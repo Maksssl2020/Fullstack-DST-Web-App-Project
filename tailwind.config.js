@@ -17,9 +17,11 @@ module.exports = {
         "custom-blue-100": "#92EFFF",
         "custom-blue-200": "#32E0FE",
         "custom-blue-300": "#1065D7",
+        "custom-orange-100": "#FF3130",
       },
       backgroundImage: {
         "header-background": `url(/public/assets/images/header_rainbow_background.png)`,
+        "drawer-background": `url(/public/assets/images/drawer_searchbar_background.png)`,
         "instagram-post-background":
           "url('/public/assets/images/test_insta_post_bg.png')",
       },
