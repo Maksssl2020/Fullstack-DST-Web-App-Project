@@ -1,6 +1,9 @@
 import React from "react";
 
-const MainBaner = ({ mainContainerStyling, imageContainerStyling }) => {
+const MainBannerWithLogo = ({
+  mainContainerStyling,
+  imageContainerStyling,
+}) => {
   return (
     <div
       className={"ml-6 flex items-center justify-center gap-4 rounded-full bg-custom-gray-100 ".concat(
@@ -19,4 +22,4 @@ const MainBaner = ({ mainContainerStyling, imageContainerStyling }) => {
   );
 };
 
-export default MainBaner;
+export default MainBannerWithLogo;

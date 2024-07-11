@@ -17,7 +17,10 @@ module.exports = {
         "custom-blue-100": "#92EFFF",
         "custom-blue-200": "#32E0FE",
         "custom-blue-300": "#1065D7",
-        "custom-orange-100": "#FF3130",
+        "custom-orange-100": "#FF9E9B",
+        "custom-orange-200": "#FF5A5A",
+        "custom-pink-100": "#FFCACA",
+        "custom-pink-200": "#FF7B7B",
       },
       backgroundImage: {
         "header-background": `url(/public/assets/images/header_rainbow_background.png)`,

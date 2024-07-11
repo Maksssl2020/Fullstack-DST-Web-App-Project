@@ -2,7 +2,7 @@ import React from "react";
 import HamburgerIcon from "../header/icons/HamburgerIcon";
 import CloseIcon from "./icons/CloseIcon";
 import DrawerList from "../list/DrawerList";
-import MainBaner from "../universal/MainBaner";
+import MainBannerWithLogo from "../universal/MainBannerWithLogo";
 
 const LeftDrawer = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -21,7 +21,10 @@ const LeftDrawer = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-30 bg-black bg-opacity-40 backdrop-blur-sm"></div>
+        <div
+          onClick={toggleDrawer}
+          className="fixed inset-0 z-30 bg-black bg-opacity-40 backdrop-blur-sm"
+        ></div>
       )}
 
       <div
@@ -44,7 +47,7 @@ const LeftDrawer = () => {
             <DrawerList />
           </div>
           <p className="mt-auto mb-12">
-            <MainBaner
+            <MainBannerWithLogo
               imageContainerStyling={"h-[55px] w-[55px]"}
               mainContainerStyling={"w-[90%]"}
             />

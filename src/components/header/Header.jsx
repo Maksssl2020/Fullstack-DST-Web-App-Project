@@ -2,7 +2,7 @@ import HamburgerIcon from "./icons/HamburgerIcon.jsx";
 import BellIcon from "./icons/BellIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer";
-import MainBaner from "../universal/MainBaner";
+import MainBannerWithLogo from "../universal/MainBannerWithLogo";
 import React from "react";
 import RightDrawer from "../drawer/RightDrawer";
 
@@ -14,14 +14,14 @@ const Header = () => {
   };
 
   return (
-    <div className="flex h-[125px] w-full border-0 border-violet-700">
-      <div className="mx-4 flex w-full items-center">
+    <div className="flex h-[125px] pl-4 w-full border-0 border-violet-700">
+      <div className="flex w-full items-center">
         <LeftDrawer />
-        <MainBaner
+        <MainBannerWithLogo
           imageContainerStyling={"w-[75px] h-[75px]"}
           mainContainerStyling={"w-[450px]"}
         />
-        <div className="ml-auto flex h-[125px] w-[600px] -translate-y-0.5 translate-x-5 items-center justify-center bg-header-background">
+        <div className="ml-auto flex h-[125px] w-[600px] relative items-center justify-center bg-header-background">
           <div className="flex h-[50px] w-[550px] translate-x-4 items-center justify-center rounded-full bg-custom-gray-100">
             <ul className="flex gap-10">
               <li className="flex items-center gap-2">
