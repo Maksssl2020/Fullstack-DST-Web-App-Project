@@ -17,7 +17,7 @@ const DrawerList = () => {
     },
     {
       title: "Altualności",
-      pageLink: "/",
+      pageLink: "/news",
     },
     {
       title: "Konto",

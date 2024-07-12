@@ -1,11 +1,19 @@
 import React from "react";
 
-const WorkPillarCard = ({ title, cardData }) => {
+const SupportUsDataCard = ({
+  title,
+  cardData,
+  additionalStyling = "h-[500px] w-[350px]",
+}) => {
   return (
-    <div className="h-[500px] relative w-[350px] py-2 px-4 flex flex-col items-center rounded-xl border-[8px] border-custom-pink-200">
+    <div
+      className={"relative py-2 px-4 flex flex-col items-center rounded-xl border-[8px] border-custom-pink-200 ".concat(
+        additionalStyling,
+      )}
+    >
       <h1 className="font-bold z-10">{title}</h1>
       <div className="text-xl mt-4 justify-center">
-        {cardData[0] !== undefined &&
+        {cardData !== undefined &&
           cardData.map((data, index) =>
             data.color === "default" ? (
               <span key={index}>{data.text}</span>
@@ -20,4 +28,4 @@ const WorkPillarCard = ({ title, cardData }) => {
   );
 };
 
-export default WorkPillarCard;
+export default SupportUsDataCard;

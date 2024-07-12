@@ -9,7 +9,7 @@ const SupportUs = () => {
     <div className="w-full h-full">
       <div className="w-full font-lato flex justify-center gap-8 flex-col items-center h-full bg-custom-gray-300">
         <MainBannerWithoutLogo bannerTitle={"Wesprzyj nas i nasze działania"} />
-        <div className="bg-white justify-center flex-col gap-8 flex w-[70%] h-auto rounded-2xl p-6">
+        <div className="bg-white justify-center items-center flex-col gap-8 flex w-[1350px] my-8 h-auto rounded-2xl p-6">
           <SupportUsPaymentSection />
           <SupportUsTraditionalTransferDataSection />
           <SupportUsIInformationAboutUsSection />

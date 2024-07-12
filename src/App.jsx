@@ -3,6 +3,7 @@ import ApplicationLayout from "./layout/ApplicationLayout.jsx";
 import Home from "./pages/Home.jsx";
 import Account from "./pages/Account";
 import SupportUs from "./pages/SupportUs";
+import News from "./pages/News";
 
 function App() {
   const router = createBrowserRouter([
@@ -20,6 +21,10 @@ function App() {
         {
           path: "/support-us",
           element: <SupportUs />,
+        },
+        {
+          path: "/news",
+          element: <News />,
         },
       ],
     },

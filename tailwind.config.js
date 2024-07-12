@@ -1,5 +1,3 @@
-import HeaderDiagonallyRainbow from "./";
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -16,11 +14,15 @@ module.exports = {
         "custom-gray-400": "#7A7A7A",
         "custom-blue-100": "#92EFFF",
         "custom-blue-200": "#32E0FE",
-        "custom-blue-300": "#1065D7",
+        "custom-blue-300": "#16C2E0",
+        "custom-blue-400": "#1065D7",
         "custom-orange-100": "#FF9E9B",
         "custom-orange-200": "#FF5A5A",
+        "custom-orange-300": "#F7A06A",
         "custom-pink-100": "#FFCACA",
         "custom-pink-200": "#FF7B7B",
+        "custom-pink-300": "#FF7070",
+        "custom-yellow-100": "#FFDE5A",
       },
       backgroundImage: {
         "header-background": `url(/public/assets/images/header_rainbow_background.png)`,
