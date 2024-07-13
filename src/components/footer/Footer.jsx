@@ -3,7 +3,7 @@ import FooterTable from "../table/FooterTable.jsx";
 
 const Footer = () => {
   return (
-    <div className="flex h-[300px] w-full justify-center">
+    <footer className="flex h-[300px] w-full justify-center">
       <div className="mt-auto flex h-[250px] w-[95%] justify-center rounded-t-3xl bg-custom-gray-300">
         <FooterTable />
         <div className="ml-auto mr-10 h-[175px] w-[175px] self-center">
@@ -14,7 +14,7 @@ const Footer = () => {
           />
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

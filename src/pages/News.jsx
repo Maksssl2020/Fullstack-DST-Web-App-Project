@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import NewsPostCard from "../components/card/NewsPostCard";
 import { newsPostsData } from "../data/NewsPageData";
@@ -52,8 +52,6 @@ const getRandomBackgroundColor = () => {
 };
 
 const News = () => {
-  const [colors, setColors] = useState([]);
-
   return (
     <div className="w-full flex-col px-8 flex items-center justify-center bg-custom-gray-300 h-auto">
       <MainBannerWithoutLogo bannerTitle="Tęczowe Aktualności" />

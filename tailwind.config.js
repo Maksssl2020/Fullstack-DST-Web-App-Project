@@ -23,6 +23,8 @@ module.exports = {
         "custom-pink-200": "#FF7B7B",
         "custom-pink-300": "#FF7070",
         "custom-yellow-100": "#FFDE5A",
+        "custom-red-100": "#FF3130",
+        "custom-violet-100": "#D44CE0",
       },
       backgroundImage: {
         "header-background": `url(/public/assets/images/header_rainbow_background.png)`,

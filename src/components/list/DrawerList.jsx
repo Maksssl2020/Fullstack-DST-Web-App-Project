@@ -9,11 +9,11 @@ const DrawerList = () => {
     },
     {
       title: "O nas",
-      pageLink: "/",
+      pageLink: "/about-us",
     },
     {
       title: "Tęczowy sklepik",
-      pageLink: "/",
+      pageLink: "/rainbow-shop",
     },
     {
       title: "Altualności",

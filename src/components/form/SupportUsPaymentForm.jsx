@@ -11,7 +11,7 @@ const SupportUsPaymentForm = ({ formTitle, formDescription, formData }) => {
         <p className="text-lg">{formDescription}</p>
       </div>
       <FormItem labelData={"Imię i nazwisko"} placeholderData={"XXX"} />
-      <FormItem labelData={"E-mail"} placeholderData={"XXX"} />
+      <FormItem labelData={"E-mail"} placeholderData={"XXX"} type={"email"} />
       <SupportUsTable tableData={formData} />
       <div className="mt-3 w-[75%] gap-2 flex flex-col">
         <p className="ml-3">Dane karty</p>
@@ -32,7 +32,10 @@ const SupportUsPaymentForm = ({ formTitle, formDescription, formData }) => {
         </div>
       </div>
       <div className="mt-3 w-[75%]">
-        <button className="bg-custom-orange-200 uppercase font-bold text-white w-full h-[40px] rounded-xl border-2 border-black">
+        <button
+          type={"submit"}
+          className="bg-custom-orange-200 uppercase font-bold text-white w-full h-[40px] rounded-xl border-2 border-black"
+        >
           {formTitle.includes("cykliczne")
             ? "wspieram cyklicznie"
             : "wpieram jednorazowo"}

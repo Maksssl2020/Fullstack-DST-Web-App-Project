@@ -1,10 +1,10 @@
 import React from "react";
 
-const InstagramIcon = () => {
+const InstagramIcon = ({ size }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="size-10"
+      className={size}
       viewBox="0 0 16 16"
       id="instagram"
     >

@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <div className="flex h-[125px] pl-4 w-full border-0 border-violet-700">
+    <header className="flex h-[125px] pl-4 w-full border-0 border-violet-700">
       <div className="flex w-full items-center">
         <LeftDrawer />
         <MainBannerWithLogo
@@ -52,7 +52,7 @@ const Header = () => {
         </div>
         <RightDrawer isOpen={isOpen} closeFunction={toggleRightDrawer} />
       </div>
-    </div>
+    </header>
   );
 };
 

@@ -1,0 +1,21 @@
+.animated-rainbow-gradient {
+    background: linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD);
+    background-size: 150% 150%;
+    animation: gradient-animation 10s ease infinite;
+}
+
+.static-rainbow-gradient {
+    background: linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD)
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
