@@ -6,6 +6,7 @@ const FormItem = ({
   type = "text",
   containerStyling = "",
   inputStyling = "",
+  onChangeAction = undefined,
 }) => {
   return (
     <div
@@ -20,6 +21,7 @@ const FormItem = ({
         className={"w-full px-2 focus:outline-none placeholder:text-black h-[40px] rounded-xl border-2 border-black".concat(
           " " + inputStyling,
         )}
+        onChange={onChangeAction}
       />
     </div>
   );
