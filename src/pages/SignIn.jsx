@@ -1,35 +1,29 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import FormItem from "../components/form/FormItem";
-import axios from "axios";
+import axios from "../helpers/AxiosConfig";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../helpers/provider/AuthProvider";
 
 const SignIn = () => {
+  const { login } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
-
-  const validate = () => {
-    const errors = {};
-    if (!username) errors.username = "Username cannot be blank!";
-    if (!password) errors.password = "Password cannot be blank!";
-    setErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+  const [errors, setErrors] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    if (!validate()) return;
-
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/login",
-        { username: username, password: password },
-      );
-      localStorage.setItem("token", response.data.token);
-      alert("User successfully logged in!");
+      const response = await axios.post("/auth/login", {
+        username: username,
+        password: password,
+      });
+      login(response.data.token);
+      navigate("/");
     } catch (error) {
-      console.error("There was an error logining!", error);
+      setErrors(error.response.data);
     }
   };
 
@@ -44,16 +38,21 @@ const SignIn = () => {
           labelData={"Nazwa użytkownika"}
           inputStyling={"focus:border-custom-orange-100"}
           onChangeAction={(event) => setUsername(event.target.value)}
+          isError={errors !== null}
         />
-        {errors.username && <p>{errors.username}</p>}
 
         <FormItem
           labelData={"Hasło"}
           type={"password"}
           inputStyling={"focus:border-custom-orange-100"}
           onChangeAction={(event) => setPassword(event.target.value)}
+          isError={errors !== null}
         />
-        {errors.password && <p>{errors.password}</p>}
+        {errors !== null && (
+          <p className="mt-4 text-lg text-red-500">
+            {"Nieprawidłowa nazwa użytkownika lub hasło!"}
+          </p>
+        )}
         <button
           type={"submit"}
           className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-full text-white uppercase font-bold"

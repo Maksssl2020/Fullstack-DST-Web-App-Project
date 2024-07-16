@@ -7,6 +7,7 @@ const FormItem = ({
   containerStyling = "",
   inputStyling = "",
   onChangeAction = undefined,
+  isError = false,
 }) => {
   return (
     <div
@@ -18,9 +19,7 @@ const FormItem = ({
       <input
         type={type}
         placeholder={placeholderData}
-        className={"w-full px-2 focus:outline-none placeholder:text-black h-[40px] rounded-xl border-2 border-black".concat(
-          " " + inputStyling,
-        )}
+        className={`w-full px-2 focus:outline-none placeholder:text-black h-[40px] rounded-xl border-2 border-black ${inputStyling} ${isError && "border-red-500"}`}
         onChange={onChangeAction}
       />
     </div>

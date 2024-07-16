@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import CloseIcon from "./icons/CloseIcon";
 import GoogleIcon from "./icons/GoogleIcon";
 import AppleIcon from "./icons/AppleIcon";
 import EmiailIcon from "./icons/EmiailIcon";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
 
 const RightDrawer = ({ isOpen, closeFunction }) => {
+  const { logout, isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <div className="transition-all duration-300 ease-in-out">
       {isOpen && (
@@ -33,25 +42,39 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
               </div>
             </div>
           </div>
-          <div className="bg-drawer-background mt-8 flex justify-center items-center w-full h-[12.5%]">
+          <div className="bg-drawer-background mt-8 flex justify-center items-center w-full h-[75px]">
             <p className="font-bold text-5xl">tęczowe konto</p>
           </div>
-          <div className="w-[90%] relative text-white text-center text-3xl items-center py-8 gap-8 flex flex-col h-[350px] mt-28 rounded-lg bg-custom-gray-100">
-            <Link to={"/sign-in"} className="w-[65%] h-[50px]">
-              <p className="bg-custom-orange-100 py-1 rounded-full">Zaloguj</p>
-            </Link>
-            <Link to={"/sign-up"} className="w-[65%] h-[50px]">
-              <p className="bg-custom-orange-100 py-1 rounded-full">
-                Zarejestruj
-              </p>
-            </Link>
-            <div className="flex items-center justify-center bg-custom-gray-300 rounded-full w-[105%] h-[75px]">
-              <div className="h-[75%] px-16 justify-between items-center flex w-[95%] bg-white rounded-full">
-                <GoogleIcon />
-                <AppleIcon />
-                <EmiailIcon />
-              </div>
-            </div>
+          <div className="w-[90%] relative text-white text-center text-3xl items-center py-8 gap-8 flex flex-col h-auto mt-28 rounded-lg bg-custom-gray-100">
+            {isAuthenticated ? (
+              <button
+                onClick={handleLogout}
+                className="w-[65%] h-[50px] bg-custom-orange-100 py-1 rounded-full"
+              >
+                WYLOGUJ SIĘ
+              </button>
+            ) : (
+              <>
+                <Link to={"/sign-in"} className="w-[65%] h-[50px]">
+                  <p className="bg-custom-orange-100 py-1 rounded-full">
+                    Zaloguj
+                  </p>
+                </Link>
+                <Link
+                  to={"/sign-up"}
+                  className="w-[65%] bg-custom-orange-100 py-1 rounded-full h-[50px]"
+                >
+                  <p>Zarejestruj</p>
+                </Link>
+                <div className="flex items-center justify-center bg-custom-gray-300 rounded-full w-[105%] h-[75px]">
+                  <div className="h-[75%] px-16 justify-between items-center flex w-[95%] bg-white rounded-full">
+                    <GoogleIcon />
+                    <AppleIcon />
+                    <EmiailIcon />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         <p className="mt-auto mb-12">
