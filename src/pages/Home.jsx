@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div className="w-full">
       <div className="mt-6 flex h-[200px] items-center justify-center bg-custom-gray-200">
-        <div className="font-lato bg-custom-blue-200 flex h-[75px] w-2/5 items-center justify-center rounded-full text-3xl font-medium text-white">
+        <div className="font-lato bg-custom-blue-300 flex h-[75px] w-2/5 items-center justify-center rounded-full text-3xl font-medium text-white">
           {"Zespół Dwóch Stron Tęczy wita Cię serdecznie <3"}
         </div>
       </div>

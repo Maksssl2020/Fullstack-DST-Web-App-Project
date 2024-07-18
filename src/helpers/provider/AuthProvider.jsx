@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("token", token);
     const decodedToken = jwtDecode(getToken());
     setUsername(decodedToken.username);
-    setRole(decodedToken.authorities);
+    setRole(decodedToken.authorities.toLocaleString());
     setIsAuthenticated(true);
   };
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         const decodedToken = jwtDecode(token);
         if (decodedToken.exp * 1000 > Date.now()) {
           setUsername(decodedToken.username);
-          setRole(decodedToken.authorities);
+          setRole(decodedToken.authorities.toLocaleString());
           setIsAuthenticated(true);
         } else {
           logout();

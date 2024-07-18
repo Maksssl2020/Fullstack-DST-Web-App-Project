@@ -21,7 +21,7 @@ const AccountInformationSection = () => {
     <>
       {showModal && <AccountModal />}
       <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[850px]">
-        <div className="ml-[15%] mt-8 w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-200 rounded-full">
+        <div className="ml-[15%] mt-8 w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">
           {`Cześć, ${username} witamy Cię serdecznie <3`}
         </div>
         <div className="flex w-full justify-center">

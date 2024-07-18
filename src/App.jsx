@@ -9,6 +9,7 @@ import RainbowShop from "./pages/RainbowShop";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Forum from "./pages/Forum";
+import ForumForm from "./pages/ForumForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -53,7 +54,7 @@ function App() {
         },
         {
           path: "/forum-create-post",
-          element: <Forum />,
+          element: <ForumForm />,
         },
       ],
     },

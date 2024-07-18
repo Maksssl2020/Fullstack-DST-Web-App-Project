@@ -4,6 +4,7 @@ import ForumPostItem from "./ForumPostItem";
 import { TodayDate } from "../../helpers/Date";
 import UserIcon from "../header/icons/UserIcon";
 import axios from "../../helpers/AxiosConfig";
+import ForumCreatedPostModal from "../modal/ForumCreatedPostModal";
 
 const ForumPostForm = () => {
   const { username, role } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const ForumPostForm = () => {
   const [title, setTitle] = React.useState("");
   const [errors, setErrors] = useState({});
   const [optionIndex, setOptionIndex] = React.useState(0);
+  const [showModal, setShowModal] = useState(false);
 
   const handleTextAreaChange = (event) => {
     setTextInTextArea(event.target.value);
@@ -35,6 +37,8 @@ const ForumPostForm = () => {
         creationDate: today,
         postType: postType,
       });
+
+      setShowModal(true);
     } catch (error) {
       const thrownErrors = {};
       let errorData;
@@ -137,6 +141,11 @@ const ForumPostForm = () => {
           </div>
         </div>
       </div>
+      {showModal && (
+        <div className="self-center flex absolute items-center justify-center">
+          <ForumCreatedPostModal />
+        </div>
+      )}
     </div>
   );
 };

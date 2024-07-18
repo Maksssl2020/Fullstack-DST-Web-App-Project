@@ -10,7 +10,7 @@ const HomeAboutUsSection = () => {
           alt=""
         />
       </div>
-      <div className="bg-custom-blue-100 flex h-full w-[45%] -translate-x-12 flex-col rounded-lg px-20 py-4">
+      <div className="bg-custom-blue-200 flex h-full w-[45%] -translate-x-12 flex-col rounded-lg px-20 py-4">
         <h1 className="font-lato text-4xl font-bold">
           O co tak właściwie chodzi?
         </h1>
@@ -26,7 +26,7 @@ const HomeAboutUsSection = () => {
           powyższymi problemami poczucie bezpieczeństwa i zrozumienia. Chcemy,
           aby nasza pomoc była realna i zauważalna.
         </p>
-        <button className="bg-custom-blue-300 mt-4 h-[55px] w-[175px] self-center rounded-full text-xl font-bold italic text-white">
+        <button className="bg-custom-blue-500 mt-4 h-[55px] w-[175px] self-center rounded-full text-xl font-bold italic text-white">
           O NAS
         </button>
       </div>

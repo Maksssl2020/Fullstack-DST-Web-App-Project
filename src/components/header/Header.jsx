@@ -45,7 +45,7 @@ const Header = () => {
                 onClick={toggleRightDrawer}
                 className="flex items-center rounded-full bg-white p-1 justify-center"
               >
-                <UserIcon />
+                <UserIcon size={"size-6"} />
               </button>
             </div>
           </div>
