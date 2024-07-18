@@ -25,7 +25,7 @@ const DrawerList = () => {
     },
     {
       title: "Forum",
-      pageLink: "/",
+      pageLink: "/forum",
     },
     {
       title: "Kontakt",

@@ -8,6 +8,7 @@ import AboutUs from "./pages/AboutUs";
 import RainbowShop from "./pages/RainbowShop";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import Forum from "./pages/Forum";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,6 +46,14 @@ function App() {
         {
           path: "/sign-in",
           element: <SignIn />,
+        },
+        {
+          path: "/forum",
+          element: <Forum />,
+        },
+        {
+          path: "/forum-create-post",
+          element: <Forum />,
         },
       ],
     },

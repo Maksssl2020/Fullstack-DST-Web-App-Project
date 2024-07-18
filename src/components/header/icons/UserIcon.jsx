@@ -1,9 +1,9 @@
 import React from "react";
 
-const UserIcon = () => {
+const UserIcon = ({ size }) => {
   return (
     <svg
-      className="size-7"
+      className={size}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

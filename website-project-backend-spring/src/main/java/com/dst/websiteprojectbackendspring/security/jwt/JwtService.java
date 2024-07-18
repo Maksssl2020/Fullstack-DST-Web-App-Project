@@ -43,7 +43,6 @@ public class JwtService {
 
         Date issuedAtDate = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(issuedAtDate.getTime() + jwtExpiration);
-
         return Jwts
                 .builder()
                 .setClaims(claims)
