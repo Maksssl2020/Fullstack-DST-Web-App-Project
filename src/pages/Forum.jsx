@@ -1,17 +1,17 @@
 import React, { useContext } from "react";
 import ForumBanner from "../components/banner/ForumBanner";
-import ForumPostCard from "../components/card/ForumPostCard";
-import { Navigate, useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import ForumAttemptToCreatePostWhenNotLogged from "../components/modal/ForumAttemptToCreatePostWhenNotLogged";
+import ForumPostSection from "../components/section/ForumPostSection";
 
 const Forum = () => {
-  const { token } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const [openModal, setOpenModal] = React.useState(false);
   const navigation = useNavigate();
 
   const handleNavigation = () => {
-    if (token) {
+    if (isAuthenticated) {
       navigation("/forum-create-post");
     } else {
       setOpenModal(true);
@@ -27,7 +27,7 @@ const Forum = () => {
             DODAJ WPIS
           </p>
         </button>
-        <ForumPostCard />
+        <ForumPostSection />
       </div>
       {openModal && (
         <ForumAttemptToCreatePostWhenNotLogged close={setOpenModal} />

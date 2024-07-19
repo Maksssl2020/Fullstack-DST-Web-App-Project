@@ -29,7 +29,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorization -> {
                     authorization.requestMatchers(
                             "/api/v1/auth/**",
-                            "/api/v1/forum/**"
+                            "/api/v1/forum/**",
+                            "/api/v1/comments/**"
                     ).permitAll()
                             .anyRequest()
                             .authenticated();

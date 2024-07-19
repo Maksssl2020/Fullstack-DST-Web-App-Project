@@ -1,5 +1,9 @@
-package com.dst.websiteprojectbackendspring.authentication;
+package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.authentication.AuthenticationRequest;
+import com.dst.websiteprojectbackendspring.authentication.AuthenticationResponse;
+import com.dst.websiteprojectbackendspring.authentication.AuthenticationService;
+import com.dst.websiteprojectbackendspring.authentication.RegistrationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

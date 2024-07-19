@@ -1,0 +1,14 @@
+.comments-section {
+    overflow-y: scroll;
+    scrollbar-face-color: #5BBE30;
+    scrollbar-base-color: #1065D7;
+    scrollbar-color: #1065D7;
+    scrollbar-arrow-color: #1065D7;
+}
+
+.comments-section::-webkit-scrollbar-thumb {
+    background: #1065D7;
+    color: #1065D7;
+    scrollbar-color: #1065D7;
+    scrollbar-color: #1065D7;
+}

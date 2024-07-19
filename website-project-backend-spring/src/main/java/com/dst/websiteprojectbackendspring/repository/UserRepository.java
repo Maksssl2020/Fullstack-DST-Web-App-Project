@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.repository;
 
-import com.dst.websiteprojectbackendspring.user.User;
+import com.dst.websiteprojectbackendspring.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

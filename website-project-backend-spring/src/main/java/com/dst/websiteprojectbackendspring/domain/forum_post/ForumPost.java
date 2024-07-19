@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.forum_post;
+package com.dst.websiteprojectbackendspring.domain.forum_post;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

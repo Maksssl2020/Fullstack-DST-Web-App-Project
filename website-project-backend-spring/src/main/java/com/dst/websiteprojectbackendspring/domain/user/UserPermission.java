@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.user;
+package com.dst.websiteprojectbackendspring.domain.user;
 
 public enum UserPermission {
     CREATING_FORUM_POSTS,

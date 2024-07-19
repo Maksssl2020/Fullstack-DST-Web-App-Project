@@ -49,20 +49,20 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
             {isAuthenticated ? (
               <button
                 onClick={handleLogout}
-                className="w-[65%] h-[50px] bg-custom-orange-100 py-1 rounded-full"
+                className="w-[65%] h-[50px] bg-custom-orange-200 py-1 rounded-full"
               >
                 WYLOGUJ SIĘ
               </button>
             ) : (
               <>
                 <Link to={"/sign-in"} className="w-[65%] h-[50px]">
-                  <p className="bg-custom-orange-100 py-1 rounded-full">
+                  <p className="bg-custom-orange-200 py-1 rounded-full">
                     Zaloguj
                   </p>
                 </Link>
                 <Link
                   to={"/sign-up"}
-                  className="w-[65%] bg-custom-orange-100 py-1 rounded-full h-[50px]"
+                  className="w-[65%] bg-custom-orange-200 py-1 rounded-full h-[50px]"
                 >
                   <p>Zarejestruj</p>
                 </Link>
