@@ -29,7 +29,7 @@ const DrawerList = () => {
     },
     {
       title: "Kontakt",
-      pageLink: "/",
+      pageLink: "/contact-us",
     },
     {
       title: "Wesprzyj nas",

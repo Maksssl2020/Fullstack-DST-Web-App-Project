@@ -1,5 +1,5 @@
 import React from "react";
-import DashedLine from "./DashedLine";
+import DashedLine from "../universal/DashedLine";
 
 const SupportUsTraditionalTransferDataSection = () => {
   return (

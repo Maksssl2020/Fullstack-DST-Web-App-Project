@@ -30,7 +30,8 @@ public class SecurityConfig {
                     authorization.requestMatchers(
                             "/api/v1/auth/**",
                             "/api/v1/forum/**",
-                            "/api/v1/comments/**"
+                            "/api/v1/comments/**",
+                            "/api/v1/news/**"
                     ).permitAll()
                             .anyRequest()
                             .authenticated();

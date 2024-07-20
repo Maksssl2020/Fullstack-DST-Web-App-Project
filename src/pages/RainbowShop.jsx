@@ -1,19 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import RainbowShopProductCard from "../components/card/RainbowShopProductCard";
 import { rainbowShopData } from "../data/RainbowShopData";
-
-const getBackgroundColor = (index) => {
-  const colors = [
-    "bg-[#B4E4FF]",
-    "bg-[#D1BAFF]",
-    "bg-[#CEFFB9]",
-    "bg-[#FFF3C5]",
-    "bg-[#FFCACA]",
-    "bg-[#FFA6A6]",
-  ];
-
-  return colors[index % colors.length];
-};
+import { getBackgroundColor } from "../helpers/DrawBackgroundColor";
+import { AuthContext } from "../helpers/provider/AuthProvider";
 
 const RainbowShop = () => {
   return (

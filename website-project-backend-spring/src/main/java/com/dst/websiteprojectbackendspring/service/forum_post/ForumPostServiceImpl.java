@@ -31,8 +31,7 @@ public class ForumPostServiceImpl implements ForumPostService {
         Page<ForumPost> allPosts = forumPostRepository.findAll(pageRequest);
         List<ForumPost> sortedPosts = allPosts.stream()
                 .collect(Collectors.toList());
-        System.out.println(allPosts);
-        System.out.println(sortedPosts.size());
+
 
         return new PageImpl<>(sortedPosts, pageRequest, allPosts.getTotalElements());
     }

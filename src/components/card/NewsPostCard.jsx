@@ -1,7 +1,8 @@
 import React from "react";
 import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate";
 
-const NewsPostCard = ({ height, backgroundColor, date, description }) => {
+const NewsPostCard = ({ height, backgroundColor, cardData }) => {
+  const { content, author, creationDate } = cardData;
   return (
     <div
       style={{ height: `${Number.parseFloat(height)}px` }}
@@ -11,15 +12,8 @@ const NewsPostCard = ({ height, backgroundColor, date, description }) => {
         className={`size-full rounded-lg flex`.concat(" " + backgroundColor)}
       >
         <div className="w-full p-5 flex flex-col min-h-[275px] h-auto rounded-lg mt-auto bg-custom-gray-100">
-          <PostBannerWithLogoAndDate
-            authorName={"Dwie Strony Tęczy"}
-            date={"09.03.2024"}
-          />
-          <p className="text-justify mt-6">
-            jest poszanowaniem cudzuch uczuć, poglądów, upodobań, wierzeń,
-            obyczajów i postępowania, choćby były całkowicie odmienne od naszych
-            albo zupełnie z nimi sprzeczne
-          </p>
+          <PostBannerWithLogoAndDate authorName={author} date={creationDate} />
+          <p className="text-justify mt-6">{content}</p>
         </div>
       </div>
     </div>

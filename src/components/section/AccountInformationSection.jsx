@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
-import AccountModal from "../modal/AccountModal";
+import DefaultModal from "../modal/DefaultModal";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 
 const AccountInformationSection = () => {
@@ -19,7 +19,16 @@ const AccountInformationSection = () => {
 
   return (
     <>
-      {showModal && <AccountModal />}
+      {showModal && (
+        <DefaultModal
+          modalTitle={"Informacja"}
+          modalSubtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
+          fistButtonTitle={"Zaloguj się"}
+          firstButtonLink={"/sign-in"}
+          secondButtonTitle={"Strona główna"}
+          secondButtonLink={"/"}
+        />
+      )}
       <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[850px]">
         <div className="ml-[15%] mt-8 w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">
           {`Cześć, ${username} witamy Cię serdecznie <3`}

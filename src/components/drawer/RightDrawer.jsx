@@ -26,7 +26,7 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
       )}
 
       <div
-        className={`font-lato flex-col right-0 top-0 flex z-30 overflow-y-auto transition-transform fixed h-screen w-[25%] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`font-lato flex-col right-0 top-0 flex z-30 overflow-y-auto transition-transform fixed h-screen w-[490px] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex flex-col items-center w-full">
           <div className="w-full flex h-[12.5%] mt-8 justify-center items-center">

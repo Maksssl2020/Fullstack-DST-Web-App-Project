@@ -23,6 +23,21 @@ const Pagination = ({ totalPages, currentPage, setCurrentPageFunc }) => {
     numbers.push(i + 1);
   }
 
+  const colors = [
+    "#FF3130",
+    "#FF914D",
+    "#FFDE5A",
+    "#5BBE30",
+    "#16C2E0",
+    "#1065D7",
+    "#D413CD",
+  ];
+
+  const getColorForPaginationNumber = (index, styleElement) => {
+    let modulo = index % 7;
+    return colors[modulo];
+  };
+
   return (
     <div className="gap-4 items-center mt-6 flex">
       <button
@@ -36,7 +51,18 @@ const Pagination = ({ totalPages, currentPage, setCurrentPageFunc }) => {
         {numbers.map((number, index) => (
           <button
             disabled={index === currentPage}
-            className={`size-8 rounded-full duration-300 font-bold border-2 flex transition transform ease-in-out items-center justify-center ${index === currentPage ? "bg-custom-blue-500 text-white scale-110 border-custom-blue-500" : "bg-white text-black border-black"}`}
+            className={`size-8 rounded-full duration-300 font-bold border-2 flex transition transform ease-in-out items-center justify-center ${index === currentPage && "text-white scale-110 border-custom-blue-500"}`}
+            style={{
+              backgroundColor:
+                index === currentPage
+                  ? getColorForPaginationNumber(index)
+                  : "white",
+              borderColor: getColorForPaginationNumber(index),
+              color:
+                index !== currentPage
+                  ? getColorForPaginationNumber(index)
+                  : "white",
+            }}
             key={index}
             onClick={() => {
               setCurrentPageFunc(number - 1);

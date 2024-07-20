@@ -28,10 +28,10 @@ const LeftDrawer = () => {
       )}
 
       <div
-        className={`font-lato flex z-30 overflow-y-auto transition-transform inset-0 fixed h-screen w-[25%] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`font-lato flex z-30 overflow-y-auto transition-transform inset-0 fixed h-screen w-[490px] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="w-full flex flex-col">
-          <div className="flex px-4 items-center justify-center gap-4 h-[12.5%] bg-drawer-background w-full">
+          <div className="flex px-4 items-center justify-center gap-4 h-[11.5%] bg-drawer-background w-full">
             <input
               placeholder={"Szukaj . . . . . ."}
               className="h-[50px] text-lg p-4 focus:outline-none placeholder:font-bold placeholder:text-2xl  placeholder:text-black w-[75%] rounded-full bg-custom-gray-100"

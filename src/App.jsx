@@ -10,6 +10,9 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Forum from "./pages/Forum";
 import ForumForm from "./pages/ForumForm";
+import ContactUs from "./pages/ContactUs";
+import ShopProductPage from "./pages/ShopProductPage";
+import NewsPostForm from "./pages/NewsPostForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -33,12 +36,20 @@ function App() {
           element: <News />,
         },
         {
+          path: "/news/add-post",
+          element: <NewsPostForm />,
+        },
+        {
           path: "/about-us",
           element: <AboutUs />,
         },
         {
-          path: "rainbow-shop",
+          path: "/rainbow-shop",
           element: <RainbowShop />,
+        },
+        {
+          path: `/rainbow-shop/product/:title`,
+          element: <ShopProductPage />,
         },
         {
           path: "/sign-up",
@@ -55,6 +66,10 @@ function App() {
         {
           path: "/forum-create-post",
           element: <ForumForm />,
+        },
+        {
+          path: "/contact-us",
+          element: <ContactUs />,
         },
       ],
     },
