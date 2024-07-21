@@ -2,11 +2,19 @@ import React from "react";
 import InstagramIcon from "../list/icons/InstagramIcon";
 import XIcon from "../list/icons/XIcon";
 import FacebookIcon from "../list/icons/FacebookIcon";
+import { Link } from "react-router-dom";
+import { socialMediaLinks } from "../../helpers/MediaLinks";
 
 const socialMediaIcons = [
-  <InstagramIcon size={"size-20"} />,
-  <XIcon size={"size-20"} />,
-  <FacebookIcon size={"size-20"} />,
+  <Link target={"_blank"} to={socialMediaLinks.instagram}>
+    <InstagramIcon size={"size-20"} />
+  </Link>,
+  <Link target={"_blank"} to={socialMediaLinks.x}>
+    <XIcon size={"size-20"} />
+  </Link>,
+  <Link target={"_blank"} to={socialMediaLinks.facebook}>
+    <FacebookIcon size={"size-20"} />
+  </Link>,
 ];
 
 const ContactUsContactDataPanel = () => {

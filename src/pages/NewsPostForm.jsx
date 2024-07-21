@@ -1,26 +1,42 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import axios from "../helpers/AxiosConfig";
 import { TodayDate } from "../helpers/Date";
-import { useNavigate } from "react-router-dom";
-import DefaultModal from "../components/modal/DefaultModal";
+import { useNavigate, useParams } from "react-router-dom";
 import ModalWithClickFunction from "../components/modal/ModalWithClickFunction";
 
 const NewsPostForm = () => {
   const { username } = useContext(AuthContext);
+  const { id } = useParams();
   const [content, setContent] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
 
-  const handleAddNewPost = async (e) => {
+  useEffect(() => {
+    if (id) {
+      setIsEditing(true);
+      axios.get(`/news/${id}`).then((response) => {
+        setContent(response.data.content);
+      });
+    }
+  }, [id]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const postData = {
+      author: username,
+      content: content,
+      creationDate: TodayDate(),
+    };
+
     try {
-      await axios.post("/news/add-new-post", {
-        author: username,
-        content: content,
-        creationDate: TodayDate(),
-      });
+      if (isEditing) {
+        await axios.put(`/news/edit-post/${id}`, postData);
+      } else {
+        await axios.post("/news/add-new-post", postData);
+      }
 
       setContent("");
       setOpenModal(true);
@@ -40,7 +56,9 @@ const NewsPostForm = () => {
           <p>Jesteś zalogowany jako:</p>
           <p>{username}</p>
         </div>
-        <p className="text-2xl font-bold mt-6 ml-4">Wpisz treść posta:</p>
+        <p className="text-2xl font-bold mt-6 ml-4">
+          {isEditing ? "Edytuj treść posta" : "Wpisz treść posta:"}
+        </p>
         <textarea
           value={content}
           onChange={(event) => setContent(event.target.value)}
@@ -55,20 +73,22 @@ const NewsPostForm = () => {
           </button>
           <button
             disabled={content.length < 5}
-            onClick={handleAddNewPost}
+            onClick={handleSubmit}
             className="w-full h-full relative bg-custom-orange-200 rounded-3xl uppercase"
           >
             {content.length < 5 && (
               <div className="w-full absolute inset-0 h-full bg-black opacity-20 rounded-3xl"></div>
             )}
-            dodaj post
+            {isEditing ? "Zaktualizuj post" : "dodaj post"}
           </button>
         </div>
         {openModal && (
           <ModalWithClickFunction
-            modalTitle={"Post dodany"}
+            modalTitle={isEditing ? "Post zaktualizowany" : "Post dodany"}
             modalSubtitle={
-              "Nowy post w aktualnościach został dodany! Dodaj kolejny lub przejdź na stronę aktualności."
+              isEditing
+                ? "Post został pomyślnie zaktualizowany!"
+                : "Nowy post w aktualnościach został dodany! Dodaj kolejny lub przejdź na stronę aktualności."
             }
             fistButtonTitle={"Przejdź do aktualności"}
             firstButtonLink={"/news"}

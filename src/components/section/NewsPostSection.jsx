@@ -33,9 +33,19 @@ const NewsPostSection = () => {
     }
   };
 
+  const handleDelete = async (postId, onClose) => {
+    try {
+      console.log(postId);
+      await axios.delete(`/news/delete-post/${postId}`);
+      await getAllPosts(currentPage);
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     getAllPosts(currentPage);
-    console.log(posts);
   }, [currentPage]);
 
   return (
@@ -47,11 +57,9 @@ const NewsPostSection = () => {
             title={"dodaj post"}
             link="/news/add-post"
             styling={
-              "absolute mr-64 right-0 w-[250px] uppercase font-bold text-xl text-white h-[75px] flex items-center justify-center bg-custom-orange-100 rounded-2xl"
+              "absolute mr-64 right-0 w-[250px] uppercase font-bold text-xl text-white h-[75px] flex items-center justify-center bg-custom-orange-200 rounded-2xl"
             }
-          >
-            dodaj nowy post
-          </ButtonWithLink>
+          />
         )}
       </div>
       <div className="w-full relative flex flex-col justify-center bg-custom-gray-200 mt-4 p-4 h-auto">
@@ -62,6 +70,7 @@ const NewsPostSection = () => {
               height={getHeightForPost(index)}
               backgroundColor={getRandomBackgroundColor()}
               cardData={data}
+              handleDelete={handleDelete}
             />
           ))}
         </Masonry>

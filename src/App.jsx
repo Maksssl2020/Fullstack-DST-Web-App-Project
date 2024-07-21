@@ -9,7 +9,7 @@ import RainbowShop from "./pages/RainbowShop";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Forum from "./pages/Forum";
-import ForumForm from "./pages/ForumForm";
+import ForumPostForm from "./pages/ForumPostForm";
 import ContactUs from "./pages/ContactUs";
 import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/NewsPostForm";
@@ -40,6 +40,10 @@ function App() {
           element: <NewsPostForm />,
         },
         {
+          path: "/news/edit-post/:id",
+          element: <NewsPostForm />,
+        },
+        {
           path: "/about-us",
           element: <AboutUs />,
         },
@@ -64,8 +68,12 @@ function App() {
           element: <Forum />,
         },
         {
-          path: "/forum-create-post",
-          element: <ForumForm />,
+          path: "/forum/create-post",
+          element: <ForumPostForm />,
+        },
+        {
+          path: "/forum/edit-post/:id",
+          element: <ForumPostForm />,
         },
         {
           path: "/contact-us",

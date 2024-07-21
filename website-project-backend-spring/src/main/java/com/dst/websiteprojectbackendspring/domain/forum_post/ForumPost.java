@@ -1,6 +1,8 @@
 package com.dst.websiteprojectbackendspring.domain.forum_post;
 
+import com.dst.websiteprojectbackendspring.domain.comment.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -11,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -32,6 +36,7 @@ public class ForumPost {
     @NotBlank(message = "Content cannot be blank!")
     @NotEmpty(message = "Content cannot be empty!")
     @Size(min = 25, message = "Content must be 25 characters minimum!")
+    @Column(length = 500)
     private String content;
 
     private String author;
@@ -43,4 +48,8 @@ public class ForumPost {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "post_type")
     private PostType postType;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 }

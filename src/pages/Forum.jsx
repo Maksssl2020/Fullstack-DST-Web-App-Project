@@ -12,7 +12,7 @@ const Forum = () => {
 
   const handleNavigation = () => {
     if (isAuthenticated) {
-      navigation("/forum-create-post");
+      navigation("/forum/create-post");
     } else {
       setOpenModal(true);
     }

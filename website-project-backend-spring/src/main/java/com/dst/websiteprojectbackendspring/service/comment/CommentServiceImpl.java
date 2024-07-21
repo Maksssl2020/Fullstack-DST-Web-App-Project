@@ -33,4 +33,21 @@ public class CommentServiceImpl implements CommentService {
     public Long countCommentsByPostId(Long postId) {
         return commentRepository.countByForumPostId(postId);
     }
+
+    @Override
+    public void updateComment(Long postId, Long commentId, Comment comment) throws ChangeSetPersister.NotFoundException {
+        if (commentRepository.existsById(commentId)) {
+            comment.setId(commentId);
+            ForumPost forumPost = forumPostRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            comment.setForumPost(forumPost);
+            commentRepository.save(comment);
+        }
+    }
+
+    @Override
+    public void deleteComment(Long postId, Long commentId) throws ChangeSetPersister.NotFoundException {
+        if (commentRepository.existsById(commentId)) {
+            commentRepository.deleteById(commentId);
+        }
+    }
 }

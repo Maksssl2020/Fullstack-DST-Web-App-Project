@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import UserIcon from "../../header/icons/UserIcon";
+import EditIcon from "../../../icons/EditIcon";
+import { AuthContext } from "../../../helpers/provider/AuthProvider";
+import DeleteIcon from "../../../icons/DeleteIcon";
+import { useNavigate } from "react-router-dom";
+import DeleteWarningModal from "../../modal/DeleteWarningModal";
 
-const ForumPostCardMainDataPanel = ({ postData }) => {
-  const { title, content, author, authorRole, creationDate, postType } =
+const ForumPostCardMainDataPanel = ({ postData, handleDelete }) => {
+  const { username, role } = useContext(AuthContext);
+  const { id, title, content, author, authorRole, creationDate, postType } =
     postData;
+  const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleDeleteClick = () => {
+    setOpenModal(true);
+  };
+
+  const handleCancelDeleteClick = () => {
+    setOpenModal(false);
+  };
 
   return (
     <div className="w-[50%] justify-between h-full rounded-2xl flex flex-col items-center p-4 bg-custom-gray-100">
@@ -25,8 +41,33 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
             <UserIcon size={"size-8"} />
           </p>
           {postType === "PUBLIC" ? author : "Anonimowy"}
+          <div className="ml-auto flex items-center gap-2">
+            {username === author && (
+              <button
+                onClick={() => navigate(`/forum/edit-post/${id}`)}
+                className="text-black rounded-full size-10 flex justify-center items-center bg-white"
+              >
+                <EditIcon size={"size-8"} />
+              </button>
+            )}
+            {(username === author || role === "ADMIN") && (
+              <button
+                onClick={handleDeleteClick}
+                className="text-black rounded-full size-10 flex justify-center items-center bg-white"
+              >
+                <DeleteIcon size={"size-8"} />
+              </button>
+            )}
+          </div>
         </div>
       </div>
+      {openModal && (
+        <DeleteWarningModal
+          itemId={id}
+          handleDeleteFunc={handleDelete}
+          onClose={handleCancelDeleteClick}
+        />
+      )}
     </div>
   );
 };

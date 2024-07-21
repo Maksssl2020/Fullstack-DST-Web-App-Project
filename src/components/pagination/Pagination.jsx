@@ -43,7 +43,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPageFunc }) => {
       <button
         onClick={handlePreviousPage}
         disabled={currentPage === 0}
-        className="rounded-full bg-white text-custom-blue-500"
+        className="rounded-full bg-white text-custom-orange-200"
       >
         <ArrowLeftIcon size={"size-10"} />
       </button>
@@ -75,7 +75,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPageFunc }) => {
       <button
         onClick={handleNextPage}
         disabled={currentPage === totalPages - 1}
-        className="rounded-full bg-white text-custom-blue-500"
+        className="rounded-full bg-white text-custom-orange-200"
       >
         <ArrowRightIcon size={"size-10"} />
       </button>

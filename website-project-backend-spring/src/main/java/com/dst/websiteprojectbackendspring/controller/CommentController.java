@@ -33,4 +33,16 @@ public class CommentController {
         commentService.saveComment(comment, postId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PutMapping("/post/{postId}/edit-comment/{commentId}")
+    public ResponseEntity<HttpStatus> updateComment(@PathVariable Long postId,@PathVariable Long commentId, @RequestBody @Valid Comment comment) throws ChangeSetPersister.NotFoundException {
+        commentService.updateComment(postId, commentId, comment);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/post/{postId}/delete-comment/{commentId}")
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Long postId, @PathVariable Long commentId) throws ChangeSetPersister.NotFoundException {
+        commentService.deleteComment(postId, commentId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

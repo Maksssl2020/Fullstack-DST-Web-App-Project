@@ -13,47 +13,71 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
   const [newCommentContent, setNewCommentContent] = React.useState("");
   const [errors, setErrors] = React.useState({});
 
-  const fetchCommentsData = async () => {
+  useEffect(() => {
     try {
-      await axios.get(`/comments/post/${postId}`).then((response) => {
+      axios.get(`/comments/post/${postId}`).then((response) => {
         setComments(response.data);
+        console.log(response.data);
       });
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [postId]);
 
   const handleAddComment = async (e) => {
     e.preventDefault();
+
     try {
-      await axios
-        .post(`/comments/post/${postId}/add-comment`, {
-          content: newCommentContent,
-          author: username,
-          authorRole: role,
-        })
-        .then(() => {
-          fetchCommentsData();
-          setNewCommentContent("");
-          setErrors({});
-        });
+      await axios.post(`/comments/post/${postId}/add-comment`, {
+        content: newCommentContent,
+        author: username,
+        authorRole: role,
+      });
+
+      setErrors({});
+      setNewCommentContent("");
     } catch (error) {
-      let thrownErrors = {};
-      let errorsData = error.response.data.validationErrors.toString();
-
-      if (errorsData.includes("Content")) {
-        thrownErrors.content = "Nieprawidłowa treść komentarza!";
-        setErrors(thrownErrors);
-      }
-
-      console.log(error);
-      console.log(errorsData);
+      const validationErrors = error.response?.data?.validationErrors || {};
+      setErrors({
+        content: validationErrors.content
+          ? "Nieprawidłowa treść komentarza!"
+          : "",
+      });
+      console.error("Error adding comment:", error);
     }
   };
 
-  useEffect(() => {
-    fetchCommentsData();
-  }, [postId]);
+  const handleCommentUpdate = async (id, commentNewData) => {
+    try {
+      await axios.put(
+        `/comments/post/${postId}/edit-comment/${id}`,
+        commentNewData,
+      );
+      const commentsCopy = [...comments];
+      const commentIndex = commentsCopy.findIndex(
+        (comment) => comment.id === id,
+      );
+      commentsCopy[commentIndex] = {
+        content: commentNewData.content,
+        author: commentNewData.author,
+        authorRole: commentNewData.authorRole,
+      };
+      setComments(commentsCopy);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteComment = async (id, onClose) => {
+    try {
+      await axios.delete(`/comments/post/${postId}/delete-comment/${id}`);
+      const commentsCopy = comments.filter((comment) => comment.id !== id);
+      setComments(commentsCopy);
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-[45%] justify-between flex flex-col h-full p-4 rounded-2xl bg-custom-gray-100">
@@ -61,8 +85,13 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
         Komentarze
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
-        {comments.map((commentData, index) => (
-          <Comment commentData={commentData} key={index} />
+        {comments.map((commentData) => (
+          <Comment
+            key={commentData.id}
+            commentData={commentData}
+            handleUpdate={handleCommentUpdate}
+            handleDelete={handleDeleteComment}
+          />
         ))}
       </div>
       <div className={`h-[65px] relative w-full`}>

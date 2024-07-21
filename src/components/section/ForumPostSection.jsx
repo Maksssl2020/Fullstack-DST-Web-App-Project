@@ -24,6 +24,16 @@ const ForumPostSection = () => {
     }
   };
 
+  const handlePostDelete = async (postId, onClose) => {
+    try {
+      await axios.delete(`/forum/posts/delete-post/${postId}`);
+      await fetchPostsData(currentPage);
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchPostsData(currentPage);
     window.scrollTo({
@@ -37,7 +47,7 @@ const ForumPostSection = () => {
       <ul className="w-full flex flex-col">
         {posts.map((post, idx) => (
           <li className="w-full flex justify-center" key={idx}>
-            <ForumPostCard postData={post} />
+            <ForumPostCard postData={post} handleDelete={handlePostDelete} />
           </li>
         ))}
       </ul>

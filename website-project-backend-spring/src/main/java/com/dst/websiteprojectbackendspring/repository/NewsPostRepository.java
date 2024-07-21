@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsPostRepository extends JpaRepository<NewsPost, Long> {
+    boolean existsById(Long id);
 }
