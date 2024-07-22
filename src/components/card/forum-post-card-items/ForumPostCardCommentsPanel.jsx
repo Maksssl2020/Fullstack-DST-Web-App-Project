@@ -24,18 +24,26 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     }
   }, [postId]);
 
-  const handleAddComment = async (e) => {
+  const handleAddComment = (e) => {
     e.preventDefault();
 
     try {
-      await axios.post(`/comments/post/${postId}/add-comment`, {
+      const newCommentData = {
         content: newCommentContent,
         author: username,
         authorRole: role,
-      });
+        creationDate: new Date().toISOString(),
+      };
+      axios
+        .post(`/comments/post/${postId}/add-comment`, newCommentData)
+        .then(() => {
+          const commentsCopy = [...comments];
+          commentsCopy.push(newCommentData);
+          setComments(commentsCopy);
 
-      setErrors({});
-      setNewCommentContent("");
+          setErrors({});
+          setNewCommentContent("");
+        });
     } catch (error) {
       const validationErrors = error.response?.data?.validationErrors || {};
       setErrors({
@@ -54,13 +62,12 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
         commentNewData,
       );
       const commentsCopy = [...comments];
-      const commentIndex = commentsCopy.findIndex(
+      const updatedCommentIndex = commentsCopy.findIndex(
         (comment) => comment.id === id,
       );
-      commentsCopy[commentIndex] = {
-        content: commentNewData.content,
-        author: commentNewData.author,
-        authorRole: commentNewData.authorRole,
+      commentsCopy[updatedCommentIndex] = {
+        ...commentsCopy[updatedCommentIndex],
+        ...commentNewData,
       };
       setComments(commentsCopy);
     } catch (error) {
@@ -71,8 +78,11 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
   const handleDeleteComment = async (id, onClose) => {
     try {
       await axios.delete(`/comments/post/${postId}/delete-comment/${id}`);
-      const commentsCopy = comments.filter((comment) => comment.id !== id);
-      setComments(commentsCopy);
+      const commentsCopy = [...comments];
+      const filteredComments = commentsCopy.filter(
+        (comment) => comment.id !== id,
+      );
+      setComments(filteredComments);
       onClose();
     } catch (error) {
       console.log(error);
@@ -85,14 +95,20 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
         Komentarze
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
-        {comments.map((commentData) => (
-          <Comment
-            key={commentData.id}
-            commentData={commentData}
-            handleUpdate={handleCommentUpdate}
-            handleDelete={handleDeleteComment}
-          />
-        ))}
+        {comments
+          .sort(
+            (commentA, commentB) =>
+              new Date(commentB.creationDate) - new Date(commentA.creationDate),
+          )
+          .reverse()
+          .map((commentData) => (
+            <Comment
+              key={commentData.id}
+              commentData={commentData}
+              handleUpdate={handleCommentUpdate}
+              handleDelete={handleDeleteComment}
+            />
+          ))}
       </div>
       <div className={`h-[65px] relative w-full`}>
         {!isAuthenticated && (

@@ -8,7 +8,7 @@ import DeleteWarningModal from "../modal/DeleteWarningModal";
 
 const Comment = ({ commentData, handleUpdate, handleDelete }) => {
   const { username, role } = useContext(AuthContext);
-  const { id, content, author, authorRole } = commentData;
+  const { id, content, author, authorRole, creationDate } = commentData;
   const [isEditing, setIsEditing] = useState(false);
   const [updateContent, setUpdateContent] = useState(content);
   const [openModal, setOpenModal] = useState(false);
@@ -21,6 +21,7 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
     author: author,
     authorRole: authorRole,
     content: updateContent,
+    creationDate: creationDate,
   };
 
   const handleOpenModal = () => {

@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class Comment {
 
     private String author;
     private String authorRole;
+    private LocalDateTime creationDate;
 
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)

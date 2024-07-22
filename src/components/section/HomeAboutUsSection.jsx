@@ -1,21 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const HomeAboutUsSection = () => {
   return (
-    <div className="mt-16 flex h-[400px] justify-center">
+    <div className="mt-16 flex h-[425px] justify-center">
       <div className="z-10 h-[350px] w-[35%]">
         <img
-          className="inset-0 h-full w-full rounded-lg object-cover"
+          className="inset-0 h-full w-full rounded-3xl object-cover"
           src="/assets/images/home_card_image.jpg"
           alt=""
         />
       </div>
-      <div className="bg-custom-blue-200 flex h-full w-[45%] -translate-x-12 flex-col rounded-lg px-20 py-4">
-        <h1 className="font-lato text-4xl font-bold">
+      <div className="bg-custom-blue-200 flex justify-between h-full w-[45%] -translate-x-12 flex-col rounded-3xl px-20 py-6">
+        <h1 className="font-lato text-4xl font-extrabold">
           O co tak właściwie chodzi?
         </h1>
         <div className="my-5 h-1 w-full bg-gradient-to-r from-black to-transparent"></div>
-        <p className="text-lg">
+        <p className="text-lg text-justify">
           Celem naszego projektu jest edukowanie społeczeństwa o tolerancji.
           Chcemy uświadomić ludzi, że szykanowanie i hejt nie jest w porządku
           niezależnie od tego z kim mamy do czynienia. Podczas realizowania
@@ -26,9 +27,12 @@ const HomeAboutUsSection = () => {
           powyższymi problemami poczucie bezpieczeństwa i zrozumienia. Chcemy,
           aby nasza pomoc była realna i zauważalna.
         </p>
-        <button className="bg-custom-blue-500 mt-4 h-[55px] w-[175px] self-center rounded-full text-xl font-bold italic text-white">
+        <Link
+          to={"/about-us"}
+          className="bg-custom-blue-500 h-[55px] w-[175px] self-center flex items-center justify-center rounded-full text-xl font-bold italic text-white"
+        >
           O NAS
-        </button>
+        </Link>
       </div>
     </div>
   );
