@@ -11,7 +11,6 @@ const Home = () => {
         <div className="font-lato bg-custom-blue-300 flex h-[100px] italic w-2/5 items-center ml-[15%] justify-center rounded-full text-3xl font-medium text-white">
           {"Zespół Dwóch Stron Tęczy wita Cię serdecznie <3"}
         </div>
-        {/*<FacebookLogin />*/}
       </div>
       <div>
         <HomeAboutUsSection />
