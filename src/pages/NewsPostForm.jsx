@@ -61,6 +61,7 @@ const NewsPostForm = () => {
         </p>
         <textarea
           value={content}
+          maxLength={300}
           onChange={(event) => setContent(event.target.value)}
           className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[65%] border-4 rounded-2xl border-black resize-none"
         ></textarea>

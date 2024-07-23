@@ -13,6 +13,7 @@ import ForumPostForm from "./pages/ForumPostForm";
 import ContactUs from "./pages/ContactUs";
 import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/NewsPostForm";
+import HomeNewsPostForm from "./pages/HomeNewsPostForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -22,6 +23,14 @@ function App() {
         {
           path: "/",
           element: <Home />,
+        },
+        {
+          path: "/home-news/add-post",
+          element: <HomeNewsPostForm />,
+        },
+        {
+          path: "/home-news/edit-post/:id",
+          element: <HomeNewsPostForm />,
         },
         {
           path: "/account",

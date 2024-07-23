@@ -37,7 +37,7 @@ const HomeInstagramSection = () => {
   };
 
   return (
-    <div className="flex h-[600px] w-full flex-col rounded-lg bg-custom-blue-200">
+    <div className="flex h-[600px] w-full flex-col rounded-lg">
       <InstagramSectionBanner />
       <div className="mt-10 flex h-[375px] w-full items-center justify-center gap-12 bg-custom-gray-200">
         <HomeInstagramSectionCardSlider
@@ -75,11 +75,10 @@ const HomeInstagramSection = () => {
                 {selectedPost.username}
               </div>
               <textarea
+                value={selectedPost.caption}
                 readOnly
                 className="resize-none h-[75%] bg-custom-gray-100 focus:outline-none px-6 py-2"
-              >
-                {selectedPost.caption}
-              </textarea>
+              ></textarea>
               <a
                 className={
                   "mt-auto h-[75px] w-[350px] flex justify-center items-center uppercase font-bold self-center text-white mb-4 button-gradient rounded-2xl"

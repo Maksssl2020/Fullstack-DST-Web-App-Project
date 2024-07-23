@@ -3,6 +3,8 @@ import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../modal/DeleteWarningModal";
+import EditIcon from "../../icons/EditIcon";
+import DeleteIcon from "../../icons/DeleteIcon";
 
 const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
   const { role } = useContext(AuthContext);
@@ -26,18 +28,18 @@ const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
       <div className={`size-full rounded-lg flex ${backgroundColor}`}>
         <div className="w-full h-[65%] flex justify-center absolute rounded-lg group inset-0">
           {role === "ADMIN" && (
-            <div className="flex flex-col">
+            <div className="flex mt-4 gap-4 transition-opacity duration-300">
               <button
                 onClick={() => navigate(`/news/edit-post/${id}`)}
-                className="z-10 w-[250px] h-[75px] mt-6 text-white text-3xl uppercase bg-custom-orange-200 rounded-3xl opacity-0 group-hover:opacity-100"
+                className="z-10 size-14 rounded-full text-black flex justify-center items-center bg-white  opacity-0 group-hover:opacity-100"
               >
-                EDYTUJ
+                <EditIcon size={"size-12"} />
               </button>
               <button
                 onClick={handleDeleteClick}
-                className="z-10 w-[250px] h-[75px] mt-6 text-white text-3xl uppercase bg-custom-orange-200 rounded-3xl opacity-0 group-hover:opacity-100"
+                className="z-10 size-14 text-black text-3xl bg-white flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100"
               >
-                USUŃ
+                <DeleteIcon size={"size-12"} />
               </button>
             </div>
           )}
@@ -49,7 +51,7 @@ const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
       </div>
       {openModal && (
         <DeleteWarningModal
-          postId={id}
+          itemId={id}
           handleDeleteFunc={handleDelete}
           onClose={handleCancelDeleteClick}
         />

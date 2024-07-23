@@ -28,11 +28,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorization -> {
                     authorization.requestMatchers(
-                            "/api/v1/auth/**",
-                            "/api/v1/forum/**",
-                                    "/api/v1/**",
-                            "/api/v1/comments/**",
-                            "/api/v1/news/**"
+                                    "/api/v1/auth/**",
+                                    "/api/v1/comments/**",
+                                    "/api/v1/news/**",
+                                    "/api/v1/forum/**",
+                                    "/api/v1/home/posts/**"
                     ).permitAll()
                             .anyRequest()
                             .authenticated();
