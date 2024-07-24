@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import { TodayDate } from "../helpers/Date";
 import axios from "../helpers/AxiosConfig";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DefaultModal from "../components/modal/DefaultModal";
 import { decodeImageFile } from "../helpers/PostManager";
 
@@ -13,6 +13,7 @@ const HomeNewsPostForm = () => {
   const [content, setContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -105,7 +106,10 @@ const HomeNewsPostForm = () => {
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
         <div className="flex w-full h-[70px] text-3xl font-bold text-white gap-4">
-          <button className="w-full h-full bg-custom-orange-200 rounded-3xl uppercase">
+          <button
+            onClick={() => navigate("/")}
+            className="w-full h-full bg-custom-orange-200 rounded-3xl uppercase"
+          >
             Anuluj
           </button>
           <button

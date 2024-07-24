@@ -11,9 +11,9 @@ const HomeNewsCard = ({ cardData, handleDelete, handleModalOpen }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="max-xl:h-[525px] max-xl:w-[325px] max-2xl:h-[575px] max-2xl:w-[375px] 2xl:h-[650px] 2xl:w-[450px] rounded-lg bg-white p-4">
+    <div className="max-xl:h-[575px] max-xl:w-[325px] max-2xl:h-[650px] max-2xl:w-[375px] 2xl:h-[750px] 2xl:w-[450px] rounded-lg bg-white p-4">
       <div className="h-full w-full rounded-lg bg-custom-gray-100">
-        <div className="relative z-20 h-[65%] w-full rounded-lg border-4 border-black bg-custom-gray-100">
+        <div className="relative z-20 h-[55%] w-full rounded-lg border-4 border-black bg-custom-gray-100">
           <img
             className="inset-0 z-20 h-full w-full rounded-lg object-cover"
             src={`data:image/png;base64,${image}`}
