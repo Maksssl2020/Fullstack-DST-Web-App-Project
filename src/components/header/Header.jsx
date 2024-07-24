@@ -18,11 +18,11 @@ const Header = () => {
       <div className="flex w-full items-center">
         <LeftDrawer />
         <MainBannerWithLogo
-          imageContainerStyling={"w-[75px] h-[75px]"}
-          mainContainerStyling={"w-[450px]"}
+          imageContainerStyling={"max-xl:size-[50px] xl:size-[75px]"}
+          mainContainerStyling={"max-xl:w-[350px] xl:w-[450px]"}
         />
-        <div className="ml-auto flex h-[125px] w-[600px] relative items-center justify-center bg-header-background">
-          <div className="flex h-[50px] w-[550px] translate-x-4 items-center justify-center rounded-full bg-custom-gray-100">
+        <div className="ml-auto flex h-[125px] max-xl:w-[450px] xl:w-[600px] relative items-center justify-center bg-header-background">
+          <div className="flex h-[50px] max-xl:w-[400px] xl:w-[550px] translate-x-4 items-center justify-center rounded-full bg-custom-gray-100">
             <ul className="flex gap-10">
               <li className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-custom-gray-400"></span>

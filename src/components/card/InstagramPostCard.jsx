@@ -1,11 +1,9 @@
 import React from "react";
-import HeartIcon from "./icons/HeartIcon.jsx";
-import CommentIcon from "./icons/CommentIcon.jsx";
 
 const InstagramPostCard = ({ post, onClick }) => {
   return (
     <div
-      className="cursor-pointer h-[350px] w-[350px] rounded-3xl"
+      className="cursor-pointer max-lg:size-[250px] max-2xl:size-[300px] 2xl:size-[350px] rounded-3xl"
       onClick={onClick}
     >
       <img

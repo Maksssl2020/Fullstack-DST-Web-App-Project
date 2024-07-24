@@ -12,12 +12,14 @@ const MainBannerWithLogo = ({
     >
       <div className={imageContainerStyling}>
         <img
-          className="inset-0 h-full w-full rounded-full object-cover"
+          className="inset-0 size-full rounded-full object-cover"
           src="/assets/images/website-logo.jpg"
           alt=""
         />
       </div>
-      <h2 className="text-2xl font-bold">DWIE strony TĘCZY</h2>
+      <h2 className="max-xl:text-xl xl:text-2xl font-bold">
+        DWIE strony TĘCZY
+      </h2>
     </div>
   );
 };

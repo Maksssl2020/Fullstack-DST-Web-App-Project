@@ -35,10 +35,12 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
                 className="rounded-full h-fit bg-custom-gray-100"
                 onClick={closeFunction}
               >
-                <CloseIcon />
+                <CloseIcon size="size-12" />
               </button>
               <div className="flex w-[70%] items-center justify-center text-xl font-bold h-[50px] bg-custom-gray-100 rounded-full">
-                <p>Skontaktuj się z nami</p>
+                <Link to={"/contact-us"}>
+                  <p>Skontaktuj się z nami</p>
+                </Link>
               </div>
             </div>
           </div>

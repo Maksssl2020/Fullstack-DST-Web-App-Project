@@ -2,7 +2,7 @@ import React from "react";
 
 const DeleteWarningModal = ({ itemId, handleDeleteFunc, onClose }) => {
   return (
-    <div className="fixed font-lato inset-0 z-20 flex items-center justify-center">
+    <div className="fixed font-lato inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black backdrop-blur-lg bg-opacity-40 z-10"></div>
       <div className="bg-custom-gray-100 gap-6 w-[650px] flex flex-col items-center h-auto p-8 rounded-2xl z-10">
         <h2 className="text-4xl font-bold">UWAGA!</h2>

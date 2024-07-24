@@ -7,12 +7,12 @@ import FacebookLogin from "../components/table/FacebookLogin";
 const Home = () => {
   return (
     <div className="w-full">
-      <div className="mt-8 flex items-center h-[200px] bg-custom-gray-200">
-        <div className="font-lato bg-custom-blue-300 flex h-[100px] italic w-2/5 items-center ml-[15%] justify-center rounded-full text-3xl font-medium text-white">
+      <div className="mt-8 flex items-center max-xl:justify-center h-[200px] bg-custom-gray-200">
+        <div className="font-lato bg-custom-blue-300 flex h-[100px] italic w-2/5 items-center ml-[15%] justify-center rounded-full max-md:text-lg max-xl:w-[80%] max-xl:ml-0 max-2xl:text-2xl text-3xl font-medium text-white">
           {"Zespół Dwóch Stron Tęczy wita Cię serdecznie <3"}
         </div>
       </div>
-      <div>
+      <div className="w-full flex justify-center h-auto">
         <HomeAboutUsSection />
       </div>
       <div className="mt-16">

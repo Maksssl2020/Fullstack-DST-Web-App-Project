@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -7,8 +7,11 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./HomeNewsSliderStyle.css";
 import HomeNewsCard from "../card/HomeNewsCard";
+import DeleteWarningModal from "../modal/DeleteWarningModal";
 
-const HomeNewsCardSlider = ({ sliderData }) => {
+const HomeNewsCardSlider = ({ sliderData, handlePostsDelete }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [postId, setPostId] = useState();
   const data = sliderData;
   const pagination = {
     clickable: true,
@@ -17,13 +20,21 @@ const HomeNewsCardSlider = ({ sliderData }) => {
     },
   };
 
+  const handleOpenModal = () => {
+    setOpenModal(!openModal);
+  };
+
+  const handleGetPostId = (postId) => {
+    setPostId(postId);
+  };
+
   return (
-    <div className="flex w-full bg-custom-gray-400 self-center h-auto">
+    <div className="flex w-full bg-custom-gray-400 justify-center h-auto">
       <Swiper
-        className="w-[80%] pl-20 pr-2 flex justify-center"
+        className="max-xl:w-full xl:w-[90%] flex justify-center"
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={35}
-        slidesPerView={3}
+        spaceBetween={15}
+        slidesPerView={1}
         navigation={true}
         pagination={pagination}
         speed={2500}
@@ -31,13 +42,33 @@ const HomeNewsCardSlider = ({ sliderData }) => {
           delay: 3000,
           disableOnInteraction: false,
         }}
+        breakpoints={{
+          1280: {
+            slidesPerView: 3,
+          },
+          700: {
+            slidesPerView: 2,
+          },
+        }}
       >
         {data.map((data, index) => (
-          <SwiperSlide className="mb-20">
-            <HomeNewsCard key={data.id} cardData={data} />
+          <SwiperSlide key={index} className="flex justify-center mb-20">
+            <HomeNewsCard
+              key={data.id}
+              cardData={data}
+              handleDelete={handleGetPostId}
+              handleModalOpen={handleOpenModal}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
+      {openModal && (
+        <DeleteWarningModal
+          itemId={postId}
+          handleDeleteFunc={handlePostsDelete}
+          onClose={handleOpenModal}
+        />
+      )}
     </div>
   );
 };

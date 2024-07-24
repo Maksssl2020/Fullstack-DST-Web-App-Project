@@ -3,6 +3,8 @@ import { AuthContext } from "../helpers/provider/AuthProvider";
 import { TodayDate } from "../helpers/Date";
 import axios from "../helpers/AxiosConfig";
 import { useParams } from "react-router-dom";
+import DefaultModal from "../components/modal/DefaultModal";
+import { decodeImageFile } from "../helpers/PostManager";
 
 const HomeNewsPostForm = () => {
   const { id } = useParams();
@@ -10,22 +12,14 @@ const HomeNewsPostForm = () => {
   const [file, setFile] = useState(null);
   const [content, setContent] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [test, setTest] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (id) {
       setIsEditing(true);
       axios.get(`/home/posts/${id}`).then((response) => {
         setContent(response.data.content);
-        const imageData = response.data.image;
-        const byteCharacters = atob(imageData);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-
-        const byteArr = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArr], { type: "image/png" });
+        const blob = decodeImageFile(response.data.image);
         console.log(blob);
         setFile(blob);
       });
@@ -44,7 +38,6 @@ const HomeNewsPostForm = () => {
 
       console.log(postData);
       console.log(file);
-      console.log(test);
       if (isEditing) {
         await axios.put(
           `/home/posts/edit-post/${id}`,
@@ -69,6 +62,8 @@ const HomeNewsPostForm = () => {
           },
         );
       }
+
+      setOpenModal(true);
     } catch (error) {
       console.error(error);
     }
@@ -105,7 +100,7 @@ const HomeNewsPostForm = () => {
         </p>
         <textarea
           value={content}
-          maxLength={250}
+          maxLength={225}
           className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[65%] border-4 rounded-2xl border-black resize-none"
           onChange={(e) => setContent(e.target.value)}
         ></textarea>
@@ -125,6 +120,20 @@ const HomeNewsPostForm = () => {
           </button>
         </div>
       </div>
+      {openModal && (
+        <DefaultModal
+          modalTitle={isEditing ? "Post zaktualizowany" : "Post dodany"}
+          modalSubtitle={
+            isEditing
+              ? "Post został pomyślnie zaktualizowany!"
+              : "Nowy post w tęczowych wiadomościach został dodany! Dodaj kolejny lub przejdź na stronę główną."
+          }
+          fistButtonTitle={"Strona główna"}
+          firstButtonLink={"/"}
+          secondButtonTitle={"Pozostań na stronie"}
+          secondButtonClickAction={() => setOpenModal(false)}
+        />
+      )}
     </div>
   );
 };

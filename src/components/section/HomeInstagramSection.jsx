@@ -37,9 +37,9 @@ const HomeInstagramSection = () => {
   };
 
   return (
-    <div className="flex h-[600px] w-full flex-col rounded-lg">
+    <div className="flex h-auto w-full flex-col rounded-3">
       <InstagramSectionBanner />
-      <div className="mt-10 flex h-[375px] w-full items-center justify-center gap-12 bg-custom-gray-200">
+      <div className="mt-10 flex h-auto w-full items-center justify-center gap-12 bg-custom-gray-200">
         <HomeInstagramSectionCardSlider
           sliderData={posts}
           handlePostClick={handlePostClick}

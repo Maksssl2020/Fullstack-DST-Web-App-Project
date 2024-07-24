@@ -21,14 +21,30 @@ const HomeNewsSection = () => {
     }
   }, []);
 
+  const handleHomeNewsPostDelete = (id, onClose) => {
+    try {
+      axios.delete(`/home/posts/delete-post/${id}`).then(() => {
+        const postsCopy = [...posts];
+        const filteredPosts = postsCopy.filter((post) => post.id !== id);
+        setPosts(filteredPosts);
+        onClose();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="flex h-[1000px] w-full flex-col bg-custom-gray-300">
+    <div className="flex h-auto w-full flex-col bg-custom-gray-300">
       <div className="w-full relative h-[125px] flex justify-center items-center">
         <MainBannerWithoutLogo bannerTitle={"Tęczowe Wiadomości"} />
         {role === "ADMIN" && <AddNewPostButton link={"/home-news/add-post"} />}
       </div>
-      <div className="mt-8 h-[950px] flex justify-center  w-full py-8">
-        <HomeNewsCardSlider sliderData={posts} />
+      <div className="h-auto flex justify-center w-full py-8">
+        <HomeNewsCardSlider
+          sliderData={posts}
+          handlePostsDelete={handleHomeNewsPostDelete}
+        />
       </div>
     </div>
   );
