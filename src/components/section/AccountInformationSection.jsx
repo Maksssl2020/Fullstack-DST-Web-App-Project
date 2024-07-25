@@ -27,6 +27,7 @@ const AccountInformationSection = () => {
           firstButtonLink={"/sign-in"}
           secondButtonTitle={"Strona główna"}
           secondButtonLink={"/"}
+          closeModal={setShowModal}
         />
       )}
       <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[850px]">

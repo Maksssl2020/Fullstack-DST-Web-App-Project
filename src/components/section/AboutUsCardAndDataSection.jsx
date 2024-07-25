@@ -9,20 +9,22 @@ import AboutUsIconList from "../list/AboutUsIconList";
 const AboutUsCardAndDataSection = () => {
   return (
     <>
-      <div className="w-full z-10 rounded-2xl my-28 h-[3500px]">
+      <div className="max-xl:w-[1000px] max-2xl:w-[1250px] 2xl:w-[1480px] [1750px]:w-[1650px] z-10 rounded-2xl my-28">
         {aboutUsData.map((data, index) => (
           <AboutUsDataCard key={index} cardData={data} index={index} />
         ))}
       </div>
       <div className="w-full -translate-y-[125px] flex flex-col p-8 items-center rounded-b-2xl bg-white h-[550px]">
-        <div className="w-[45%] h-[125px] p-6 animated-rainbow-gradient rounded-full bg-custom-blue-200">
+        <div className="max-2xl:w-[650px] 2xl:w-[750px] h-[125px] p-6 animated-rainbow-gradient rounded-full bg-custom-blue-200">
           <div className="w-full flex gap-6 justify-center items-center h-full bg-white rounded-full">
             <LineWithCircleOnLeftSide />
-            <h1 className="font-bold text-5xl">Nasi Partnerzy:</h1>
+            <h1 className="font-bold max-2xl:text-4xl 2xl:text-5xl">
+              Nasi Partnerzy:
+            </h1>
             <LineWithCircleOnRightSide />
           </div>
         </div>
-        <div className="w-[45%] translate-y-28 h-[175px] mt-auto p-6 animated-rainbow-gradient rounded-3xl bg-custom-blue-200">
+        <div className="max-2xl:w-[650px] 2xl:w-[750px] translate-y-28 h-[175px] mt-auto p-6 animated-rainbow-gradient rounded-3xl bg-custom-blue-200">
           <div className="w-full flex gap-6 justify-center items-center h-full bg-white rounded-3xl">
             <AboutUsIconList />
           </div>

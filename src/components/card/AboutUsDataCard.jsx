@@ -25,19 +25,21 @@ const AboutUsDataCard = ({ cardData, index }) => {
 
   return (
     <div
-      className={`w-full flex h-1/6 rounded-2xl ${isOdd && "flex-row-reverse"}`}
+      className={`w-full flex max-xl:h-[475px]  max-2xl:h-[525px] 2xl:h-[585px] rounded-2xl ${isOdd && "flex-row-reverse"}`}
       style={{ backgroundColor: cardColor }}
     >
       <div
-        className="h-full w-[35%] p-12 rounded-2xl"
+        className="max-xl:size-[475px] max-2xl:size-[525px] 2xl:size-[585px] p-12 rounded-2xl"
         style={{ backgroundColor: imageContainerColor }}
       >
         <div className="w-full flex items-center justify-center h-full rounded-2xl bg-white">
           {image === undefined ? (
-            <h1 className="font-bold text-6xl italic">ZDJĘCIE</h1>
+            <h1 className="font-bold max-xl:text-2xl xl:text-6xl italic">
+              ZDJĘCIE
+            </h1>
           ) : (
             <img
-              className="inset-0 object-cover w-full h-full"
+              className="inset-0 object-cover size-full"
               src={image}
               alt={title}
             />
@@ -45,18 +47,24 @@ const AboutUsDataCard = ({ cardData, index }) => {
         </div>
       </div>
       <div className="h-full gap-6 w-[65%] px-16 py-8 flex flex-col">
-        <h1 className="font-bold text-5xl">{title}</h1>
+        <h1 className="font-bold max-xl:text-2xl max-2xl:text-4xl 2xl:text-5xl">
+          {title}
+        </h1>
         <div className="h-1 w-full bg-gradient-to-r from-black to-transparent"></div>
-        <p className="text-3xl">{description}</p>
+        <p className="max-xl:text-lg max-2xl:text-2xl 2xl:text-3xl">
+          {description}
+        </p>
         {listData !== undefined && (
-          <ul className="list-disc text-2xl flex w-[80%] ml-10 flex-wrap h-[25%] flex-col">
+          <ul className="list-disc max-xl:text-sm max-2xl:text-xl 2xl:text-2xl flex w-[80%] ml-10 flex-wrap h-[25%] flex-col">
             {splitListData.map((data, index) => (
               <li key={index}>{data}</li>
             ))}
           </ul>
         )}
         {descriptionAfterList !== undefined && (
-          <p className="text-3xl">{descriptionAfterList}</p>
+          <p className="max-xl:text-lg max-2xl:text-2xl 2xl:text-3xl">
+            {descriptionAfterList}
+          </p>
         )}
       </div>
     </div>

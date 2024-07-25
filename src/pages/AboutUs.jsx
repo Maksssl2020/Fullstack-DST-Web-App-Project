@@ -3,7 +3,7 @@ import AboutUsCardAndDataSection from "../components/section/AboutUsCardAndDataS
 
 const AboutUs = () => {
   return (
-    <div className="relative font-lato flex-col px-32 w-full h-auto flex justify-center bg-custom-gray-300">
+    <div className="font-lato flex-col items-center w-full h-auto flex justify-center bg-custom-gray-300">
       <AboutUsCardAndDataSection />
     </div>
   );

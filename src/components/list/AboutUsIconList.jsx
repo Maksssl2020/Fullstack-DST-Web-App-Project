@@ -15,7 +15,7 @@ const icons = [
 
 const AboutUsIconList = () => {
   return (
-    <ul className="flex gap-4 size-16 w-auto h-auto">
+    <ul className="flex gap-8 size-16 w-auto h-auto">
       {icons.map((icon, index) => (
         <li key={index}>{icon}</li>
       ))}

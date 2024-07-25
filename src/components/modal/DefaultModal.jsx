@@ -8,6 +8,7 @@ const DefaultModal = ({
   firstButtonLink,
   secondButtonTitle,
   secondButtonLink,
+  closeModal,
 }) => {
   return (
     <div className="fixed font-lato inset-0 flex items-center justify-center">
@@ -21,6 +22,7 @@ const DefaultModal = ({
           styling={
             "w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center bg-custom-orange-100 py-1 rounded-full"
           }
+          closeModal={closeModal}
         />
         <ButtonWithLink
           title={secondButtonTitle}
@@ -28,6 +30,7 @@ const DefaultModal = ({
           styling={
             "w-[50%] font-bold uppercase text-xl text-white h-[50px] flex items-center justify-center bg-custom-orange-100 py-1 rounded-full"
           }
+          closeModal={closeModal}
         />
       </div>
     </div>

@@ -32,7 +32,8 @@ public class SecurityConfig {
                                     "/api/v1/comments/**",
                                     "/api/v1/news/**",
                                     "/api/v1/forum/**",
-                                    "/api/v1/home/posts/**"
+                                    "/api/v1/home/posts/**",
+                                    "/api/v1/products/**"
                     ).permitAll()
                             .anyRequest()
                             .authenticated();

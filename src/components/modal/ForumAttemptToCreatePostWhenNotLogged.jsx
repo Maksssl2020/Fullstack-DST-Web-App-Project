@@ -16,6 +16,7 @@ const ForumAttemptToCreatePostWhenNotLogged = ({ close: setOpenModal }) => {
           styling={
             "w-[50%] font-bold uppercase text-xl text-white h-[50px] flex items-center justify-center bg-custom-orange-100 py-1 rounded-full"
           }
+          closeModal={setOpenModal}
         />
         <button
           onClick={() => setOpenModal(false)}

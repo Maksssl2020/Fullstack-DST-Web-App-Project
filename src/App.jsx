@@ -14,6 +14,7 @@ import ContactUs from "./pages/ContactUs";
 import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/NewsPostForm";
 import HomeNewsPostForm from "./pages/HomeNewsPostForm";
+import ProductForm from "./pages/ProductForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -63,6 +64,10 @@ function App() {
         {
           path: `/rainbow-shop/product/:title`,
           element: <ShopProductPage />,
+        },
+        {
+          path: "/rainbow-shop/add-product",
+          element: <ProductForm />,
         },
         {
           path: "/sign-up",

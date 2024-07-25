@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../dst-website-project-frontend-react.iml" filepath="$PROJECT_DIR$/../dst-website-project-frontend-react.iml" />
+      <module fileurl="file://$PROJECT_DIR$/website-project-backend-spring/website-project-backend-spring.iml" filepath="$PROJECT_DIR$/website-project-backend-spring/website-project-backend-spring.iml" />
     </modules>
   </component>
 </project>
