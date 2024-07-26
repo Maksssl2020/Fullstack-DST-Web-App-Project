@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public interface ProductService {
@@ -13,8 +12,8 @@ public interface ProductService {
     void saveProduct(
             String title, String name, String color, String description,
             String packageSize, String weight, String productComposition,
-            String productOverprint, String price, Set<String> productSizes,
-            Set<String> categories, MultipartFile[] images
+            String productOverprint, String price, String[] productSizes,
+            String[] categories, MultipartFile[] images
     );
     List<Product> getProducts();
     Product getProduct(int id);

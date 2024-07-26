@@ -45,7 +45,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void deleteComment(Long postId, Long commentId) throws ChangeSetPersister.NotFoundException {
+    public void deleteComment(Long postId, Long commentId) {
         if (commentRepository.existsById(commentId)) {
             commentRepository.deleteById(commentId);
         }

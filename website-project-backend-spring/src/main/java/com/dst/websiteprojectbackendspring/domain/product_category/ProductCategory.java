@@ -1,5 +1,6 @@
-package com.dst.websiteprojectbackendspring.domain.product;
+package com.dst.websiteprojectbackendspring.domain.product_category;
 
+import com.dst.websiteprojectbackendspring.domain.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,18 +10,17 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product_images")
-public class ProductImage {
+@NoArgsConstructor
+@Table(name = "product_categories")
+public class ProductCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "image", nullable = false)
-    private byte[] image;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)

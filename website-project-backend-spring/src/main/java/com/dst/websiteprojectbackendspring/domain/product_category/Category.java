@@ -1,6 +1,6 @@
-package com.dst.websiteprojectbackendspring.domain.product;
+package com.dst.websiteprojectbackendspring.domain.product_category;
 
-public enum ProductCategory {
+public enum Category {
     UBRANIA,
     KOSZULKI,
     AKCESORIA,

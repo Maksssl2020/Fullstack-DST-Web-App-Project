@@ -1,5 +1,8 @@
 package com.dst.websiteprojectbackendspring.domain.product;
 
+import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -60,15 +63,16 @@ public class Product {
     @NotNull(message = "Price cannot be empty!")
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductSize> productSize;
 
-    @ElementCollection(targetClass = ProductCategory.class)
-    @CollectionTable(name = "product_categories", joinColumns = @JoinColumn(name = "product_id"))
-//    @Enumerated(EnumType.STRING)
-    @Column(name = "categories")
+    @JsonIgnore
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCategory> categories;
 
+
+    @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
 }
