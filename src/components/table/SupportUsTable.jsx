@@ -19,7 +19,7 @@ const SupportUsTable = ({ tableData }) => {
         {tableData.map((item, index) => (
           <button
             onClick={() => handleDifferentAmountClick(index)}
-            className="border-2 h-[35px] focus:border-custom-orange-100 border-black rounded-xl"
+            className="border-2 h-[35px] focus:border-custom-orange-200 border-black rounded-xl"
             key={index}
           >
             {item}
@@ -29,7 +29,7 @@ const SupportUsTable = ({ tableData }) => {
       {isDifferentAmountChosen && (
         <>
           <p className="ml-3">Inna kwota</p>
-          <div className="relative group focus-within:border-custom-orange-100 w-[125px] h-[35px]  flex">
+          <div className="relative group focus-within:border-custom-orange-200 w-[125px] h-[35px]  flex">
             <input
               placeholder="35.00"
               className={

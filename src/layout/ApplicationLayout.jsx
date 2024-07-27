@@ -5,6 +5,7 @@ import Footer from "../components/footer/Footer.jsx";
 import ScrollToTop from "./ScrollToTop";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import ForumAttemptToCreatePostWhenNotLogged from "../components/modal/ForumAttemptToCreatePostWhenNotLogged";
+import AnimatedPage from "../animation/AnimatedPage";
 
 const ApplicationLayout = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -32,6 +33,7 @@ const ApplicationLayout = () => {
     <div>
       <ScrollToTop />
       <Header forumAddPostButton={forumAddPostButton} />
+
       <Outlet />
       <Footer />
       {openModal && (

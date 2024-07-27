@@ -3,6 +3,7 @@ import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo
 import FormItem from "../components/form/FormItem";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AnimatedPage from "../animation/AnimatedPage";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -65,59 +66,61 @@ const SignUp = () => {
   console.log(errors);
 
   return (
-    <div className="font-lato w-full bg-custom-gray-300 flex flex-col items-center justify-center h-auto">
-      <MainBannerWithoutLogo bannerTitle={"Zarejestruj się"} />
-      <form
-        onSubmit={handleRegister}
-        className="w-[850px] p-8 flex flex-col items-center rounded-2xl my-12 h-auto bg-custom-gray-100"
-      >
-        <FormItem
-          labelData={"Nazwa użytkownika"}
-          inputStyling={"focus:border-custom-orange-100"}
-          onChangeAction={(event) => setUsername(event.target.value)}
-          isError={errors.username !== undefined}
-        />
-        {errors.username && (
-          <p className="mt-2 text-lg text-red-500">{errors.username}</p>
-        )}
-        <FormItem
-          labelData={"e-mail"}
-          type={"email"}
-          inputStyling={"focus:border-custom-orange-100"}
-          onChangeAction={(event) => setEmail(event.target.value)}
-          isError={errors.email !== undefined}
-        />
-        {errors.email && (
-          <p className="mt-2 text-lg text-red-500">{errors.email}</p>
-        )}
-        <FormItem
-          labelData={"Hasło"}
-          type={"password"}
-          inputStyling={"focus:border-custom-orange-100"}
-          onChangeAction={(event) => setPassword(event.target.value)}
-          isError={errors.password !== undefined}
-        />
-        {errors.password && (
-          <p className="mt-2 text-lg text-red-500">{errors.password}</p>
-        )}
-        <FormItem
-          labelData={"Powtórz hasło"}
-          type={"password"}
-          inputStyling={"focus:border-custom-orange-100"}
-          onChangeAction={(event) => setRetypePassword(event.target.value)}
-          isError={errors.retypePassword !== undefined}
-        />
-        {errors.retypePassword && (
-          <p className="mt-2 text-lg text-red-500">{errors.retypePassword}</p>
-        )}
-        <button
-          type={"submit"}
-          className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-full text-white uppercase font-bold"
+    <AnimatedPage>
+      <div className="font-lato w-full bg-custom-gray-300 flex flex-col items-center justify-center h-auto">
+        <MainBannerWithoutLogo bannerTitle={"Zarejestruj się"} />
+        <form
+          onSubmit={handleRegister}
+          className="w-[850px] p-8 flex flex-col items-center rounded-2xl my-12 h-auto bg-custom-gray-100"
         >
-          Zarejestruj się
-        </button>
-      </form>
-    </div>
+          <FormItem
+            labelData={"Nazwa użytkownika"}
+            inputStyling={"focus:border-custom-orange-100"}
+            onChangeAction={(event) => setUsername(event.target.value)}
+            isError={errors.username !== undefined}
+          />
+          {errors.username && (
+            <p className="mt-2 text-lg text-red-500">{errors.username}</p>
+          )}
+          <FormItem
+            labelData={"e-mail"}
+            type={"email"}
+            inputStyling={"focus:border-custom-orange-100"}
+            onChangeAction={(event) => setEmail(event.target.value)}
+            isError={errors.email !== undefined}
+          />
+          {errors.email && (
+            <p className="mt-2 text-lg text-red-500">{errors.email}</p>
+          )}
+          <FormItem
+            labelData={"Hasło"}
+            type={"password"}
+            inputStyling={"focus:border-custom-orange-100"}
+            onChangeAction={(event) => setPassword(event.target.value)}
+            isError={errors.password !== undefined}
+          />
+          {errors.password && (
+            <p className="mt-2 text-lg text-red-500">{errors.password}</p>
+          )}
+          <FormItem
+            labelData={"Powtórz hasło"}
+            type={"password"}
+            inputStyling={"focus:border-custom-orange-100"}
+            onChangeAction={(event) => setRetypePassword(event.target.value)}
+            isError={errors.retypePassword !== undefined}
+          />
+          {errors.retypePassword && (
+            <p className="mt-2 text-lg text-red-500">{errors.retypePassword}</p>
+          )}
+          <button
+            type={"submit"}
+            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-full text-white uppercase font-bold"
+          >
+            Zarejestruj się
+          </button>
+        </form>
+      </div>
+    </AnimatedPage>
   );
 };
 

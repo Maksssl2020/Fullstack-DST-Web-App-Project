@@ -5,6 +5,7 @@ import MainBannerWithLogo from "../universal/MainBannerWithLogo";
 import React from "react";
 import RightDrawer from "../drawer/RightDrawer";
 import { useLocation, useNavigate } from "react-router-dom";
+import AnimatedPage from "../../animation/AnimatedPage";
 
 const Header = ({ forumAddPostButton }) => {
   const [isOpen, setIsOpen] = React.useState(false);

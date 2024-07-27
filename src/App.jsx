@@ -1,4 +1,9 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import ApplicationLayout from "./layout/ApplicationLayout.jsx";
 import Home from "./pages/Home.jsx";
 import Account from "./pages/Account";
@@ -15,6 +20,7 @@ import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/NewsPostForm";
 import HomeNewsPostForm from "./pages/HomeNewsPostForm";
 import ProductForm from "./pages/ProductForm";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   const router = createBrowserRouter([
@@ -97,7 +103,11 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <AnimatePresence mode={"wait"}>
+      <RouterProvider router={router} />
+    </AnimatePresence>
+  );
 }
 
 export default App;

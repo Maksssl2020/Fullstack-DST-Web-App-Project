@@ -1,11 +1,14 @@
 import React from "react";
 import AccountInformationSection from "../components/section/AccountInformationSection";
+import AnimatedPage from "../animation/AnimatedPage";
 
 const Account = () => {
   return (
-    <div className="w-full h-full">
-      <AccountInformationSection />
-    </div>
+    <AnimatedPage>
+      <div className="w-full h-full">
+        <AccountInformationSection />
+      </div>
+    </AnimatedPage>
   );
 };
 
