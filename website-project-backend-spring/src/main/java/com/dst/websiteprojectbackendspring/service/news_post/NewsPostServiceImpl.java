@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,7 +19,6 @@ public class NewsPostServiceImpl implements NewsPostService {
 
     @Override
     public void save(NewsPost newsPost) {
-        LocalDate today = LocalDate.now();
         newsPostRepository.save(newsPost);
     }
 

@@ -38,4 +38,6 @@ public class HomePost {
     @JsonDeserialize(using = NumberDeserializers.ByteDeserializer.class)
     @NotNull(message = "Image cannot be null!")
     private byte[] image;
+
+    private Long mainArticleId;
 }

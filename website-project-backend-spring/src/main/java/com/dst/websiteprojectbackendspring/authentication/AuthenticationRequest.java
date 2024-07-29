@@ -1,5 +1,7 @@
 package com.dst.websiteprojectbackendspring.authentication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -18,4 +20,11 @@ public class AuthenticationRequest {
     @NotBlank(message = "Password cannot be blank!")
     @Size(min = 8, message = "Password should be 8 characters long minimum!")
     private String password;
+
+    @JsonCreator
+    public AuthenticationRequest(@JsonProperty("username") String username,
+                                 @JsonProperty("password") String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

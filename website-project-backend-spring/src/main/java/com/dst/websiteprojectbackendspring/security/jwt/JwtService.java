@@ -1,9 +1,12 @@
 package com.dst.websiteprojectbackendspring.security.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${security.jwt.expiration}")
@@ -21,6 +25,8 @@ public class JwtService {
 
     @Value("${security.jwt.secret-key}")
     private String SECRET_KEY;
+
+    private final ObjectMapper objectMapper;
 
     public String generateJwtToken(UserDetails userDetails) {
         return generateJwtToken(new HashMap<>(), userDetails);
@@ -41,11 +47,14 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+//        claims.put("accountCreationDate", userDetails.)
+
         Date issuedAtDate = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(issuedAtDate.getTime() + jwtExpiration);
         return Jwts
                 .builder()
                 .setClaims(claims)
+                .serializeToJsonWith(new JacksonSerializer<>(objectMapper))
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(issuedAtDate)
                 .setExpiration(expirationDate)

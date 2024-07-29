@@ -1,6 +1,9 @@
 package com.dst.websiteprojectbackendspring.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,6 +28,9 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String firstName;
+    private String lastName;
+
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -35,8 +42,24 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Pattern(regexp = "[1-9][0-9]{8}", message = "Invalid phone number!")
+    private String phoneNumber;
+
     private boolean accountEnabled;
     private boolean accountLocked;
+
+    private LocalDate accountCreationDate;
+
+    @Past
+    @Column
+    @JsonFormat(pattern = "dd.MM.yyyy")
+    private LocalDate dateOfBirth;
+
+    @Lob
+    private byte[] avatar;
+
+    @Lob
+    private byte[] identifyPhoto;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

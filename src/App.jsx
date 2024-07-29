@@ -21,6 +21,8 @@ import NewsPostForm from "./pages/NewsPostForm";
 import HomeNewsPostForm from "./pages/HomeNewsPostForm";
 import ProductForm from "./pages/ProductForm";
 import { AnimatePresence } from "framer-motion";
+import Article from "./pages/Article";
+import ArticleForm from "./pages/ArticleForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -98,6 +100,14 @@ function App() {
         {
           path: "/contact-us",
           element: <ContactUs />,
+        },
+        {
+          path: "/article/:id",
+          element: <Article />,
+        },
+        {
+          path: "/article/add-article",
+          element: <ArticleForm />,
         },
       ],
     },

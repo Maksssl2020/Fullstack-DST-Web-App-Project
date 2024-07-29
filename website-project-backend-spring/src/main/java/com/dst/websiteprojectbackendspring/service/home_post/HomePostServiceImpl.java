@@ -9,7 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -21,6 +20,13 @@ public class HomePostServiceImpl implements HomePostService {
     @Override
     public void save(String content, String author, String creationDate, MultipartFile image) {
         HomePost homePost = setHomePost(content, author, creationDate, image);
+        homePostRepository.save(homePost);
+    }
+
+    @Override
+    public void save(String content, String author, String creationDate, MultipartFile image, Long mainArticleId) {
+        HomePost homePost = setHomePost(content, author, creationDate, image);
+        homePost.setMainArticleId(mainArticleId);
         homePostRepository.save(homePost);
     }
 
@@ -50,7 +56,7 @@ public class HomePostServiceImpl implements HomePostService {
         HomePost homePost = new HomePost();
         homePost.setContent(content);
         homePost.setAuthor(author);
-        homePost.setCreationDate(LocalDate.parse(creationDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+        homePost.setCreationDate(LocalDate.parse(creationDate));
         try {
             homePost.setImage(image.getBytes());
         } catch (IOException e) {

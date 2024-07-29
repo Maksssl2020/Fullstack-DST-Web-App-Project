@@ -8,7 +8,7 @@ import DeleteIcon from "../../icons/DeleteIcon";
 
 const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
   const { role } = useContext(AuthContext);
-  const { id, content, author, creationDate } = cardData;
+  const { id, content, author, creationDate, mainArticleId } = cardData;
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
@@ -23,7 +23,8 @@ const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
   return (
     <div
       style={{ height: `${Number.parseFloat(height)}px` }}
-      className="w-[400px] relative bg-white rounded-lg p-2 "
+      className="w-[400px] relative bg-white rounded-lg p-2 hover:cursor-pointer"
+      onClick={() => navigate(`/article/${mainArticleId}`)}
     >
       <div className={`size-full rounded-lg flex ${backgroundColor}`}>
         <div className="w-full h-[65%] flex justify-center absolute rounded-lg group inset-0">

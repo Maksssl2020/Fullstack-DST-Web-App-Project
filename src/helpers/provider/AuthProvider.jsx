@@ -7,13 +7,17 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
+  const [accountCreationDate, setAccountCreationDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const login = (token) => {
     localStorage.setItem("token", token);
     const decodedToken = jwtDecode(getToken());
     setUsername(decodedToken.username);
     setRole(decodedToken.authorities.toLocaleString());
+    setAccountCreationDate(decodedToken.accountCreationDate);
     setIsAuthenticated(true);
+    setLoading(false);
   };
 
   const logout = () => {
@@ -21,6 +25,7 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
     setUsername("");
     setRole("");
+    setLoading(false);
   };
 
   const getToken = () => {
@@ -36,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         if (decodedToken.exp * 1000 > Date.now()) {
           setUsername(decodedToken.username);
           setRole(decodedToken.authorities.toLocaleString());
+          setAccountCreationDate(decodedToken.accountCreationDate);
           setIsAuthenticated(true);
         } else {
           logout();
@@ -44,12 +50,24 @@ export const AuthProvider = ({ children }) => {
         console.log(error);
         logout();
       }
+    } else {
+      logout();
     }
+    setLoading(true);
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, logout, getToken, username, role }}
+      value={{
+        isAuthenticated,
+        login,
+        logout,
+        getToken,
+        username,
+        role,
+        accountCreationDate,
+        loading,
+      }}
     >
       <React.StrictMode>{children}</React.StrictMode>
     </AuthContext.Provider>

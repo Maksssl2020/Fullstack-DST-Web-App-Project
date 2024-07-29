@@ -53,16 +53,16 @@ const NewsPostSection = () => {
     <>
       <div className="flex relative w-full h-[125px] items-center justify-center">
         <MainBannerWithoutLogo bannerTitle="Tęczowe Aktualności" />
-        {role === "ADMIN" && (
-          <div className="w-[25%] px-6 h-[125px] absolute inset-0 items-center ml-auto flex">
-            <button
-              onClick={() => navigate("/news/add-post")}
-              className="size-[64px] bg-white inset-0 rounded-full flex items-center justify-center "
-            >
-              <PlusInCircleIcon size={"size-14"} />
-            </button>
-          </div>
-        )}
+        {/*{role === "ADMIN" && (*/}
+        {/*  <div className="w-[25%] px-6 h-[125px] absolute inset-0 items-center ml-auto flex">*/}
+        {/*    <button*/}
+        {/*      onClick={() => navigate("/news/add-post")}*/}
+        {/*      className="size-[64px] bg-white inset-0 rounded-full flex items-center justify-center "*/}
+        {/*    >*/}
+        {/*      <PlusInCircleIcon size={"size-14"} />*/}
+        {/*    </button>*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </div>
       <div className="w-full relative flex flex-col justify-center bg-custom-gray-200 mt-4 p-4 h-auto">
         <Masonry columns={{ xl: 4, lg: 3, md: 2 }} spacing={5}>

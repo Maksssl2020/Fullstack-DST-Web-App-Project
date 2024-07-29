@@ -11,6 +11,7 @@ import java.util.List;
 public interface HomePostService {
 
     void save(String content, String author, String creationDate, MultipartFile image);
+    void save(String content, String author, String creationDate, MultipartFile image, Long mainArticleId);
     List<HomePost> findAll();
     HomePost findById(Long id) throws ChangeSetPersister.NotFoundException;
     void update(Long id, String content, String author, String creationDate, MultipartFile image);

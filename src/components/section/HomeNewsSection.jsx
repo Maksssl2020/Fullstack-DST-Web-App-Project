@@ -38,7 +38,7 @@ const HomeNewsSection = () => {
     <div className="flex h-auto w-full flex-col bg-custom-gray-300">
       <div className="w-full relative h-[125px] flex justify-center items-center">
         <MainBannerWithoutLogo bannerTitle={"Tęczowe Wiadomości"} />
-        {role === "ADMIN" && <AddNewPostButton link={"/home-news/add-post"} />}
+        {/*{role === "ADMIN" && <AddNewPostButton link={"/home-news/add-post"} />}*/}
       </div>
       <div className="h-auto flex justify-center w-full py-8">
         <HomeNewsCardSlider

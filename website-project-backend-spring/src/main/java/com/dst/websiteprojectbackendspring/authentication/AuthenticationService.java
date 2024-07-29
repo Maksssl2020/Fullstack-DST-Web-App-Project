@@ -23,12 +23,15 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
     public void register(RegistrationRequest request) {
-
         User user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(UserRole.REGISTERED)
+                .dateOfBirth(request.getDateOfBirth())
+                .accountCreationDate(request.getAccountCreationDate())
                 .accountEnabled(true)
                 .accountLocked(false)
                 .build();
@@ -45,6 +48,7 @@ public class AuthenticationService {
         HashMap<String, Object> claims = new HashMap<>();
         User user = (User) authenticate.getPrincipal();
         claims.put("username", user.getUsername());
+        claims.put("accountCreationDate", user.getAccountCreationDate());
         String jwtToken = jwtService.generateJwtToken(claims, user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

@@ -35,9 +35,11 @@ const ForumPostPageForm = () => {
   }, [id]);
 
   useEffect(() => {
-    axios.get(`/forum/posts/author/${username}`).then((response) => {
-      setAuthorPosts(response.data);
-    });
+    if (username) {
+      axios.get(`/forum/posts/author/${username}`).then((response) => {
+        setAuthorPosts(response.data);
+      });
+    }
   }, [username]);
 
   const handleTextAreaChange = (event) => {
