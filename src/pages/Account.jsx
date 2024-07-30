@@ -1,7 +1,6 @@
 import React from "react";
-import AccountAdminSection from "../components/section/AccountAdminSection";
 import AnimatedPage from "../animation/AnimatedPage";
-import AccountInformationSection from "../components/section/AccountInformationSection";
+import AccountInformationSection from "../components/section/account/AccountInformationSection";
 
 const Account = () => {
   return (

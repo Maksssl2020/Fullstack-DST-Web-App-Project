@@ -1,10 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserIcon from "../header/icons/UserIcon";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import EditIcon from "../../icons/EditIcon";
 import DeleteIcon from "../../icons/DeleteIcon";
 import AcceptIcon from "../../icons/AcceptIcon";
 import DeleteWarningModal from "../modal/DeleteWarningModal";
+import axios from "../../helpers/AxiosConfig";
 
 const Comment = ({ commentData, handleUpdate, handleDelete }) => {
   const { username, role } = useContext(AuthContext);
@@ -12,6 +13,17 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updateContent, setUpdateContent] = useState(content);
   const [openModal, setOpenModal] = useState(false);
+  const [userAvatar, setUserAvatar] = useState(null);
+
+  useEffect(() => {
+    try {
+      axios.get(`/users/${author}/avatar`).then((response) => {
+        if (response.data !== undefined) {
+          setUserAvatar(response.data);
+        }
+      });
+    } catch (error) {}
+  }, [username]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -35,8 +47,16 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
   return (
     <div className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200">
       <div className="w-[100px] h-[115px] gap-2 border-2 flex flex-col justify-center items-center border-custom-blue-400 rounded-2xl">
-        <p className="size-10 rounded-full bg-white flex items-center justify-center">
-          <UserIcon size={"size-8"} />
+        <p className="size-12 rounded-full bg-white flex items-center justify-center">
+          {userAvatar ? (
+            <img
+              className="rounded-full inset-0 object-cover size-full"
+              src={`data:image/png;base64,${userAvatar}`}
+              alt={author}
+            />
+          ) : (
+            <UserIcon size={"size-8"} />
+          )}
         </p>
         <p className="font-bold text-sm">{author}</p>
       </div>
@@ -45,9 +65,7 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
         onChange={(e) => setUpdateContent(e.target.value)}
         readOnly={!isEditing}
         className={`w-[65%] focus:outline-none h-full mb-auto bg-transparent text-black resize-none rounded-2xl text-lg placeholder:text-black ${isEditing && "bg-white p-2 focus:outline-custom-blue-500"}`}
-      >
-        {/*{content}*/}
-      </textarea>
+      ></textarea>
       <div className="flex flex-col gap-2">
         {username === author && (
           <button

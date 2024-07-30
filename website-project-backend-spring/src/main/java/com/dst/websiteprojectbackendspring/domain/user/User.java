@@ -1,9 +1,10 @@
 package com.dst.websiteprojectbackendspring.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,9 +33,14 @@ public class User implements UserDetails {
     private String lastName;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Username cannot be blank!")
+    @NotEmpty(message = "Username cannot be empty!")
     private String username;
 
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "E-mail cannot be blank!")
+    @NotEmpty(message = "E-mail cannot be empty!")
+    @Email(message = "Invalid e-mail!")
     private String email;
 
     private String password;
@@ -42,7 +48,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @Pattern(regexp = "[1-9][0-9]{8}", message = "Invalid phone number!")
+    @Pattern(regexp = "^([1-9][0-9]{8})?$", message = "Invalid phone number!")
     private String phoneNumber;
 
     private boolean accountEnabled;
@@ -56,9 +62,11 @@ public class User implements UserDetails {
     private LocalDate dateOfBirth;
 
     @Lob
+    @JsonDeserialize(using = NumberDeserializers.ByteDeserializer.class)
     private byte[] avatar;
 
     @Lob
+    @JsonDeserialize(using = NumberDeserializers.ByteDeserializer.class)
     private byte[] identifyPhoto;
 
     @Override

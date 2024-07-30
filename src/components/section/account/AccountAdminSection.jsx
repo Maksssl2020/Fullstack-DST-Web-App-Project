@@ -1,16 +1,18 @@
 import React, { useContext, useEffect } from "react";
-import { AuthContext } from "../../helpers/provider/AuthProvider";
-import axios from "../../helpers/AxiosConfig";
-import { jwtDecode } from "jwt-decode";
-import { GetRole } from "../../helpers/RolesTranslate";
-import AccountBasicDataForm from "../form/AccountBasicDataForm";
+import { AuthContext } from "../../../helpers/provider/AuthProvider";
+import { GetRole } from "../../../helpers/RolesTranslate";
+import AccountBasicDataForm from "../../form/AccountBasicDataForm";
 import { useNavigate } from "react-router-dom";
+import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
+import AddingPhotoModal from "../../modal/AddingPhotoModal";
 
-const AccountAdminSection = ({ userData }) => {
-  const { getToken, role, accountCreationDate } = useContext(AuthContext);
+const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
+  const { role, accountCreationDate } = useContext(AuthContext);
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState("");
+  const [avatar, setAvatar] = React.useState(null);
+  const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
   const manageShopData = ["ubranie", "długopis", "kubek", "gadżet"];
 
@@ -18,7 +20,30 @@ const AccountAdminSection = ({ userData }) => {
     setUsername(userData.username);
     setEmail(userData.email);
     setPhoneNumber(userData.phoneNumber);
+    setAvatar(userData.avatar);
   }, [userData]);
+
+  useEffect(() => {
+    onChange("username", userData.username !== username ? username : null);
+    onChange("email", userData.email !== email ? email : null);
+    onChange(
+      "phoneNumber",
+      userData.phoneNumber !== phoneNumber ? phoneNumber : null,
+    );
+    onChange("avatar", userData.avatar !== avatar ? avatar : null);
+  }, [username, phoneNumber, email, avatar]);
+
+  const handleModalOpen = () => {
+    setOpenModal(!openModal);
+  };
+
+  const handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      setAvatar(file);
+    }
+  };
 
   return (
     <>
@@ -35,21 +60,15 @@ const AccountAdminSection = ({ userData }) => {
             phoneNumber={phoneNumber}
             setPhoneNumber={setPhoneNumber}
             accountCreationDate={accountCreationDate}
+            updateErrors={updateErrors}
           />
-          <div className="w-[40%] ml-auto h-full flex flex-col p-4">
-            <p className="ml-3 text-xl mb-2">Zdjęcie profilowe:</p>
-            <div className="w-full h-[60%] flex items-center justify-center border-4 border-custom-gray-300 rounded-3xl">
-              <img
-                className="size-[85%]  inset-0 object-cover rounded-3xl"
-                src="/assets/images/website-logo.jpg"
-                alt={""}
-              />
-            </div>
-            <p className="ml-3 mt-auto text-xl mb-2">Status konta:</p>
-            <p className="w-full flex justify-center items-center text-2xl rounded-2xl h-[60px] border-4 border-custom-gray-300">
-              {GetRole(role)}
-            </p>
-          </div>
+          <AccountSectionUserPhoto
+            imageTitle={"Zdjęcie profilowe:"}
+            mainImageSrc={userData.avatar}
+            bottomDataTitle={"Status konta:"}
+            bottomData={GetRole(role)}
+            openModal={handleModalOpen}
+          />
         </div>
       </div>
       <div className="ml-auto w-[48%] bg-custom-pink-100 rounded-2xl h-full flex flex-col">
@@ -86,6 +105,13 @@ const AccountAdminSection = ({ userData }) => {
           ))}
         </div>
       </div>
+      {openModal && (
+        <AddingPhotoModal
+          modalTitle={"zdjęcie profilowe"}
+          onChangeAction={handleAvatarChange}
+          closeModal={handleModalOpen}
+        />
+      )}
     </>
   );
 };

@@ -21,6 +21,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByUsername(username));
     }
 
+    @GetMapping("/{username}/avatar")
+    public ResponseEntity<String> getUserAvatar(@PathVariable String username) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(userService.getUserAvatarByUsername(username));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> updateUser(
             @PathVariable Long id,
@@ -28,7 +33,7 @@ public class UserController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestParam(value = "identifyPhoto", required = false) MultipartFile identifyPhoto
+            @RequestParam(value = "identifyImage", required = false) MultipartFile identifyPhoto
 
             ) throws ChangeSetPersister.NotFoundException {
 

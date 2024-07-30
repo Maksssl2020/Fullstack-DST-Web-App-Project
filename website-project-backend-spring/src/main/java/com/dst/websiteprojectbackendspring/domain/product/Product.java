@@ -1,7 +1,6 @@
 package com.dst.websiteprojectbackendspring.domain.product;
 
 import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
-import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -21,6 +20,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Product {
 
     @Id
@@ -35,10 +35,6 @@ public class Product {
     @NotBlank(message = "Name cannot be blank!")
     private String name;
 
-    @NotEmpty(message = "Color cannot be empty!")
-    @NotBlank(message = "Color cannot be blank!")
-    private String color;
-
     @NotEmpty(message = "Description cannot be empty!")
     @NotBlank(message = "Description cannot be blank!")
     private String description;
@@ -51,26 +47,13 @@ public class Product {
     @NotBlank(message = "Weight cannot be blank!")
     private String weight;
 
-    @NotEmpty(message = "Composition cannot be empty!")
-    @NotBlank(message = "Composition cannot be blank!")
-    private String productComposition;
-
-    @NotEmpty(message = "Overprint cannot be empty!")
-    @NotBlank(message = "Overprint cannot be blank!")
-    private String productOverprint;
-
     @DecimalMin(value = "0.01")
     @NotNull(message = "Price cannot be empty!")
     private BigDecimal price;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductSize> productSize;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductCategory> categories;
-
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

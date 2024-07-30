@@ -3,11 +3,13 @@ package com.dst.websiteprojectbackendspring.service.user;
 import com.dst.websiteprojectbackendspring.domain.user.User;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Base64;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +26,13 @@ public class UserServiceImpl implements UserService{
     public void updateUser(Long id, String username, String email, String phoneNumber, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException {
         User existingUser = userRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-        if (username != null && !username.isEmpty()) {
+        if (username != null ) {
             existingUser.setUsername(username);
         }
-        if (email != null && !email.isEmpty()) {
+        if (email != null) {
             existingUser.setEmail(email);
         }
-        if (phoneNumber != null && !phoneNumber.isEmpty()) {
-            existingUser.setPhoneNumber(phoneNumber);
-        }
+        existingUser.setPhoneNumber(phoneNumber);
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 existingUser.setAvatar(avatar.getBytes());
@@ -48,6 +48,21 @@ public class UserServiceImpl implements UserService{
             }
         }
 
-        userRepository.save(existingUser);
+        try {
+            userRepository.save(existingUser);
+        } catch (DataIntegrityViolationException exception) {
+            throw new DataIntegrityViolationException(exception.getMessage());
+        }
+    }
+
+    @Override
+    public String getUserAvatarByUsername(String username) throws ChangeSetPersister.NotFoundException {
+        User foundUser = userRepository.findByUsername(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        if (foundUser.getAvatar() != null) {
+            byte[] userAvatar = foundUser.getAvatar();
+            return Base64.getEncoder().encodeToString(userAvatar);
+        } else {
+            return null;
+        }
     }
 }
