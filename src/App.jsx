@@ -70,11 +70,11 @@ function App() {
           element: <RainbowShop />,
         },
         {
-          path: `/rainbow-shop/product/:title`,
+          path: `/rainbow-shop/products/:title`,
           element: <ShopProductPage />,
         },
         {
-          path: "/rainbow-shop/add-product",
+          path: "/rainbow-shop/products/:category/:type",
           element: <ProductForm />,
         },
         {

@@ -1,11 +1,22 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import RainbowShopProductCard from "../components/card/RainbowShopProductCard";
-import { rainbowShopData } from "../data/RainbowShopData";
 import { getBackgroundColor } from "../helpers/DrawBackgroundColor";
-import { AuthContext } from "../helpers/provider/AuthProvider";
 import AnimatedPage from "../animation/AnimatedPage";
+import axios from "../helpers/AxiosConfig";
 
 const RainbowShop = () => {
+  const [productsData, setProductsData] = React.useState([]);
+
+  useEffect(() => {
+    try {
+      axios.get("/products").then((response) => {
+        setProductsData(response.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   return (
     <AnimatedPage>
       <div className="w-full font-lato gap-8 h-auto bg-custom-gray-300 flex items-center flex-col">
@@ -15,12 +26,11 @@ const RainbowShop = () => {
           </div>
         </div>
         <div className="w-[1500px] rounded-2xl h-auto flex flex-wrap">
-          {rainbowShopData.map((cardData, index) => (
+          {productsData.map((cardData, index) => (
             <RainbowShopProductCard
               key={index}
-              title={cardData}
+              cardData={cardData}
               cardColor={getBackgroundColor(index)}
-              image={"/assets/images/Test_T_Shirt_Photo.png"}
             />
           ))}
 

@@ -14,8 +14,28 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
   const [avatar, setAvatar] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
-  const manageShopData = ["ubranie", "długopis", "kubek", "gadżet"];
+  const manageShopData = [
+    {
+      title: "ubranie",
+      onClickFunction: () =>
+        navigate("/rainbow-shop/products/clothes/add-clothing"),
+    },
+    {
+      title: "długopis",
+      onClickFunction: () => navigate("/rainbow-shop/products/pens/add-pen"),
+    },
+    {
+      title: "kubek",
+      onClickFunction: () => navigate("/rainbow-shop/products/mugs/add-mug"),
+    },
+    {
+      title: "gadżet",
+      onClickFunction: () =>
+        navigate("/rainbow-shop/products/gadgets/add-gadget"),
+    },
+  ];
 
+  // "ubranie", "długopis", "kubek", "gadżet"
   useEffect(() => {
     setUsername(userData.username);
     setEmail(userData.email);
@@ -96,11 +116,12 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
         <div className="w-full h-[35%] text-xl justify-items-center  grid grid-rows-2 grid-cols-2 px-20 py-8 gap-6">
           {manageShopData.map((data, index) => (
             <button
+              onClick={data.onClickFunction}
               key={index}
               className="w-[300px] h-[75px] flex justify-center items-center bg-white border-8 border-custom-pink-200 rounded-2xl"
             >
               Dodaj:
-              <span className="ml-2 uppercase text-custom-pink-200">{`${data}`}</span>
+              <span className="ml-2 uppercase text-custom-pink-200">{`${data.title}`}</span>
             </button>
           ))}
         </div>

@@ -3,17 +3,13 @@ package com.dst.websiteprojectbackendspring.domain.product;
 import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "products")
@@ -43,9 +39,8 @@ public class Product {
     @NotBlank(message = "Size cannot be blank!")
     private String packageSize;
 
-    @NotEmpty(message = "Weight cannot be empty!")
-    @NotBlank(message = "Weight cannot be blank!")
-    private String weight;
+    @DecimalMin(value = "1.0")
+    private double weight;
 
     @DecimalMin(value = "0.01")
     @NotNull(message = "Price cannot be empty!")
@@ -53,7 +48,7 @@ public class Product {
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductCategory> categories;
+    private List<ProductCategory> categories;
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -13,7 +13,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,5 +36,5 @@ public class Clothing extends Product {
 
     @JsonIgnore
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ProductSize> productSize;
+    private List<ProductSize> productSize;
 }

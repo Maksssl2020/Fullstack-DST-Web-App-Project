@@ -20,7 +20,7 @@ const DefaultModal = ({
           title={fistButtonTitle}
           link={firstButtonLink}
           styling={
-            "w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center border-2 border-black justify-center bg-custom-orange-200 py-1 rounded-full"
+            "w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center border-4 border-black justify-center bg-custom-orange-200 py-1 rounded-full"
           }
           closeModal={closeModal}
         />

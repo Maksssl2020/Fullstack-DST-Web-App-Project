@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductImageServiceImpl implements ProductImageService {
@@ -20,5 +22,10 @@ public class ProductImageServiceImpl implements ProductImageService {
         Product product = productRepository.findById(productId).orElseThrow(ChangeSetPersister.NotFoundException::new);
         productImage.setProduct(product);
         productImageRepository.save(productImage);
+    }
+
+    @Override
+    public List<ProductImage> getProductImages(Long productId) {
+        return productImageRepository.findByProductId(productId);
     }
 }

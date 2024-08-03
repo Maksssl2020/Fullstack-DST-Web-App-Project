@@ -43,20 +43,20 @@ const ShopProductSection = ({ productTitle }) => {
       </div>
       <div className="w-full flex gap-8 flex-col items-center my-6 h-auto">
         <h2 className="text-5xl font-bold">Podobne artykuły</h2>
-        <ul className="w-full flex h-auto">
-          {rainbowShopData.slice(0, 4).map((item, index) => (
-            <li key={index}>
-              <RainbowShopProductCard
-                title={item}
-                image="/assets/images/Test_T_Shirt_Photo.png"
-                cardColor={getBackgroundColor(index)}
-                size={"size-auto"}
-                price={"135,00"}
-                cardType={"LIST"}
-              />
-            </li>
-          ))}
-        </ul>
+        {/*<ul className="w-full flex h-auto">*/}
+        {/*  {rainbowShopData.slice(0, 4).map((item, index) => (*/}
+        {/*    <li key={index}>*/}
+        {/*      <RainbowShopProductCard*/}
+        {/*        title={item}*/}
+        {/*        image="/assets/images/Test_T_Shirt_Photo.png"*/}
+        {/*        cardColor={getBackgroundColor(index)}*/}
+        {/*        size={"size-auto"}*/}
+        {/*        price={"135,00"}*/}
+        {/*        cardType={"LIST"}*/}
+        {/*      />*/}
+        {/*    </li>*/}
+        {/*  ))}*/}
+        {/*</ul>*/}
       </div>
     </div>
   );
