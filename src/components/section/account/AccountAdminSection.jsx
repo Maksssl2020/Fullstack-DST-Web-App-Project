@@ -18,20 +18,22 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
     {
       title: "ubranie",
       onClickFunction: () =>
-        navigate("/rainbow-shop/products/clothes/add-clothing"),
+        navigate("/rainbow-shop/products/admin-options/clothes/add-clothing"),
     },
     {
       title: "długopis",
-      onClickFunction: () => navigate("/rainbow-shop/products/pens/add-pen"),
+      onClickFunction: () =>
+        navigate("/rainbow-shop/products/admin-options/pens/add-pen"),
     },
     {
       title: "kubek",
-      onClickFunction: () => navigate("/rainbow-shop/products/mugs/add-mug"),
+      onClickFunction: () =>
+        navigate("/rainbow-shop/products/admin-options/mugs/add-mug"),
     },
     {
       title: "gadżet",
       onClickFunction: () =>
-        navigate("/rainbow-shop/products/gadgets/add-gadget"),
+        navigate("/rainbow-shop/products/admin-options/gadgets/add-gadget"),
     },
   ];
 

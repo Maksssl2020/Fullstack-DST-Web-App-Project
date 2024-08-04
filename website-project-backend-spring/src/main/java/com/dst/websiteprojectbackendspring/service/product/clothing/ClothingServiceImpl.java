@@ -1,8 +1,11 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.clothing;
 
+import com.dst.websiteprojectbackendspring.domain.product.ProductType;
 import com.dst.websiteprojectbackendspring.domain.product.clothing.Clothing;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ClothingRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
+import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,8 +17,8 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
 
     private final ClothingRepository clothingRepository;
 
-    public ClothingServiceImpl(ProductRepository productRepository, ClothingRepository clothingRepository) {
-        super(productRepository);
+    public ClothingServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, ClothingRepository clothingRepository) {
+        super(productRepository, productDTOForCardMapper);
         this.clothingRepository = clothingRepository;
     }
 
@@ -67,6 +70,7 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
         clothing.setColor(color);
         clothing.setProductComposition(productComposition);
         clothing.setProductOverprint(productOverprint);
+        clothing.setProductType(ProductType.CLOTHING);
 
         return clothing;
     }

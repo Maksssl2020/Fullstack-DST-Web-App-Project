@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.mug;
 
 import com.dst.websiteprojectbackendspring.domain.product.mug.Mug;
 import org.springframework.web.multipart.MultipartFile;

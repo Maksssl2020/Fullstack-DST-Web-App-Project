@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import FormItem from "../FormItem";
-import DropdownWithCheckboxes from "../../dropdown/DropdownWithCheckboxes";
 
 const NewPenForm = ({ formData }) => {
   const [color, setColor] = useState("");
@@ -9,7 +8,7 @@ const NewPenForm = ({ formData }) => {
   useEffect(() => {
     formData.append("color", color);
     formData.append("inkColor", inkColor);
-  }, [color, inkColor]);
+  }, [formData]);
 
   const formDataStructure = [
     {

@@ -22,7 +22,7 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
     setEmail(userData.email);
     setPhoneNumber(userData.phoneNumber);
     setDateOfBirth([userData.dateOfBirth]);
-    setIdentifyImage(userData.identifyImage);
+    setIdentifyImage(userData.identifyPhoto);
     setAvatar(userData.avatar);
 
     const fullName = `${userData.firstName} ${userData.lastName}`;
@@ -38,7 +38,7 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
     );
     onChange(
       "identifyImage",
-      userData.identifyImage !== identifyImage ? identifyImage : null,
+      userData.identifyPhoto !== identifyImage ? identifyImage : null,
     );
     onChange("avatar", userData.avatar !== avatar ? avatar : null);
   }, [username, phoneNumber, email, identifyImage, avatar]);
@@ -72,7 +72,7 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
   const imagesData = [
     {
       title: "Zdjęcie identyfikujące:",
-      imageSrc: userData.identifyImage,
+      imageSrc: userData.identifyPhoto,
       bottomDataTitle: "Data urodzenia:",
       bottomData: dateOfBirth,
     },

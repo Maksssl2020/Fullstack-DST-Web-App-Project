@@ -1,20 +1,22 @@
 import React from "react";
 import DashedLine from "../universal/DashedLine";
 
-const ShopProductDescriptionPanel = () => {
+const ShopProductDescriptionPanel = ({ productData }) => {
+  let productInfo;
+
+  if (productData.productType === "CLOTHING") {
+    productInfo = (
+      <div className="text-xl">
+        <p>Skład: {productData.productComposition}</p>
+        <p>Nadruk: {productData.productOverprint}</p>
+      </div>
+    );
+  }
   return (
     <div className="w-full gap-2 flex p-8 flex-col items-center bg-custom-yellow-100 h-auto rounded-2xl">
-      <h2 className="text-2xl font-bold">
-        Koszulka bawełniana <span className="italic">Tęcza x Elen</span>
-      </h2>
-      <p className="text-xl">
-        Bawełniany, jasno-czerwony T-shirt. Z przodu z nadrukiem w tęczowych
-        kolorach i identycznym tyłem.
-      </p>
-      <div className="text-xl">
-        <p>skład: 100% bawełna</p>
-        <p>nadruk: sitodruk</p>
-      </div>
+      <h2 className="text-2xl font-bold">{productData.name}</h2>
+      <p className="text-xl">{productData.description}</p>
+      {productInfo}
       <p className="text-xl">
         Grafika jest prezentem od <span className="italic">Eleny XXX</span>,
         początlującej artystki.

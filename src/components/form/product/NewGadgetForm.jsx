@@ -8,7 +8,7 @@ const NewGadgetForm = ({ formData }) => {
   useEffect(() => {
     formData.append("type", type);
     formData.append("material", material);
-  }, [formData, material, type]);
+  }, [formData]);
 
   const formDataStructure = [
     {

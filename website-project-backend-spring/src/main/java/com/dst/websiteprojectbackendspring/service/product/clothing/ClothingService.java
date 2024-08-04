@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.clothing;
 
 import com.dst.websiteprojectbackendspring.domain.product.clothing.Clothing;
 import org.springframework.stereotype.Service;

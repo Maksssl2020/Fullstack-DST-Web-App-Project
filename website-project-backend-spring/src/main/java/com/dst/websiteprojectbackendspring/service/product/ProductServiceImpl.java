@@ -1,13 +1,16 @@
 package com.dst.websiteprojectbackendspring.service.product;
 
 import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product.ProductImage;
+import com.dst.websiteprojectbackendspring.domain.product.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.domain.product_category.Category;
 import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
 import com.dst.websiteprojectbackendspring.domain.product_size.Size;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,10 +25,25 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl<T extends Product> implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductDTOForCardMapper productDTOForCardMapper;
 
     @Override
     public List<Product> findAllProducts() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<ProductDTOForCard> findAllProductsDTOForCard() {
+        return productRepository
+                .findAll()
+                .stream()
+                .map(productDTOForCardMapper)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Product findProductById(Long id) throws ChangeSetPersister.NotFoundException {
+        return productRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     public T setProduct(

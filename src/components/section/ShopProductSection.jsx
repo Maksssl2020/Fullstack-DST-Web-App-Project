@@ -1,24 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ShopProductImagesPanel from "../panel/ShopProductImagesPanel";
 import ShopProductBuyOptionsPanel from "../panel/ShopProductBuyOptionsPanel";
 import ShopProductDescriptionPanel from "../panel/ShopProductDescriptionPanel";
 import ShopProductAdditionalInformationPanel from "../panel/ShopProductAdditionalInformationPanel";
-import RainbowShopProductCard from "../card/RainbowShopProductCard";
-import { getBackgroundColor } from "../../helpers/DrawBackgroundColor";
-import { rainbowShopData } from "../../data/RainbowShopData";
+import axios from "../../helpers/AxiosConfig";
 
-const ShopProductSection = ({ productTitle }) => {
+const ShopProductSection = ({ productId, productTitle }) => {
   const [chosenOption, setChosenOption] = useState(0);
+  const [productData, setProductData] = useState({});
+  const [isActive, setIsActive] = React.useState(false);
 
   const handleButtonClick = (index) => {
     setChosenOption(index);
+
+    if (index === 1) {
+      setIsActive(true);
+    } else {
+      setIsActive(false);
+    }
   };
+
+  useEffect(() => {
+    try {
+      axios.get(`/products/${productId}`).then((response) => {
+        setProductData(response.data);
+      });
+      console.log(productData);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [productId]);
+
+  console.log(productData);
 
   return (
     <div className="my-8 flex flex-col w-[1450px] h-auto bg-white rounded-2xl p-6">
       <div className="w-full h-auto justify-between flex">
-        <ShopProductImagesPanel />
-        <ShopProductBuyOptionsPanel productTitle={productTitle} />
+        <ShopProductImagesPanel productId={productId} />
+        <ShopProductBuyOptionsPanel productData={productData} />
       </div>
       <div className="w-full flex justify-center gap-6 items-center h-[75px] bg-white">
         <button
@@ -36,9 +55,12 @@ const ShopProductSection = ({ productTitle }) => {
       </div>
       <div className="transition-transform duration-300 ease-in-out">
         {chosenOption === 0 ? (
-          <ShopProductDescriptionPanel />
+          <ShopProductDescriptionPanel productData={productData} />
         ) : (
-          <ShopProductAdditionalInformationPanel />
+          <ShopProductAdditionalInformationPanel
+            productData={productData}
+            isActive={isActive}
+          />
         )}
       </div>
       <div className="w-full flex gap-8 flex-col items-center my-6 h-auto">

@@ -10,7 +10,7 @@ const NewMugForm = ({ formData }) => {
     formData.append("color", color);
     formData.append("height", height);
     formData.append("material", material);
-  }, [color, height, material]);
+  }, [formData]);
 
   const formDataStructure = [
     {
@@ -26,6 +26,8 @@ const NewMugForm = ({ formData }) => {
       function: setMaterial,
     },
   ];
+
+  console.log(color);
 
   return (
     <>

@@ -25,6 +25,7 @@ const NewProductForm = () => {
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
   const formData = new FormData();
+  const specifiedFormData = new FormData();
 
   const getFormDependsOnProductType = () => {
     switch (type) {
@@ -45,7 +46,13 @@ const NewProductForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  console.log(specifiedFormData);
+  console.log(price);
+  console.log(weight);
+  console.log(price);
+  console.log(formData.color);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     formData.append("title", title);
@@ -61,10 +68,8 @@ const NewProductForm = () => {
       });
     }
 
-    console.log(price);
-
     try {
-      await axios.post(`/products/${category}/${type}`, formData, {
+      axios.post(`/products/${category}/${type}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

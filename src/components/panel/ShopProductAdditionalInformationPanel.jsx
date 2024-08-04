@@ -1,23 +1,107 @@
 import React from "react";
+import axios from "../../helpers/AxiosConfig";
+import { useQuery } from "react-query";
 
-const ShopProductAdditionalInformationPanel = () => {
-  const additionalInformationData = [
+const fetchData = async (productId) => {
+  try {
+    const { data } = await axios.get(`/products/sizes/${productId}`);
+    return data.flatMap((productSize) => productSize.size);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const ShopProductAdditionalInformationPanel = ({ productData }) => {
+  const {
+    data: productSizes,
+    error: sizesError,
+    isLoading: sizesLoading,
+  } = useQuery(
+    ["productSizes", productData.id],
+    () => fetchData(productData.id),
+    {
+      enabled: productData?.productType === "CLOTHING",
+    },
+  );
+  const productType = productData.productType;
+
+  if (productData?.productType === "CLOTHING" && sizesLoading) {
+    return <div>Loading...</div>;
+  }
+  console.log(productSizes);
+
+  let additionalInformationData = [
     {
       infoTitle: "Waga:",
-      infoContent: "0,2 kg",
+      infoContent: `${productData.weight} (kg)`,
     },
     {
       infoTitle: "Rozmiar paczki:",
-      infoContent: "25 x 20 x 5 (cm)",
+      infoContent: `${productData.packageSize} (cm)`,
     },
-    {
-      infoTitle: "Kolor:",
-      infoContent: "jasno-czerwony",
-    },
-    {
-      infoTitle: "Rozmiary:",
-      infoContent: "XS | S | M | L | XL",
-    },
+  ];
+
+  const getAdditionalInformationDataDependsOnProductType = () => {
+    if (productType === "CLOTHING") {
+      return [
+        {
+          infoTitle: "Kolor:",
+          infoContent: productData.color,
+        },
+        {
+          infoTitle: "Rozmiary:",
+          infoContent: productSizes.join(", "),
+        },
+      ];
+    }
+
+    if (productType === "MUG") {
+      return [
+        {
+          infoTitle: "Kolor:",
+          infoContent: productData.color,
+        },
+        {
+          infoTitle: "Materiał:",
+          infoContent: productData.material,
+        },
+        {
+          infoTitle: "Wysokość:",
+          infoContent: `${productData.height} (cm)`,
+        },
+      ];
+    }
+
+    if (productType === "PEN") {
+      return [
+        {
+          infoTitle: "Kolor:",
+          infoContent: productData.color,
+        },
+        {
+          infoTitle: "Kolor tuszu:",
+          infoContent: productData.inkColor,
+        },
+      ];
+    }
+
+    if (productType === "GADGET") {
+      return [
+        {
+          infoTitle: "Typ:",
+          infoContent: productData.type,
+        },
+        {
+          infoTitle: "Materiał:",
+          infoContent: productData.material,
+        },
+      ];
+    }
+  };
+
+  additionalInformationData = [
+    ...additionalInformationData,
+    ...getAdditionalInformationDataDependsOnProductType(),
   ];
 
   return (

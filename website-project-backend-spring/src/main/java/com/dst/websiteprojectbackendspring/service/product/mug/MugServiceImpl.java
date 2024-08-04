@@ -1,8 +1,11 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.mug;
 
+import com.dst.websiteprojectbackendspring.domain.product.ProductType;
 import com.dst.websiteprojectbackendspring.domain.product.mug.Mug;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.MugRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
+import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +16,8 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
 
     private final MugRepository mugRepository;
 
-    public MugServiceImpl(ProductRepository productRepository, MugRepository mugRepository) {
-        super(productRepository);
+    public MugServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, MugRepository mugRepository) {
+        super(productRepository, productDTOForCardMapper);
         this.mugRepository = mugRepository;
     }
 
@@ -57,6 +60,7 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
         mug.setColor(color);
         mug.setHeight(height);
         mug.setMaterial(material);
+        mug.setProductType(ProductType.MUG);
 
         return mug;
     }

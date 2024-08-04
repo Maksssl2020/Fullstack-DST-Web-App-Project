@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.gadget;
 
 
 import com.dst.websiteprojectbackendspring.domain.product.gadget.Gadget;

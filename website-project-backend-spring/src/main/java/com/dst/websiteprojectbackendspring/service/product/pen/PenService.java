@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.pen;
 
 import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
 import org.springframework.web.multipart.MultipartFile;

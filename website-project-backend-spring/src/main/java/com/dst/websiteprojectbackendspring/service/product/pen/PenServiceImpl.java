@@ -1,8 +1,11 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.pen;
 
+import com.dst.websiteprojectbackendspring.domain.product.ProductType;
 import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.PenRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
+import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,22 +14,23 @@ import java.util.List;
 @Service
 public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenService {
 
-    private final PenRepository productRepository;
+    private final PenRepository penRepository;
 
-    public PenServiceImpl(ProductRepository productRepository, PenRepository productRepository1) {
-        super(productRepository);
-        this.productRepository = productRepository1;
+    public PenServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, PenRepository penRepository) {
+        super(productRepository, productDTOForCardMapper);
+        this.penRepository = penRepository;
     }
+
 
     @Override
     public void savePen(String title, String name, String description, String packageSize, String weight, String price, List<String> categories, MultipartFile[] images, String color, String inkColor) {
         Pen pen = setPen(title, name, description, packageSize, weight, price, color, inkColor);
-        productRepository.save(pen);
+        penRepository.save(pen);
 
         pen.setCategories(createProductCategories(categories, pen));
         pen.setImages(createImages(images, pen));
 
-        productRepository.save(pen);
+        penRepository.save(pen);
     }
 
     @Override
@@ -55,6 +59,7 @@ public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenServic
         Pen pen = setProduct(new Pen(), title, name, description, packageSize, weight, price);
         pen.setColor(color);
         pen.setInkColor(inkColor);
+        pen.setProductType(ProductType.PEN);
 
         return pen;
     }

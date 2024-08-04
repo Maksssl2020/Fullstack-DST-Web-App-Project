@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.domain.product.clothing.Clothing;
-import com.dst.websiteprojectbackendspring.service.product.ClothingServiceImpl;
+import com.dst.websiteprojectbackendspring.service.product.clothing.ClothingServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,9 +1,12 @@
-package com.dst.websiteprojectbackendspring.service.product;
+package com.dst.websiteprojectbackendspring.service.product.gadget;
 
+import com.dst.websiteprojectbackendspring.domain.product.ProductType;
 import com.dst.websiteprojectbackendspring.domain.product.gadget.Gadget;
 import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.GadgetRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
+import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,8 +17,8 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
 
     private final GadgetRepository gadgetRepository;
 
-    public GadgetServiceImpl(ProductRepository productRepository, GadgetRepository gadgetRepository) {
-        super(productRepository);
+    public GadgetServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, GadgetRepository gadgetRepository) {
+        super(productRepository, productDTOForCardMapper);
         this.gadgetRepository = gadgetRepository;
     }
 
@@ -57,6 +60,7 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
         Gadget gadget = setProduct(new Gadget(), title, name, description, packageSize, weight, price);
         gadget.setType(type);
         gadget.setMaterial(material);
+        gadget.setProductType(ProductType.GADGET);
 
         return gadget;
     }

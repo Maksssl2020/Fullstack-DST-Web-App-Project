@@ -9,7 +9,7 @@ const RainbowShop = () => {
 
   useEffect(() => {
     try {
-      axios.get("/products").then((response) => {
+      axios.get("/products/cards").then((response) => {
         setProductsData(response.data);
       });
     } catch (error) {

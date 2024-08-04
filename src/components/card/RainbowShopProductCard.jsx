@@ -18,20 +18,21 @@ const RainbowShopProductCard = ({
       axios.get(`/products/images/${cardData.id}`).then((response) => {
         setProductImage(response.data.flatMap((data) => data.image));
         console.log(productImage);
+        console.log(response.data);
       });
     } catch (err) {
       console.error(err);
     }
   }, []);
 
-  const { title } = cardData;
+  const { id, title } = cardData;
 
   return (
     <div className="w-auto h-auto">
       <div
         onClick={() =>
           navigate(
-            `/rainbow-shop/products/${transformProductTitleIntoLinkTitle(title)}`,
+            `/rainbow-shop/products/${id}/${transformProductTitleIntoLinkTitle(title)}`,
           )
         }
         className={`flex flex-col justify-center items-center hover:cursor-pointer ${size}`.concat(

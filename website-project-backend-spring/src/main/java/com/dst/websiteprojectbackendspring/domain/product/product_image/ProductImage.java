@@ -1,7 +1,9 @@
-package com.dst.websiteprojectbackendspring.domain.product;
+package com.dst.websiteprojectbackendspring.domain.product.product_image;
 
+import com.dst.websiteprojectbackendspring.domain.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -9,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "product_images")
