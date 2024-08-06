@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.home_post.HomePost;
+import com.dst.websiteprojectbackendspring.model.home_post.HomePost;
 import com.dst.websiteprojectbackendspring.service.home_post.HomePostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

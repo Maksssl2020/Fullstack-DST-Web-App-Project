@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.forum_post;
 
-import com.dst.websiteprojectbackendspring.domain.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.repository.CommentRepository;
 import com.dst.websiteprojectbackendspring.repository.ForumPostRepository;
 import lombok.RequiredArgsConstructor;

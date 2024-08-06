@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.product.pen;
 
-import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

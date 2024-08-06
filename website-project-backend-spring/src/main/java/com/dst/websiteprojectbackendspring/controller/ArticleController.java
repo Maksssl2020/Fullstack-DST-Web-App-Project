@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.article.Article;
+import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.service.article.ArticleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;

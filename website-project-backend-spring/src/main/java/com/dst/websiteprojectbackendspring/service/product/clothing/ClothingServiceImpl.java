@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.clothing;
 
-import com.dst.websiteprojectbackendspring.domain.product.ProductType;
-import com.dst.websiteprojectbackendspring.domain.product.clothing.Clothing;
+import com.dst.websiteprojectbackendspring.model.product.ProductType;
+import com.dst.websiteprojectbackendspring.model.product.clothing.Clothing;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ClothingRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;

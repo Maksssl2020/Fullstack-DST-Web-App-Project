@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.home_post;
 
-import com.dst.websiteprojectbackendspring.domain.home_post.HomePost;
+import com.dst.websiteprojectbackendspring.model.home_post.HomePost;
 import com.dst.websiteprojectbackendspring.repository.HomePostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;

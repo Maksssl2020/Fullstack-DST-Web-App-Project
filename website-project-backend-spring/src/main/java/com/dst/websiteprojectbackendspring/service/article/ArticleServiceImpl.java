@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
-import com.dst.websiteprojectbackendspring.domain.article.Article;
-import com.dst.websiteprojectbackendspring.domain.news_post.NewsPost;
+import com.dst.websiteprojectbackendspring.model.article.Article;
+import com.dst.websiteprojectbackendspring.model.news_post.NewsPost;
 import com.dst.websiteprojectbackendspring.repository.ArticleRepository;
 import com.dst.websiteprojectbackendspring.service.home_post.HomePostServiceImpl;
 import com.dst.websiteprojectbackendspring.service.news_post.NewsPostServiceImpl;

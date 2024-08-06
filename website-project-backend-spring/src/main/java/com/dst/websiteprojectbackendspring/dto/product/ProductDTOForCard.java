@@ -1,4 +1,6 @@
 package com.dst.websiteprojectbackendspring.dto.product;
 
-public record ProductDTOForCard(Long id, String title) {
+import java.math.BigDecimal;
+
+public record ProductDTOForCard(Long id, String title, BigDecimal price) {
 }

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.dto.product;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
+import com.dst.websiteprojectbackendspring.model.product.Product;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;
@@ -11,7 +11,8 @@ public class ProductDTOForCardMapper implements Function<Product, ProductDTOForC
     public ProductDTOForCard apply(Product product) {
         return new ProductDTOForCard(
                 product.getId(),
-                product.getTitle()
+                product.getTitle(),
+                product.getPrice()
         );
     }
 }

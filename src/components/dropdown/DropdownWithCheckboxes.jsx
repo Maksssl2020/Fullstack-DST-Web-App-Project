@@ -6,6 +6,8 @@ const DropdownWithCheckboxes = ({ title, options, setChosenOptions }) => {
   const [selectedOptions, setSelectedOptions] = React.useState([]);
 
   const handleOpenClick = () => {
+    setChosenOptions(selectedOptions);
+    console.log(selectedOptions);
     setIsOpen(!isOpen);
   };
 
@@ -15,8 +17,6 @@ const DropdownWithCheckboxes = ({ title, options, setChosenOptions }) => {
     } else {
       setSelectedOptions([...selectedOptions, option]);
     }
-
-    setChosenOptions(selectedOptions);
   };
 
   console.log(selectedOptions);

@@ -1,8 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.product.gadget;
 
 
-import com.dst.websiteprojectbackendspring.domain.product.gadget.Gadget;
-import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.model.product.gadget.Gadget;
+import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 

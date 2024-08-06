@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.dto.product_image;
 
-import com.dst.websiteprojectbackendspring.domain.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Function;

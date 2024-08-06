@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.mug;
 
-import com.dst.websiteprojectbackendspring.domain.product.ProductType;
-import com.dst.websiteprojectbackendspring.domain.product.mug.Mug;
+import com.dst.websiteprojectbackendspring.model.product.ProductType;
+import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.MugRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
@@ -23,6 +23,7 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
 
     @Override
     public void saveMug(String title, String name, String description, String packageSize, String weight, String price, List<String> categories, MultipartFile[] images, String color, String height, String material) {
+        System.out.println(categories);
         Mug mug = setMug(title, name, description, packageSize, weight, price, color, height, material);
         mugRepository.save(mug);
 

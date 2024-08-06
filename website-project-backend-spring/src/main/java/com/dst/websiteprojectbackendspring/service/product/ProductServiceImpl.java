@@ -1,11 +1,11 @@
 package com.dst.websiteprojectbackendspring.service.product;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product.product_image.ProductImage;
-import com.dst.websiteprojectbackendspring.domain.product_category.Category;
-import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
-import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
-import com.dst.websiteprojectbackendspring.domain.product_size.Size;
+import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_category.Category;
+import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
+import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,11 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
 
     @Override
     public List<Product> findAllProducts() {
-        return productRepository.findAll();
+        return productRepository
+                .findAll()
+                .stream()
+                .sorted(Comparator.comparing(Product::getId).reversed())
+                .toList();
     }
 
     @Override
@@ -38,12 +43,20 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
                 .findAll()
                 .stream()
                 .map(productDTOForCardMapper)
+                .sorted(Comparator.comparing(ProductDTOForCard::id).reversed())
                 .collect(Collectors.toList());
     }
 
     @Override
     public Product findProductById(Long id) throws ChangeSetPersister.NotFoundException {
         return productRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    }
+
+    @Override
+    public ProductDTOForCard findProductDTOForCardById(Long id) throws ChangeSetPersister.NotFoundException {
+        return productRepository.findById(id)
+                .map(productDTOForCardMapper)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     public T setProduct(
@@ -77,6 +90,7 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
     }
 
     protected List<ProductCategory> createProductCategories(List<String> productCategories, T product) {
+        System.out.println(productCategories);
         return productCategories
                 .stream()
                 .map(category -> {

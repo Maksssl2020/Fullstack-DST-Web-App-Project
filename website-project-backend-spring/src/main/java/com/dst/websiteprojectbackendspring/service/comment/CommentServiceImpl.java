@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.comment;
 
-import com.dst.websiteprojectbackendspring.domain.comment.Comment;
-import com.dst.websiteprojectbackendspring.domain.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.comment.Comment;
+import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.repository.CommentRepository;
 import com.dst.websiteprojectbackendspring.repository.ForumPostRepository;
 import lombok.RequiredArgsConstructor;

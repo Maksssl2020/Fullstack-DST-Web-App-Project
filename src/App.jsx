@@ -1,9 +1,4 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Routes,
-  useLocation,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ApplicationLayout from "./layout/ApplicationLayout.jsx";
 import Home from "./pages/Home.jsx";
 import Account from "./pages/Account";

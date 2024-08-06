@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product_size;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
+import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
 import com.dst.websiteprojectbackendspring.dto.product_size.ProductSizeDTO;
 import com.dst.websiteprojectbackendspring.dto.product_size.ProductSizeDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;

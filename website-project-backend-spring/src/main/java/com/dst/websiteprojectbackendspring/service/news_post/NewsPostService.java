@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.news_post;
 
-import com.dst.websiteprojectbackendspring.domain.news_post.NewsPost;
+import com.dst.websiteprojectbackendspring.model.news_post.NewsPost;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

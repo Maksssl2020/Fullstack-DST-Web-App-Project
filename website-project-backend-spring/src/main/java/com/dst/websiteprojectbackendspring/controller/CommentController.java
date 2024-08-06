@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.comment.Comment;
+import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.service.comment.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

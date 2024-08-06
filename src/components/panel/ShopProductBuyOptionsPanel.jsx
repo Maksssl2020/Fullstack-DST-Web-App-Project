@@ -1,29 +1,41 @@
 import React, { useEffect } from "react";
 import HeartIcon from "../../icons/HeartIcon";
 import axios from "../../helpers/AxiosConfig";
+import { useQuery } from "react-query";
 
-const ShopProductBuyOptionsPanel = ({ productData }) => {
-  const [productCategories, setProductCategories] = React.useState([]);
-  const { id, title, name, price } = productData;
-
-  const fetchProductCategories = async (productId) => {
-    if (productId !== undefined) {
-      try {
-        const response = await axios.get(`/products/categories/${productId}`);
-        setProductCategories(response.data.flatMap((data) => data.category));
-        console.log(response.data);
-      } catch (error) {
-        console.log(error);
-      }
+const fetchProductCategoriesData = async (productId) => {
+  if (productId !== undefined) {
+    try {
+      const response = await axios.get(`/products/categories/${productId}`);
+      console.log(response);
+      return response.data.flatMap((data) => data.category);
+    } catch (error) {
+      console.log(error);
     }
-  };
+  }
+};
 
-  useEffect(() => {
-    fetchProductCategories(productData.id);
-  }, [id]);
+const ShopProductBuyOptionsPanel = ({
+  productData,
+  cardColor,
+  setProductCategories,
+}) => {
+  const { id, title, name, price } = productData;
+  const { data: productCategories, isLoading: categoriesLoading } = useQuery(
+    ["productCategories", id],
+    () => fetchProductCategoriesData(id),
+  );
+
+  if (categoriesLoading) {
+    return <div>Is LODAING!w</div>;
+  }
+
+  setProductCategories(productCategories);
 
   return (
-    <div className="w-[50%] h relative py-4 px-10 h-[550px] rounded-2xl bg-custom-yellow-100">
+    <div
+      className={`w-[50%] h relative py-4 px-10 h-[550px] rounded-2xl ${cardColor}`}
+    >
       <h2 className="w-full h-[65px] flex justify-center items-center font-bold text-5xl left-0 bg-white absolute indent-0">
         {title}
       </h2>
@@ -50,7 +62,7 @@ const ShopProductBuyOptionsPanel = ({ productData }) => {
             <p>dodaj do ulubionych</p>
           </button>
         </div>
-        <p className="text-xl">{`Kategoria: ${productCategories.join(", ")}`}</p>
+        <p className="text-xl">{`Kategoria: ${productCategories}`}</p>
       </div>
     </div>
   );

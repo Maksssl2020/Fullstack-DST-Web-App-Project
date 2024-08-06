@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.news_post;
 
-import com.dst.websiteprojectbackendspring.domain.news_post.NewsPost;
+import com.dst.websiteprojectbackendspring.model.news_post.NewsPost;
 import com.dst.websiteprojectbackendspring.repository.NewsPostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;

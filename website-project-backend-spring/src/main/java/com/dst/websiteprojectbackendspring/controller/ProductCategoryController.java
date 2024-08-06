@@ -18,6 +18,11 @@ public class ProductCategoryController {
 
     private final ProductCategoryServiceImpl productCategoryService;
 
+    @GetMapping
+    public ResponseEntity<List<ProductCategoryDTO>> getAllProductCategories() {
+        return ResponseEntity.ok(productCategoryService.findAll());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<List<ProductCategoryDTO>> getProductCategories(@PathVariable Long id) {
         return ResponseEntity.ok(productCategoryService.findByProductId(id));

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
-import com.dst.websiteprojectbackendspring.domain.article.Article;
+import com.dst.websiteprojectbackendspring.model.article.Article;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

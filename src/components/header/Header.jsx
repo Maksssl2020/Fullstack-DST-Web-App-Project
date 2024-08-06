@@ -6,14 +6,22 @@ import React from "react";
 import RightDrawer from "../drawer/RightDrawer";
 import { useLocation, useNavigate } from "react-router-dom";
 import AnimatedPage from "../../animation/AnimatedPage";
+import ShoppingBagIcon from "../../icons/ShoppingBagIcon";
+import CartDrawer from "../drawer/CartDrawer";
 
 const Header = ({ forumAddPostButton }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
+    React.useState(false);
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const toggleRightDrawer = () => {
-    setIsOpen(!isOpen);
+    setIsRightDataDrawerOpen(!isRightDataDrawerOpen);
+  };
+
+  const toogleCartDrawer = () => {
+    setIsCartDrawerOpen(!isCartDrawerOpen);
   };
 
   const headerNavigationData = [
@@ -81,6 +89,14 @@ const Header = ({ forumAddPostButton }) => {
             <div
               className={`relative flex gap-4 ${location.pathname !== "/forum" && "ml-8"}`}
             >
+              {location.pathname.includes("/rainbow-shop") && (
+                <button
+                  onClick={toogleCartDrawer}
+                  className="rounded-full bg-white p-1"
+                >
+                  <ShoppingBagIcon size={"size-6"} />
+                </button>
+              )}
               <span className="rounded-full bg-white p-1">
                 <BellIcon />
               </span>
@@ -93,7 +109,14 @@ const Header = ({ forumAddPostButton }) => {
             </div>
           </div>
         </div>
-        <RightDrawer isOpen={isOpen} closeFunction={toggleRightDrawer} />
+        <CartDrawer
+          isOpen={isCartDrawerOpen}
+          closeFunction={toogleCartDrawer}
+        />
+        <RightDrawer
+          isOpen={isRightDataDrawerOpen}
+          closeFunction={toggleRightDrawer}
+        />
       </div>
     </header>
   );

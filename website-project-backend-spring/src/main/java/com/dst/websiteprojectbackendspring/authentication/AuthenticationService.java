@@ -2,8 +2,8 @@ package com.dst.websiteprojectbackendspring.authentication;
 
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import com.dst.websiteprojectbackendspring.security.jwt.JwtService;
-import com.dst.websiteprojectbackendspring.domain.user.User;
-import com.dst.websiteprojectbackendspring.domain.user.UserRole;
+import com.dst.websiteprojectbackendspring.model.user.User;
+import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

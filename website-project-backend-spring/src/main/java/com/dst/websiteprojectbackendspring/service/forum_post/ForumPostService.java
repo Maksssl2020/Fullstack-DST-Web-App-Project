@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.forum_post;
 
-import com.dst.websiteprojectbackendspring.domain.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

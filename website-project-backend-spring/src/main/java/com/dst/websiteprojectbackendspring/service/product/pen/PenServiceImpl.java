@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.pen;
 
-import com.dst.websiteprojectbackendspring.domain.product.ProductType;
-import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.model.product.ProductType;
+import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.PenRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;

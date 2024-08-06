@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import axios from "../../helpers/AxiosConfig";
 
-const ShopProductImagesPanel = ({ productId }) => {
+const ShopProductImagesPanel = ({ productId, cardColor }) => {
   const [productImages, setProductImages] = React.useState([]);
   const [chosenImage, setChosenImage] = React.useState(0);
 
@@ -28,7 +28,7 @@ const ShopProductImagesPanel = ({ productId }) => {
           <button
             onClick={() => handleImageClick(index)}
             key={index}
-            className="bg-custom-yellow-100 rounded-2xl size-[100px]"
+            className={`${cardColor} rounded-2xl size-[100px]`}
           >
             <img
               className="size-full inset-0 object-cover self-center rounded-2xl"
@@ -38,7 +38,7 @@ const ShopProductImagesPanel = ({ productId }) => {
           </button>
         ))}
       </ul>
-      <div className="w-[35%] h-[450px] bg-custom-yellow-100 rounded-2xl p-8">
+      <div className={`w-[35%] h-[450px] rounded-2xl p-8 ${cardColor}`}>
         <img
           className="size-full inset-0 object-cover self-center rounded-2xl"
           src={`data:image/png;base64,${productImages[chosenImage]}`}

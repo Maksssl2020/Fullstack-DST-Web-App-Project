@@ -2,7 +2,6 @@ import React from "react";
 import HomeAboutUsSection from "../components/section/HomeAboutUsSection.jsx";
 import HomeNewsSection from "../components/section/HomeNewsSection.jsx";
 import HomeInstagramSection from "../components/section/HomeInstagramSection.jsx";
-import FacebookLogin from "../components/table/FacebookLogin";
 import AnimatedPage from "../animation/AnimatedPage";
 
 const Home = () => {

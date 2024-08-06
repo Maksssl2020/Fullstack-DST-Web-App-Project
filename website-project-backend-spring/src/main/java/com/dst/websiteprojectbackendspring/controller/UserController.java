@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.user.User;
+import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;

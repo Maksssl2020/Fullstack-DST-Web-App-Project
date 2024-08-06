@@ -1,8 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.product;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product_category.Category;
-import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product_category.Category;
+import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
@@ -95,9 +95,9 @@ class ProductServiceImplTest {
     void canMapProductsIntoProductDTOForCard() {
         given(productRepository.findAll()).willReturn(productList);
         given(productDTOForCardMapper.apply(product1))
-                .willReturn(new ProductDTOForCard(product1.getId(), product1.getTitle()));
+                .willReturn(new ProductDTOForCard(product1.getId(), product1.getTitle(), product1.getPrice()));
         given(productDTOForCardMapper.apply(product2))
-                .willReturn(new ProductDTOForCard(product2.getId(), product2.getTitle()));
+                .willReturn(new ProductDTOForCard(product2.getId(), product2.getTitle(), product2.getPrice()));
 
         List<ProductDTOForCard> allProductsDTO = productService.findAllProductsDTOForCard();
 

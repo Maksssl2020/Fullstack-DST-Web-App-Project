@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.repository;
 
-import com.dst.websiteprojectbackendspring.domain.article.Article;
+import com.dst.websiteprojectbackendspring.model.article.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

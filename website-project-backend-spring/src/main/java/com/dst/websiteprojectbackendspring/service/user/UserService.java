@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.user;
 
-import com.dst.websiteprojectbackendspring.domain.user.User;
+import com.dst.websiteprojectbackendspring.model.user.User;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

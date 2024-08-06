@@ -14,6 +14,7 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
   const handleLogout = () => {
     logout();
     navigate("/");
+    closeFunction();
   };
 
   return (

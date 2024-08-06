@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.product_size;
 
-import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
+import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
 import com.dst.websiteprojectbackendspring.dto.product_size.ProductSizeDTO;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;

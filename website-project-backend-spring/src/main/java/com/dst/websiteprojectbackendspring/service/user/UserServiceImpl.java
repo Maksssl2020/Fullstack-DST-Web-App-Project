@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.user;
 
-import com.dst.websiteprojectbackendspring.domain.user.User;
+import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;

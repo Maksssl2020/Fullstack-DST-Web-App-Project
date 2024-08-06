@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.forum_post;
 
-import com.dst.websiteprojectbackendspring.domain.forum_post.ForumPost;
-import com.dst.websiteprojectbackendspring.domain.forum_post.PostType;
+import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.forum_post.PostType;
 import com.dst.websiteprojectbackendspring.repository.ForumPostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

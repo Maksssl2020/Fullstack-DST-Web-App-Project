@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.product.pen.Pen;
+import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import com.dst.websiteprojectbackendspring.service.product.pen.PenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.news_post.NewsPost;
+import com.dst.websiteprojectbackendspring.model.news_post.NewsPost;
 import com.dst.websiteprojectbackendspring.service.news_post.NewsPostServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

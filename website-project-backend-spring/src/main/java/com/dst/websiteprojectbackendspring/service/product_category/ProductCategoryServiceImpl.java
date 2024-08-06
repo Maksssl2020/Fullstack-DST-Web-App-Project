@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product_category;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTO;
 import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductCategoryRepository;
@@ -25,6 +25,14 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
         Product product = productRepository.findById(productId).orElseThrow(ChangeSetPersister.NotFoundException::new);
         productCategory.setProduct(product);
         productCategoryRepository.save(productCategory);
+    }
+
+    @Override
+    public List<ProductCategoryDTO> findAll() {
+        return productCategoryRepository.findAll()
+                .stream()
+                .map(productCategoryDTOMapper)
+                .toList();
     }
 
     @Override

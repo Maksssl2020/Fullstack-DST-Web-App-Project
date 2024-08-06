@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
+import com.dst.websiteprojectbackendspring.model.product.Product;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
 import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,12 @@ public class ProductController {
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<List<ProductDTOForCard>> getProductsByCard() {
+    public ResponseEntity<List<ProductDTOForCard>> findAllProductsForCards() {
         return ResponseEntity.ok(productService.findAllProductsDTOForCard());
+    }
+
+    @GetMapping("/cards/{id}")
+    public ResponseEntity<ProductDTOForCard> findProductForCardById(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(productService.findProductDTOForCardById(id));
     }
 }

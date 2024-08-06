@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
+import { useLocation } from "react-router-dom";
 
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
   const [accountCreationDate, setAccountCreationDate] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const getToken = () => {
+    return Cookies.get("token");
+  };
+
   const login = (token) => {
-    localStorage.setItem("token", token);
+    Cookies.set("token", token, {
+      secure: true,
+      sameSite: "Strict",
+    });
+
     const decodedToken = jwtDecode(getToken());
     setUsername(decodedToken.username);
     setRole(decodedToken.authorities.toLocaleString());
@@ -20,41 +31,47 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
+  const isTokenExpired = (decodedToken) => {
+    try {
+      console.log(decodedToken.exp);
+      const currentTime = Date.now() / 1000;
+      return decodedToken.exp < currentTime;
+    } catch (err) {
+      console.error(err);
+      return true;
+    }
+  };
+
   const logout = () => {
-    localStorage.removeItem("token");
+    console.log("LOGOUT");
+    Cookies.remove("token");
+    setToken(null);
     setIsAuthenticated(false);
     setUsername("");
     setRole("");
     setLoading(false);
   };
 
-  const getToken = () => {
-    return localStorage.getItem("token");
-  };
-
   useEffect(() => {
-    const token = getToken();
-
-    if (token) {
-      try {
+    const interval = setInterval(() => {
+      if (token) {
         const decodedToken = jwtDecode(token);
-        if (decodedToken.exp * 1000 > Date.now()) {
+        if (isTokenExpired(decodedToken)) {
+          logout();
+        } else {
           setUsername(decodedToken.username);
           setRole(decodedToken.authorities.toLocaleString());
           setAccountCreationDate(decodedToken.accountCreationDate);
           setIsAuthenticated(true);
-        } else {
-          logout();
         }
-      } catch (error) {
-        console.log(error);
+      } else {
         logout();
       }
-    } else {
-      logout();
-    }
-    setLoading(true);
-  }, []);
+      setLoading(true);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [token]);
 
   return (
     <AuthContext.Provider

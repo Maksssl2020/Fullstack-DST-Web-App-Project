@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.repository;
 
-import com.dst.websiteprojectbackendspring.domain.product_size.ProductSize;
+import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -47,8 +47,6 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-//        claims.put("accountCreationDate", userDetails.)
-
         Date issuedAtDate = new Date(System.currentTimeMillis());
         Date expirationDate = new Date(issuedAtDate.getTime() + jwtExpiration);
         return Jwts

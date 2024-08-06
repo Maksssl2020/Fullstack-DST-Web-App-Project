@@ -8,24 +8,24 @@ const RainbowShopProductCard = ({
   cardColor,
   cardType = "MAIN",
   size = "size-[500px]",
-  price = "0,0",
 }) => {
   const [productImage, setProductImage] = React.useState([]);
   const navigate = useNavigate();
+  const { id, title, price } = cardData;
+
+  // console.log(cardData);
 
   useEffect(() => {
     try {
-      axios.get(`/products/images/${cardData.id}`).then((response) => {
+      axios.get(`/products/images/${id}`).then((response) => {
         setProductImage(response.data.flatMap((data) => data.image));
-        console.log(productImage);
-        console.log(response.data);
+        // console.log(productImage);
+        // console.log(response.data);
       });
     } catch (err) {
       console.error(err);
     }
-  }, []);
-
-  const { id, title } = cardData;
+  }, [id]);
 
   return (
     <div className="w-auto h-auto">
@@ -33,16 +33,17 @@ const RainbowShopProductCard = ({
         onClick={() =>
           navigate(
             `/rainbow-shop/products/${id}/${transformProductTitleIntoLinkTitle(title)}`,
+            { state: { cardColor } },
           )
         }
         className={`flex flex-col justify-center items-center hover:cursor-pointer ${size}`.concat(
           " " + cardColor,
         )}
       >
-        <div className="w-[350px] h-[350px]">
+        <div className="size-[350px] flex justify-center items-center">
           <img
-            className="inset-0 object-cover w-full h-full"
-            src={`data:image/png;base64,${productImage[3]}`}
+            className="inset-0 object-cover size-[85%]"
+            src={`data:image/png;base64,${productImage[0]}`}
             alt={title}
           />
         </div>

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.product.mug.Mug;
+import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
 import com.dst.websiteprojectbackendspring.service.product.mug.MugServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

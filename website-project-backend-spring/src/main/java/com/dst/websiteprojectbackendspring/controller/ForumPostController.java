@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.domain.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.service.forum_post.ForumPostServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

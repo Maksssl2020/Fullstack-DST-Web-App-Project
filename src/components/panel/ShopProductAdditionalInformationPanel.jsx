@@ -11,7 +11,7 @@ const fetchData = async (productId) => {
   }
 };
 
-const ShopProductAdditionalInformationPanel = ({ productData }) => {
+const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
   const {
     data: productSizes,
     error: sizesError,
@@ -105,7 +105,9 @@ const ShopProductAdditionalInformationPanel = ({ productData }) => {
   ];
 
   return (
-    <div className="w-full gap-2 flex p-8 flex-col items-center bg-custom-yellow-100 h-auto rounded-2xl">
+    <div
+      className={`w-full gap-2 flex p-8 flex-col items-center h-auto rounded-2xl ${cardColor}`}
+    >
       <ul className="w-[35%] h-auto space-y-4">
         {additionalInformationData.map((data, index) => (
           <li className="w-full text-xl flex justify-between" key={index}>

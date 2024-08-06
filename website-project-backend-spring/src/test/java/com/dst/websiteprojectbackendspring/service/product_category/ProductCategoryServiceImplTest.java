@@ -1,8 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.product_category;
 
-import com.dst.websiteprojectbackendspring.domain.product.Product;
-import com.dst.websiteprojectbackendspring.domain.product_category.Category;
-import com.dst.websiteprojectbackendspring.domain.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product_category.Category;
+import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTO;
 import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductCategoryRepository;

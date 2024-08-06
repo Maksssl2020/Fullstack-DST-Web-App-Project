@@ -1,7 +1,7 @@
 import React from "react";
 import DashedLine from "../universal/DashedLine";
 
-const ShopProductDescriptionPanel = ({ productData }) => {
+const ShopProductDescriptionPanel = ({ productData, cardColor }) => {
   let productInfo;
 
   if (productData.productType === "CLOTHING") {
@@ -13,7 +13,9 @@ const ShopProductDescriptionPanel = ({ productData }) => {
     );
   }
   return (
-    <div className="w-full gap-2 flex p-8 flex-col items-center bg-custom-yellow-100 h-auto rounded-2xl">
+    <div
+      className={`w-full gap-2 flex p-8 flex-col items-center h-auto rounded-2xl ${cardColor}`}
+    >
       <h2 className="text-2xl font-bold">{productData.name}</h2>
       <p className="text-xl">{productData.description}</p>
       {productInfo}

@@ -50,8 +50,7 @@ const NewProductForm = () => {
   console.log(price);
   console.log(weight);
   console.log(price);
-  console.log(formData.color);
-
+  console.log(categories);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -61,9 +60,17 @@ const NewProductForm = () => {
     formData.append("packageSize", packageSize);
     formData.append("weight", weight);
     formData.append("price", price);
-    formData.append("categories", categories);
+
+    categories.forEach((category) => {
+      formData.append("categories[]", category);
+    });
+
+    for (var pair of formData) {
+      console.log(pair[0] + ", " + pair[1]);
+    }
+
     if (files) {
-      Array.from(files).forEach((file, index) => {
+      Array.from(files).forEach((file) => {
         formData.append(`images`, file);
       });
     }

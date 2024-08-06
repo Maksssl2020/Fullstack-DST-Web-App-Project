@@ -21,7 +21,7 @@ const RainbowShop = () => {
     <AnimatedPage>
       <div className="w-full font-lato gap-8 h-auto bg-custom-gray-300 flex items-center flex-col">
         <div className="w-[1250px] p-3 h-[125px] bg-white mt-16 rounded-full">
-          <div className="w-full flex justify-center items-center h-full static-rainbow-gradient rounded-full">
+          <div className="w-full flex justify-center items-center h-full animated-rainbow-gradient rounded-full">
             <h1 className="text-6xl font-bold text-white ">Tęczowy Sklepik</h1>
           </div>
         </div>
