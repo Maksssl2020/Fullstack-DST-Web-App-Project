@@ -25,7 +25,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart(String customerUsername) {
+    public Cart getCartByCustomerUsername(String customerUsername) {
         if (cartRepository.existsByCustomerUsername(customerUsername)) {
             return cartRepository.findByCustomerUsername(customerUsername);
         } else {

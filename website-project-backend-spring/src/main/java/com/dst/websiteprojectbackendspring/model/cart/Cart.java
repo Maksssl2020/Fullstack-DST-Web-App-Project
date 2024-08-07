@@ -27,6 +27,9 @@ public class Cart {
     @Column(unique = true, nullable = true)
     private String customerUsername;
 
+    @Column(unique = true, nullable = true)
+    private String nonRegisteredCustomerCartId;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##")
     private BigDecimal totalPrice;
 

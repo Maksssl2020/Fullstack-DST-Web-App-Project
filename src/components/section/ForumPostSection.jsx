@@ -1,28 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import axios from "../../helpers/AxiosConfig";
 import ForumPostCard from "../card/ForumPostCard";
 import Pagination from "../pagination/Pagination";
+import { useQuery } from "react-query";
+import { fetchPostsData } from "../../helpers/api-integration/ForumPostsHandling";
+import Spinner from "../universal/Spinner";
 
 const ForumPostSection = () => {
-  const [posts, setPosts] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(0);
-  const [totalPages, setTotalPages] = React.useState(0);
 
-  const fetchPostsData = async (page) => {
-    try {
-      const response = await axios.get("/forum/posts", {
-        params: {
-          page: page,
-          size: 8,
-        },
-      });
-      setPosts(response.data.content);
-      setTotalPages(response.data.totalPages);
-      console.log(response);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { data: postsData, isLoading: loadingPosts } = useQuery(
+    ["forumPostsData", currentPage],
+    () => fetchPostsData(currentPage),
+  );
+
+  if (loadingPosts) {
+    return <Spinner />;
+  }
 
   const handlePostDelete = async (postId, onClose) => {
     try {
@@ -34,25 +28,17 @@ const ForumPostSection = () => {
     }
   };
 
-  useEffect(() => {
-    fetchPostsData(currentPage);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [currentPage]);
-
   return (
     <>
       <ul className="w-full flex flex-col">
-        {posts.map((post, idx) => (
+        {postsData.content.map((post, idx) => (
           <li className="w-full flex justify-center" key={idx}>
             <ForumPostCard postData={post} handleDelete={handlePostDelete} />
           </li>
         ))}
       </ul>
       <Pagination
-        totalPages={totalPages}
+        totalPages={postsData.totalPages}
         currentPage={currentPage}
         setCurrentPageFunc={setCurrentPage}
       />

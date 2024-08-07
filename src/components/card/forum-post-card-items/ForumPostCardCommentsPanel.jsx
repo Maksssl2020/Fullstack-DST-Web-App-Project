@@ -6,54 +6,44 @@ import ButtonWithLink from "../../universal/ButtonWithLink";
 import Comment from "../../comment/Comment";
 import "./ForumPostCardCommentsPanel.css";
 import axios from "../../../helpers/AxiosConfig";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  fetchPostUsersComments,
+  handleAddComment,
+} from "../../../helpers/api-integration/ForumPostsHandling";
+import Spinner from "../../universal/Spinner";
+import { useForm } from "react-hook-form";
 
 const ForumPostCardCommentsPanel = ({ postId }) => {
   const { isAuthenticated, role, username } = useContext(AuthContext);
+  const queryClient = useQueryClient();
+  const { register, handleSubmit, resetField, formState, getValues } =
+    useForm();
+  const { errors } = formState;
   const [comments, setComments] = React.useState([]);
-  const [newCommentContent, setNewCommentContent] = React.useState("");
-  const [errors, setErrors] = React.useState({});
 
-  useEffect(() => {
-    try {
-      axios.get(`/comments/post/${postId}`).then((response) => {
-        setComments(response.data);
-        console.log(response.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [postId]);
+  const { data: postComments, isLoading: fetchingPostComments } = useQuery(
+    ["forumPostComments", postId],
+    () => fetchPostUsersComments(postId),
+  );
 
-  const handleAddComment = (e) => {
-    e.preventDefault();
-
-    try {
-      const newCommentData = {
-        content: newCommentContent,
+  const { mutate, isLoading: addingNewComment } = useMutation({
+    mutationFn: () =>
+      handleAddComment(postId, {
+        content: getValues().commentContent,
         author: username,
         authorRole: role,
         creationDate: new Date().toISOString(),
-      };
-      axios
-        .post(`/comments/post/${postId}/add-comment`, newCommentData)
-        .then(() => {
-          const commentsCopy = [...comments];
-          commentsCopy.push(newCommentData);
-          setComments(commentsCopy);
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+      resetField("commentContent");
+    },
+    onError: (error) => console.log(error),
+  });
 
-          setErrors({});
-          setNewCommentContent("");
-        });
-    } catch (error) {
-      const validationErrors = error.response?.data?.validationErrors || {};
-      setErrors({
-        content: validationErrors.content
-          ? "Nieprawidłowa treść komentarza!"
-          : "",
-      });
-      console.error("Error adding comment:", error);
-    }
-  };
+  console.log(errors);
+  console.log(getValues());
 
   const handleCommentUpdate = async (id, commentNewData) => {
     try {
@@ -89,18 +79,18 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     }
   };
 
+  if (fetchingPostComments) {
+    return <Spinner />;
+  }
+
   return (
     <div className="w-[45%] justify-between flex flex-col h-full p-4 rounded-2xl bg-custom-gray-100">
       <div className="w-full h-[50px] flex text-white font-bold items-center justify-center text-4xl rounded-full bg-custom-blue-400">
         Komentarze
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
-        {comments
-          .sort(
-            (commentA, commentB) =>
-              new Date(commentB.creationDate) - new Date(commentA.creationDate),
-          )
-          .reverse()
+        {postComments
+          .sort((commentA, commentB) => commentA.id - commentB.id)
           .map((commentData) => (
             <Comment
               key={commentData.id}
@@ -121,7 +111,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
           />
         )}
         <div
-          className={`flex h-full border-2 rounded-full w-full ${errors.content && "border-red-500"}`}
+          className={`flex h-full border-2 rounded-full w-full ${errors.commentContent && "border-red-500"}`}
         >
           <div className="w-[15%] h-full flex items-center justify-center bg-custom-gray-200 rounded-l-full">
             {role === "ADMIN" ? (
@@ -137,17 +127,18 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
             )}
           </div>
           <input
-            value={newCommentContent}
-            onChange={(event) => setNewCommentContent(event.target.value)}
             placeholder={
-              errors.content
-                ? errors.content
+              errors.commentContent
+                ? errors.commentContent.message
                 : "Napisz komentarz . . . . . . . "
             }
             className={`h-full focus:outline-none text-xl placeholder:text-black w-[75%] ml-auto bg-custom-gray-200 `}
+            {...register("commentContent", {
+              required: "Nie można dodać pustego komentarza!",
+            })}
           />
           <div className="w-[15%] flex justify-center items-center h-full bg-custom-gray-200 rounded-r-full">
-            <button onClick={handleAddComment}>
+            <button onClick={handleSubmit(mutate)}>
               <AddInCircleIcon size={"size-10"} />
             </button>
           </div>

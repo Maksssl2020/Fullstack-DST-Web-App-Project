@@ -10,7 +10,7 @@ public interface CartService {
 
     boolean existsByUsername(String username);
     List<Cart> getAllCarts();
-    Cart getCart(String customerUsername);
+    Cart getCartByCustomerUsername(String customerUsername);
     Cart addProductToCart(Long cartId, Long productId, Integer quantity);
     Cart findCartById(Long cartId);
 }

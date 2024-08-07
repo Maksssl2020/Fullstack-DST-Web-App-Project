@@ -6,23 +6,34 @@ import DeleteIcon from "../../../icons/DeleteIcon";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../../modal/DeleteWarningModal";
 import axios from "../../../helpers/AxiosConfig";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  fetchUserAvatar,
+  handlePostDelete,
+} from "../../../helpers/api-integration/ForumPostsHandling";
+import Spinner from "../../universal/Spinner";
 
-const ForumPostCardMainDataPanel = ({ postData, handleDelete }) => {
+const ForumPostCardMainDataPanel = ({ postData }) => {
   const { username, role } = useContext(AuthContext);
+  const queryClient = useQueryClient();
   const { id, title, content, author, creationDate, postType } = postData;
   const [openModal, setOpenModal] = useState(false);
-  const [userAvatar, setUserAvatar] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    try {
-      axios.get(`/users/${author}/avatar`).then((response) => {
-        if (response.data !== undefined) {
-          setUserAvatar(response.data);
-        }
+  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
+    ["forumPostUserAvatar", author],
+    () => fetchUserAvatar(author),
+  );
+
+  const { mutate, isLoading: deletingPost } = useMutation({
+    mutationFn: handlePostDelete,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["forumPostsData"],
       });
-    } catch (error) {}
-  }, [username]);
+    },
+    onError: (error) => console.log(error),
+  });
 
   const handleDeleteClick = () => {
     setOpenModal(true);
@@ -31,6 +42,10 @@ const ForumPostCardMainDataPanel = ({ postData, handleDelete }) => {
   const handleCancelDeleteClick = () => {
     setOpenModal(false);
   };
+
+  if (deletingPost || fetchingUserAvatar) {
+    return <Spinner />;
+  }
 
   return (
     <div className="w-[50%] justify-between h-full rounded-2xl flex flex-col items-center p-4 bg-custom-gray-100">
@@ -83,7 +98,7 @@ const ForumPostCardMainDataPanel = ({ postData, handleDelete }) => {
       {openModal && (
         <DeleteWarningModal
           itemId={id}
-          handleDeleteFunc={handleDelete}
+          handleDeleteFunc={mutate}
           onClose={handleCancelDeleteClick}
         />
       )}

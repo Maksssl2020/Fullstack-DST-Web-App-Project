@@ -1,13 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CloseIcon from "./icons/CloseIcon";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
-import DeleteIcon from "../../icons/DeleteIcon";
 import ButtonWithLink from "../universal/ButtonWithLink";
+import { useQuery } from "react-query";
+import {
+  getShoppingCartByUsername,
+  getShoppingCartItems,
+} from "../../helpers/api-integration/ShoppingCartHandling";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {
-  const { logout, isAuthenticated } = useContext(AuthContext);
+  const { username, isAuthenticated } = useContext(AuthContext);
+  const [cartId, setCartId] = useState();
+  const { data: authenticatedCustomerCart, isLoading: searchingCart } =
+    useQuery(
+      ["authenticatedCustomerCart", username],
+      () => getShoppingCartByUsername(username),
+      {
+        enabled: isAuthenticated === true && isOpen === true,
+      },
+    );
+
+  console.log(authenticatedCustomerCart);
+
+  useEffect(() => {
+    if (authenticatedCustomerCart) {
+      setCartId(authenticatedCustomerCart.id);
+    }
+  }, [authenticatedCustomerCart]);
+
+  const { data: cartItems, isLoading: searchingCartItems } = useQuery(
+    ["cartItems", cartId],
+    () => getShoppingCartItems(cartId),
+    { enabled: isOpen === true },
+  );
   const navigate = useNavigate();
+
+  console.log(cartItems);
 
   return (
     <div className="transition-all duration-300 ease-in-out">
@@ -31,27 +60,20 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
           <div className="flex flex-col w-full h-auto mt-6">
             <h1 className="font-bold text-4xl">Koszyk</h1>
             <div className="w-full h-auto gap-4 mt-8">
-              <div className="w-full flex items-center border-4 border-black rounded-2xl pr-2">
-                <div className="size-[125px] rounded-l-2xl flex items-center justify-center rounded-2xl">
-                  <img
-                    className="size-full inset-0 object-cover self-center"
-                    src="/assets/images/Test_T_Shirt_Photo.png"
-                    alt={""}
-                  />
-                </div>
-                <div className="w-auto h-[125px] p-2 flex flex-col">
-                  <p className="text-lg">koszulka modnie w Tęczy - xs</p>
-                  <p className="text-[20px]">1 x 89,50</p>
-                </div>
-                <button className="size-10 ml-auto bg-white rounded-full justify-center items-center flex">
-                  <CloseIcon size={"size-10"} />
-                </button>
+              {cartItems && cartItems.length > 0 ? (
+                ""
+              ) : (
+                <h3 className="w-full text-2xl font-bold text-center my-8">
+                  Bark produktów w koszyku
+                </h3>
+              )}
+            </div>
+            {cartItems && cartItems.length > 0 && (
+              <div className="w-full h-auto flex text-lg px-2 justify-between mt-4">
+                <p>Kwota:</p>
+                <p>89,50 zł</p>
               </div>
-            </div>
-            <div className="w-full h-auto flex text-lg px-2 justify-between mt-4">
-              <p>Kwota:</p>
-              <p>89,50 zł</p>
-            </div>
+            )}
           </div>
           <div className="w-full h-auto flex flex-col px-2 gap-4 mt-8">
             <ButtonWithLink

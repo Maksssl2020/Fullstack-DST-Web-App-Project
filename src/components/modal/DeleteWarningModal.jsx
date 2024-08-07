@@ -8,7 +8,10 @@ const DeleteWarningModal = ({ itemId, handleDeleteFunc, onClose }) => {
         <h2 className="text-4xl font-bold">UWAGA!</h2>
         <p className="text-2xl">Czy na pewno chcesz usunąć post?</p>
         <button
-          onClick={() => handleDeleteFunc(itemId, onClose)}
+          onClick={() => {
+            handleDeleteFunc(itemId);
+            onClose();
+          }}
           className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"
         >
           tak
