@@ -4,10 +4,7 @@ import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.service.cart.CartServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,13 +20,13 @@ public class CartController {
         return ResponseEntity.ok(cartService.getAllCarts());
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<Cart> getCartByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(cartService.getCartByCustomerUsername(username));
+    @GetMapping("/{cartIdentifier}")
+    public ResponseEntity<Cart> getCartByIdentifier(@PathVariable String cartIdentifier, @RequestParam("isUserRegistered") boolean isUserRegistered) {
+        return ResponseEntity.ok(cartService.getCartByIdentifier(cartIdentifier, isUserRegistered));
     }
 
     @GetMapping("/exist/{username}")
     public ResponseEntity<Boolean> isCartExist(@PathVariable String username) {
-        return ResponseEntity.ok(cartService.existsByUsername(username));
+        return ResponseEntity.ok(cartService.existsByIdentifier(username));
     }
 }

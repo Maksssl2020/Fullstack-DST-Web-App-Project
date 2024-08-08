@@ -14,18 +14,39 @@ export const fetchPostsData = async (page) => {
   }
 };
 
-export const handlePostDelete = async (postId) => {
+export const fetchPostData = async (postId) => {
   try {
-    await axios.delete(`/forum/posts/delete-post/${postId}`);
+    const response = await axios.get(`/forum/posts/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleAddForumPost = async (forumPostData) => {
+  try {
+    const response = await axios.post("/forum/create-post", forumPostData);
+    return response.data;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const fetchUserAvatar = async (author) => {
+export const handleUpdateForumPost = async (postId, forumPostData) => {
   try {
-    const response = await axios.get(`/users/${author}/avatar`);
+    const response = await axios.put(
+      `/forum/posts/edit-post/${postId}`,
+      forumPostData,
+    );
     return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const handlePostDelete = async (postId) => {
+  try {
+    await axios.delete(`/forum/posts/delete-post/${postId}`);
   } catch (error) {
     console.error(error);
   }
@@ -49,5 +70,32 @@ export const handleAddComment = async (postId, newCommentData) => {
     return response.data;
   } catch (error) {
     console.error("Error adding comment:", error);
+  }
+};
+
+export const handleCommentUpdate = async (
+  postId,
+  commentId,
+  commentNewData,
+) => {
+  console.log(commentId);
+  console.log(postId);
+  console.log(commentNewData);
+  try {
+    const response = await axios.put(
+      `/comments/post/${postId}/edit-comment/${commentId}`,
+      commentNewData,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleCommentDelete = async (postId, commentId) => {
+  try {
+    await axios.delete(`/comments/post/${postId}/delete-comment/${commentId}`);
+  } catch (error) {
+    console.log(error);
   }
 };

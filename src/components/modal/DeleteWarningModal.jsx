@@ -1,6 +1,11 @@
 import React from "react";
 
-const DeleteWarningModal = ({ itemId, handleDeleteFunc, onClose }) => {
+const DeleteWarningModal = ({
+  itemId,
+  secondItemId = undefined,
+  handleDeleteFunc,
+  onClose,
+}) => {
   return (
     <div className="fixed font-lato inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black backdrop-blur-lg bg-opacity-40 z-10"></div>
@@ -9,7 +14,11 @@ const DeleteWarningModal = ({ itemId, handleDeleteFunc, onClose }) => {
         <p className="text-2xl">Czy na pewno chcesz usunąć post?</p>
         <button
           onClick={() => {
-            handleDeleteFunc(itemId);
+            if (secondItemId) {
+              handleDeleteFunc(itemId, secondItemId);
+            } else {
+              handleDeleteFunc(itemId);
+            }
             onClose();
           }}
           className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"

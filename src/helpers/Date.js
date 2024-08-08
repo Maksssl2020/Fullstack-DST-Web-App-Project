@@ -1,9 +1,17 @@
 export const TodayDate = () => {
-  return new Date(Date.now()).toLocaleDateString();
+  return new Date(Date.now()).toLocaleString("pl-PL", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 };
 
 export const DateParser = (date) => {
-  return `${date[2]}.${date[1]}.${date[0]}`;
+  return new Date(date).toLocaleString("pl-PL", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 };
 
 export const PeriodOfDays = (date) => {

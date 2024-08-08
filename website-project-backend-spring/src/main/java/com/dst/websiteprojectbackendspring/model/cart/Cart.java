@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -25,13 +26,16 @@ public class Cart {
     private Long id;
 
     @Column(unique = true, nullable = true)
-    private String customerUsername;
-
-    @Column(unique = true, nullable = true)
-    private String nonRegisteredCustomerCartId;
+    private String cartIdentifier;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##")
     private BigDecimal totalPrice;
+
+    private LocalDateTime creationDate;
+
+    private LocalDateTime lastUpdateDate;
+
+    private boolean isUserRegistered;
 
     @JsonIgnore
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)

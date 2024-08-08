@@ -18,22 +18,12 @@ const ForumPostSection = () => {
     return <Spinner />;
   }
 
-  const handlePostDelete = async (postId, onClose) => {
-    try {
-      await axios.delete(`/forum/posts/delete-post/${postId}`);
-      await fetchPostsData(currentPage);
-      onClose();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <>
       <ul className="w-full flex flex-col">
         {postsData.content.map((post, idx) => (
           <li className="w-full flex justify-center" key={idx}>
-            <ForumPostCard postData={post} handleDelete={handlePostDelete} />
+            <ForumPostCard postData={post} />
           </li>
         ))}
       </ul>

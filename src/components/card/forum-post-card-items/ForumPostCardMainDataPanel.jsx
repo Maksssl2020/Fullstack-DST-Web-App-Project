@@ -1,17 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import UserIcon from "../../header/icons/UserIcon";
 import EditIcon from "../../../icons/EditIcon";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import DeleteIcon from "../../../icons/DeleteIcon";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../../modal/DeleteWarningModal";
-import axios from "../../../helpers/AxiosConfig";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchUserAvatar,
-  handlePostDelete,
-} from "../../../helpers/api-integration/ForumPostsHandling";
+import { handlePostDelete } from "../../../helpers/api-integration/ForumPostsHandling";
 import Spinner from "../../universal/Spinner";
+import { fetchUserAvatar } from "../../../helpers/api-integration/UserDataHandling";
+import { DateParser } from "../../../helpers/Date";
 
 const ForumPostCardMainDataPanel = ({ postData }) => {
   const { username, role } = useContext(AuthContext);
@@ -60,7 +58,7 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
       </textarea>
       <div className="w-full relative flex flex-col h-[100px]">
         <p className="w-[55%] text-white flex justify-center absolute rounded-2xl right-0 h-[75px] pb-4 text-2xl font-bold bg-custom-blue-200">
-          {creationDate}
+          {DateParser(creationDate)}
         </p>
         <div className="z-10 text-white text-4xl font-bold mt-auto bg-custom-blue-400 flex px-2 items-center h-[65px] rounded-full">
           <p className="bg-white text-black mr-4 border-2 border-custom-blue-400 rounded-full flex justify-center items-center size-14">

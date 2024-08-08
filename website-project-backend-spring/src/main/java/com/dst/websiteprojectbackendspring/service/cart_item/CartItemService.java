@@ -1,6 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.cart_item;
 
 import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 @Service
 public interface CartItemService {
 
-    void saveCartItem(Integer quantity, Long productId, Long cartId);
+    void saveCartItem(Integer quantity, String size, Long productId, String cartIdentifier, boolean isUserRegistered) throws ChangeSetPersister.NotFoundException;
     List<CartItem> getCartItems(Long cartId);
+    void deleteCartItem(Long cartItemId);
 }

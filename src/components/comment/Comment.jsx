@@ -1,39 +1,57 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import UserIcon from "../header/icons/UserIcon";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import EditIcon from "../../icons/EditIcon";
 import DeleteIcon from "../../icons/DeleteIcon";
 import AcceptIcon from "../../icons/AcceptIcon";
 import DeleteWarningModal from "../modal/DeleteWarningModal";
-import axios from "../../helpers/AxiosConfig";
+import {
+  handleCommentDelete,
+  handleCommentUpdate,
+} from "../../helpers/api-integration/ForumPostsHandling";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useForm } from "react-hook-form";
+import Spinner from "../universal/Spinner";
+import { fetchUserAvatar } from "../../helpers/api-integration/UserDataHandling";
 
-const Comment = ({ commentData, handleUpdate, handleDelete }) => {
+const Comment = ({ commentData, postId }) => {
   const { username, role } = useContext(AuthContext);
+  const queryClient = useQueryClient();
+  const { register, handleSubmit, getValues } = useForm();
   const { id, content, author, authorRole, creationDate } = commentData;
   const [isEditing, setIsEditing] = useState(false);
-  const [updateContent, setUpdateContent] = useState(content);
   const [openModal, setOpenModal] = useState(false);
-  const [userAvatar, setUserAvatar] = useState(null);
 
-  useEffect(() => {
-    try {
-      axios.get(`/users/${author}/avatar`).then((response) => {
-        if (response.data !== undefined) {
-          setUserAvatar(response.data);
-        }
-      });
-    } catch (error) {}
-  }, [username]);
+  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
+    ["forumPostCommentsUserAvatar", author],
+    () => fetchUserAvatar(author),
+  );
+
+  const { mutate: updateComment, isLoading: updatingComment } = useMutation({
+    mutationFn: () =>
+      handleCommentUpdate(postId, id, {
+        author: author,
+        authorRole: authorRole,
+        content: getValues().commentNewContent,
+        creationDate: creationDate,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+      setIsEditing(false);
+    },
+    onError: (error) => console.log(error),
+  });
+
+  const { mutate: deleteComment, isLoading: deletingComment } = useMutation({
+    mutationFn: () => handleCommentDelete(postId, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+    },
+    onError: (error) => console.log(error),
+  });
 
   const handleEditClick = () => {
     setIsEditing(true);
-  };
-
-  const commentNewData = {
-    author: author,
-    authorRole: authorRole,
-    content: updateContent,
-    creationDate: creationDate,
   };
 
   const handleOpenModal = () => {
@@ -43,6 +61,10 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
+  if (updatingComment || fetchingUserAvatar || deletingComment) {
+    return <Spinner />;
+  }
 
   return (
     <div className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200">
@@ -61,10 +83,12 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
         <p className="font-bold text-sm">{author}</p>
       </div>
       <textarea
-        value={updateContent}
-        onChange={(e) => setUpdateContent(e.target.value)}
+        defaultValue={content}
         readOnly={!isEditing}
         className={`w-[65%] focus:outline-none h-full mb-auto bg-transparent text-black resize-none rounded-2xl text-lg placeholder:text-black ${isEditing && "bg-white p-2 focus:outline-custom-blue-500"}`}
+        {...register("commentNewContent", {
+          required: "Nie można ustawić pustej treści!",
+        })}
       ></textarea>
       <div className="flex flex-col gap-2">
         {username === author && (
@@ -85,10 +109,7 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
         )}
         {isEditing && (
           <button
-            onClick={() => {
-              handleUpdate(id, commentNewData);
-              setIsEditing(false);
-            }}
+            onClick={handleSubmit(updateComment)}
             className="size-8 text-white rounded-full bg-custom-blue-500 flex items-center justify-center"
           >
             <AcceptIcon size={"size-6"} />
@@ -97,8 +118,9 @@ const Comment = ({ commentData, handleUpdate, handleDelete }) => {
       </div>
       {openModal && (
         <DeleteWarningModal
-          itemId={id}
-          handleDeleteFunc={handleDelete}
+          itemId={postId}
+          secondItemId={id}
+          handleDeleteFunc={deleteComment}
           onClose={handleCloseModal}
         />
       )}

@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ButtonWithLink = ({ title, link, styling, closeModal }) => {
+const ButtonWithLink = ({ title, link, styling }) => {
   return (
-    <Link onClick={() => closeModal(false)} to={link} className={styling}>
+    <Link to={link} className={styling}>
       <p>{title}</p>
     </Link>
   );

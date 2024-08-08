@@ -5,12 +5,19 @@ import ShopProductDescriptionPanel from "../panel/ShopProductDescriptionPanel";
 import ShopProductAdditionalInformationPanel from "../panel/ShopProductAdditionalInformationPanel";
 import axios from "../../helpers/AxiosConfig";
 import SimilarProductsList from "../list/SimilarProductsList";
+import { useQuery } from "react-query";
+import { fetchProductData } from "../../helpers/api-integration/ShopProductsHandling";
+import Spinner from "../universal/Spinner";
 
 const ShopProductSection = ({ productId, cardColor }) => {
   const [chosenOption, setChosenOption] = useState(0);
-  const [productData, setProductData] = useState({});
   const [isActive, setIsActive] = React.useState(false);
   const [productCategories, setProductCategories] = React.useState([]);
+
+  const { data: productData, isLoading: fetchingProductData } = useQuery(
+    ["productPageData", productId],
+    () => fetchProductData(productId),
+  );
 
   const handleButtonClick = (index) => {
     setChosenOption(index);
@@ -22,18 +29,9 @@ const ShopProductSection = ({ productId, cardColor }) => {
     }
   };
 
-  useEffect(() => {
-    try {
-      axios.get(`/products/${productId}`).then((response) => {
-        setProductData(response.data);
-      });
-      console.log(productData);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [productId]);
-
-  console.log(productData);
+  if (fetchingProductData) {
+    return <Spinner />;
+  }
 
   return (
     <div className="my-8 flex flex-col w-[1450px] h-auto bg-white rounded-2xl p-6">

@@ -1,11 +1,10 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import UserIcon from "../../header/icons/UserIcon";
 import AddInCircleIcon from "../../form/icons/AddInCircleIcon";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import ButtonWithLink from "../../universal/ButtonWithLink";
 import Comment from "../../comment/Comment";
 import "./ForumPostCardCommentsPanel.css";
-import axios from "../../../helpers/AxiosConfig";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchPostUsersComments,
@@ -20,14 +19,13 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
   const { register, handleSubmit, resetField, formState, getValues } =
     useForm();
   const { errors } = formState;
-  const [comments, setComments] = React.useState([]);
 
   const { data: postComments, isLoading: fetchingPostComments } = useQuery(
     ["forumPostComments", postId],
     () => fetchPostUsersComments(postId),
   );
 
-  const { mutate, isLoading: addingNewComment } = useMutation({
+  const { mutate: addComment, isLoading: addingNewComment } = useMutation({
     mutationFn: () =>
       handleAddComment(postId, {
         content: getValues().commentContent,
@@ -42,44 +40,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     onError: (error) => console.log(error),
   });
 
-  console.log(errors);
-  console.log(getValues());
-
-  const handleCommentUpdate = async (id, commentNewData) => {
-    try {
-      await axios.put(
-        `/comments/post/${postId}/edit-comment/${id}`,
-        commentNewData,
-      );
-      const commentsCopy = [...comments];
-      const updatedCommentIndex = commentsCopy.findIndex(
-        (comment) => comment.id === id,
-      );
-      commentsCopy[updatedCommentIndex] = {
-        ...commentsCopy[updatedCommentIndex],
-        ...commentNewData,
-      };
-      setComments(commentsCopy);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDeleteComment = async (id, onClose) => {
-    try {
-      await axios.delete(`/comments/post/${postId}/delete-comment/${id}`);
-      const commentsCopy = [...comments];
-      const filteredComments = commentsCopy.filter(
-        (comment) => comment.id !== id,
-      );
-      setComments(filteredComments);
-      onClose();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  if (fetchingPostComments) {
+  if (fetchingPostComments || addingNewComment) {
     return <Spinner />;
   }
 
@@ -95,8 +56,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
             <Comment
               key={commentData.id}
               commentData={commentData}
-              handleUpdate={handleCommentUpdate}
-              handleDelete={handleDeleteComment}
+              postId={postId}
             />
           ))}
       </div>
@@ -138,7 +98,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
             })}
           />
           <div className="w-[15%] flex justify-center items-center h-full bg-custom-gray-200 rounded-r-full">
-            <button onClick={handleSubmit(mutate)}>
+            <button onClick={handleSubmit(addComment)}>
               <AddInCircleIcon size={"size-10"} />
             </button>
           </div>

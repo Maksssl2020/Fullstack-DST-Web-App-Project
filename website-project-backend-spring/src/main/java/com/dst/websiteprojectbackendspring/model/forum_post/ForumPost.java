@@ -3,6 +3,8 @@ package com.dst.websiteprojectbackendspring.model.forum_post;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -42,7 +44,6 @@ public class ForumPost {
     private String author;
     private String authorRole;
 
-    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate creationDate;
 
     @Enumerated(EnumType.ORDINAL)

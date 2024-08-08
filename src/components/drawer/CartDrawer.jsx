@@ -5,17 +5,20 @@ import { AuthContext } from "../../helpers/provider/AuthProvider";
 import ButtonWithLink from "../universal/ButtonWithLink";
 import { useQuery } from "react-query";
 import {
-  getShoppingCartByUsername,
+  getShoppingCartByIdentifier,
   getShoppingCartItems,
 } from "../../helpers/api-integration/ShoppingCartHandling";
+import CartItemCard from "../card/CartItemCard";
+import { formatCurrency } from "../../helpers/CurrencyFormatter";
+import Spinner from "../universal/Spinner";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {
   const { username, isAuthenticated } = useContext(AuthContext);
   const [cartId, setCartId] = useState();
   const { data: authenticatedCustomerCart, isLoading: searchingCart } =
     useQuery(
-      ["authenticatedCustomerCart", username],
-      () => getShoppingCartByUsername(username),
+      ["authenticatedCustomerCart", username, isAuthenticated],
+      () => getShoppingCartByIdentifier(username, isAuthenticated),
       {
         enabled: isAuthenticated === true && isOpen === true,
       },
@@ -37,6 +40,14 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
   const navigate = useNavigate();
 
   console.log(cartItems);
+
+  const totalItemsPrice = cartItems?.reduce((accumulator, item) => {
+    return accumulator + Number.parseFloat(item.totalPrice);
+  }, 0);
+
+  if (searchingCart || searchingCartItems) {
+    return <Spinner />;
+  }
 
   return (
     <div className="transition-all duration-300 ease-in-out">
@@ -61,7 +72,11 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
             <h1 className="font-bold text-4xl">Koszyk</h1>
             <div className="w-full h-auto gap-4 mt-8">
               {cartItems && cartItems.length > 0 ? (
-                ""
+                <div className="gap-4 flex flex-col">
+                  {cartItems.map((data, index) => (
+                    <CartItemCard cartItemData={data} key={index} />
+                  ))}
+                </div>
               ) : (
                 <h3 className="w-full text-2xl font-bold text-center my-8">
                   Bark produktów w koszyku
@@ -71,7 +86,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
             {cartItems && cartItems.length > 0 && (
               <div className="w-full h-auto flex text-lg px-2 justify-between mt-4">
                 <p>Kwota:</p>
-                <p>89,50 zł</p>
+                <p>{formatCurrency(totalItemsPrice)}</p>
               </div>
             )}
           </div>

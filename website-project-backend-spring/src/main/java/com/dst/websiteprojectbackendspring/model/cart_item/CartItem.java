@@ -2,6 +2,7 @@ package com.dst.websiteprojectbackendspring.model.cart_item;
 
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.model.product_size.Size;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,8 +33,10 @@ public class CartItem {
 
     private Integer quantity;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##")
     private BigDecimal unitPrice;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##")
     private BigDecimal totalPrice;
 
     @Lob
