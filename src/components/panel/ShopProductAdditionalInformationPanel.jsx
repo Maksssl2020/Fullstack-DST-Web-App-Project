@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "../../helpers/AxiosConfig";
 import { useQuery } from "react-query";
+import { motion } from "framer-motion";
 
 const fetchData = async (productId) => {
   try {
@@ -105,7 +106,11 @@ const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
   ];
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.3 }}
       className={`w-full gap-2 flex p-8 flex-col items-center h-auto rounded-2xl ${cardColor}`}
     >
       <ul className="w-[35%] h-auto space-y-4">
@@ -116,7 +121,7 @@ const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
           </li>
         ))}
       </ul>
-    </div>
+    </motion.div>
   );
 };
 

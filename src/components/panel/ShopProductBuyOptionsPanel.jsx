@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import HeartIcon from "../../icons/HeartIcon";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { fetchProductCategoriesData } from "../../helpers/api-integration/ShopProductsHandling";
 import Spinner from "../universal/Spinner";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
-import { addProductToCartWhenUserIsLogged } from "../../helpers/api-integration/ShoppingCartHandling";
+import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
+import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -14,6 +15,7 @@ const ShopProductBuyOptionsPanel = ({
 }) => {
   const { username, isAuthenticated } = useContext(AuthContext);
   const { id, title, name, price, productType } = productData;
+  const [cartIdentifier, setCartIdentifier] = useState();
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
   const queryClient = useQueryClient();
@@ -22,12 +24,20 @@ const ShopProductBuyOptionsPanel = ({
     () => fetchProductCategoriesData(id),
   );
 
-  const { mutate: addProductToCart, isLoading: addingProductToCart } =
+  useEffect(() => {
+    if (isAuthenticated) {
+      setCartIdentifier(username);
+    } else {
+      setCartIdentifier(getCartIdForNonRegisterUser);
+    }
+  }, [isAuthenticated, username]);
+
+  const { mutate: addProductToUserCart, isLoading: addingProductToCart } =
     useMutation({
       mutationKey: ["addProductToCart", username, id, quantity, chosenSize],
       mutationFn: () =>
-        addProductToCartWhenUserIsLogged(
-          username,
+        addProductToCart(
+          cartIdentifier,
           id,
           quantity,
           chosenSize,
@@ -93,7 +103,7 @@ const ShopProductBuyOptionsPanel = ({
         </div>
         <div className="w-full flex h-[75px] bg-white rounded-2xl">
           <button
-            onClick={addProductToCart}
+            onClick={addProductToUserCart}
             className=" w-[50%] rounded-2xl h-full hover:bg-custom-orange-200 hover:text-white uppercase text-2xl bg-custom-gray-300"
           >
             Dodaj do koszyka

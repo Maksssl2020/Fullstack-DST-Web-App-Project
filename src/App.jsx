@@ -18,6 +18,7 @@ import ProductForm from "./pages/ProductForm";
 import { AnimatePresence } from "framer-motion";
 import Article from "./pages/Article";
 import ArticleForm from "./pages/ArticleForm";
+import CartPage from "./pages/CartPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -67,6 +68,10 @@ function App() {
         {
           path: `/rainbow-shop/products/:id/:title`,
           element: <ShopProductPage />,
+        },
+        {
+          path: "/rainbow-shop/cart/:identifier",
+          element: <CartPage />,
         },
         {
           path: "/rainbow-shop/products/admin-options/:category/:type",

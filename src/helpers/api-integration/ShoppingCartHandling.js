@@ -6,10 +6,18 @@ export const getShoppingCartByIdentifier = async (
 ) => {
   try {
     const response = await axios.get(`/shop/carts/${identifier}`, {
-      isUserRegistered: isAuthenticated,
+      params: { userRegistered: isAuthenticated },
     });
     console.log(identifier);
-    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getShoppingCartId = async (cartIdentifier) => {
+  try {
+    const response = await axios.get(`/shop/carts/${cartIdentifier}/id`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -25,8 +33,8 @@ export const getShoppingCartItems = async (cartId) => {
   }
 };
 
-export const addProductToCartWhenUserIsLogged = async (
-  customerUsername,
+export const addProductToCart = async (
+  cartIdentifier,
   productId,
   quantity,
   size,
@@ -34,7 +42,7 @@ export const addProductToCartWhenUserIsLogged = async (
 ) => {
   const formData = new FormData();
   formData.append("quantity", quantity);
-  formData.append("isUserRegistered", isAuthenticated);
+  formData.append("userRegistered", isAuthenticated);
 
   if (size !== null) {
     formData.append("size", size);
@@ -42,7 +50,7 @@ export const addProductToCartWhenUserIsLogged = async (
 
   try {
     const response = await axios.post(
-      `/shop/carts/items/add-item/${customerUsername}/${productId}`,
+      `/shop/carts/items/add-item/${cartIdentifier}/${productId}`,
       formData,
       {
         headers: "Content-Type/multipart/form-data",

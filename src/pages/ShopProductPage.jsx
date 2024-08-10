@@ -10,8 +10,6 @@ const ShopProductPage = () => {
   const { id, title } = useParams();
   const productTitle = transformLinkTitleIntoProductTitle(title);
 
-  console.log(title);
-  console.log(cardColor);
   return (
     <AnimatedPage>
       <div className="w-full bg-custom-gray-400 h-auto flex justify-center font-lato">

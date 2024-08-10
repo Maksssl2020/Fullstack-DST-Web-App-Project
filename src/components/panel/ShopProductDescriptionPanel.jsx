@@ -1,5 +1,6 @@
 import React from "react";
 import DashedLine from "../universal/DashedLine";
+import { motion } from "framer-motion";
 
 const ShopProductDescriptionPanel = ({ productData, cardColor }) => {
   let productInfo;
@@ -13,7 +14,11 @@ const ShopProductDescriptionPanel = ({ productData, cardColor }) => {
     );
   }
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      transition={{ duration: 0.3 }}
       className={`w-full gap-2 flex p-8 flex-col items-center h-auto rounded-2xl ${cardColor}`}
     >
       <h2 className="text-2xl font-bold">{productData.name}</h2>
@@ -54,7 +59,7 @@ const ShopProductDescriptionPanel = ({ productData, cardColor }) => {
         </p>
         <p>Wyprodukowano z Pasją &#10084;</p>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

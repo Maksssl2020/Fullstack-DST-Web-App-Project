@@ -28,7 +28,7 @@ public class CartItemController {
             @PathVariable Long productId,
             @RequestParam("quantity") Integer quantity,
             @RequestParam(value = "size", required = false) String size,
-            @RequestParam("isUserRegistered") boolean isUserRegistered
+            @RequestParam("userRegistered") boolean isUserRegistered
     ) throws ChangeSetPersister.NotFoundException {
         cartItemService.saveCartItem(quantity, size, productId, cartIdentifier, isUserRegistered);
         return new ResponseEntity<>(HttpStatus.CREATED);

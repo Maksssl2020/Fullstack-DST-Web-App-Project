@@ -20,8 +20,13 @@ public class CartController {
         return ResponseEntity.ok(cartService.getAllCarts());
     }
 
+    @GetMapping("/{cartIdentifier}/id")
+    public ResponseEntity<Long> getCartId(@PathVariable String cartIdentifier) {
+        return ResponseEntity.ok(cartService.getCartIdByIdentifier(cartIdentifier));
+    }
+
     @GetMapping("/{cartIdentifier}")
-    public ResponseEntity<Cart> getCartByIdentifier(@PathVariable String cartIdentifier, @RequestParam("isUserRegistered") boolean isUserRegistered) {
+    public ResponseEntity<Cart> getCartByIdentifier(@PathVariable String cartIdentifier, @RequestParam("userRegistered") boolean isUserRegistered) {
         return ResponseEntity.ok(cartService.getCartByIdentifier(cartIdentifier, isUserRegistered));
     }
 

@@ -37,11 +37,16 @@ public class CartServiceImpl implements CartService {
                     .totalPrice(BigDecimal.ZERO)
                     .creationDate(LocalDateTime.now())
                     .lastUpdateDate(LocalDateTime.now())
-                    .isUserRegistered(isUserRegistered)
+                    .userRegistered(isUserRegistered)
                     .build();
 
             return cartRepository.save(cart);
         }
+    }
+
+    @Override
+    public Long getCartIdByIdentifier(String cartIdentifier) {
+        return cartRepository.findByCartIdentifier(cartIdentifier).getId();
     }
 
     @Override
@@ -58,7 +63,7 @@ public class CartServiceImpl implements CartService {
     private void deleteNonRegisteredUsersCartsAfterInactivityForTwoDays() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime twoDaysAgo = now.minusDays(2);
-        List<Cart> nonRegisteredUsersCarts = cartRepository.findNonRegisteredUsersCarts();
+        List<Cart> nonRegisteredUsersCarts = cartRepository.findByUserRegisteredFalse();
 
         nonRegisteredUsersCarts.stream()
                 .filter(cart -> cart.getLastUpdateDate().isBefore(twoDaysAgo))

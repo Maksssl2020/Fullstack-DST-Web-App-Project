@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ShopProductImagesPanel from "../panel/ShopProductImagesPanel";
 import ShopProductBuyOptionsPanel from "../panel/ShopProductBuyOptionsPanel";
 import ShopProductDescriptionPanel from "../panel/ShopProductDescriptionPanel";
 import ShopProductAdditionalInformationPanel from "../panel/ShopProductAdditionalInformationPanel";
-import axios from "../../helpers/AxiosConfig";
 import SimilarProductsList from "../list/SimilarProductsList";
 import { useQuery } from "react-query";
 import { fetchProductData } from "../../helpers/api-integration/ShopProductsHandling";
 import Spinner from "../universal/Spinner";
+import ButtonWithAnimatedBottomBorder from "../universal/ButtonWithAnimatedBottomBorder";
 
 const ShopProductSection = ({ productId, cardColor }) => {
   const [chosenOption, setChosenOption] = useState(0);
@@ -33,6 +33,17 @@ const ShopProductSection = ({ productId, cardColor }) => {
     return <Spinner />;
   }
 
+  const tabsData = [
+    {
+      name: "opis",
+      onClick: () => handleButtonClick(0),
+    },
+    {
+      name: "informacje dodatkowe",
+      onClick: () => handleButtonClick(1),
+    },
+  ];
+
   return (
     <div className="my-8 flex flex-col w-[1450px] h-auto bg-white rounded-2xl p-6">
       <div className="w-full h-auto justify-between flex">
@@ -43,21 +54,17 @@ const ShopProductSection = ({ productId, cardColor }) => {
           setProductCategories={setProductCategories}
         />
       </div>
-      <div className="w-full flex justify-center gap-6 items-center h-[75px] bg-white">
-        <button
-          className={`uppercase text-xl border-b-4 ${chosenOption === 0 ? "border-red-500 font-bold" : "border-white"}`}
-          onClick={() => handleButtonClick(0)}
-        >
-          opis
-        </button>
-        <button
-          className={`uppercase text-xl w-fit h-auto border-b-4 ${chosenOption === 1 ? "border-red-500 font-bold" : "border-white"}`}
-          onClick={() => handleButtonClick(1)}
-        >
-          informacje dodatkowe
-        </button>
+      <div className="w-full flex justify-center gap-4 items-center h-[75px] bg-white relative">
+        {tabsData.map((data, index) => (
+          <ButtonWithAnimatedBottomBorder
+            key={index}
+            name={data.name}
+            isSelected={index === chosenOption}
+            onClick={data.onClick}
+          />
+        ))}
       </div>
-      <div className="transition-transform duration-300 ease-in-out">
+      <div>
         {chosenOption === 0 ? (
           <ShopProductDescriptionPanel
             productData={productData}
