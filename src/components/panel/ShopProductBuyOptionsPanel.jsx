@@ -7,6 +7,7 @@ import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
+import ProductQuantityButton from "../button/ProductQuantityButton";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -57,7 +58,6 @@ const ShopProductBuyOptionsPanel = ({
   }
 
   setProductCategories(productCategories);
-  // console.log(productData);
 
   const handleQuantitySubtraction = () => {
     if (quantity - 1 >= 1) {
@@ -89,18 +89,14 @@ const ShopProductBuyOptionsPanel = ({
             </button>
           </>
         )}
-        <div className="flex justify-between items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full">
-          <button
-            onClick={handleQuantitySubtraction}
-            className="w-[35px] h-full"
-          >
-            -
-          </button>
-          <p className="italic">{quantity}</p>
-          <button onClick={handleQuantityAdding} className="w-[35px] h-full">
-            +
-          </button>
-        </div>
+        <ProductQuantityButton
+          quantity={quantity}
+          subFunction={handleQuantitySubtraction}
+          addFunction={handleQuantityAdding}
+          className={
+            "flex justify-between items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full"
+          }
+        />
         <div className="w-full flex h-[75px] bg-white rounded-2xl">
           <button
             onClick={addProductToUserCart}

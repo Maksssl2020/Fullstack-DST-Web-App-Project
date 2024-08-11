@@ -11,5 +11,6 @@ public interface CartItemService {
 
     void saveCartItem(Integer quantity, String size, Long productId, String cartIdentifier, boolean isUserRegistered) throws ChangeSetPersister.NotFoundException;
     List<CartItem> getCartItems(Long cartId);
+    void updateItemQuantity(Long itemId, Integer quantity) throws ChangeSetPersister.NotFoundException;
     void deleteCartItem(Long cartItemId);
 }

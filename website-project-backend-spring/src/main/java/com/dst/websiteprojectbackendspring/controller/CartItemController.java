@@ -34,6 +34,15 @@ public class CartItemController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PutMapping("/change-quantity/{cartItemId}")
+    public ResponseEntity<HttpStatus> changeItemQuantity(
+            @PathVariable Long cartItemId,
+            @RequestParam("quantity") Integer quantity
+    ) throws ChangeSetPersister.NotFoundException {
+        cartItemService.updateItemQuantity(cartItemId, quantity);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @DeleteMapping("/delete-item/{cartItemId}")
     public ResponseEntity<HttpStatus> deleteItemFromCart(@PathVariable Long cartItemId) {
         cartItemService.deleteCartItem(cartItemId);

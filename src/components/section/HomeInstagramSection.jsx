@@ -14,7 +14,7 @@ const HomeInstagramSection = () => {
     try {
       axios
         .get(
-          "https://graph.instagram.com/me/media?fields=username,id,caption,media_url,permalink,media_type,thumbnail_url,like&access_token=IGQWRQSnhzN19sZA2cxUllzZAHFpYWo0ckxYalI3NGlNLWViSGd3cGlYdGJxWVJrOXlsVmxoY1h1M0JiRWM3ektDSWhTSHRkNl92cEZAPVTRlRXBvRWVCQ0VlOGhBeTd6MU1Kek1laW5qVXNlQnpEY0oyTVRBU1h5R0EZD",
+          "https://graph.instagram.com/me/media?fields=username,id,caption,media_url,permalink,media_type,thumbnail_url,like&access_token=IGQWRQWDJaSXc3a3MxOGNVR25zU0JnQkdzd1ViRmFtT2RHalVpaXd0V3FNejBGSjBCZA3E1S3MxVEQ0UHg2ZA1ZAZAQTJsMnNNcVhZAZAmlZARTBzSjY3WHFNTDFGbFcyYVhkcTdGN3V6LXAzeGVEZAGdOcjV6LVN1VTFsWE0ZD",
         )
         .then((response) => {
           setPosts(response.data.data);

@@ -65,8 +65,8 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
           <ButtonWithLink
             title={"Zaloguj się, żeby napisać komentarz"}
             link={"/sign-in"}
-            styling={
-              "absolute inset-0 z-10 w-full h-full items-center justify-center flex font-bold uppercase text-xl text-white bg-custom-orange-100 rounded-full"
+            className={
+              "absolute inset-0 z-10 w-full h-full items-center justify-center flex font-bold uppercase text-xl text-white bg-custom-orange-200 rounded-full border-4 border-black"
             }
           />
         )}

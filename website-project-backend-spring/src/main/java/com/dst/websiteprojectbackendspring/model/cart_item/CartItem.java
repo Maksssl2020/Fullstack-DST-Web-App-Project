@@ -12,6 +12,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @AllArgsConstructor
@@ -38,6 +39,8 @@ public class CartItem {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "#,##")
     private BigDecimal totalPrice;
+
+    private LocalDateTime dateAdded;
 
     @Lob
     private byte[] mainImage;

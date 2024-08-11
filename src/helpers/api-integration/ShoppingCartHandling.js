@@ -8,7 +8,6 @@ export const getShoppingCartByIdentifier = async (
     const response = await axios.get(`/shop/carts/${identifier}`, {
       params: { userRegistered: isAuthenticated },
     });
-    console.log(identifier);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -55,6 +54,21 @@ export const addProductToCart = async (
       {
         headers: "Content-Type/multipart/form-data",
       },
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateProductQuantity = async (cartItemId, quantity) => {
+  const formData = new FormData();
+  formData.append("quantity", quantity);
+
+  try {
+    const response = await axios.put(
+      `/shop/carts/items/change-quantity/${cartItemId}`,
+      formData,
     );
     return response.data;
   } catch (error) {

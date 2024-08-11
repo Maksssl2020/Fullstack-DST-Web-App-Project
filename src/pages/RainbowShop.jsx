@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
+import React from "react";
 import RainbowShopProductCard from "../components/card/RainbowShopProductCard";
 import { getBackgroundColor } from "../helpers/DrawBackgroundColor";
 import AnimatedPage from "../animation/AnimatedPage";
-import axios from "../helpers/AxiosConfig";
+import { AnimatePresence, motion } from "framer-motion";
+import { useQuery } from "react-query";
+import { fetchAllProducts } from "../helpers/api-integration/ShopProductsHandling";
+import Spinner from "../components/universal/Spinner";
 
 const RainbowShop = () => {
-  const [productsData, setProductsData] = React.useState([]);
+  const { data: productsData, isLoading: fetchingProductsData } = useQuery(
+    ["shopProductsData"],
+    () => fetchAllProducts(),
+  );
 
-  useEffect(() => {
-    try {
-      axios.get("/products/cards").then((response) => {
-        setProductsData(response.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  if (fetchingProductsData) {
+    return <Spinner />;
+  }
 
   return (
     <AnimatedPage>
@@ -25,14 +25,20 @@ const RainbowShop = () => {
             <h1 className="text-6xl font-bold text-white ">Tęczowy Sklepik</h1>
           </div>
         </div>
-        <div className="w-[1500px] rounded-2xl h-auto flex flex-wrap">
-          {productsData.map((cardData, index) => (
-            <RainbowShopProductCard
-              key={index}
-              cardData={cardData}
-              cardColor={getBackgroundColor(index)}
-            />
-          ))}
+        <div className="w-[1500px] rounded-2xl h-auto">
+          <AnimatePresence mode={"wait"}>
+            <ul className={"flex flex-wrap"}>
+              {productsData.map((cardData, index) => (
+                <motion.li whileHover={{ scale: 1.05 }}>
+                  <RainbowShopProductCard
+                    key={index}
+                    cardData={cardData}
+                    cardColor={getBackgroundColor(index)}
+                  />
+                </motion.li>
+              ))}
+            </ul>
+          </AnimatePresence>
 
           <div className="w-full flex justify-center h-auto">
             <div className="w-[80%] flex justify-center items-center h-[200px] rounded-2xl my-16 bg-white">

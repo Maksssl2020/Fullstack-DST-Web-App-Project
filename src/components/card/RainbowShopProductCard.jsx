@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { transformProductTitleIntoLinkTitle } from "../../helpers/transformProductTitle";
 import axios from "../../helpers/AxiosConfig";
+import { useQuery } from "react-query";
+import { fetchProductImages } from "../../helpers/api-integration/ShopProductsHandling";
+import Spinner from "../universal/Spinner";
 
 const RainbowShopProductCard = ({
   cardData,
@@ -9,23 +12,17 @@ const RainbowShopProductCard = ({
   cardType = "MAIN",
   size = "size-[500px]",
 }) => {
-  const [productImage, setProductImage] = React.useState([]);
   const navigate = useNavigate();
   const { id, title, price } = cardData;
 
-  // console.log(cardData);
+  const { data: productImages, isLoading: fetchingProductImages } = useQuery(
+    ["mainCardProductImages", id],
+    () => fetchProductImages(id),
+  );
 
-  useEffect(() => {
-    try {
-      axios.get(`/products/images/${id}`).then((response) => {
-        setProductImage(response.data.flatMap((data) => data.image));
-        // console.log(productImage);
-        // console.log(response.data);
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  }, [id]);
+  if (fetchingProductImages) {
+    return <Spinner />;
+  }
 
   return (
     <div className="w-auto h-auto">
@@ -43,7 +40,7 @@ const RainbowShopProductCard = ({
         <div className="size-[350px] flex justify-center items-center">
           <img
             className="inset-0 object-cover size-[85%]"
-            src={`data:image/png;base64,${productImage[0]}`}
+            src={`data:image/png;base64,${productImages[0]}`}
             alt={title}
           />
         </div>

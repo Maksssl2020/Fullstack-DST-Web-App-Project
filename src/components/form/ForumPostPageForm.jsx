@@ -17,6 +17,7 @@ import {
   fetchUserAmountOfCreatedForumPosts,
   fetchUserAvatar,
 } from "../../helpers/api-integration/UserDataHandling";
+import ButtonWithLink from "../universal/ButtonWithLink";
 
 const ForumPostPageForm = () => {
   const { id } = useParams();
@@ -232,17 +233,34 @@ const ForumPostPageForm = () => {
       {showModal && (
         <div className="self-center flex absolute items-center justify-center">
           <DefaultModal
-            modalTitle={
+            title={
               isEditing
                 ? "Wpis został zaktualizowany!"
                 : "Nowy wpis został utworzony!"
             }
-            modalSubtitle={"Przejdź na stronę główną forum, aby go zobaczyć."}
+            subtitle={"Przejdź na stronę główną forum, aby go zobaczyć."}
             firstButtonLink={"/forum"}
             fistButtonTitle={"Strona Główna Forum"}
             secondButtonLink={"/"}
             secondButtonTitle={"Strona główna"}
-          />
+          >
+            <div className="flex gap-6">
+              <ButtonWithLink
+                title={"Forum"}
+                link={"/forum"}
+                className={
+                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                }
+              />
+              <ButtonWithLink
+                title={"Strona główna"}
+                link={"/"}
+                className={
+                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                }
+              />
+            </div>
+          </DefaultModal>
         </div>
       )}
     </div>

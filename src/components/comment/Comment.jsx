@@ -13,7 +13,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import Spinner from "../universal/Spinner";
 import { fetchUserAvatar } from "../../helpers/api-integration/UserDataHandling";
-import toast from "react-hot-toast";
 
 const Comment = ({ commentData, postId }) => {
   const { username, role } = useContext(AuthContext);
@@ -43,8 +42,6 @@ const Comment = ({ commentData, postId }) => {
     },
     onError: (error) => console.log(error),
   });
-
-  // console.log(errors.commentNewContent);
 
   const { mutate: deleteComment, isLoading: deletingComment } = useMutation({
     mutationFn: () => handleCommentDelete(postId, id),

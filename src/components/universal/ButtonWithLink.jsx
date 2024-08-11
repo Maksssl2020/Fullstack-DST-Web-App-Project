@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ButtonWithLink = ({ title, link, styling: className }) => {
+const ButtonWithLink = ({ title, link, className, onClick = undefined }) => {
   return (
-    <Link to={link} className={className}>
+    <Link onClick={onClick} to={link} className={className}>
       <p>{title}</p>
     </Link>
   );
