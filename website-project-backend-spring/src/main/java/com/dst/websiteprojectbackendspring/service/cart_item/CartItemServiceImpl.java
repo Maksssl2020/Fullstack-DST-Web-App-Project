@@ -7,6 +7,7 @@ import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.repository.CartItemRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.cart.CartServiceImpl;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -111,5 +112,16 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void deleteCartItem(Long cartItemId) {
         cartItemRepository.deleteById(cartItemId);
+    }
+
+    @Override
+    public Long getAmountOfCartItems(Long cartId) {
+        return cartItemRepository.countByCartId(cartId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAllItemsFromCart(Long cartId) {
+        cartItemRepository.deleteAllByCartId(cartId);
     }
 }

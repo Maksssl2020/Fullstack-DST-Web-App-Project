@@ -35,6 +35,10 @@ const DrawerList = () => {
       title: "Wesprzyj nas",
       pageLink: "/support-us",
     },
+    {
+      title: "Wydarzenia",
+      pageLink: "/events",
+    },
   ];
 
   return (

@@ -13,4 +13,6 @@ public interface CartItemService {
     List<CartItem> getCartItems(Long cartId);
     void updateItemQuantity(Long itemId, Integer quantity) throws ChangeSetPersister.NotFoundException;
     void deleteCartItem(Long cartItemId);
+    Long getAmountOfCartItems(Long cartId);
+    void deleteAllItemsFromCart(Long cartId);
 }

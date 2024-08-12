@@ -98,13 +98,24 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
           Zarządzanie Stroną
         </div>
         <div className="w-full h-[35%] px-4 py-8 gap-6 flex justify-center items-center">
-          <button
-            onClick={() => navigate("/article/add-article")}
-            className="bg-white gap-4 py-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl"
-          >
-            <p className="text-2xl font-bold">Artykuł</p>
-            <p className="text-xl">Stwórz nowy artykuł</p>
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => navigate("/article/add-article")}
+              className="bg-white gap-4 py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+            >
+              <p className="text-xl">
+                Stwórz nowy <span className="font-bold">artykuł</span>
+              </p>
+            </button>
+            <button
+              onClick={() => navigate("/article/add-article")}
+              className="bg-white gap-4 py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+            >
+              <p className="text-xl">
+                Stwórz nowe <span className="font-bold">wydarzenie</span>
+              </p>
+            </button>
+          </div>
           <button className="bg-white gap-4 p-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl">
             <p className="text-2xl font-bold">Dane o kwartałach</p>
             <p className="text-xl text-center">

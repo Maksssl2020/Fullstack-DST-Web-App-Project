@@ -33,7 +33,8 @@ const CartItemsTable = ({ cartIdentifier }) => {
       mutationKey: ["deleteItemFromCart"],
       mutationFn: (itemId) => deleteProductFromCart(itemId),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: "cartPageItems" });
+        queryClient.invalidateQueries("cartPageItems");
+        queryClient.invalidateQueries("amountOfItemsInCart");
         toast.success("Usunięto produkt z koszyka!");
       },
       onError: (error) => console.log(error),

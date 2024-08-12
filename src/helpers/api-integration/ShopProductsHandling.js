@@ -73,3 +73,12 @@ export const fetchProductCategoriesData = async (productId) => {
     console.log(error);
   }
 };
+
+export const fetchProductSizes = async (productId) => {
+  try {
+    const response = await axios.get(`/products/sizes/${productId}`);
+    return response.data.flatMap((productSize) => productSize.size);
+  } catch (error) {
+    console.log(error);
+  }
+};

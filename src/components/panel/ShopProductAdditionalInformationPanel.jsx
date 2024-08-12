@@ -1,25 +1,13 @@
 import React from "react";
-import axios from "../../helpers/AxiosConfig";
 import { useQuery } from "react-query";
 import { motion } from "framer-motion";
-
-const fetchData = async (productId) => {
-  try {
-    const { data } = await axios.get(`/products/sizes/${productId}`);
-    return data.flatMap((productSize) => productSize.size);
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { fetchProductSizes } from "../../helpers/api-integration/ShopProductsHandling";
+import Spinner from "../universal/Spinner";
 
 const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
-  const {
-    data: productSizes,
-    error: sizesError,
-    isLoading: sizesLoading,
-  } = useQuery(
+  const { data: productSizes, isLoading: sizesLoading } = useQuery(
     ["productSizes", productData.id],
-    () => fetchData(productData.id),
+    () => fetchProductSizes(productData.id),
     {
       enabled: productData?.productType === "CLOTHING",
     },
@@ -27,7 +15,7 @@ const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
   const productType = productData.productType;
 
   if (productData?.productType === "CLOTHING" && sizesLoading) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
   console.log(productSizes);
 

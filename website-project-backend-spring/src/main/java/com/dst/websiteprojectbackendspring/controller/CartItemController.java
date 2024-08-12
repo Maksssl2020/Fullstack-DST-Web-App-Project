@@ -22,6 +22,11 @@ public class CartItemController {
         return ResponseEntity.ok(cartItemService.getCartItems(cartId));
     }
 
+    @GetMapping("/amount-of-items/{cartId}")
+    public ResponseEntity<Long> getCartAmountOfItems(@PathVariable Long cartId) {
+        return ResponseEntity.ok(cartItemService.getAmountOfCartItems(cartId));
+    }
+
     @PostMapping("/add-item/{cartIdentifier}/{productId}")
     public ResponseEntity<HttpStatus> addItemToCart(
             @PathVariable String cartIdentifier,
@@ -46,6 +51,12 @@ public class CartItemController {
     @DeleteMapping("/delete-item/{cartItemId}")
     public ResponseEntity<HttpStatus> deleteItemFromCart(@PathVariable Long cartItemId) {
         cartItemService.deleteCartItem(cartItemId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/delete-all-items/{cartId}")
+    public ResponseEntity<HttpStatus> deleteAllItemsFromCart(@PathVariable Long cartId) {
+        cartItemService.deleteAllItemsFromCart(cartId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-const HeartIcon = () => {
+const InstagramHeartIcon = () => {
   return (
     <svg
       className="bi bi-suit-heart-fill size-12 fill-white"
@@ -12,4 +12,4 @@ const HeartIcon = () => {
   );
 };
 
-export default HeartIcon;
+export default InstagramHeartIcon;

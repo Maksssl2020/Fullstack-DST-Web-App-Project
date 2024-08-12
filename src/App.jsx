@@ -19,6 +19,7 @@ import { AnimatePresence } from "framer-motion";
 import Article from "./pages/Article";
 import ArticleForm from "./pages/ArticleForm";
 import CartPage from "./pages/CartPage";
+import Events from "./pages/Events";
 
 function App() {
   const router = createBrowserRouter([
@@ -108,6 +109,10 @@ function App() {
         {
           path: "/article/add-article",
           element: <ArticleForm />,
+        },
+        {
+          path: "/events",
+          element: <Events />,
         },
       ],
     },

@@ -32,6 +32,17 @@ export const getShoppingCartItems = async (cartId) => {
   }
 };
 
+export const getShoppingCartAmountOfItems = async (cartId) => {
+  try {
+    const response = await axios.get(
+      `/shop/carts/items/amount-of-items/${cartId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addProductToCart = async (
   cartIdentifier,
   productId,
@@ -80,6 +91,17 @@ export const deleteProductFromCart = async (cartItemId) => {
   try {
     const response = await axios.delete(
       `/shop/carts/items/delete-item/${cartItemId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteAllProductsFromCart = async (cartId) => {
+  try {
+    const response = await axios.delete(
+      `/shop/carts/items/delete-all-items/${cartId}`,
     );
     return response.data;
   } catch (error) {

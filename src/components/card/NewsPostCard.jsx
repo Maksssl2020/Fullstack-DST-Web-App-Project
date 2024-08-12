@@ -5,20 +5,33 @@ import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../modal/DeleteWarningModal";
 import EditIcon from "../../icons/EditIcon";
 import DeleteIcon from "../../icons/DeleteIcon";
+import { useMutation, useQueryClient } from "react-query";
+import { handleNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling";
+import toast from "react-hot-toast";
+import Spinner from "../universal/Spinner";
+import DefaultModal from "../modal/DefaultModal";
+import { AnimatePresence } from "framer-motion";
 
-const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
+const NewsPostCard = ({ height, backgroundColor, cardData }) => {
   const { role } = useContext(AuthContext);
   const { id, content, author, creationDate, mainArticleId } = cardData;
+  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const handleDeleteClick = () => {
-    setOpenModal(true);
-  };
+  const { mutate: deleteNewsPost, isLoading: deletingNewsPost } = useMutation({
+    mutationKey: ["deletingNewsPost", id],
+    mutationFn: () => handleNewsPostDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries("newsSectionPostsData");
+      toast.success("Usunięto post z tęczowych wiadomości!");
+    },
+    onError: (error) => console.log(error),
+  });
 
-  const handleCancelDeleteClick = () => {
-    setOpenModal(false);
-  };
+  if (deletingNewsPost) {
+    return <Spinner />;
+  }
 
   return (
     <div
@@ -27,17 +40,23 @@ const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
       onClick={() => navigate(`/article/${mainArticleId}`)}
     >
       <div className={`size-full rounded-lg flex ${backgroundColor}`}>
-        <div className="w-full h-[65%] flex justify-center absolute rounded-lg group inset-0">
+        <div className="w-full h-[65%] a z-10 flex justify-center absolute rounded-lg group inset-0">
           {role === "ADMIN" && (
             <div className="flex mt-4 gap-4 transition-opacity duration-300">
               <button
-                onClick={() => navigate(`/news/edit-post/${id}`)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/news/edit-post/${id}`);
+                }}
                 className="z-10 size-14 rounded-full text-black flex justify-center items-center bg-white  opacity-0 group-hover:opacity-100"
               >
                 <EditIcon size={"size-12"} />
               </button>
               <button
-                onClick={handleDeleteClick}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenModal(true);
+                }}
                 className="z-10 size-14 text-black text-3xl bg-white flex justify-center items-center rounded-full opacity-0 group-hover:opacity-100"
               >
                 <DeleteIcon size={"size-12"} />
@@ -50,13 +69,34 @@ const NewsPostCard = ({ height, backgroundColor, cardData, handleDelete }) => {
           <p className="text-justify mt-6">{content}</p>
         </div>
       </div>
-      {openModal && (
-        <DeleteWarningModal
-          itemId={id}
-          handleDeleteFunc={handleDelete}
-          onClose={handleCancelDeleteClick}
-        />
-      )}
+      <AnimatePresence>
+        {openModal && (
+          <DefaultModal
+            title="UWAGA!"
+            subtitle="Czy na pewno chcesz usunąć post?"
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteNewsPost();
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              tak
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              nie
+            </button>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

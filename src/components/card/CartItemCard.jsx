@@ -17,7 +17,8 @@ const CartItemCard = ({ cartItemData }) => {
       mutationKey: ["deleteItemFromCart", id],
       mutationFn: () => deleteProductFromCart(id),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: "cartItems" });
+        queryClient.invalidateQueries("cartItems");
+        queryClient.invalidateQueries("amountOfItemsInCart");
         toast.success("Przedmiot został usunięty z koszyka!", {
           position: "top-center",
         });

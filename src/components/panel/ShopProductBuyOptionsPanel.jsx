@@ -1,13 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import HeartIcon from "../../icons/HeartIcon";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { fetchProductCategoriesData } from "../../helpers/api-integration/ShopProductsHandling";
+import {
+  fetchProductCategoriesData,
+  fetchProductSizes,
+} from "../../helpers/api-integration/ShopProductsHandling";
 import Spinner from "../universal/Spinner";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 import ProductQuantityButton from "../button/ProductQuantityButton";
+import SizesDropdown from "../dropdown/SizesDropdown";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -20,9 +24,18 @@ const ShopProductBuyOptionsPanel = ({
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
   const queryClient = useQueryClient();
+
   const { data: productCategories, isLoading: categoriesLoading } = useQuery(
     ["productCategories", id],
     () => fetchProductCategoriesData(id),
+  );
+
+  const { data: productSizes, isLoading: sizesLoading } = useQuery(
+    ["productSizes", productData.id],
+    () => fetchProductSizes(productData.id),
+    {
+      enabled: productData?.productType === "CLOTHING",
+    },
   );
 
   useEffect(() => {
@@ -45,7 +58,8 @@ const ShopProductBuyOptionsPanel = ({
           isAuthenticated,
         ),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: "cartItems" });
+        queryClient.invalidateQueries("cartItems");
+        queryClient.invalidateQueries("amountOfItemsInCart");
         toast.success("Produkt dodany do koszyka!", {
           position: "top-center",
         });
@@ -53,7 +67,7 @@ const ShopProductBuyOptionsPanel = ({
       onError: (error) => console.log(error),
     });
 
-  if (categoriesLoading || addingProductToCart) {
+  if (categoriesLoading || addingProductToCart || sizesLoading) {
     return <Spinner />;
   }
 
@@ -84,9 +98,15 @@ const ShopProductBuyOptionsPanel = ({
             <button className="text-xl w-full h-[50px] bg-white rounded-full">
               Rozmiar
             </button>
-            <button className="text-xl w-full h-[50px] bg-white rounded-full italic">
-              wybierz opcję
-            </button>
+            <SizesDropdown
+              title={"Wybierz opcję"}
+              className={
+                "text-xl w-full h-[50px] z-20 bg-white rounded-full italic"
+              }
+              data={productSizes}
+              chosenSize={chosenSize}
+              onClick={setChosenSize}
+            />
           </>
         )}
         <ProductQuantityButton

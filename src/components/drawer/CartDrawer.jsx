@@ -75,7 +75,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
             animate={{ x: "0%", opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ duration: 0.2, type: "just" }}
-            className="font-lato flex-col right-0 top-0 flex z-30 fixed h-screen w-[490px] bg-custom-gray-200"
+            className="font-lato flex-col right-0 top-0 flex z-30 overflow-y-auto fixed h-screen w-[490px] bg-custom-gray-200"
           >
             <div className="flex flex-col items-center w-full py-14">
               <motion.button

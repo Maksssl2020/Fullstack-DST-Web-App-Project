@@ -2,25 +2,60 @@ import BellIcon from "./icons/BellIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import RightDrawer from "../drawer/RightDrawer";
 import { useLocation, useNavigate } from "react-router-dom";
-import AnimatedPage from "../../animation/AnimatedPage";
 import ShoppingBagIcon from "../../icons/ShoppingBagIcon";
 import CartDrawer from "../drawer/CartDrawer";
+import { useQuery } from "react-query";
+import {
+  getShoppingCartAmountOfItems,
+  getShoppingCartId,
+} from "../../helpers/api-integration/ShoppingCartHandling";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
+import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
+import Spinner from "../universal/Spinner";
+import Badge from "../badge/Badge";
 
 const Header = ({ forumAddPostButton }) => {
+  const { username, isAuthenticated } = useContext(AuthContext);
   const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
     React.useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);
+  const [cartIdentifier, setCartIdentifier] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setCartIdentifier(username);
+    } else {
+      setCartIdentifier(getCartIdForNonRegisterUser);
+    }
+  }, [isAuthenticated, username]);
+
+  const { data: cartId, isLoading: fetchingCartId } = useQuery(
+    ["cartHeaderId", cartIdentifier],
+    () => getShoppingCartId(cartIdentifier),
+    {
+      enabled: location.pathname.includes("/rainbow-shop") === true,
+    },
+  );
+
+  const { data: amountOfItemsInCart, isLoading: fetchingAmountOfItemsInCart } =
+    useQuery(
+      ["amountOfItemsInCart", cartIdentifier],
+      () => getShoppingCartAmountOfItems(cartId),
+      {
+        enabled: location.pathname.includes("/rainbow-shop") === true,
+      },
+    );
 
   const toggleRightDrawer = () => {
     setIsRightDataDrawerOpen(!isRightDataDrawerOpen);
   };
 
-  const toogleCartDrawer = () => {
+  const toggleCartDrawer = () => {
     setIsCartDrawerOpen(!isCartDrawerOpen);
   };
 
@@ -62,6 +97,10 @@ const Header = ({ forumAddPostButton }) => {
     }
   };
 
+  if (fetchingCartId || fetchingAmountOfItemsInCart) {
+    return <Spinner />;
+  }
+
   return (
     <header className="flex h-[125px] pl-4 w-full border-0 border-violet-700">
       <div className="flex w-full items-center">
@@ -91,10 +130,16 @@ const Header = ({ forumAddPostButton }) => {
             >
               {location.pathname.includes("/rainbow-shop") && (
                 <button
-                  onClick={toogleCartDrawer}
-                  className="rounded-full bg-white p-1"
+                  onClick={toggleCartDrawer}
+                  className="rounded-full bg-white p-1 relative"
                 >
                   <ShoppingBagIcon size={"size-6"} />
+
+                  {amountOfItemsInCart > 0 && (
+                    <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                      {amountOfItemsInCart}
+                    </Badge>
+                  )}
                 </button>
               )}
               <span className="rounded-full bg-white p-1">
@@ -111,7 +156,7 @@ const Header = ({ forumAddPostButton }) => {
         </div>
         <CartDrawer
           isOpen={isCartDrawerOpen}
-          closeFunction={toogleCartDrawer}
+          closeFunction={toggleCartDrawer}
         />
         <RightDrawer
           isOpen={isRightDataDrawerOpen}

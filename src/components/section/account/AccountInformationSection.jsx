@@ -6,6 +6,7 @@ import AccountUserSection from "./AccountUserSection";
 import { jwtDecode } from "jwt-decode";
 import axios from "../../../helpers/AxiosConfig";
 import ButtonWithLink from "../../universal/ButtonWithLink";
+import { AnimatePresence } from "framer-motion";
 
 const AccountInformationSection = () => {
   const { getToken, role, username, logout } = useContext(AuthContext);
@@ -113,29 +114,31 @@ const AccountInformationSection = () => {
 
   return (
     <>
-      {showModal && (
-        <DefaultModal
-          title={"Informacja"}
-          subtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
-        >
-          <div className="flex gap-6">
-            <ButtonWithLink
-              title={"Zaloguj się"}
-              link={"/sign-in"}
-              className={
-                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-              }
-            />
-            <ButtonWithLink
-              title={"Strona główna"}
-              link={"/"}
-              className={
-                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-              }
-            />
-          </div>
-        </DefaultModal>
-      )}
+      <AnimatePresence>
+        {showModal && (
+          <DefaultModal
+            title={"Informacja"}
+            subtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
+          >
+            <div className="flex gap-6">
+              <ButtonWithLink
+                title={"Zaloguj się"}
+                link={"/sign-in"}
+                className={
+                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                }
+              />
+              <ButtonWithLink
+                title={"Strona główna"}
+                link={"/"}
+                className={
+                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                }
+              />
+            </div>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
       <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[950px]">
         <div className="flex items-center mt-8">
           <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>

@@ -5,9 +5,40 @@ import { useParams } from "react-router-dom";
 import CartItemsTable from "../components/table/CartItemsTable";
 import ButtonWithLink from "../components/universal/ButtonWithLink";
 import CheckIcon from "../icons/CheckIcon";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  deleteAllProductsFromCart,
+  getShoppingCartId,
+} from "../helpers/api-integration/ShoppingCartHandling";
+import toast from "react-hot-toast";
+import Spinner from "../components/universal/Spinner";
 
 const CartPage = () => {
   const { identifier } = useParams();
+  const queryClient = useQueryClient();
+
+  const { data: cartId, isLoading: fetchingCartId } = useQuery(
+    ["cartId", identifier],
+    () => getShoppingCartId(identifier),
+  );
+
+  const {
+    mutate: deleteAllItemsFromCart,
+    isLoading: deletingAllItemsFromCart,
+  } = useMutation({
+    mutationKey: ["deleteAllItemsFromCart", cartId],
+    mutationFn: () => deleteAllProductsFromCart(cartId),
+    onSuccess: () => {
+      queryClient.invalidateQueries("cartPageItems");
+      queryClient.invalidateQueries("amountOfItemsInCart");
+      toast.success("Usunięto wszystkie produkty z koszyka!");
+    },
+    onError: (error) => console.log(error),
+  });
+
+  if (fetchingCartId || deletingAllItemsFromCart) {
+    return <Spinner />;
+  }
 
   return (
     <AnimatedPage>
@@ -30,7 +61,10 @@ const CartPage = () => {
               }
             />
             <div className="w-[550px] h-[75px] flex justify-between text-white text-xl">
-              <button className="w-[48%] h-full bg-custom-gray-300 rounded-2xl uppercase hover:bg-custom-orange-200">
+              <button
+                onClick={deleteAllItemsFromCart}
+                className="w-[48%] h-full bg-custom-gray-300 rounded-2xl uppercase hover:bg-custom-orange-200"
+              >
                 wyczyść
               </button>
               <button className="w-[48%] h-full bg-custom-gray-300 rounded-2xl uppercase hover:bg-custom-orange-200">
