@@ -37,7 +37,6 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
     },
   ];
 
-  // "ubranie", "długopis", "kubek", "gadżet"
   useEffect(() => {
     setUsername(userData.username);
     setEmail(userData.email);
@@ -101,19 +100,15 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
           <div className="flex flex-col gap-4">
             <button
               onClick={() => navigate("/article/add-article")}
-              className="bg-white gap-4 py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
             >
-              <p className="text-xl">
-                Stwórz nowy <span className="font-bold">artykuł</span>
-              </p>
+              Stwórz nowy &nbsp;<span className="font-bold">artykuł</span>
             </button>
             <button
-              onClick={() => navigate("/article/add-article")}
-              className="bg-white gap-4 py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+              onClick={() => navigate("/events/add-event")}
+              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
             >
-              <p className="text-xl">
-                Stwórz nowe <span className="font-bold">wydarzenie</span>
-              </p>
+              Stwórz nowe &nbsp;<span className="font-bold">wydarzenie</span>
             </button>
           </div>
           <button className="bg-white gap-4 p-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl">

@@ -9,17 +9,19 @@ import RainbowShop from "./pages/RainbowShop";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Forum from "./pages/Forum";
-import ForumPostForm from "./pages/ForumPostForm";
+import ForumPostForm from "./pages/forms/ForumPostForm";
 import ContactUs from "./pages/ContactUs";
-import ShopProductPage from "./pages/ShopProductPage";
-import NewsPostForm from "./pages/NewsPostForm";
-import HomeNewsPostForm from "./pages/HomeNewsPostForm";
+import ShopProductPage from "./pages/forms/ShopProductPage";
+import NewsPostForm from "./pages/forms/NewsPostForm";
+import HomeNewsPostForm from "./pages/forms/HomeNewsPostForm";
 import ProductForm from "./pages/ProductForm";
 import { AnimatePresence } from "framer-motion";
 import Article from "./pages/Article";
-import ArticleForm from "./pages/ArticleForm";
+import ArticleForm from "./pages/forms/ArticleForm";
 import CartPage from "./pages/CartPage";
 import Events from "./pages/Events";
+import EventForm from "./pages/forms/EventForm";
+import React from "react";
 
 function App() {
   const router = createBrowserRouter([
@@ -113,6 +115,10 @@ function App() {
         {
           path: "/events",
           element: <Events />,
+        },
+        {
+          path: "/events/add-event",
+          element: <EventForm />,
         },
       ],
     },

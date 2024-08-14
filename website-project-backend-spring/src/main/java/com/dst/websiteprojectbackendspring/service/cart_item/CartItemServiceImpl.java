@@ -35,25 +35,25 @@ public class CartItemServiceImpl implements CartItemService {
         cart.setLastUpdateDate(now);
         Product foundProduct = productRepository.findById(productId).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
-         if (!isItemCurrentlyInCart(foundProduct.getTitle(), size, quantity, cart.getId())) {
+         if (!isItemCurrentlyInCart(foundProduct.getId(), size, quantity, cart.getId())) {
              CartItem cartItem = buildNewCartItem(quantity, size, foundProduct, now, cart);
              cartItemRepository.save(cartItem);
          }
     }
 
-    private boolean isItemCurrentlyInCart(String productFullTitle, String size, Integer quantity, Long cartId) {
-        List<CartItem> foundProductsWithTheSameTitle = getCartItemsWithTheSameTitle(productFullTitle, cartId);
+    private boolean isItemCurrentlyInCart(Long mainProductId, String size, Integer quantity, Long cartId) {
+        List<CartItem> foundCartItemsWithTheSameMainProductId = getCartItemsWithTheSameMainProductId(mainProductId, cartId);
 
         if (size != null) {
-            foundProductsWithTheSameTitle = getCartItemsWithTheSameSize(size, foundProductsWithTheSameTitle);
+            foundCartItemsWithTheSameMainProductId = getCartItemsWithTheSameSize(size, foundCartItemsWithTheSameMainProductId);
         }
 
-        if (!foundProductsWithTheSameTitle.isEmpty()) {
-            foundProductsWithTheSameTitle
-                    .forEach(foundProduct -> {
-                        Integer newQuantity = quantity + foundProduct.getQuantity();
+        if (!foundCartItemsWithTheSameMainProductId.isEmpty()) {
+            foundCartItemsWithTheSameMainProductId
+                    .forEach(foundCartItem -> {
+                        Integer newQuantity = quantity + foundCartItem.getQuantity();
                         try {
-                            updateItemQuantity(foundProduct.getId(), newQuantity);
+                            updateItemQuantity(foundCartItem.getId(), newQuantity);
                         } catch (ChangeSetPersister.NotFoundException e) {
                             throw new RuntimeException(e);
                         }
@@ -65,9 +65,9 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
-    private List<CartItem> getCartItemsWithTheSameTitle(String productFullTitle, Long cartId) {
+    private List<CartItem> getCartItemsWithTheSameMainProductId(Long mainProductId, Long cartId) {
         return getCartItems(cartId).stream()
-                .filter(item -> item.getProductFullTitle().equals(productFullTitle))
+                .filter(item -> item.getMainProductId().equals(mainProductId))
                 .toList();
     }
 
@@ -79,6 +79,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     private static CartItem buildNewCartItem(Integer quantity, String size, Product foundProduct, LocalDateTime now, Cart cart) {
         CartItem cartItem = CartItem.builder()
+                .mainProductId(foundProduct.getId())
                 .productFullTitle(foundProduct.getName())
                 .quantity(quantity)
                 .mainImage(foundProduct.getImages().getFirst().getImage())

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../helpers/provider/AuthProvider";
-import { TodayDate } from "../helpers/Date";
-import axios from "../helpers/AxiosConfig";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
+import { TodayDate } from "../../helpers/Date";
+import axios from "../../helpers/AxiosConfig";
 import { useNavigate, useParams } from "react-router-dom";
-import DefaultModal from "../components/modal/DefaultModal";
-import { decodeImageFile } from "../helpers/PostManager";
-import AnimatedPage from "../animation/AnimatedPage";
+import DefaultModal from "../../components/modal/DefaultModal";
+import { decodeImageFile } from "../../helpers/PostManager";
+import AnimatedPage from "../../animation/AnimatedPage";
 
 const HomeNewsPostForm = () => {
   const { id } = useParams();

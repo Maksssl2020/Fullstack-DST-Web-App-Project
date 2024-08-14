@@ -1,6 +1,8 @@
 package com.dst.websiteprojectbackendspring.model.user;
 
+import com.dst.websiteprojectbackendspring.model.event.Event;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import jakarta.persistence.*;
@@ -14,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,6 +71,15 @@ public class User implements UserDetails {
     @Lob
     @JsonDeserialize(using = NumberDeserializers.ByteDeserializer.class)
     private byte[] identifyPhoto;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_events",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id")
+    )
+    @JsonManagedReference
+    private List<Event> events = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

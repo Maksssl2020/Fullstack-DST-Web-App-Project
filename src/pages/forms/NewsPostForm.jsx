@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../helpers/provider/AuthProvider";
-import axios from "../helpers/AxiosConfig";
-import { TodayDate } from "../helpers/Date";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
+import axios from "../../helpers/AxiosConfig";
+import { TodayDate } from "../../helpers/Date";
 import { useNavigate, useParams } from "react-router-dom";
-import ModalWithClickFunction from "../components/modal/ModalWithClickFunction";
-import AnimatedPage from "../animation/AnimatedPage";
+import ModalWithClickFunction from "../../components/modal/ModalWithClickFunction";
+import AnimatedPage from "../../animation/AnimatedPage";
 
 const NewsPostForm = () => {
   const { username } = useContext(AuthContext);

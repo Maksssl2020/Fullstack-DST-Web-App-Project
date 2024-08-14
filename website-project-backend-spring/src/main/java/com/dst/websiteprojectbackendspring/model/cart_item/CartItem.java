@@ -26,9 +26,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long mainProductId;
+
     private String productFullTitle;
 
-    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private Size productSize;
 

@@ -1,7 +1,7 @@
 import React from "react";
-import ForumPostPageForm from "../components/form/ForumPostPageForm";
-import ForumBanner from "../components/banner/ForumBanner";
-import AnimatedPage from "../animation/AnimatedPage";
+import ForumPostPageForm from "../../components/form/ForumPostPageForm";
+import ForumBanner from "../../components/banner/ForumBanner";
+import AnimatedPage from "../../animation/AnimatedPage";
 
 const ForumPostForm = () => {
   return (

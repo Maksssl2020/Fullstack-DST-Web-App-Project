@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import DefaultModal from "../components/modal/DefaultModal";
-import AnimatedPage from "../animation/AnimatedPage";
-import { AuthContext } from "../helpers/provider/AuthProvider";
+import DefaultModal from "../../components/modal/DefaultModal";
+import AnimatedPage from "../../animation/AnimatedPage";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import FormItem from "../components/form/FormItem";
-import axios from "../helpers/AxiosConfig";
-import { TodayDate } from "../helpers/Date";
+import FormItem from "../../components/form/FormItem";
+import axios from "../../helpers/AxiosConfig";
+import { TodayDate } from "../../helpers/Date";
 
 const ArticleForm = () => {
   const { username } = useContext(AuthContext);
