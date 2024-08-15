@@ -4,9 +4,13 @@ import { GetRole } from "../../../helpers/RolesTranslate";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
 import AddingPhotoModal from "../../modal/AddingPhotoModal";
+import { useQuery } from "react-query";
+import { fetchUserNotifications } from "../../../helpers/api-integration/NotificationsHandling";
+import Spinner from "../../universal/Spinner";
+import NotificationCard from "../../card/NotificationCard";
 
 const AccountUserSection = ({ userData, onChange, updateErrors }) => {
-  const { role, accountCreationDate } = useContext(AuthContext);
+  const { userId, role, accountCreationDate } = useContext(AuthContext);
   const [fullname, setFullname] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -16,6 +20,13 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
   const [avatar, setAvatar] = React.useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
+
+  const { data: userNotifications, isLoading: fetchingUserNotifications } =
+    useQuery(["userNotificationsData", userId], () =>
+      fetchUserNotifications(userId),
+    );
+
+  console.log(userNotifications);
 
   useEffect(() => {
     setUsername(userData.username);
@@ -84,6 +95,10 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
     },
   ];
 
+  if (fetchingUserNotifications) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <div className="w-[68%] rounded-2xl h-full flex flex-col">
@@ -121,11 +136,14 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
           ))}
         </div>
       </div>
-      <div className="ml-auto w-[30%] bg-custom-pink-100 rounded-2xl h-full">
+      <div className="ml-auto w-[30%] bg-custom-pink-100 rounded-2xl h-full overflow-y-auto">
         <div className="w-full h-[100px] bg-custom-orange-200 rounded-2xl flex justify-center items-center">
-          <h2 className="text-white text-4xl font-bold italic">
-            Uczestniczył w:
-          </h2>
+          <h2 className="text-white text-4xl font-bold italic">Sprawdź:</h2>
+        </div>
+        <div className="px-8 mt-4 flex flex-col gap-4">
+          {userNotifications?.map((data, index) => (
+            <NotificationCard key={index} data={data} />
+          ))}
         </div>
       </div>
       {openModal && (

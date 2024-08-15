@@ -12,10 +12,12 @@ import java.util.List;
 public interface EventService {
 
     void saveEvent(EventRequest eventRequest);
-    void addUserToTheEvent(Long eventId, String username) throws ChangeSetPersister.NotFoundException;
+    void addUserToTheEvent(Long eventId, Long userId) throws ChangeSetPersister.NotFoundException;
     List<Event> getEvents();
     List<User> getEventUsers(Long eventId);
     Event getEvent(Long id) throws ChangeSetPersister.NotFoundException;
     Long countRegisteredVolunteers(Long eventId);
     Long countOtherRegisteredUsers(Long eventId);
+    boolean isUserTakingAPertInTheEvent(Long eventId, Long userId) throws ChangeSetPersister.NotFoundException;
+    List<Event> getAllByUserId(Long userId);
 }

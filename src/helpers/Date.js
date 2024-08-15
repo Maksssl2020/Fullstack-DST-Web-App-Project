@@ -14,6 +14,14 @@ export const DateParser = (date) => {
   });
 };
 
+export const DateTimeParser = (date) => {
+  return new Date(date[0], date[1] - 1, date[2]).toLocaleString("pl-PL", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+};
+
 export const PeriodOfDays = (date) => {
   const dayInMilliseconds = 24 * 60 * 60 * 1000;
   const differenceInMilliseconds = new Date() - new Date(date);

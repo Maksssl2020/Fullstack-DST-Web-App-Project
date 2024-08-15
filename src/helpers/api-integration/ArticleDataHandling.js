@@ -8,3 +8,16 @@ export const fetchArticleData = async (articleId) => {
     console.log(error);
   }
 };
+
+export const handleAddNewArticle = async (articleData) => {
+  try {
+    const response = await axios.post("/articles/add-article", articleData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

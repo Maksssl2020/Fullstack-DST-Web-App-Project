@@ -3,6 +3,8 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
+import { fetchUserIdByUsername } from "../api-integration/UserDataHandling";
+import Spinner from "../../components/universal/Spinner";
 
 export const AuthContext = React.createContext();
 
@@ -12,6 +14,14 @@ export const AuthProvider = ({ children }) => {
   const [role, setRole] = useState("");
   const [accountCreationDate, setAccountCreationDate] = useState("");
   const [loading, setLoading] = useState(true);
+
+  const { data: userId, isLoading: fetchingUserId } = useQuery(
+    ["userId", username],
+    () => fetchUserIdByUsername(username),
+    {
+      enabled: isAuthenticated === true,
+    },
+  );
 
   const getToken = () => {
     return Cookies.get("token");
@@ -66,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         username,
         role,
         accountCreationDate,
+        userId,
         loading,
       }}
     >

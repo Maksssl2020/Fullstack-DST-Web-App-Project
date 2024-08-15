@@ -17,3 +17,12 @@ export const fetchUserAmountOfCreatedForumPosts = async (username) => {
     console.log(error);
   }
 };
+
+export const fetchUserIdByUsername = async (username) => {
+  try {
+    const response = await axios.get(`/users/${username}/id`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

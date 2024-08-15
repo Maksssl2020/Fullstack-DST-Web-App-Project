@@ -71,4 +71,13 @@ public class UserServiceImpl implements UserService{
     public List<User> getAllUsersByEventId(Long eventId) {
         return userRepository.findAllUsersByEventId(eventId);
     }
+
+    @Override
+    public Long getUserIdByUsername(String username) {
+        try {
+            return userRepository.findByUsername(username).orElseThrow(ChangeSetPersister.NotFoundException::new).getId();
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

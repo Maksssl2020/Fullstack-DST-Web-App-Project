@@ -44,18 +44,28 @@ public class EventController {
         return ResponseEntity.ok(eventService.getEventUsers(eventId));
     }
 
+    @GetMapping("/{eventId}/user-registered-to-the-event/{userId}")
+    public ResponseEntity<Boolean> getUserRegisteredToTheEvent(@PathVariable Long eventId, @PathVariable Long userId) {
+        return ResponseEntity.ok(eventService.isUserTakingAPertInTheEvent(eventId, userId));
+    }
+
+    @GetMapping("/user-events/{userId}")
+    ResponseEntity<List<Event>> getUserEventsByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(eventService.getAllByUserId(userId));
+    }
+
     @PostMapping("/add-event")
     public ResponseEntity<HttpStatus> addEvent(@RequestBody EventRequest eventRequest) {
         eventService.saveEvent(eventRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/{eventId}/add-user")
+    @PostMapping("/{eventId}/add-user/{userId}")
     public ResponseEntity<HttpStatus> addUserToEvent(
             @PathVariable Long eventId,
-            @RequestParam("username") String username
+            @PathVariable("userId") Long userId
     ) throws ChangeSetPersister.NotFoundException {
-        eventService.addUserToTheEvent(eventId, username);
+        eventService.addUserToTheEvent(eventId, userId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

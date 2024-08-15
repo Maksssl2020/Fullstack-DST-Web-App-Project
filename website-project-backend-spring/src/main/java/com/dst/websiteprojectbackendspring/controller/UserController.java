@@ -26,6 +26,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserAvatarByUsername(username));
     }
 
+    @GetMapping("/{username}/id")
+    public ResponseEntity<Long> getUserIdByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.getUserIdByUsername(username));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> updateUser(
             @PathVariable Long id,

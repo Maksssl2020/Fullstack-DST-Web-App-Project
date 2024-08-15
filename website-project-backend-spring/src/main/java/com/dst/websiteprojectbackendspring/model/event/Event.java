@@ -24,9 +24,13 @@ public class Event {
     private Long id;
 
     private String title;
+
+    @Column(length = 2500)
     private String description;
     private LocalDateTime eventDate;
     private LocalDateTime registrationEndDate;
+
+    private Long eventNumber;
 
     @ElementCollection
     @CollectionTable(name = "event_tasks", joinColumns = @JoinColumn(name = "event_id"))

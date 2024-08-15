@@ -4,11 +4,44 @@ import AdminForumSection from "../../components/form/AdminForumSection";
 import PlusIcon from "../../icons/PlusIcon";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "../../icons/DeleteIcon";
+import { useMutation, useQueryClient } from "react-query";
+import { handleAddNewEvent } from "../../helpers/api-integration/EventsHandling";
+import toast from "react-hot-toast";
+import Spinner from "../../components/universal/Spinner";
 
 const EventForm = () => {
-  const { register, getValues, setValue, formState, handleSubmit } = useForm();
+  const queryClient = useQueryClient();
+  const { register, getValues, setValue, formState, handleSubmit, reset } =
+    useForm({
+      defaultValues: {
+        title: "",
+        description: "",
+        eventDate: "",
+        registrationEndDate: "",
+        task: "",
+      },
+    });
   const { errors } = formState;
   const [tasks, setTasks] = React.useState([]);
+
+  const { mutate: addNewEvent, isLoading: addingNewEvent } = useMutation({
+    mutationKey: ["addNewEvent"],
+    mutationFn: () =>
+      handleAddNewEvent({
+        title: getValues().title,
+        description: getValues().description,
+        eventDate: getValues().eventDate,
+        registrationEndDate: getValues().registrationEndDate,
+        tasks: tasks,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["eventsData"] });
+      reset();
+      setTasks([]);
+      toast.success("Dodano nowe wydarzenie!");
+    },
+    onError: (error) => console.log(error),
+  });
 
   console.log(getValues().task);
   console.log(errors);
@@ -17,7 +50,7 @@ const EventForm = () => {
     const task = getValues().task;
     if (task) {
       setTasks([...tasks, task]);
-      setValue("task", ""); // Clear the input field
+      setValue("task", "");
     }
   };
 
@@ -34,12 +67,23 @@ const EventForm = () => {
     setTasks(updatedTasks);
   };
 
+  if (addingNewEvent) {
+    return <Spinner />;
+  }
+
+  const notificationData = {
+    message: "Stworzono nowe wydarzenie:",
+    notificationContentTitle: getValues().title,
+    link: "/events",
+  };
+
   return (
     <div className="w-full h-auto flex justify-center font-lato py-8">
       <AdminForumSection
-        handleSubmit={handleSubmit()}
+        handleSubmit={handleSubmit(addNewEvent)}
         disabledButton={errors.length > 0}
         submitTitle={"Dodaj wydarzenie"}
+        notificationData={notificationData}
       >
         <FormItem
           labelData={"Tytuł wydarzenia:"}
@@ -72,7 +116,7 @@ const EventForm = () => {
         </div>
         <FormItem
           labelData={"Data wydarzenia:"}
-          type={"date"}
+          type={"datetime-local"}
           containerStyling={
             "w-[650px] h-auto flex flex-col font-bold text-xl gap-2 items-center"
           }
@@ -93,7 +137,7 @@ const EventForm = () => {
         />
         <FormItem
           labelData={"Data końca zapisów:"}
-          type={"date"}
+          type={"datetime-local"}
           containerStyling={
             "w-[650px] h-auto flex flex-col font-bold text-xl gap-2 items-center"
           }

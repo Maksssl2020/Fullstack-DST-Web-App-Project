@@ -1,15 +1,14 @@
 package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.model.article.Article;
+import com.dst.websiteprojectbackendspring.model.article.ArticleRequest;
 import com.dst.websiteprojectbackendspring.service.article.ArticleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,14 +29,8 @@ public class ArticleController {
     }
 
     @PostMapping("/add-article")
-    public ResponseEntity<HttpStatus> addArticle(
-            @RequestParam("title") String title,
-            @RequestParam("content") String content,
-            @RequestParam("author") String author,
-            @RequestParam("creationDate") LocalDate creationDate,
-            @RequestParam(value = "image", required = false) MultipartFile image
-            ) {
-        articleService.save(title, content, author, creationDate, image);
+    public ResponseEntity<HttpStatus> addArticle(@ModelAttribute ArticleRequest articleRequest) {
+        articleService.save(articleRequest);
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
 }

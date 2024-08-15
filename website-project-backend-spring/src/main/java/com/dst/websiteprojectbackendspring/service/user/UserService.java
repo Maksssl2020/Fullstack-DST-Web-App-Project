@@ -14,4 +14,5 @@ public interface UserService {
     void updateUser(Long id, String username, String email, String phoneNumber, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException;
     String getUserAvatarByUsername(String username) throws ChangeSetPersister.NotFoundException;
     List<User> getAllUsersByEventId(Long eventId);
+    Long getUserIdByUsername(String username) throws ChangeSetPersister.NotFoundException;
 }

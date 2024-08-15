@@ -7,11 +7,13 @@ import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.EventRepository;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -27,13 +29,14 @@ public class EventServiceImpl implements EventService {
         event.setEventDate(eventRequest.eventDate());
         event.setRegistrationEndDate(eventRequest.registrationEndDate());
         event.setTasks(eventRequest.tasks());
+        event.setEventNumber(eventRepository.count() + 1);
         eventRepository.save(event);
     }
 
     @Override
-    public void addUserToTheEvent(Long eventId, String username) throws ChangeSetPersister.NotFoundException {
+    public void addUserToTheEvent(Long eventId, Long userId) throws ChangeSetPersister.NotFoundException {
         Event foundEvent = eventRepository.findById(eventId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        User foundUser = userRepository.findByUsername(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        User foundUser = userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         foundUser.getEvents().add(foundEvent);
         foundEvent.getUsers().add(foundUser);
@@ -68,5 +71,15 @@ public class EventServiceImpl implements EventService {
         Long allEventVolunteers = eventRepository.countByIdAndUserRole(eventId, UserRole.VOLUNTEER);
 
         return allEventUsers - allEventVolunteers;
+    }
+
+    @Override
+    public boolean isUserTakingAPertInTheEvent(Long eventId, Long userId) {
+        return eventRepository.existsByEventIdAndUserId(eventId, userId) > 0;
+    }
+
+    @Override
+    public List<Event> getAllByUserId(Long userId) {
+        return eventRepository.findAllByUserId(userId);
     }
 }

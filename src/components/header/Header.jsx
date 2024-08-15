@@ -2,9 +2,9 @@ import BellIcon from "./icons/BellIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import RightDrawer from "../drawer/RightDrawer";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "../../icons/ShoppingBagIcon";
 import CartDrawer from "../drawer/CartDrawer";
 import { useQuery } from "react-query";
@@ -16,9 +16,10 @@ import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 import Spinner from "../universal/Spinner";
 import Badge from "../badge/Badge";
+import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling";
 
 const Header = ({ forumAddPostButton }) => {
-  const { username, isAuthenticated } = useContext(AuthContext);
+  const { userId, username, role, isAuthenticated } = useContext(AuthContext);
   const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
     React.useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);
@@ -50,6 +51,17 @@ const Header = ({ forumAddPostButton }) => {
         enabled: location.pathname.includes("/rainbow-shop") === true,
       },
     );
+
+  const {
+    data: amountOfNonReadUserNotifications,
+    isLoading: fetchingAmountOfNonReadUserNotifications,
+  } = useQuery(
+    ["amountOfNonReadUserNotifications", userId],
+    () => fetchAmountOfNonReadUserNotifications(userId),
+    {
+      enabled: isAuthenticated !== false && role !== "ADMIN",
+    },
+  );
 
   const toggleRightDrawer = () => {
     setIsRightDataDrawerOpen(!isRightDataDrawerOpen);
@@ -97,7 +109,11 @@ const Header = ({ forumAddPostButton }) => {
     }
   };
 
-  if (fetchingCartId || fetchingAmountOfItemsInCart) {
+  if (
+    fetchingCartId ||
+    fetchingAmountOfItemsInCart ||
+    fetchingAmountOfNonReadUserNotifications
+  ) {
     return <Spinner />;
   }
 
@@ -142,9 +158,21 @@ const Header = ({ forumAddPostButton }) => {
                   )}
                 </button>
               )}
-              <span className="rounded-full bg-white p-1">
-                <BellIcon />
-              </span>
+              <div className="relative flex gap-4">
+                <Link
+                  className={"rounded-full bg-white p-1 relative"}
+                  disabled={!isAuthenticated}
+                  to={"/account"}
+                >
+                  <BellIcon />
+                </Link>
+
+                {amountOfNonReadUserNotifications > 0 && (
+                  <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                    {amountOfNonReadUserNotifications}
+                  </Badge>
+                )}
+              </div>
               <button
                 onClick={toggleRightDrawer}
                 className="flex items-center rounded-full bg-white p-1 justify-center"

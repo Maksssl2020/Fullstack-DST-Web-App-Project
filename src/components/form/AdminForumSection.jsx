@@ -1,15 +1,35 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "react-query";
+import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling";
+import Spinner from "../universal/Spinner";
 
 const AdminForumSection = ({
   children,
   handleSubmit,
   disabledButton,
   submitTitle,
+  notificationData = undefined,
 }) => {
   const { username } = useContext(AuthContext);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  const { mutate: createNewNotification, isLoading: creatingNewNotification } =
+    useMutation({
+      mutationKey: ["createNewNotification", notificationData],
+      mutationFn: () => sendNewNotification(notificationData),
+      onSuccess: () => {
+        queryClient.invalidateQueries("userNotificationsData");
+      },
+      onError: (error) => console.log(error),
+      enabled: notificationData !== undefined,
+    });
+
+  if (creatingNewNotification) {
+    return <Spinner />;
+  }
 
   return (
     <div className="my-8 flex flex-col items-center p-8 gap-4 w-[850px] h-auto border-4 border-black rounded-2xl">
@@ -27,7 +47,10 @@ const AdminForumSection = ({
           Anuluj
         </button>
         <button
-          onClick={handleSubmit}
+          onClick={() => {
+            handleSubmit();
+            createNewNotification(notificationData);
+          }}
           disabled={disabledButton}
           className="w-full h-full border-4 border-black relative bg-custom-orange-200 rounded-3xl uppercase"
         >

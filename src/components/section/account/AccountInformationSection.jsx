@@ -37,7 +37,6 @@ const AccountInformationSection = () => {
         setUserData(response.data);
       });
       setUpdateErrors([]);
-      console.log(userData);
     } catch (error) {
       console.log(error);
     }
