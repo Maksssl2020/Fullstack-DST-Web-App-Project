@@ -6,6 +6,9 @@ export const GetRole = (role) => {
     case "REGISTERED": {
       return "Zarejestrowany";
     }
+    case "VOLUNTEER": {
+      return "Wolontariusz";
+    }
     default: {
       return "NIEZNANY!";
     }

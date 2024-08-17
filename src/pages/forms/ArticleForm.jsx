@@ -1,11 +1,7 @@
-import React, { useContext, useState } from "react";
-import DefaultModal from "../../components/modal/DefaultModal";
+import React, { useContext } from "react";
 import AnimatedPage from "../../animation/AnimatedPage";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
-import { useNavigate } from "react-router-dom";
 import FormItem from "../../components/form/FormItem";
-import axios from "../../helpers/AxiosConfig";
-import { TodayDate } from "../../helpers/Date";
 import AdminForumSection from "../../components/form/AdminForumSection";
 import { useMutation, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
@@ -25,7 +21,6 @@ const ArticleForm = () => {
       },
     });
   const { errors } = formState;
-  const [openModal, setOpenModal] = React.useState(false);
 
   const articleData = new FormData();
   articleData.append("title", getValues().title);
@@ -43,6 +38,8 @@ const ArticleForm = () => {
     mutationKey: ["addNewArticle", articleData],
     mutationFn: () => handleAddNewArticle(articleData),
     onSuccess: () => {
+      queryClient.invalidateQueries("newsSectionPostsData");
+      queryClient.invalidateQueries("homeNewsPostsData");
       toast.success("Dodano nowy artykuł!");
       reset();
     },
@@ -112,16 +109,6 @@ const ArticleForm = () => {
           <div className="w-full h-[60px] flex justify-center items-center text-2xl border-4 border-black rounded-2xl  bg-custom-orange-200 text-white font-bold">
             {`Liczba liter: ${contentLength.length}`}
           </div>
-          {/*{openModal && (*/}
-          {/*  <DefaultModal*/}
-          {/*    modalTitle={"Post dodany"}*/}
-          {/*    modalSubtitle={"Post został pomyślnie zaktualizowany!"}*/}
-          {/*    fistButtonTitle={"Strona główna"}*/}
-          {/*    firstButtonLink={"/"}*/}
-          {/*    secondButtonTitle={"Pozostań na stronie"}*/}
-          {/*    secondButtonClickAction={() => setOpenModal(false)}*/}
-          {/*  />*/}
-          {/*)}*/}
         </AdminForumSection>
       </div>
     </AnimatedPage>

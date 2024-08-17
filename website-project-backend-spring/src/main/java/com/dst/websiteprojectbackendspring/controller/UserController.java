@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.service.user.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -16,14 +20,19 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
-    @GetMapping("/{username}")
-    public ResponseEntity<User> getUser(@PathVariable String username) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userService.getUserByUsername(username));
+    @GetMapping("/all")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/{username}/avatar")
-    public ResponseEntity<String> getUserAvatar(@PathVariable String username) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userService.getUserAvatarByUsername(username));
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUser(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(userService.getUserById(userId));
+    }
+
+    @GetMapping("/{userId}/avatar")
+    public ResponseEntity<String> getUserAvatar(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(userService.getUserAvatarByUsername(userId));
     }
 
     @GetMapping("/{username}/id")
@@ -31,18 +40,24 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserIdByUsername(username));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> updateUser(
+    @PutMapping("/{id}/update-files")
+    public ResponseEntity<HttpStatus> updateUserFile(
             @PathVariable Long id,
-            @RequestParam(value = "username", required = false) String username,
-            @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
-            @RequestParam(value = "identifyImage", required = false) MultipartFile identifyPhoto
+            @RequestParam(value = "identifyPhoto", required = false) MultipartFile identifyPhoto
+    ) throws ChangeSetPersister.NotFoundException {
+        userService.updateUserFiles(id, avatar, identifyPhoto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}/update")
+    public ResponseEntity<HttpStatus> updateUserData(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> updates
 
             ) throws ChangeSetPersister.NotFoundException {
 
-        userService.updateUser(id, username, email, phoneNumber, avatar, identifyPhoto);
+        userService.updateUser(id, updates);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

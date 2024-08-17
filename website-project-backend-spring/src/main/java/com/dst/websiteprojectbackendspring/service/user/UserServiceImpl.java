@@ -1,64 +1,82 @@
 package com.dst.websiteprojectbackendspring.service.user;
 
+import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
+import com.dst.websiteprojectbackendspring.dto.user.UserDTOMapper;
 import com.dst.websiteprojectbackendspring.model.user.User;
+import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
-    public User getUserByUsername(String username) throws ChangeSetPersister.NotFoundException {
-        return userRepository.findByUsername(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll().stream().map(userDTOMapper).toList();
     }
 
     @Override
-    public void updateUser(Long id, String username, String email, String phoneNumber, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException {
-        User existingUser = userRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public User getUserById(Long userId) throws ChangeSetPersister.NotFoundException {
+        return userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    }
 
-        if (username != null ) {
-            existingUser.setUsername(username);
-        }
-        if (email != null) {
-            existingUser.setEmail(email);
-        }
-        existingUser.setPhoneNumber(phoneNumber);
-        if (avatar != null && !avatar.isEmpty()) {
-            try {
-                existingUser.setAvatar(avatar.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to upload avatar", e);
-            }
-        }
-        if (identifyPhoto != null && !identifyPhoto.isEmpty()) {
-            try {
-                existingUser.setIdentifyPhoto(identifyPhoto.getBytes());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to upload identify photo", e);
-            }
-        }
+    @Override
+    public void updateUserFiles(Long userId, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException {
+        User foundUser = userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         try {
-            userRepository.save(existingUser);
-        } catch (DataIntegrityViolationException exception) {
-            throw new DataIntegrityViolationException(exception.getMessage());
+            if (avatar != null && !avatar.isEmpty() ) {
+                foundUser.setAvatar(avatar.getBytes());
+            }
+            if (identifyPhoto != null && !identifyPhoto.isEmpty() ) {
+                foundUser.setIdentifyPhoto(identifyPhoto.getBytes());
+            }
+            foundUser.setId(userId);
+
+            userRepository.save(foundUser);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public String getUserAvatarByUsername(String username) throws ChangeSetPersister.NotFoundException {
-        User foundUser = userRepository.findByUsername(username).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public void updateUser(Long id, Map<String, Object> updates) throws ChangeSetPersister.NotFoundException {
+        User existingUser = userRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        updates.forEach((key, value) -> {
+            if (key.equals("role") && value != null) {
+                existingUser.setRole(UserRole.valueOf(value.toString()));
+            } else {
+                Field field = ReflectionUtils.findField(User.class, key);
+                if (field != null) {
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field, existingUser, value);
+                }
+            }
+        });
+
+        userRepository.save(existingUser);
+    }
+
+    @Override
+    public String getUserAvatarByUsername(Long userId) throws ChangeSetPersister.NotFoundException {
+        User foundUser = userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
         if (foundUser.getAvatar() != null) {
             byte[] userAvatar = foundUser.getAvatar();
             return Base64.getEncoder().encodeToString(userAvatar);

@@ -22,6 +22,8 @@ import CartPage from "./pages/CartPage";
 import Events from "./pages/Events";
 import EventForm from "./pages/forms/EventForm";
 import React from "react";
+import Users from "./pages/Users";
+import UserAccountAdminView from "./pages/UserAccountAdminView";
 
 function App() {
   const router = createBrowserRouter([
@@ -119,6 +121,14 @@ function App() {
         {
           path: "/events/add-event",
           element: <EventForm />,
+        },
+        {
+          path: "/users",
+          element: <Users />,
+        },
+        {
+          path: "/users/check-user/:userId",
+          element: <UserAccountAdminView />,
         },
       ],
     },

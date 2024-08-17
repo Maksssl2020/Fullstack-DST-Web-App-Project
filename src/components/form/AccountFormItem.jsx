@@ -1,6 +1,6 @@
 import React from "react";
 
-const AccountFormItem = ({ labelTitle, inputValue, inputFunction, errors }) => {
+const AccountFormItem = ({ labelTitle, register, value, errors }) => {
   const [editing, setEditing] = React.useState(false);
 
   const handleButtonClick = () => {
@@ -14,10 +14,10 @@ const AccountFormItem = ({ labelTitle, inputValue, inputFunction, errors }) => {
         <div className="w-full flex relative">
           <input
             type="text"
-            value={inputValue}
             disabled={editing === false}
+            defaultValue={value}
             className={`w-[80%] h-[60px] border-4 px-4 text-lg text-center focus:outline-none rounded-2xl ${editing ? "border-custom-orange-200" : "border-custom-gray-300"}`}
-            onChange={(event) => inputFunction(event.target.value)}
+            {...register}
           />
           <button
             onClick={handleButtonClick}

@@ -3,6 +3,7 @@ package com.dst.websiteprojectbackendspring.service.notification;
 import com.dst.websiteprojectbackendspring.model.notification.Notification;
 import com.dst.websiteprojectbackendspring.model.notification.NotificationRequest;
 import com.dst.websiteprojectbackendspring.model.user.User;
+import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.NotificationRepository;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -26,21 +29,25 @@ public class NotificationServiceImpl implements NotificationService {
         List<User> allUsers = userRepository.findAll();
 
         allUsers.forEach(user -> {
-            Notification notification = new Notification();
-            notification.setMessage(notificationRequest.message());
-            notification.setNotificationContentTitle(notificationRequest.notificationContentTitle());
-            notification.setLink(notificationRequest.link());
-            notification.setCreatedAt(LocalDateTime.now());
-            notification.setRead(false);
-            notification.setUser(user);
+            if (user.getRole() != UserRole.ADMIN) {
+                Notification notification = new Notification();
+                notification.setMessage(notificationRequest.message());
+                notification.setNotificationContentTitle(notificationRequest.notificationContentTitle());
+                notification.setLink(notificationRequest.link());
+                notification.setCreatedAt(LocalDateTime.now());
+                notification.setRead(false);
+                notification.setUser(user);
 
-            notificationRepository.save(notification);
+                notificationRepository.save(notification);
+            }
         });
     }
 
     @Override
     public List<Notification> getNotificationsByUserId(Long userId) {
-        return notificationRepository.findAllByUserId(userId);
+        return notificationRepository.findAllByUserId(userId).stream()
+                .sorted(Comparator.comparing(Notification::getId).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override

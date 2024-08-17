@@ -12,7 +12,10 @@ import {
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import Spinner from "../universal/Spinner";
-import { fetchUserAvatar } from "../../helpers/api-integration/UserDataHandling";
+import {
+  fetchUserAvatar,
+  fetchUserIdByUsername,
+} from "../../helpers/api-integration/UserDataHandling";
 
 const Comment = ({ commentData, postId }) => {
   const { username, role } = useContext(AuthContext);
@@ -23,9 +26,14 @@ const Comment = ({ commentData, postId }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
+  const { data: userId, isLoading: fetchingUserId } = useQuery(
+    ["userId", author],
+    () => fetchUserIdByUsername(author),
+  );
+
   const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostCommentsUserAvatar", author],
-    () => fetchUserAvatar(author),
+    ["forumPostCommentsUserAvatar", userId],
+    () => fetchUserAvatar(userId),
   );
 
   const { mutate: updateComment, isLoading: updatingComment } = useMutation({

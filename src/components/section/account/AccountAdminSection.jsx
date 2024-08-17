@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
 import AddingPhotoModal from "../../modal/AddingPhotoModal";
 
-const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
+const AccountAdminSection = ({ userData, register, errors }) => {
   const { role, accountCreationDate } = useContext(AuthContext);
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -44,16 +44,6 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
     setAvatar(userData.avatar);
   }, [userData]);
 
-  useEffect(() => {
-    onChange("username", userData.username !== username ? username : null);
-    onChange("email", userData.email !== email ? email : null);
-    onChange(
-      "phoneNumber",
-      userData.phoneNumber !== phoneNumber ? phoneNumber : null,
-    );
-    onChange("avatar", userData.avatar !== avatar ? avatar : null);
-  }, [username, phoneNumber, email, avatar]);
-
   const handleModalOpen = () => {
     setOpenModal(!openModal);
   };
@@ -81,7 +71,7 @@ const AccountAdminSection = ({ userData, onChange, updateErrors }) => {
             phoneNumber={phoneNumber}
             setPhoneNumber={setPhoneNumber}
             accountCreationDate={accountCreationDate}
-            updateErrors={updateErrors}
+            updateErrors={null}
           />
           <AccountSectionUserPhoto
             imageTitle={"Zdjęcie profilowe:"}

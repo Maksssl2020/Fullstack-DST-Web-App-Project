@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../helpers/provider/AuthProvider";
 
 const DrawerList = () => {
+  const { role } = useContext(AuthContext);
+
   const drawerListData = [
     {
       title: "Strona główna",
@@ -53,6 +56,13 @@ const DrawerList = () => {
           </li>
         </Link>
       ))}
+      {role === "ADMIN" && (
+        <Link to={"/users"}>
+          <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
+            {"Użytkownicy"}
+          </li>
+        </Link>
+      )}
     </ul>
   );
 };

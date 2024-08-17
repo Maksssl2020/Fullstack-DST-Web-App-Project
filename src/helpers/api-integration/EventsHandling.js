@@ -53,6 +53,7 @@ export const handleAddNewEvent = async (eventData) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
@@ -62,5 +63,6 @@ export const handleAddUserToTheEvent = async (eventId, userId) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };

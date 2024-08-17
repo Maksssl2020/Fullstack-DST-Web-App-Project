@@ -3,35 +3,39 @@ import AccountFormItem from "./AccountFormItem";
 import { DateParser, PeriodOfDays } from "../../helpers/Date";
 
 const AccountBasicDataForm = ({
-  username,
-  setUsername,
-  email,
-  setEmail,
-  phoneNumber,
-  setPhoneNumber,
+  register,
+  userData,
   accountCreationDate,
-  updateErrors,
+  errors,
 }) => {
   const periodOfDays = PeriodOfDays(accountCreationDate);
 
   const formData = [
     {
       title: "Nazwa użytkownika:",
-      value: username,
-      function: setUsername,
-      error: updateErrors.username,
+      value: userData.username,
+      register: {
+        ...register("username", {
+          required: "Nazwa użytkownika nie może być pusta!",
+        }),
+      },
+      error: errors?.username?.message,
     },
     {
       title: "Adres e-mail:",
-      value: email,
-      function: setEmail,
-      error: updateErrors.email,
+      value: userData.email,
+      register: {
+        ...register("email", {
+          required: "E-mail nie może być pusty!",
+        }),
+      },
+      error: errors?.email?.message,
     },
     {
       title: "Numer telefonu:",
-      value: phoneNumber === null ? "" : phoneNumber,
-      function: setPhoneNumber,
-      error: updateErrors.phoneNumber,
+      value: userData.phoneNumber,
+      register: { ...register("phoneNumber") },
+      error: errors?.phoneNumber?.message,
     },
   ];
 
@@ -41,8 +45,8 @@ const AccountBasicDataForm = ({
         <AccountFormItem
           key={index}
           labelTitle={data.title}
-          inputValue={data.value}
-          inputFunction={data.function}
+          register={data.register}
+          value={data.value}
           errors={data.error}
         />
       ))}

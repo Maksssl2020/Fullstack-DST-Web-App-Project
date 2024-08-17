@@ -8,7 +8,10 @@ import DeleteWarningModal from "../../modal/DeleteWarningModal";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { handlePostDelete } from "../../../helpers/api-integration/ForumPostsHandling";
 import Spinner from "../../universal/Spinner";
-import { fetchUserAvatar } from "../../../helpers/api-integration/UserDataHandling";
+import {
+  fetchUserAvatar,
+  fetchUserIdByUsername,
+} from "../../../helpers/api-integration/UserDataHandling";
 import { DateParser } from "../../../helpers/Date";
 
 const ForumPostCardMainDataPanel = ({ postData }) => {
@@ -18,9 +21,14 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
+  const { data: userId, isLoading: fetchingUserId } = useQuery(
+    ["userId", author],
+    () => fetchUserIdByUsername(author),
+  );
+
   const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostUserAvatar", author],
-    () => fetchUserAvatar(author),
+    ["forumPostUserAvatar", userId],
+    () => fetchUserAvatar(userId),
   );
 
   const { mutate, isLoading: deletingPost } = useMutation({

@@ -21,7 +21,7 @@ import ButtonWithLink from "../universal/ButtonWithLink";
 
 const ForumPostPageForm = () => {
   const { id } = useParams();
-  const { username, role } = useContext(AuthContext);
+  const { userId, username, role } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const { register, handleSubmit, getValues, formState, watch } = useForm();
   const { errors } = formState;
@@ -46,8 +46,8 @@ const ForumPostPageForm = () => {
   }, [id]);
 
   const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostForumUserAvatar", username],
-    () => fetchUserAvatar(username),
+    ["forumPostForumUserAvatar", userId],
+    () => fetchUserAvatar(userId),
   );
 
   const {

@@ -8,51 +8,35 @@ import { useQuery } from "react-query";
 import { fetchUserNotifications } from "../../../helpers/api-integration/NotificationsHandling";
 import Spinner from "../../universal/Spinner";
 import NotificationCard from "../../card/NotificationCard";
+import { useForm } from "react-hook-form";
+import DefaultModal from "../../modal/DefaultModal";
+import CloseIcon from "../../drawer/icons/CloseIcon";
+import FormItem from "../../form/FormItem";
 
-const AccountUserSection = ({ userData, onChange, updateErrors }) => {
+const AccountUserSection = ({
+  userData,
+  register,
+  handleImagesChange,
+  watch,
+  errors,
+}) => {
   const { userId, role, accountCreationDate } = useContext(AuthContext);
-  const [fullname, setFullname] = React.useState("");
-  const [username, setUsername] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [dateOfBirth, setDateOfBirth] = React.useState(null);
-  const [identifyImage, setIdentifyImage] = React.useState("");
-  const [avatar, setAvatar] = React.useState("");
+  const [fullName, setFullName] = React.useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
+
+  const { username, email, phoneNumber, dateOfBirth, identifyImage, avatar } =
+    userData;
 
   const { data: userNotifications, isLoading: fetchingUserNotifications } =
     useQuery(["userNotificationsData", userId], () =>
       fetchUserNotifications(userId),
     );
 
-  console.log(userNotifications);
-
   useEffect(() => {
-    setUsername(userData.username);
-    setEmail(userData.email);
-    setPhoneNumber(userData.phoneNumber);
-    setDateOfBirth([userData.dateOfBirth]);
-    setIdentifyImage(userData.identifyPhoto);
-    setAvatar(userData.avatar);
-
     const fullName = `${userData.firstName} ${userData.lastName}`;
-    setFullname(fullName);
+    setFullName(fullName);
   }, [userData]);
-
-  useEffect(() => {
-    onChange("username", userData.username !== username ? username : null);
-    onChange("email", userData.email !== email ? email : null);
-    onChange(
-      "phoneNumber",
-      userData.phoneNumber !== phoneNumber ? phoneNumber : null,
-    );
-    onChange(
-      "identifyImage",
-      userData.identifyPhoto !== identifyImage ? identifyImage : null,
-    );
-    onChange("avatar", userData.avatar !== avatar ? avatar : null);
-  }, [username, phoneNumber, email, identifyImage, avatar]);
 
   const handleModalOpen = (imageTitle = undefined) => {
     setOpenModal(!openModal);
@@ -62,27 +46,24 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
     }
   };
 
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      setAvatar(file);
-    }
-  };
-
-  const handleIdentifyPhotoChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      setIdentifyImage(file);
-    }
-
-    console.log(file);
-  };
+  useEffect(() => {
+    watch((values) => {
+      handleImagesChange(
+        "identifyPhoto",
+        userData.identifyPhoto !== values.identifyPhoto
+          ? values.identifyPhoto
+          : null,
+      );
+      handleImagesChange(
+        "avatar",
+        userData.avatar !== values.avatar ? values.avatar : null,
+      );
+    });
+  }, [userData, watch]);
 
   const imagesData = [
     {
-      title: "Zdjęcie identyfikujące:",
+      title: "Zdjęcie identyfikacyjne:",
       imageSrc: userData.identifyPhoto,
       bottomDataTitle: "Data urodzenia:",
       bottomData: dateOfBirth,
@@ -109,20 +90,16 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
           <div className="w-[60%] h-[85px] flex items-center p-2 bg-custom-gray-300 rounded-2xl">
             <p>Imię i nazwisko:</p>
             <p className="w-[80%] border-4 flex justify-center items-center text-2xl border-custom-gray-200 h-full bg-white rounded-2xl ml-auto">
-              {fullname}
+              {fullName}
             </p>
           </div>
         </div>
         <div className="flex w-full">
           <AccountBasicDataForm
-            username={username}
-            setUsername={setUsername}
-            email={email}
-            setEmail={setEmail}
-            phoneNumber={phoneNumber}
-            setPhoneNumber={setPhoneNumber}
+            register={register}
+            userData={userData}
             accountCreationDate={accountCreationDate}
-            updateErrors={updateErrors}
+            errors={errors}
           />
           {imagesData.map((data, index) => (
             <AccountSectionUserPhoto
@@ -140,22 +117,34 @@ const AccountUserSection = ({ userData, onChange, updateErrors }) => {
         <div className="w-full h-[100px] bg-custom-orange-200 rounded-2xl flex justify-center items-center">
           <h2 className="text-white text-4xl font-bold italic">Sprawdź:</h2>
         </div>
-        <div className="px-8 mt-4 flex flex-col gap-4">
+        <div className="px-8 py-4 flex flex-col gap-4">
           {userNotifications?.map((data, index) => (
             <NotificationCard key={index} data={data} />
           ))}
         </div>
       </div>
       {openModal && (
-        <AddingPhotoModal
-          modalTitle={selectedImage.replace(":", " ")}
-          closeModal={handleModalOpen}
-          onChangeAction={
-            selectedImage.includes("profilowe")
-              ? handleAvatarChange
-              : handleIdentifyPhotoChange
-          }
-        />
+        <DefaultModal title={selectedImage}>
+          <button
+            onClick={() => setOpenModal(false)}
+            className="absolute size-12 bg-white border-[3px] flex justify-center items-center rounded-full ml-auto mt-3 mr-3 border-black inset-0"
+          >
+            <CloseIcon size={"size-8"} />
+          </button>
+          <FormItem
+            type={"file"}
+            labelData={"Wybierz zdjęcie:"}
+            containerStyling={"text-lg font-bold"}
+            inputStyling={
+              "w-full file:w-[30%] file:border-0 border-4 border-black file:border-r-4 file:bg-custom-orange-200 file:text-white file:font-bold file:hover:bg-custom-orange-100 file:text-sm file:uppercase file:rounded-l-lg file:h-full h-[75px] font-bold text-lg text-black bg-custom-gray-200 rounded-2xl"
+            }
+            register={
+              selectedImage.includes("profilowe")
+                ? { ...register("avatar") }
+                : { ...register("identifyPhoto") }
+            }
+          />
+        </DefaultModal>
       )}
     </>
   );
