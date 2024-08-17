@@ -9,23 +9,14 @@ import "./HomeNewsSliderStyle.css";
 import HomeNewsCard from "../card/HomeNewsCard";
 import DeleteWarningModal from "../modal/DeleteWarningModal";
 
-const HomeNewsCardSlider = ({ sliderData, handlePostsDelete }) => {
+const HomeNewsCardSlider = ({ sliderData }) => {
   const [openModal, setOpenModal] = useState(false);
-  const [postId, setPostId] = useState();
   const data = sliderData;
   const pagination = {
     clickable: true,
     renderBullet: function (index, className) {
       return '<div class="' + className + '">' + (index + 1) + "</div>";
     },
-  };
-
-  const handleOpenModal = () => {
-    setOpenModal(!openModal);
-  };
-
-  const handleGetPostId = (postId) => {
-    setPostId(postId);
   };
 
   return (
@@ -53,22 +44,10 @@ const HomeNewsCardSlider = ({ sliderData, handlePostsDelete }) => {
       >
         {data.map((data, index) => (
           <SwiperSlide key={index} className="flex justify-center mb-20">
-            <HomeNewsCard
-              key={data.id}
-              cardData={data}
-              handleDelete={handleGetPostId}
-              handleModalOpen={handleOpenModal}
-            />
+            <HomeNewsCard key={data.id} cardData={data} />
           </SwiperSlide>
         ))}
       </Swiper>
-      {openModal && (
-        <DeleteWarningModal
-          itemId={postId}
-          handleDeleteFunc={handlePostsDelete}
-          onClose={handleOpenModal}
-        />
-      )}
     </div>
   );
 };

@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,8 +28,21 @@ public class UserServiceImpl implements UserService{
     private final UserDTOMapper userDTOMapper;
 
     @Override
-    public List<UserDTO> findAllUsers() {
-        return userRepository.findAll().stream().map(userDTOMapper).toList();
+    public List<UserDTO> findAllUsersWithoutAdmins() {
+        return userRepository.findAll().stream()
+                .map(userDTOMapper)
+                .filter(user -> user.role() != UserRole.ADMIN)
+                .sorted(Comparator.comparing(UserDTO::id).reversed())
+                .toList();
+    }
+
+    @Override
+    public List<UserDTO> findAllVolunteers() {
+        return userRepository.findAll().stream()
+                .map(userDTOMapper)
+                .filter(user -> user.role().equals(UserRole.VOLUNTEER))
+                .sorted(Comparator.comparing(UserDTO::id).reversed())
+                .toList();
     }
 
     @Override

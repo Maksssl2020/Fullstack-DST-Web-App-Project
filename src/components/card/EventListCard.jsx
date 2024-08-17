@@ -1,6 +1,6 @@
 import React from "react";
 
-const VolunteerListCard = ({ number, title }) => {
+const EventListCard = ({ number, title }) => {
   return (
     <li className="w-full h-[65px] border-4 text-xl border-custom-gray-300 relative flex rounded-2xl">
       <div className="w-[20%] absolute rounded-xl font-bold inset-0 flex justify-center items-center h-full bg-custom-gray-300 text-white">
@@ -13,4 +13,4 @@ const VolunteerListCard = ({ number, title }) => {
   );
 };
 
-export default VolunteerListCard;
+export default EventListCard;

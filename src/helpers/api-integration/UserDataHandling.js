@@ -9,6 +9,15 @@ export const fetchAllUsers = async () => {
   }
 };
 
+export const fetchAllVolunteers = async () => {
+  try {
+    const response = await axios.get(`/users/volunteers`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const fetchUserById = async (userId) => {
   try {
     const response = await axios.get(`/users/${userId}`);
@@ -42,6 +51,16 @@ export const fetchUserIdByUsername = async (username) => {
     return response.data;
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const handleSendUserWarn = async (userId, warnData) => {
+  try {
+    const response = await axios.post(`/warns/${userId}/send-warn`, warnData);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 };
 

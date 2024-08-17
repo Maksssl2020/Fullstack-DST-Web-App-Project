@@ -1,105 +1,67 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../helpers/provider/AuthProvider";
-import axios from "../../helpers/AxiosConfig";
-import { TodayDate } from "../../helpers/Date";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ModalWithClickFunction from "../../components/modal/ModalWithClickFunction";
 import AnimatedPage from "../../animation/AnimatedPage";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  fetchNewsPostDataByPostId,
+  handleNewsPostUpdate,
+} from "../../helpers/api-integration/NewsPostsHandling";
+import Spinner from "../../components/universal/Spinner";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import AdminForumSection from "../../components/form/AdminForumSection";
 
 const NewsPostForm = () => {
-  const { username } = useContext(AuthContext);
   const { id } = useParams();
-  const [content, setContent] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const queryClient = useQueryClient();
+  const { register, getValues, handleSubmit, formState, watch } = useForm();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (id) {
-      setIsEditing(true);
-      axios.get(`/news/${id}`).then((response) => {
-        setContent(response.data.content);
-      });
-    }
-  }, [id]);
+  const { data: postData, isLoading: fetchingPostData } = useQuery(
+    ["newsPostDataToUpdate", id],
+    () => fetchNewsPostDataByPostId(id),
+  );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { mutate: updatePostData, isLoading: updatingPostData } = useMutation({
+    mutationKey: ["updateNewsPostData", id],
+    mutationFn: () =>
+      handleNewsPostUpdate(id, {
+        content: getValues().content,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries("newsSectionPostsData");
+      queryClient.invalidateQueries("newsPostDataToUpdate");
+      toast.success("Zaktualizowano post tęczowych aktualności!");
+      navigate("/news");
+    },
+    onError: (error) => console.log(error),
+  });
 
-    const postData = {
-      author: username,
-      content: content,
-      creationDate: TodayDate(),
-    };
+  if (fetchingPostData || updatingPostData) {
+    return <Spinner />;
+  }
 
-    try {
-      if (isEditing) {
-        await axios.put(`/news/edit-post/${id}`, postData);
-      } else {
-        await axios.post("/news/add-new-post", postData);
-      }
-
-      setContent("");
-      setOpenModal(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleCancelClick = () => {
-    navigate("/news");
-  };
+  let contentLength = watch().content?.length;
 
   return (
     <AnimatedPage>
-      <div className="w-full font-lato h-auto flex justify-center">
-        <div className="my-8 flex flex-col p-8 gap-6 w-[750px] h-[850px] border-4 border-black rounded-2xl">
-          <div className="w-full flex text-2xl font-bold items-center justify-between">
-            <p>Jesteś zalogowany jako:</p>
-            <p>{username}</p>
-          </div>
-          <p className="text-2xl font-bold mt-6 ml-4">
-            {isEditing ? "Edytuj treść posta" : "Wpisz treść posta:"}
+      <div className="w-full h-auto flex justify-center font-lato py-8">
+        <AdminForumSection
+          handleSubmit={handleSubmit(updatePostData)}
+          submitTitle={"Zaktualizuj post"}
+          disabledButton={contentLength < 10}
+          cancelLink={"/news"}
+        >
+          <p className="text-2xl font-bold mt-6 ml-4 mr-auto">
+            Edytuj treść posta:
           </p>
           <textarea
-            value={content}
+            defaultValue={postData.content}
             maxLength={300}
-            onChange={(event) => setContent(event.target.value)}
-            className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[65%] border-4 rounded-2xl border-black resize-none"
-          ></textarea>
-          <div className="flex w-full h-[70px] text-3xl font-bold text-white gap-4">
-            <button
-              onClick={handleCancelClick}
-              className="w-full h-full bg-custom-orange-200 rounded-3xl uppercase"
-            >
-              Anuluj
-            </button>
-            <button
-              disabled={content.length < 5}
-              onClick={handleSubmit}
-              className="w-full h-full relative bg-custom-orange-200 rounded-3xl uppercase"
-            >
-              {content.length < 5 && (
-                <div className="w-full absolute inset-0 h-full bg-black opacity-20 rounded-3xl"></div>
-              )}
-              {isEditing ? "Zaktualizuj post" : "dodaj post"}
-            </button>
-          </div>
-          {openModal && (
-            <ModalWithClickFunction
-              modalTitle={isEditing ? "Post zaktualizowany" : "Post dodany"}
-              modalSubtitle={
-                isEditing
-                  ? "Post został pomyślnie zaktualizowany!"
-                  : "Nowy post w aktualnościach został dodany! Dodaj kolejny lub przejdź na stronę aktualności."
-              }
-              fistButtonTitle={"Przejdź do aktualności"}
-              firstButtonLink={"/news"}
-              secondButtonTitle={"Pozostań na stronie"}
-              secondButtonClickAction={() => setOpenModal(false)}
-            />
-          )}
-        </div>
+            className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[450px] border-4 rounded-2xl border-black resize-none"
+            {...register("content")}
+          />
+        </AdminForumSection>
       </div>
     </AnimatedPage>
   );

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import DefaultModal from "../../modal/DefaultModal";
 import AccountAdminSection from "./AccountAdminSection";
@@ -13,7 +13,6 @@ import {
 } from "../../../helpers/api-integration/UserDataHandling";
 import Spinner from "../../universal/Spinner";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 
 const AccountInformationSection = () => {
   const { userId, isAuthenticated, role, username, logout } =
@@ -22,11 +21,14 @@ const AccountInformationSection = () => {
   const { register, setValue, watch, handleSubmit, getValues, formState } =
     useForm({});
   const { errors } = formState;
-  const [showModal, setShowModal] = React.useState(false);
-  const [isChange, setIsChange] = React.useState(false);
+  const [avatar, setAvatar] = useState(null);
+  const [isChangeInTextData, setIsChangeInTextData] = React.useState(false);
+  const [isChangeInFilesData, setIsChangeInFilesData] = React.useState(false);
   const [updatedDataForm, setUpdatedDataForm] = React.useState({});
-  const [updatedImagesForm, setUpdatedImagesForm] = React.useState({});
-  const navigate = useNavigate();
+  const [updatedImagesForm, setUpdatedImagesForm] = React.useState({
+    avatar: null,
+    identifyPhoto: null,
+  });
 
   const { data: userData, isLoading: fetchingUserData } = useQuery(
     ["accountUserData", userId],
@@ -41,7 +43,8 @@ const AccountInformationSection = () => {
     mutationFn: () => updateUserData(userId, updatedDataForm),
     onSuccess: () => {
       queryClient.invalidateQueries("accountUserData");
-      if (updatedDataForm.username !== null) {
+      setIsChangeInTextData(false);
+      if (updatedDataForm.username !== userData.username) {
         logout();
       }
     },
@@ -65,46 +68,70 @@ const AccountInformationSection = () => {
   );
 
   useEffect(() => {
-    setValue("username", userData?.username);
-    setValue("email", userData?.email);
-    setValue("phoneNumber", userData?.phoneNumber);
-    setValue("identifyPhoto", userData?.identifyPhoto);
-    setValue("avatar", userData?.avatar);
-  }, [setValue, userData]);
+    if (userData) {
+      setValue("username", userData.username);
+      setValue("email", userData.email);
+      setValue("phoneNumber", userData.phoneNumber);
+      setValue("identifyPhoto", userData.identifyPhoto);
+      setValue("avatar", userData.avatar);
+      setAvatar(userData.avatar);
+
+      setUpdatedDataForm({
+        username: userData.username,
+        email: userData.email,
+        phoneNumber: userData.phoneNumber,
+      });
+    }
+  }, [userData, setValue]);
 
   useEffect(() => {
-    watch((values) => {
-      setUpdatedDataForm({
-        username:
-          values.username !== userData?.username ? values.username : null,
-        email: values.email !== userData?.email ? values.email : null,
-        phoneNumber:
-          values.phoneNumber !== userData?.phoneNumber &&
-          values.phoneNumber !== ""
+    if (userData) {
+      watch((values) => {
+        const isUsernameChanged = values.username !== userData.username;
+        const isEmailChanged = values.email !== userData.email;
+        const isPhoneNumberChanged =
+          values.phoneNumber !== userData.phoneNumber;
+
+        setUpdatedDataForm({
+          username: isUsernameChanged ? values.username : userData.username,
+          email: isEmailChanged ? values.email : userData.email,
+          phoneNumber: isPhoneNumberChanged
             ? values.phoneNumber
-            : null,
+            : userData.phoneNumber,
+        });
+
+        setIsChangeInTextData(
+          isUsernameChanged || isEmailChanged || isPhoneNumberChanged,
+        );
       });
-    });
+    }
   }, [watch, userData]);
 
   useEffect(() => {
-    setIsChange(
-      updatedDataForm.username !== null ||
-        updatedDataForm.email !== null ||
-        updatedDataForm.phoneNumber !== null ||
-        updatedImagesForm.avatar !== null ||
+    setIsChangeInFilesData(
+      updatedImagesForm.avatar !== null ||
         updatedImagesForm.identifyPhoto !== null,
     );
-  }, [updatingUser, updatedDataForm, updatedImagesForm]);
+  }, [role, updatedImagesForm]);
+
+  console.log(updatedImagesForm);
+  console.log(updatedDataForm);
+  console.log(getValues());
+  console.log(errors);
 
   const handleImagesChange = (field, value) => {
+    if (field === "avatar") {
+      if (value instanceof File) {
+        const imageUrl = URL.createObjectURL(value);
+        setAvatar(imageUrl);
+      }
+    }
+
     setUpdatedImagesForm((prevData) => ({
       ...prevData,
       [field]: value,
     }));
   };
-  console.log(updatedImagesForm);
-  console.log(updatedDataForm);
 
   if (!isAuthenticated) {
     return (
@@ -140,8 +167,12 @@ const AccountInformationSection = () => {
   }
 
   const onSubmit = () => {
-    updateUser();
-    updateUserFiles();
+    if (isChangeInTextData) {
+      updateUser();
+    }
+    if (isChangeInFilesData) {
+      updateUserFiles();
+    }
   };
 
   return (
@@ -149,7 +180,7 @@ const AccountInformationSection = () => {
       <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[950px]">
         <div className="flex items-center mt-8">
           <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
-          {isChange && (
+          {(isChangeInTextData || isChangeInFilesData) && (
             <button
               onClick={handleSubmit(onSubmit)}
               className="bg-custom-orange-200 rounded-2xl ml-auto mr-[15%] text-white h-[75px] font-bold border-4 border-black p-4 w-auto"
@@ -163,8 +194,10 @@ const AccountInformationSection = () => {
             {role === "ADMIN" ? (
               <AccountAdminSection
                 userData={userData}
+                avatar={avatar}
                 register={register}
                 handleImagesChange={handleImagesChange}
+                watch={watch}
                 errors={errors}
               />
             ) : (

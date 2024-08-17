@@ -4,12 +4,33 @@ import { AuthContext } from "../../helpers/provider/AuthProvider";
 import EditIcon from "../../icons/EditIcon";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "../../icons/DeleteIcon";
+import { useMutation, useQueryClient } from "react-query";
+import { handleHomeNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling";
+import toast from "react-hot-toast";
+import Spinner from "../universal/Spinner";
+import { AnimatePresence } from "framer-motion";
+import DefaultModal from "../modal/DefaultModal";
 
-const HomeNewsCard = ({ cardData, handleDelete, handleModalOpen }) => {
+const HomeNewsCard = ({ cardData }) => {
   const { role } = useContext(AuthContext);
   const { id, content, author, creationDate, image } = cardData;
+  const queryClient = useQueryClient();
+  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
+  const { mutate: deleteHomePost, isLoading: deletingHomePost } = useMutation({
+    mutationKey: ["deleteHomePost", id],
+    mutationFn: () => handleHomeNewsPostDelete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries("homeNewsPostsData");
+      toast.success("Usunięto post tęczowych wiadomości na stronie głównej!");
+    },
+    onError: (error) => console.log(error),
+  });
+
+  if (deletingHomePost) {
+    return <Spinner />;
+  }
   return (
     <div className="max-xl:h-[575px] max-xl:w-[325px] max-2xl:h-[650px] max-2xl:w-[375px] 2xl:h-[750px] 2xl:w-[450px] rounded-lg bg-white p-4">
       <div className="h-full w-full rounded-lg bg-custom-gray-100">
@@ -28,10 +49,7 @@ const HomeNewsCard = ({ cardData, handleDelete, handleModalOpen }) => {
                 <EditIcon size={"max-xl:size-8 xl:size-12"} />
               </button>
               <button
-                onClick={() => {
-                  handleModalOpen();
-                  handleDelete(id);
-                }}
+                onClick={() => setOpenModal(true)}
                 className="max-xl:border-2 xl:border-4 border-black max-xl:size-12 xl:size-16 bg-white rounded-full flex items-center justify-center"
               >
                 <DeleteIcon size={"max-xl:size-8 xl:size-12"} />
@@ -42,13 +60,41 @@ const HomeNewsCard = ({ cardData, handleDelete, handleModalOpen }) => {
         <div className="z-10 h-[40%] w-full -translate-y-7 rounded-b-lg bg-custom-gray-100 max-xl:p-4 xl:px-8 xl:py-6">
           <PostBannerWithLogoAndDate
             authorName={"Dwie Strony Tęczy"}
-            date={"09.02.2024"}
+            date={creationDate}
           />
           <p className="mt-4 max-xl:text-xs max-2xl:text-sm text-justify">
             {content}
           </p>
         </div>
       </div>
+      <AnimatePresence>
+        {openModal && (
+          <DefaultModal
+            title="UWAGA!"
+            subtitle="Czy na pewno chcesz usunąć post?"
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteHomePost();
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              tak
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              nie
+            </button>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

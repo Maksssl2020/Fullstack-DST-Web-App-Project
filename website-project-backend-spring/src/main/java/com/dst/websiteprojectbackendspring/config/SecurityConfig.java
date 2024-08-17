@@ -26,24 +26,23 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorization -> {
-                    authorization.requestMatchers(
-                                    "/api/v1/auth/**",
-                                    "/api/v1/comments/**",
-                                    "/api/v1/news/**",
-                                    "/api/v1/forum/**",
-                                    "/api/v1/home/posts/**",
-                                    "/api/v1/products/**",
-                                    "/api/v1/users/**",
-                                    "/api/v1/articles/**",
-                                    "/api/v1/shop/carts/**",
-                                    "/api/v1/instagram/**",
-                                    "/api/v1/events/**",
-                                    "/api/v1/notifications/**"
-                    ).permitAll()
-                            .anyRequest()
-                            .authenticated();
-                })
+                .authorizeHttpRequests(authorization -> authorization.requestMatchers(
+                                "/api/v1/auth/**",
+                                "/api/v1/comments/**",
+                                "/api/v1/news/**",
+                                "/api/v1/forum/**",
+                                "/api/v1/home/posts/**",
+                                "/api/v1/products/**",
+                                "/api/v1/users/**",
+                                "/api/v1/articles/**",
+                                "/api/v1/shop/carts/**",
+                                "/api/v1/instagram/**",
+                                "/api/v1/events/**",
+                                "/api/v1/notifications/**",
+                                "/api/v1/warns/**"
+                ).permitAll()
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

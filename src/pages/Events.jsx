@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import EventCard from "../components/card/EventCard";
-import EventsListCard from "../components/card/VolunteerListCard";
+import EventsListCard from "../components/card/EventListCard";
 import AnimatedPage from "../animation/AnimatedPage";
 import { useQuery } from "react-query";
 import {
@@ -11,6 +11,8 @@ import Spinner from "../components/universal/Spinner";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import DefaultModal from "../components/modal/DefaultModal";
 import ButtonWithLink from "../components/universal/ButtonWithLink";
+import { fetchAllVolunteers } from "../helpers/api-integration/UserDataHandling";
+import VolunteerListCard from "../components/card/VolunteerDataCard";
 
 const Events = () => {
   const { isAuthenticated, role, userId } = useContext(AuthContext);
@@ -22,40 +24,55 @@ const Events = () => {
 
   const { data: userEventsData, isLoading: fetchingUserEventsData } = useQuery(
     ["userEventsData", userId],
-    () => fetchAllUserEvents(userId),
+    () => {
+      if (isAuthenticated) {
+        return fetchAllUserEvents(userId);
+      }
+    },
   );
 
-  if (fetchingEventsData || fetchingUserEventsData) {
+  const { data: allVolunteersData, isLoading: fetchingAllVolunteersData } =
+    useQuery(["allVolunteersData"], () => {
+      if (isAuthenticated && role === "ADMIN") {
+        return fetchAllVolunteers();
+      }
+    });
+
+  if (
+    fetchingEventsData ||
+    fetchingUserEventsData ||
+    fetchingAllVolunteersData
+  ) {
     return <Spinner />;
   }
 
   return (
     <AnimatedPage>
+      {!isAuthenticated && (
+        <DefaultModal
+          title={"Informacja"}
+          subtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
+        >
+          <div className="flex gap-6">
+            <ButtonWithLink
+              title={"Zaloguj się"}
+              link={"/sign-in"}
+              className={
+                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+              }
+            />
+            <ButtonWithLink
+              title={"Strona główna"}
+              link={"/"}
+              className={
+                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+              }
+            />
+          </div>
+        </DefaultModal>
+      )}
       <div className="w-full h-auto flex justify-center font-lato">
-        {!isAuthenticated && (
-          <DefaultModal
-            title={"Informacja"}
-            subtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
-          >
-            <div className="flex gap-6">
-              <ButtonWithLink
-                title={"Zaloguj się"}
-                link={"/sign-in"}
-                className={
-                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-                }
-              />
-              <ButtonWithLink
-                title={"Strona główna"}
-                link={"/"}
-                className={
-                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-                }
-              />
-            </div>
-          </DefaultModal>
-        )}
-        <div className="w-[1550px] h-auto bg-custom-gray-400 mt-8 rounded-2xl flex justify-between">
+        <div className="w-[1550px] h-auto bg-white mt-8 rounded-2xl flex justify-between">
           <div className="w-[60%] h-full space-y-6">
             <div className="w-full h-[100px] bg-custom-pink-100 rounded-2xl flex justify-center items-center">
               <h1 className="text-4xl text-white italic font-bold">
@@ -65,7 +82,7 @@ const Events = () => {
             {eventsData.map((data, index) => (
               <EventCard
                 eventData={data}
-                number={eventsData.length - (index + 1)}
+                number={data.eventNumber}
                 key={index}
               />
             ))}
@@ -78,25 +95,22 @@ const Events = () => {
             </div>
             <div className="w-full h-auto px-4 mt-4 flex flex-col gap-4">
               {role === "ADMIN" ? (
-                <div>
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                  <EventsListCard />
-                </div>
+                <ul className="px-4 mt-4 flex flex-col gap-4">
+                  {allVolunteersData?.map((data, index) => (
+                    <VolunteerListCard
+                      key={index}
+                      username={data.username}
+                      accountCreationDate={data.accountCreationDate}
+                    />
+                  ))}
+                </ul>
               ) : (
                 <ul className="px-4 mt-4 flex flex-col gap-4">
-                  {userEventsData.map((data, index) => (
+                  {userEventsData?.map((data, index) => (
                     <EventsListCard
                       key={index}
                       title={data.title}
-                      number={index}
+                      number={data.eventNumber}
                     />
                   ))}
                 </ul>

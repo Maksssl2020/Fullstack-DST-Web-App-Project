@@ -10,6 +10,7 @@ const AdminForumSection = ({
   handleSubmit,
   disabledButton,
   submitTitle,
+  cancelLink = "/",
   notificationData = undefined,
 }) => {
   const { username } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const AdminForumSection = ({
         queryClient.invalidateQueries("userNotificationsData");
       },
       onError: (error) => console.log(error),
-      enabled: notificationData !== undefined,
+      enabled: notificationData !== undefined && notificationData !== null,
     });
 
   if (creatingNewNotification) {
@@ -41,7 +42,7 @@ const AdminForumSection = ({
 
       <div className="flex w-full h-[70px] mt-16 text-2xl font-bold text-white gap-4">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(cancelLink)}
           className="w-full h-full border-4 border-black bg-custom-orange-200 rounded-3xl uppercase"
         >
           Anuluj

@@ -21,14 +21,16 @@ export const fetchAmountOfNonReadUserNotifications = async (userId) => {
 };
 
 export const sendNewNotification = async (notificationData) => {
-  try {
-    const response = await axios.post(
-      "/notifications/add-notification",
-      notificationData,
-    );
-    return response.data;
-  } catch (error) {
-    console.log(error);
+  if (notificationData) {
+    try {
+      const response = await axios.post(
+        "/notifications/add-notification",
+        notificationData,
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 };
 

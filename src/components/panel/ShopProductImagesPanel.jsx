@@ -1,25 +1,23 @@
-import React, { useEffect } from "react";
-import axios from "../../helpers/AxiosConfig";
+import React from "react";
+import { useQuery } from "react-query";
+import { fetchProductImages } from "../../helpers/api-integration/ShopProductsHandling";
+import Spinner from "../universal/Spinner";
 
 const ShopProductImagesPanel = ({ productId, cardColor }) => {
-  const [productImages, setProductImages] = React.useState([]);
   const [chosenImage, setChosenImage] = React.useState(0);
 
-  useEffect(() => {
-    try {
-      axios.get(`/products/images/${productId}`).then((response) => {
-        setProductImages(response.data.flatMap((data) => data.image));
-      });
-
-      console.log(productImages);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [productId]);
+  const { data: productImages, isLoading: fetchingProductImages } = useQuery(
+    ["productPageImages", productId],
+    () => fetchProductImages(productId),
+  );
 
   const handleImageClick = (imageIndex) => {
     setChosenImage(imageIndex);
   };
+
+  if (fetchingProductImages) {
+    return <Spinner />;
+  }
 
   return (
     <>

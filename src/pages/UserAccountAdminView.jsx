@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchUserById,
@@ -18,6 +18,7 @@ const UserAccountAdminView = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalContent, setModalContent] = React.useState(null);
   const [userUpdateData, setUserUpdateData] = React.useState({});
+  const navigate = useNavigate();
 
   const { data: userAccountViewData, isLoading: fetchingUserAccountViewData } =
     useQuery(["userAccountViewData", userId], () => fetchUserById(userId));
@@ -175,7 +176,13 @@ const UserAccountAdminView = () => {
               Anuluj
             </button>
             <button
-              onClick={updateUser}
+              onClick={() => {
+                if (modalContent.includes("warn")) {
+                  navigate(`/users/create-warn/${userId}/${username}`);
+                } else {
+                  updateUser();
+                }
+              }}
               className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
             >
               Potwierdź

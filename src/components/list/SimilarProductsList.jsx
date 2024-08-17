@@ -28,19 +28,23 @@ const SimilarProductsList = ({ productCategories, productId }) => {
 
   return (
     <>
-      <h2 className="text-5xl font-bold">Podobne artykuły</h2>
-      <ul className="w-full flex h-auto">
-        {similarProductsList.map((data, index) => (
-          <motion.li whileHover={{ y: -15 }} key={index}>
-            <RainbowShopProductCard
-              cardData={data}
-              cardColor={getBackgroundColor(index)}
-              cardType="LIST"
-              size={"size-auto"}
-            />
-          </motion.li>
-        ))}
-      </ul>
+      {similarProductsList.length > 0 && (
+        <>
+          <h2 className="text-5xl font-bold">Podobne artykuły</h2>
+          <ul className="w-full flex h-auto">
+            {similarProductsList.map((data, index) => (
+              <motion.li whileHover={{ y: -15 }} key={index}>
+                <RainbowShopProductCard
+                  cardData={data}
+                  cardColor={getBackgroundColor(index)}
+                  cardType="LIST"
+                  size={"size-auto"}
+                />
+              </motion.li>
+            ))}
+          </ul>
+        </>
+      )}
     </>
   );
 };

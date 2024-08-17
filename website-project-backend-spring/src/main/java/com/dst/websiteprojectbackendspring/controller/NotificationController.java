@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.model.notification.Notification;
+import com.dst.websiteprojectbackendspring.dto.notification.NotificationDTO;
 import com.dst.websiteprojectbackendspring.model.notification.NotificationRequest;
 import com.dst.websiteprojectbackendspring.service.notification.NotificationServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class NotificationController {
     private final NotificationServiceImpl notificationService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<Notification>> getNotificationsByUserId(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<NotificationDTO>> getNotificationsByUserId(@PathVariable("userId") Long userId) {
         return ResponseEntity.ok(notificationService.getNotificationsByUserId(userId));
     }
 

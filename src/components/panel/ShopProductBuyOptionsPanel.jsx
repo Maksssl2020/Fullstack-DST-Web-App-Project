@@ -71,8 +71,6 @@ const ShopProductBuyOptionsPanel = ({
     return <Spinner />;
   }
 
-  setProductCategories(productCategories);
-
   const handleQuantitySubtraction = () => {
     if (quantity - 1 >= 1) {
       setQuantity(quantity - 1);

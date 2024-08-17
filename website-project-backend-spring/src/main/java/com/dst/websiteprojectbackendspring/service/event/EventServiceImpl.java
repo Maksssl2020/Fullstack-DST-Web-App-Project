@@ -67,10 +67,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Long countOtherRegisteredUsers(Long eventId) {
-        Long allEventUsers = eventRepository.countByIdAndUserRole(eventId, UserRole.REGISTERED);
-        Long allEventVolunteers = eventRepository.countByIdAndUserRole(eventId, UserRole.VOLUNTEER);
-
-        return allEventUsers - allEventVolunteers;
+        return eventRepository.countByIdAndUserRole(eventId, UserRole.REGISTERED);
     }
 
     @Override

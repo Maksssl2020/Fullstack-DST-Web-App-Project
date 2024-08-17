@@ -21,8 +21,13 @@ public class UserController {
     private final UserServiceImpl userService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(userService.findAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsersWithoutAdmins() {
+        return ResponseEntity.ok(userService.findAllUsersWithoutAdmins());
+    }
+
+    @GetMapping("/volunteers")
+    public ResponseEntity<List<UserDTO>> getAllVolunteers() {
+        return ResponseEntity.ok(userService.findAllVolunteers());
     }
 
     @GetMapping("/{userId}")
@@ -41,7 +46,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/update-files")
-    public ResponseEntity<HttpStatus> updateUserFile(
+    public ResponseEntity<HttpStatus> updateUserFiles(
             @PathVariable Long id,
             @RequestParam(value = "avatar", required = false) MultipartFile avatar,
             @RequestParam(value = "identifyPhoto", required = false) MultipartFile identifyPhoto

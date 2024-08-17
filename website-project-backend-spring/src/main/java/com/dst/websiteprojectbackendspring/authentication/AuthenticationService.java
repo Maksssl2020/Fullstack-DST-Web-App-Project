@@ -5,6 +5,7 @@ import com.dst.websiteprojectbackendspring.security.jwt.JwtService;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {

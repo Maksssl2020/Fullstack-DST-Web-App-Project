@@ -12,7 +12,8 @@ import java.util.Map;
 @Service
 public interface UserService {
 
-    List<UserDTO> findAllUsers();
+    List<UserDTO> findAllUsersWithoutAdmins();
+    List<UserDTO> findAllVolunteers();
     User getUserById(Long userId) throws ChangeSetPersister.NotFoundException;
     void updateUserFiles(Long userId, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException;
     void updateUser(Long id, Map<String, Object> updates) throws ChangeSetPersister.NotFoundException;

@@ -42,6 +42,7 @@ const EventCard = ({ eventData, number }) => {
         queryClient.invalidateQueries("amountOfBasicUsersInEvent");
         queryClient.invalidateQueries("amountOfVolunteersInEvent");
         queryClient.invalidateQueries("isUserRegisteredInEvent");
+        queryClient.invalidateQueries("userEventsData");
       },
       onError: (error) => console.log(error),
     });
@@ -53,6 +54,7 @@ const EventCard = ({ eventData, number }) => {
 
   console.log(eventData);
   console.log(amountOfVolunteersInEvent);
+  console.log(amountOfBasicUsersInEvent);
 
   const currentDate = new Date();
   const eventDateObject = new Date(...eventDate);
@@ -71,7 +73,7 @@ const EventCard = ({ eventData, number }) => {
     <div className="w-full h-[500px] bg-custom-pink-100 rounded-2xl">
       <div className="w-full h-[65px] relative bg-custom-pink-200 rounded-2xl flex items-center justify-center px-2 font-bold">
         <div className="absolute left-0 ml-1 h-[90%] w-[75px] bg-white rounded-3xl flex justify-center items-center">
-          {`nr. ${number + 1}`}
+          {`nr. ${number}`}
         </div>
         <div className="w-auto h-auto justify-center items-center flex gap-4">
           <LineWithCircleOnLeftSide

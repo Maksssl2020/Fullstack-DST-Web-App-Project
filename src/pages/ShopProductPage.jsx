@@ -1,8 +1,8 @@
 import React from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { transformLinkTitleIntoProductTitle } from "../../helpers/transformProductTitle";
-import ShopProductSection from "../../components/section/ShopProductSection";
-import AnimatedPage from "../../animation/AnimatedPage";
+import { transformLinkTitleIntoProductTitle } from "../helpers/transformProductTitle";
+import ShopProductSection from "../components/section/ShopProductSection";
+import AnimatedPage from "../animation/AnimatedPage";
 
 const ShopProductPage = () => {
   const location = useLocation();

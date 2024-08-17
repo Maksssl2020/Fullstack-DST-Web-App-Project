@@ -8,7 +8,7 @@ import {
 } from "../../helpers/NewsPostStyling";
 import Pagination from "../pagination/Pagination";
 import { useQuery } from "react-query";
-import { fetchNewsPostData } from "../../helpers/api-integration/NewsPostsHandling";
+import { fetchAllNewsPostsData } from "../../helpers/api-integration/NewsPostsHandling";
 import Spinner from "../universal/Spinner";
 
 const NewsPostSection = () => {
@@ -16,7 +16,7 @@ const NewsPostSection = () => {
 
   const { data: postsData, isLoading: fetchingPostsData } = useQuery(
     ["newsSectionPostsData", currentPage],
-    () => fetchNewsPostData(currentPage),
+    () => fetchAllNewsPostsData(currentPage),
   );
 
   if (fetchingPostsData) {

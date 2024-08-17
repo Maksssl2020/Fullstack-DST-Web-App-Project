@@ -15,10 +15,18 @@ export const DateParser = (date) => {
 };
 
 export const DateTimeParser = (date) => {
-  return new Date(date[0], date[1] - 1, date[2]).toLocaleString("pl-PL", {
-    year: "numeric",
+  return new Date(
+    date[0],
+    date[1] - 1,
+    date[2],
+    date[3],
+    date[4],
+  ).toLocaleString("pl-PL", {
+    year: "2-digit",
     month: "2-digit",
     day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 

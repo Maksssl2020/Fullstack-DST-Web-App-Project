@@ -1,17 +1,22 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import { GetRole } from "../../../helpers/RolesTranslate";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm";
 import { useNavigate } from "react-router-dom";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
-import AddingPhotoModal from "../../modal/AddingPhotoModal";
+import DefaultModal from "../../modal/DefaultModal";
+import CloseIcon from "../../drawer/icons/CloseIcon";
+import FormItem from "../../form/FormItem";
 
-const AccountAdminSection = ({ userData, register, errors }) => {
+const AccountAdminSection = ({
+  userData,
+  register,
+  avatar,
+  handleImagesChange,
+  watch,
+  errors,
+}) => {
   const { role, accountCreationDate } = useContext(AuthContext);
-  const [username, setUsername] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
-  const [avatar, setAvatar] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
   const manageShopData = [
@@ -38,22 +43,16 @@ const AccountAdminSection = ({ userData, register, errors }) => {
   ];
 
   useEffect(() => {
-    setUsername(userData.username);
-    setEmail(userData.email);
-    setPhoneNumber(userData.phoneNumber);
-    setAvatar(userData.avatar);
-  }, [userData]);
+    watch((values) => {
+      handleImagesChange(
+        "avatar",
+        userData.avatar !== values.avatar ? values.avatar : null,
+      );
+    });
+  }, [handleImagesChange, userData.avatar, watch]);
 
   const handleModalOpen = () => {
     setOpenModal(!openModal);
-  };
-
-  const handleAvatarChange = (event) => {
-    const file = event.target.files[0];
-
-    if (file) {
-      setAvatar(file);
-    }
   };
 
   return (
@@ -64,18 +63,14 @@ const AccountAdminSection = ({ userData, register, errors }) => {
         </div>
         <div className="flex">
           <AccountBasicDataForm
-            username={username}
-            setUsername={setUsername}
-            email={email}
-            setEmail={setEmail}
-            phoneNumber={phoneNumber}
-            setPhoneNumber={setPhoneNumber}
+            userData={userData}
+            register={register}
             accountCreationDate={accountCreationDate}
-            updateErrors={null}
+            errors={errors}
           />
           <AccountSectionUserPhoto
             imageTitle={"Zdjęcie profilowe:"}
-            mainImageSrc={userData.avatar}
+            mainImageSrc={avatar}
             bottomDataTitle={"Status konta:"}
             bottomData={GetRole(role)}
             openModal={handleModalOpen}
@@ -125,11 +120,23 @@ const AccountAdminSection = ({ userData, register, errors }) => {
         </div>
       </div>
       {openModal && (
-        <AddingPhotoModal
-          modalTitle={"zdjęcie profilowe"}
-          onChangeAction={handleAvatarChange}
-          closeModal={handleModalOpen}
-        />
+        <DefaultModal title={"Zdjęcie Profilowe"}>
+          <button
+            onClick={() => setOpenModal(false)}
+            className="absolute size-12 bg-white border-[3px] flex justify-center items-center rounded-full ml-auto mt-3 mr-3 border-black inset-0"
+          >
+            <CloseIcon size={"size-8"} />
+          </button>
+          <FormItem
+            type={"file"}
+            labelData={"Wybierz zdjęcie:"}
+            containerStyling={"text-lg font-bold"}
+            inputStyling={
+              "w-full file:w-[30%] file:border-0 border-4 border-black file:border-r-4 file:bg-custom-orange-200 file:text-white file:font-bold file:hover:bg-custom-orange-100 file:text-sm file:uppercase file:rounded-l-lg file:h-full h-[75px] font-bold text-lg text-black bg-custom-gray-200 rounded-2xl"
+            }
+            register={{ ...register("avatar") }}
+          />
+        </DefaultModal>
       )}
     </>
   );

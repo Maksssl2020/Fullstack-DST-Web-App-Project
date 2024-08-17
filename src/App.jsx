@@ -11,7 +11,7 @@ import SignUp from "./pages/SignUp";
 import Forum from "./pages/Forum";
 import ForumPostForm from "./pages/forms/ForumPostForm";
 import ContactUs from "./pages/ContactUs";
-import ShopProductPage from "./pages/forms/ShopProductPage";
+import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/forms/NewsPostForm";
 import HomeNewsPostForm from "./pages/forms/HomeNewsPostForm";
 import ProductForm from "./pages/ProductForm";
@@ -24,6 +24,7 @@ import EventForm from "./pages/forms/EventForm";
 import React from "react";
 import Users from "./pages/Users";
 import UserAccountAdminView from "./pages/UserAccountAdminView";
+import WarnForm from "./pages/forms/WarnForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -129,6 +130,10 @@ function App() {
         {
           path: "/users/check-user/:userId",
           element: <UserAccountAdminView />,
+        },
+        {
+          path: "/users/create-warn/:userId/:user",
+          element: <WarnForm />,
         },
       ],
     },

@@ -25,9 +25,6 @@ const AccountUserSection = ({
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
 
-  const { username, email, phoneNumber, dateOfBirth, identifyImage, avatar } =
-    userData;
-
   const { data: userNotifications, isLoading: fetchingUserNotifications } =
     useQuery(["userNotificationsData", userId], () =>
       fetchUserNotifications(userId),
@@ -66,7 +63,7 @@ const AccountUserSection = ({
       title: "Zdjęcie identyfikacyjne:",
       imageSrc: userData.identifyPhoto,
       bottomDataTitle: "Data urodzenia:",
-      bottomData: dateOfBirth,
+      bottomData: userData.dateOfBirth,
     },
     {
       title: "Zdjęcie profilowe:",
