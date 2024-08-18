@@ -53,4 +53,15 @@ public class WarnServiceImpl implements WarnService {
                 .map(warnDTOMapper)
                 .toList();
     }
+
+    @Override
+    public void markWarnAsRead(Long warnId) {
+        try {
+            Warn foundWarn = warnRepository.findById(warnId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundWarn.setRead(true);
+            warnRepository.save(foundWarn);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

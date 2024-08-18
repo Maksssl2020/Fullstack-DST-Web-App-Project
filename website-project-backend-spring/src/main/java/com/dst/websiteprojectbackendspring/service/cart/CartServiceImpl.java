@@ -45,8 +45,12 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long getCartIdByIdentifier(String cartIdentifier) {
-        return cartRepository.findByCartIdentifier(cartIdentifier).getId();
+    public Long getCartIdByIdentifier(String cartIdentifier, boolean isUserRegistered) {
+        if (existsByIdentifier(cartIdentifier)) {
+            return cartRepository.findByCartIdentifier(cartIdentifier).getId();
+        } else {
+            return getCartByIdentifier(cartIdentifier, isUserRegistered).getId();
+        }
     }
 
     @Override

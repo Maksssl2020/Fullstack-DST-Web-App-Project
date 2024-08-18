@@ -32,4 +32,10 @@ public class WarnController {
         warnService.saveWarn(userId, warnRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PutMapping("/{warnId}/is-read")
+    public ResponseEntity<HttpStatus> isWarnRead(@PathVariable Long warnId) {
+        warnService.markWarnAsRead(warnId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

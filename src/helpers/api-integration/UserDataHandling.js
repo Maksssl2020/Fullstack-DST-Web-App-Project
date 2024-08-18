@@ -64,6 +64,25 @@ export const handleSendUserWarn = async (userId, warnData) => {
   }
 };
 
+export const fetchUserAllNonReadWarns = async (userId) => {
+  try {
+    const response = await axios.get(`/warns/${userId}/get-non-reads`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleMarkWarnAsRead = async (warnId) => {
+  try {
+    const response = await axios.put(`/warns/${warnId}/is-read`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const updateUserData = async (userId, updateData) => {
   try {
     const response = await axios.patch(`/users/${userId}/update`, updateData);

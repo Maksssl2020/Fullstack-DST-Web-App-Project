@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import AnimatedPage from "../../animation/AnimatedPage";
 import AdminForumSection from "../../components/form/AdminForumSection";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { handleSendUserWarn } from "../../helpers/api-integration/UserDataHandling";
@@ -15,6 +15,7 @@ const WarnForm = () => {
   const { register, handleSubmit, getValues, formState } = useForm();
   const { errors } = formState;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutate: sendWarnToUser, isLoading: sendingWarnToUser } = useMutation({
     mutationKey: ["sendingWarnToUser", userId],
@@ -24,7 +25,9 @@ const WarnForm = () => {
         message: getValues().warnMessage,
       }),
     onSuccess: () => {
+      queryClient.invalidateQueries("allUserNonReadWarns");
       toast.success(`Wysłano warn użytkownikowi ${user}!`);
+      navigate(-1);
     },
   });
 

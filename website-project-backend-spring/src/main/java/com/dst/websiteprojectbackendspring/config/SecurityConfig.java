@@ -39,7 +39,8 @@ public class SecurityConfig {
                                 "/api/v1/instagram/**",
                                 "/api/v1/events/**",
                                 "/api/v1/notifications/**",
-                                "/api/v1/warns/**"
+                                "/api/v1/warns/**",
+                                "/api/v1/statistics/**"
                 ).permitAll()
                         .anyRequest()
                         .authenticated())

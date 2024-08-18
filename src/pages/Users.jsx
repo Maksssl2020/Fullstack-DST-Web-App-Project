@@ -18,7 +18,7 @@ const Users = () => {
 
   return (
     <div className="w-full h-auto flex flex-col items-center my-8">
-      <div className="w-[850px] h-auto flex flex-col gap-4 bg-custom-gray-100 rounded-2xl border-4 border-black p-8">
+      <div className="w-[1000px] h-auto flex flex-col gap-4 bg-custom-gray-100 rounded-2xl border-4 border-black p-8">
         <ul className="gap-4 flex flex-col">
           {allUsersData.map((userData, index) => (
             <UserCard key={index} userData={userData} />

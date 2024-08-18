@@ -1,11 +1,11 @@
 import { v4 as uuid } from "uuid";
 
-const generateCartIdForNonRegisterUser = () => {
+export const generateCartIdentifier = () => {
   return uuid();
 };
 
 const saveCartIdInLocalStorage = (cartId) => {
-  cartId = generateCartIdForNonRegisterUser();
+  cartId = generateCartIdentifier();
   localStorage.setItem("cartId", cartId);
   localStorage.setItem("cartIdTimeStamp", Date.now());
 };

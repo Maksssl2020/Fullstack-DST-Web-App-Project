@@ -14,9 +14,13 @@ export const getShoppingCartByIdentifier = async (
   }
 };
 
-export const getShoppingCartId = async (cartIdentifier) => {
+export const getShoppingCartId = async (cartIdentifier, isAuthenticated) => {
+  console.log(cartIdentifier);
+
   try {
-    const response = await axios.get(`/shop/carts/${cartIdentifier}/id`);
+    const response = await axios.get(`/shop/carts/${cartIdentifier}/id`, {
+      params: { userRegistered: isAuthenticated },
+    });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -24,6 +28,8 @@ export const getShoppingCartId = async (cartIdentifier) => {
 };
 
 export const getShoppingCartItems = async (cartId) => {
+  console.log(cartId);
+
   try {
     const response = await axios.get(`/shop/carts/items/${cartId}`);
     return response.data;

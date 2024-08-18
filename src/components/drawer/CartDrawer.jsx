@@ -14,17 +14,17 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {
-  const { username, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useContext(AuthContext);
   const [cartId, setCartId] = useState();
-  const [cartIdentifier, setCartIdentifier] = useState();
+  const [cartIdentifier, setCartIdentifier] = useState("");
 
   useEffect(() => {
     if (isAuthenticated) {
-      setCartIdentifier(username);
+      setCartIdentifier(`${userId}`);
     } else {
       setCartIdentifier(getCartIdForNonRegisterUser);
     }
-  }, [isAuthenticated, username]);
+  }, [isAuthenticated, userId]);
 
   const { data: customerCart, isLoading: searchingCart } = useQuery(
     ["authenticatedCustomerCart", cartIdentifier, isAuthenticated],
@@ -35,15 +35,18 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
   );
 
   useEffect(() => {
-    if (customerCart) {
+    if (customerCart && !searchingCart) {
       setCartId(customerCart.id);
     }
-  }, [customerCart]);
+  }, [customerCart, searchingCart]);
 
   const { data: cartItems, isLoading: searchingCartItems } = useQuery(
     ["cartItems", cartId],
-    () => getShoppingCartItems(cartId),
-    { enabled: isOpen === true },
+    () => {
+      if (isOpen) {
+        return getShoppingCartItems(cartId);
+      }
+    },
   );
 
   console.log(cartItems);

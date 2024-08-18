@@ -13,13 +13,16 @@ import {
   getShoppingCartId,
 } from "../../helpers/api-integration/ShoppingCartHandling";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
-import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
+import {
+  generateCartIdentifier,
+  getCartIdForNonRegisterUser,
+} from "../../helpers/NonRegisteredUserCartId";
 import Spinner from "../universal/Spinner";
 import Badge from "../badge/Badge";
 import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling";
 
 const Header = ({ forumAddPostButton }) => {
-  const { userId, username, role, isAuthenticated } = useContext(AuthContext);
+  const { userId, role, isAuthenticated } = useContext(AuthContext);
   const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
     React.useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);
@@ -29,15 +32,15 @@ const Header = ({ forumAddPostButton }) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      setCartIdentifier(username);
+      setCartIdentifier(`${userId}`);
     } else {
       setCartIdentifier(getCartIdForNonRegisterUser);
     }
-  }, [isAuthenticated, username]);
+  }, [isAuthenticated, userId]);
 
   const { data: cartId, isLoading: fetchingCartId } = useQuery(
     ["cartHeaderId", cartIdentifier],
-    () => getShoppingCartId(cartIdentifier),
+    () => getShoppingCartId(cartIdentifier, isAuthenticated),
     {
       enabled: location.pathname.includes("/rainbow-shop") === true,
     },
@@ -45,7 +48,7 @@ const Header = ({ forumAddPostButton }) => {
 
   const { data: amountOfItemsInCart, isLoading: fetchingAmountOfItemsInCart } =
     useQuery(
-      ["amountOfItemsInCart", cartIdentifier],
+      ["amountOfItemsInCart", cartId],
       () => getShoppingCartAmountOfItems(cartId),
       {
         enabled: location.pathname.includes("/rainbow-shop") === true,

@@ -96,7 +96,10 @@ const AccountAdminSection = ({
               Stwórz nowe &nbsp;<span className="font-bold">wydarzenie</span>
             </button>
           </div>
-          <button className="bg-white gap-4 p-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl">
+          <button
+            onClick={() => navigate("/change-statistics")}
+            className="bg-white gap-4 p-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl"
+          >
             <p className="text-2xl font-bold">Dane o kwartałach</p>
             <p className="text-xl text-center">
               Zmień dane dotyczące kwartałów i środków.

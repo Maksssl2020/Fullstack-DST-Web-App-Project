@@ -8,7 +8,7 @@ import UserIcon from "../header/icons/UserIcon";
 import { Link } from "react-router-dom";
 
 const UserCard = ({ userData }) => {
-  const { id, username, role, accountCreationDate } = userData;
+  const { id, username, role, accountCreationDate, accountLocked } = userData;
 
   const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
     ["userAvatar", id],
@@ -18,6 +18,8 @@ const UserCard = ({ userData }) => {
   if (fetchingUserAvatar) {
     return <Spinner />;
   }
+
+  console.log(userData);
 
   return (
     <li className="w-full h-[75px] rounded-2xl p-2 border-4 border-black bg-white flex items-center justify-between gap-4">
@@ -32,11 +34,15 @@ const UserCard = ({ userData }) => {
           <UserIcon size={"size-8"} />
         )}
       </div>
-      <label className="flex flex-col items-center h-full w-[20%] justify-between">
+      <label className="flex flex-col items-center h-full w-[12%] justify-between">
+        <p>Status konta:</p>
+        <p className="font-bold">{!accountLocked ? "AKTYWNE" : "ZBANOWANE"}</p>
+      </label>
+      <label className="flex flex-col items-center h-full w-[18%] justify-between">
         <p>Nazwa:</p>
         <p className="font-bold">{username}</p>
       </label>
-      <label className="flex flex-col items-center h-full w-[25%] justify-between">
+      <label className="flex flex-col items-center h-full w-[15%] justify-between">
         <p>Rola:</p>
         <p className="font-bold">{GetRole(role)}</p>
       </label>
@@ -46,7 +52,7 @@ const UserCard = ({ userData }) => {
       </label>
       <Link
         to={`/users/check-user/${id}`}
-        className="border-4 border-black bg-custom-orange-200 w-[15%] flex justify-center items-center rounded-2xl text-white uppercase font-bold h-[50px]"
+        className="border-4 border-black bg-custom-orange-200 w-[12%] flex justify-center items-center rounded-2xl text-white uppercase font-bold h-[50px]"
       >
         Sprawdź
       </Link>

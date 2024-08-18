@@ -41,10 +41,14 @@ public class NewsPostServiceImpl implements NewsPostService {
     }
 
     @Override
-    public void update(Long id, NewsPost newsPost) {
-        if (newsPostRepository.existsById(id)) {
-            newsPost.setId(id);
-            newsPostRepository.save(newsPost);
+    public void update(Long id, String content) {
+        try {
+            NewsPost foundNewsPost = newsPostRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundNewsPost.setContent(content);
+            foundNewsPost.setId(id);
+            newsPostRepository.save(foundNewsPost);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

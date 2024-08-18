@@ -9,7 +9,10 @@ import Spinner from "../universal/Spinner";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
-import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
+import {
+  generateCartIdentifier,
+  getCartIdForNonRegisterUser,
+} from "../../helpers/NonRegisteredUserCartId";
 import ProductQuantityButton from "../button/ProductQuantityButton";
 import SizesDropdown from "../dropdown/SizesDropdown";
 
@@ -18,9 +21,9 @@ const ShopProductBuyOptionsPanel = ({
   cardColor,
   setProductCategories,
 }) => {
-  const { username, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useContext(AuthContext);
   const { id, title, name, price, productType } = productData;
-  const [cartIdentifier, setCartIdentifier] = useState();
+  const [cartIdentifier, setCartIdentifier] = useState("");
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
   const queryClient = useQueryClient();
@@ -40,15 +43,24 @@ const ShopProductBuyOptionsPanel = ({
 
   useEffect(() => {
     if (isAuthenticated) {
-      setCartIdentifier(username);
+      setCartIdentifier(`${userId}`);
     } else {
       setCartIdentifier(getCartIdForNonRegisterUser);
     }
-  }, [isAuthenticated, username]);
+  }, [isAuthenticated, userId]);
+
+  console.log(cartIdentifier);
 
   const { mutate: addProductToUserCart, isLoading: addingProductToCart } =
     useMutation({
-      mutationKey: ["addProductToCart", username, id, quantity, chosenSize],
+      mutationKey: [
+        "addProductToCart",
+        cartIdentifier,
+        id,
+        quantity,
+        chosenSize,
+        isAuthenticated,
+      ],
       mutationFn: () =>
         addProductToCart(
           cartIdentifier,

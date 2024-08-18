@@ -15,13 +15,8 @@ import ProductQuantityButton from "../button/ProductQuantityButton";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
-const CartItemsTable = ({ cartIdentifier }) => {
+const CartItemsTable = ({ cartId }) => {
   const queryClient = useQueryClient();
-
-  const { data: cartId, isLoading: fetchingCartId } = useQuery(
-    ["cartPageData", cartIdentifier],
-    () => getShoppingCartId(cartIdentifier),
-  );
 
   const { data: cartItems, isLoading: fetchingCartItems } = useQuery(
     ["cartPageItems", cartId],
@@ -52,13 +47,13 @@ const CartItemsTable = ({ cartIdentifier }) => {
     return quantity + 1;
   };
 
-  if (fetchingCartId || fetchingCartItems) {
+  if (fetchingCartItems || deletingItemFromCart) {
     return <Spinner />;
   }
 
   return (
     <>
-      {cartItems.length === 0 && (
+      {cartItems?.length === 0 && (
         <DefaultModal
           title={"Informacja"}
           subtitle={"Brak produktów w koszyku!"}
@@ -92,7 +87,7 @@ const CartItemsTable = ({ cartIdentifier }) => {
         </div>
         <div className="w-full h-auto rounded-2xl text-2xl">
           <AnimatePresence mode={"popLayout"}>
-            {cartItems.map((data) => (
+            {cartItems?.map((data) => (
               <motion.div
                 layout
                 key={data.id}

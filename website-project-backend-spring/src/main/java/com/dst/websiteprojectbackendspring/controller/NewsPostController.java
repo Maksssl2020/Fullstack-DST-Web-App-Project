@@ -37,8 +37,8 @@ public class NewsPostController {
     }
 
     @PutMapping("/edit-post/{id}")
-    public ResponseEntity<HttpStatus> editNewsPost(@PathVariable Long id, @RequestBody @Valid NewsPost newsPost) {
-        newsPostServiceImpl.update(id, newsPost);
+    public ResponseEntity<HttpStatus> editNewsPost(@PathVariable Long id, @RequestParam String content) {
+        newsPostServiceImpl.update(id, content);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

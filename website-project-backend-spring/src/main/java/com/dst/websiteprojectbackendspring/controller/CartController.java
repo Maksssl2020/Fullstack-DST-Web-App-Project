@@ -21,8 +21,8 @@ public class CartController {
     }
 
     @GetMapping("/{cartIdentifier}/id")
-    public ResponseEntity<Long> getCartId(@PathVariable String cartIdentifier) {
-        return ResponseEntity.ok(cartService.getCartIdByIdentifier(cartIdentifier));
+    public ResponseEntity<Long> getCartId(@PathVariable String cartIdentifier, @RequestParam("userRegistered") boolean isUserRegistered) {
+        return ResponseEntity.ok(cartService.getCartIdByIdentifier(cartIdentifier, isUserRegistered));
     }
 
     @GetMapping("/{cartIdentifier}")

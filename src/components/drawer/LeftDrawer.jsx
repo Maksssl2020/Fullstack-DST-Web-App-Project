@@ -32,10 +32,6 @@ const LeftDrawer = () => {
       >
         <div className="w-full flex flex-col">
           <div className="flex px-4 items-center justify-center gap-4 h-[11.5%] bg-drawer-background w-full">
-            <input
-              placeholder={"Szukaj . . . . . ."}
-              className="h-[50px] text-lg p-4 focus:outline-none placeholder:font-bold placeholder:text-2xl  placeholder:text-black w-[75%] rounded-full bg-custom-gray-100"
-            />
             <button
               className="rounded-full h-fit bg-custom-gray-100"
               onClick={toggleDrawer}
@@ -46,12 +42,12 @@ const LeftDrawer = () => {
           <div className="my-8">
             <DrawerList />
           </div>
-          <p className="mt-auto mb-12">
+          <div className="mt-auto mb-12">
             <MainBannerWithLogo
               imageContainerStyling={"h-[55px] w-[55px]"}
               mainContainerStyling={"w-[90%]"}
             />
-          </p>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import AnimatedPage from "../animation/AnimatedPage";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import { useParams } from "react-router-dom";
@@ -12,14 +12,16 @@ import {
 } from "../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
 import Spinner from "../components/universal/Spinner";
+import { AuthContext } from "../helpers/provider/AuthProvider";
 
 const CartPage = () => {
+  const { isAuthenticated } = useContext(AuthContext);
   const { identifier } = useParams();
   const queryClient = useQueryClient();
 
   const { data: cartId, isLoading: fetchingCartId } = useQuery(
-    ["cartId", identifier],
-    () => getShoppingCartId(identifier),
+    ["cartId", identifier, isAuthenticated],
+    () => getShoppingCartId(identifier, isAuthenticated),
   );
 
   const {
@@ -51,7 +53,7 @@ const CartPage = () => {
             </div>
             <p>Strefa wysyłkowa dopasowana do klienta: &nbsp; "Polska"</p>
           </div>
-          <CartItemsTable cartIdentifier={identifier} />
+          <CartItemsTable cartId={cartId} />
           <div className="w-[90%] mt-12 flex justify-between">
             <ButtonWithLink
               link={"/rainbow-shop"}

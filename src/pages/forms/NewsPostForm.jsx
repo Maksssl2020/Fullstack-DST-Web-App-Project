@@ -24,10 +24,7 @@ const NewsPostForm = () => {
 
   const { mutate: updatePostData, isLoading: updatingPostData } = useMutation({
     mutationKey: ["updateNewsPostData", id],
-    mutationFn: () =>
-      handleNewsPostUpdate(id, {
-        content: getValues().content,
-      }),
+    mutationFn: () => handleNewsPostUpdate(id, getValues().content),
     onSuccess: () => {
       queryClient.invalidateQueries("newsSectionPostsData");
       queryClient.invalidateQueries("newsPostDataToUpdate");

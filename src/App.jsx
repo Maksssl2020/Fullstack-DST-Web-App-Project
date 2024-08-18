@@ -25,6 +25,7 @@ import React from "react";
 import Users from "./pages/Users";
 import UserAccountAdminView from "./pages/UserAccountAdminView";
 import WarnForm from "./pages/forms/WarnForm";
+import StatisticsForm from "./pages/forms/StatisticsForm";
 
 function App() {
   const router = createBrowserRouter([
@@ -134,6 +135,10 @@ function App() {
         {
           path: "/users/create-warn/:userId/:user",
           element: <WarnForm />,
+        },
+        {
+          path: "/change-statistics",
+          element: <StatisticsForm />,
         },
       ],
     },

@@ -11,7 +11,7 @@ public interface CartService {
     boolean existsByIdentifier(String cartIdentifier);
     List<Cart> getAllCarts();
     Cart getCartByIdentifier(String cartIdentifier, boolean isUserRegistered);
-    Long getCartIdByIdentifier(String cartIdentifier);
+    Long getCartIdByIdentifier(String cartIdentifier, boolean isUserRegistered);
     Cart addProductToCart(Long cartId, Long productId, Integer quantity);
     Cart findCartById(Long cartId);
 }

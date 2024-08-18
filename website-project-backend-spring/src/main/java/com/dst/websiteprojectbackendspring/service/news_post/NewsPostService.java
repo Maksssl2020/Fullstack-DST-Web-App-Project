@@ -15,6 +15,6 @@ public interface NewsPostService {
     List<NewsPost> findAll();
     NewsPost getNewsPostById(Long id) throws ChangeSetPersister.NotFoundException;
     Page<NewsPost> getNewsPosts(PageRequest pageRequest);
-    void update(Long id, NewsPost newsPost);
+    void update(Long id, String content);
     void delete(Long id);
 }

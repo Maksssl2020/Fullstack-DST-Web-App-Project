@@ -7,14 +7,23 @@ import {
   jobCharacteristicsListData,
   moneyResourcesInformationData,
   mostImportantEffortsOfWork,
-  pieChartData,
   secondUseOfFundsList,
   threePillarsData,
 } from "../../data/SupportUsPageData";
 import ReusableChart from "../universal/ReusableChart";
 import SupportUsSectionHeader from "../banner/SupportUsSectionHeader";
+import { useQuery } from "react-query";
+import { fetchAllStatistics } from "../../helpers/api-integration/StatisticsHandling";
+import Spinner from "../universal/Spinner";
 
 const SupportUsIInformationAboutUsSection = () => {
+  const { data: chartStatisticsData, isLoading: fetchingChartStatisticsData } =
+    useQuery(["supportUsChartStatisticsData"], () => fetchAllStatistics());
+
+  if (fetchingChartStatisticsData) {
+    return <Spinner />;
+  }
+
   return (
     <div className="flex text-2xl w-[750px] flex-col justify-center items-center">
       <SupportUsSectionHeader title="Jak pracujemy?">
@@ -41,8 +50,12 @@ const SupportUsIInformationAboutUsSection = () => {
         <p>Dane z I kwartału roku 2024</p>
       </SupportUsSectionHeader>
 
-      <div className="mt-8">
-        <ReusableChart chartData={pieChartData} width={525} height={525} />
+      <div className="mt-8 h-auto">
+        <ReusableChart
+          chartData={chartStatisticsData}
+          width={525}
+          height={525}
+        />
       </div>
 
       <div className="mt-6 text-center">

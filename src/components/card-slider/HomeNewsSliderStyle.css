@@ -8,7 +8,7 @@
 }
 
 .swiper-button-next::after {
-    margin-left: 4px; /* Poprawka na pozycję */
+    margin-left: 4px;
 }
 
 .swiper-button-prev::after {

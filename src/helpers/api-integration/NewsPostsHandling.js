@@ -32,9 +32,12 @@ export const handleNewsPostDelete = async (postId) => {
   }
 };
 
-export const handleNewsPostUpdate = async (postId, updatedData) => {
+export const handleNewsPostUpdate = async (postId, updatedContent) => {
+  const dataToSend = new FormData();
+  dataToSend.append("content", updatedContent);
+
   try {
-    const response = await axios.put(`/news/edit-post/${postId}`, updatedData);
+    const response = await axios.put(`/news/edit-post/${postId}`, dataToSend);
     return response.data;
   } catch (error) {
     console.error(error);
