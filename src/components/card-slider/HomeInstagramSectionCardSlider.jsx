@@ -30,7 +30,7 @@ const HomeInstagramSectionCardSlider = ({ sliderData, handlePostClick }) => {
           },
         }}
       >
-        {sliderData.slice(4).map((post) => (
+        {sliderData?.slice(4)?.map((post) => (
           <SwiperSlide key={post.id} className="flex justify-center">
             <InstagramPostCard
               key={post.id}

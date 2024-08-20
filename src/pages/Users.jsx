@@ -3,6 +3,7 @@ import UserCard from "../components/card/UserCard";
 import { useQuery } from "react-query";
 import { fetchAllUsers } from "../helpers/api-integration/UserDataHandling";
 import Spinner from "../components/universal/Spinner";
+import AnimatedPage from "../animation/AnimatedPage";
 
 const Users = () => {
   const { data: allUsersData, isLoading: fetchingAllUsersData } = useQuery(
@@ -17,15 +18,17 @@ const Users = () => {
   console.log(allUsersData);
 
   return (
-    <div className="w-full h-auto flex flex-col items-center my-8">
-      <div className="w-[1000px] h-auto flex flex-col gap-4 bg-custom-gray-100 rounded-2xl border-4 border-black p-8">
-        <ul className="gap-4 flex flex-col">
-          {allUsersData.map((userData, index) => (
-            <UserCard key={index} userData={userData} />
-          ))}
-        </ul>
+    <AnimatedPage>
+      <div className="w-full h-auto flex flex-col items-center my-8">
+        <div className="w-[1000px] min-h-[600px] h-auto flex flex-col gap-4 bg-custom-gray-100 rounded-2xl border-4 border-black p-8">
+          <ul className="gap-4 flex flex-col">
+            {allUsersData.map((userData, index) => (
+              <UserCard key={index} userData={userData} />
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

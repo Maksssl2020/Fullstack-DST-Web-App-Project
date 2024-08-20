@@ -3,6 +3,8 @@ package com.dst.websiteprojectbackendspring.service.cart;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.repository.CartRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
@@ -60,7 +63,21 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findCartById(Long cartId) {
-        return null;
+        try {
+            return cartRepository.findById(cartId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setCartTotalPrice(Long cartId, BigDecimal totalPrice) {
+        try {
+            Cart foundCart = cartRepository.findById(cartId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundCart.setTotalPrice(totalPrice);
+            cartRepository.save(foundCart);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Scheduled(cron = "0 0 0 */2 * ?") // at 00:00 every 2 days

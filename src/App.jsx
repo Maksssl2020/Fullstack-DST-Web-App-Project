@@ -26,6 +26,9 @@ import Users from "./pages/Users";
 import UserAccountAdminView from "./pages/UserAccountAdminView";
 import WarnForm from "./pages/forms/WarnForm";
 import StatisticsForm from "./pages/forms/StatisticsForm";
+import DiscountCodeForm from "./pages/forms/DiscountCodeForm";
+import DiscountCodes from "./pages/DiscountCodes";
+import OrderPage from "./pages/OrderPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -139,6 +142,18 @@ function App() {
         {
           path: "/change-statistics",
           element: <StatisticsForm />,
+        },
+        {
+          path: "/rainbow-shop/create-discount-code",
+          element: <DiscountCodeForm />,
+        },
+        {
+          path: "/rainbow-shop/discount-codes",
+          element: <DiscountCodes />,
+        },
+        {
+          path: "/rainbow-shop/order/:cartIdentifier",
+          element: <OrderPage />,
         },
       ],
     },

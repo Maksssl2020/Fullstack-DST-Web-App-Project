@@ -1,6 +1,6 @@
 import axios from "../AxiosConfig";
 
-export const getShoppingCartByIdentifier = async (
+export const fetchShoppingCartByIdentifier = async (
   identifier,
   isAuthenticated,
 ) => {

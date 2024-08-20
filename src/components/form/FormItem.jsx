@@ -20,8 +20,8 @@ const FormItem = ({
           placeholder={placeholderData}
           className={`w-full focus:outline-none placeholder:text-black h-[40px] border-2 border-black ${inputStyling} ${errors && "border-red-500"}`}
           onChange={onChangeAction}
-          {...register}
           onKeyDown={onKeyDown}
+          {...register}
         />
       </div>
       {errors && <p className="mt-2 text-lg text-red-500">{errors}</p>}

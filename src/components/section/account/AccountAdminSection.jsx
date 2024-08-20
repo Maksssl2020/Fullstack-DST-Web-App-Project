@@ -57,7 +57,7 @@ const AccountAdminSection = ({
 
   return (
     <>
-      <div className="w-[48%] rounded-2xl h-full flex flex-col">
+      <div className="w-[48%] rounded-2xl h-auto flex flex-col">
         <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-100 flex justify-center items-center">
           Informacje o koncie
         </div>
@@ -77,8 +77,8 @@ const AccountAdminSection = ({
           />
         </div>
       </div>
-      <div className="ml-auto w-[48%] bg-custom-pink-100 rounded-2xl h-full flex flex-col">
-        <div className="w-full italic h-[15%] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
+      <div className="ml-auto w-[51%] bg-custom-pink-100 rounded-2xl h-auto flex flex-col">
+        <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
           Zarządzanie Stroną
         </div>
         <div className="w-full h-[35%] px-4 py-8 gap-6 flex justify-center items-center">
@@ -96,20 +96,25 @@ const AccountAdminSection = ({
               Stwórz nowe &nbsp;<span className="font-bold">wydarzenie</span>
             </button>
           </div>
-          <button
-            onClick={() => navigate("/change-statistics")}
-            className="bg-white gap-4 p-2 flex flex-col items-center w-[300px] h-[150px] border-8 border-custom-pink-200 rounded-2xl"
-          >
-            <p className="text-2xl font-bold">Dane o kwartałach</p>
-            <p className="text-xl text-center">
-              Zmień dane dotyczące kwartałów i środków.
-            </p>
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={() => navigate("/change-statistics")}
+              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+            >
+              Edytuj &nbsp;<span className="font-bold">dane o kwartałach</span>
+            </button>
+            <button
+              onClick={() => navigate("/change-statistics")}
+              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+            >
+              Edytuj &nbsp;<span className="font-bold">dane o kwartałach</span>
+            </button>
+          </div>
         </div>
-        <div className="w-full italic h-[15%] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
+        <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
           Zarządzanie Sklepem
         </div>
-        <div className="w-full h-[35%] text-xl justify-items-center  grid grid-rows-2 grid-cols-2 px-20 py-8 gap-6">
+        <div className="w-full h-[300px] text-xl justify-items-center grid grid-rows-3 grid-cols-2 px-6 py-6 gap-6">
           {manageShopData.map((data, index) => (
             <button
               onClick={data.onClickFunction}
@@ -120,6 +125,24 @@ const AccountAdminSection = ({
               <span className="ml-2 uppercase text-custom-pink-200">{`${data.title}`}</span>
             </button>
           ))}
+          <button
+            onClick={() => navigate("/rainbow-shop/create-discount-code")}
+            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
+          >
+            Dodaj: &nbsp;
+            <span className="ml-2 uppercase text-custom-pink-200">
+              kod rabatowy
+            </span>
+          </button>
+          <button
+            onClick={() => navigate("/rainbow-shop/discount-codes")}
+            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
+          >
+            Zobacz: &nbsp;
+            <span className="ml-2 uppercase text-custom-pink-200">
+              kody rabatowe
+            </span>
+          </button>
         </div>
       </div>
       {openModal && (

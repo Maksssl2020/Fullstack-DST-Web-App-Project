@@ -48,15 +48,20 @@ public class BeansConfig {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("https://secure.sandbox.tpay.com/**");
         config.setAllowedHeaders(List.of(
                 HttpHeaders.ORIGIN,
                 HttpHeaders.CONTENT_TYPE,
                 HttpHeaders.ACCEPT,
                 HttpHeaders.AUTHORIZATION,
-                HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN
+                HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,
+                HttpHeaders.ACCESS_CONTROL_REQUEST_HEADERS,
+                HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD,
+                HttpHeaders.PROXY_AUTHENTICATE,
+                HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS
         ));
         config.setAllowedMethods(List.of(
-                "GET", "POST", "PUT", "DELETE", "PATCH"
+                "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"
         ));
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

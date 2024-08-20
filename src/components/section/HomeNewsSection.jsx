@@ -7,25 +7,10 @@ import { fetchHomeNewsPostsData } from "../../helpers/api-integration/NewsPostsH
 import Spinner from "../universal/Spinner";
 
 const HomeNewsSection = () => {
-  const [posts, setPosts] = useState([]);
-
   const { data: homeNewsPosts, isLoading: fetchingHomeNewsPosts } = useQuery(
     ["homeNewsPostsData"],
     () => fetchHomeNewsPostsData(),
   );
-
-  const handleHomeNewsPostDelete = (id, onClose) => {
-    try {
-      axios.delete(`/home/posts/delete-post/${id}`).then(() => {
-        const postsCopy = [...posts];
-        const filteredPosts = postsCopy.filter((post) => post.id !== id);
-        setPosts(filteredPosts);
-        onClose();
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   if (fetchingHomeNewsPosts) {
     return <Spinner />;
@@ -37,10 +22,7 @@ const HomeNewsSection = () => {
         <MainBannerWithoutLogo bannerTitle={"Tęczowe Wiadomości"} />
       </div>
       <div className="h-auto flex justify-center w-full py-8">
-        <HomeNewsCardSlider
-          sliderData={homeNewsPosts}
-          handlePostsDelete={handleHomeNewsPostDelete}
-        />
+        <HomeNewsCardSlider sliderData={homeNewsPosts} />
       </div>
     </div>
   );

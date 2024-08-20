@@ -177,7 +177,11 @@ const AccountInformationSection = () => {
 
   return (
     <>
-      <div className="w-full flex bg-custom-gray-300 flex-col font-lato h-[950px]">
+      <div
+        className={
+          "w-full flex bg-custom-gray-300 flex-col font-lato min-h-[950px] h-auto"
+        }
+      >
         <div className="flex items-center mt-8">
           <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
           {(isChangeInTextData || isChangeInFilesData) && (
@@ -190,7 +194,7 @@ const AccountInformationSection = () => {
           )}
         </div>
         <div className="flex w-full justify-center">
-          <div className="w-[85%] max-w-[1630px] flex mt-8 h-[700px] rounded-3xl bg-white">
+          <div className="w-[85%] max-w-[1630px] flex mt-8 min-h-[700px] rounded-3xl bg-white">
             {role === "ADMIN" ? (
               <AccountAdminSection
                 userData={userData}

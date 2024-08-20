@@ -28,14 +28,14 @@ export const fetchProductDTOData = async (productId) => {
 };
 
 export const fetchSimilarProducts = async (
-  productCategory,
+  productCategories,
   productsCategoriesData,
   productId,
 ) => {
-  const filteredProducts = productsCategoriesData.filter((item) => {
+  const filteredProducts = productsCategoriesData?.filter((item) => {
     return (
       productId.toString() !== item.productId.toString() &&
-      productCategory.includes(item.category)
+      productCategories.includes(item.category)
     );
   });
 

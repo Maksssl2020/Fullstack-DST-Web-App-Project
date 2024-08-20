@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import React from "react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -7,10 +7,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "./HomeNewsSliderStyle.css";
 import HomeNewsCard from "../card/HomeNewsCard";
-import DeleteWarningModal from "../modal/DeleteWarningModal";
 
 const HomeNewsCardSlider = ({ sliderData }) => {
-  const [openModal, setOpenModal] = useState(false);
   const data = sliderData;
   const pagination = {
     clickable: true,
@@ -42,7 +40,7 @@ const HomeNewsCardSlider = ({ sliderData }) => {
           },
         }}
       >
-        {data.map((data, index) => (
+        {data?.map((data, index) => (
           <SwiperSlide key={index} className="flex justify-center mb-20">
             <HomeNewsCard key={data.id} cardData={data} />
           </SwiperSlide>

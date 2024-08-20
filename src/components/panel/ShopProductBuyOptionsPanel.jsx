@@ -9,10 +9,7 @@ import Spinner from "../universal/Spinner";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling";
 import toast from "react-hot-toast";
-import {
-  generateCartIdentifier,
-  getCartIdForNonRegisterUser,
-} from "../../helpers/NonRegisteredUserCartId";
+import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 import ProductQuantityButton from "../button/ProductQuantityButton";
 import SizesDropdown from "../dropdown/SizesDropdown";
 
@@ -31,6 +28,11 @@ const ShopProductBuyOptionsPanel = ({
   const { data: productCategories, isLoading: categoriesLoading } = useQuery(
     ["productCategories", id],
     () => fetchProductCategoriesData(id),
+    {
+      onSuccess: (categories) => {
+        setProductCategories(categories);
+      },
+    },
   );
 
   const { data: productSizes, isLoading: sizesLoading } = useQuery(

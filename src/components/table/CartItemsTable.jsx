@@ -15,7 +15,7 @@ import ProductQuantityButton from "../button/ProductQuantityButton";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
-const CartItemsTable = ({ cartId }) => {
+const CartItemsTable = ({ cartId, orderPage = false }) => {
   const queryClient = useQueryClient();
 
   const { data: cartItems, isLoading: fetchingCartItems } = useQuery(
@@ -77,9 +77,13 @@ const CartItemsTable = ({ cartId }) => {
         </DefaultModal>
       )}
 
-      <div className="w-[90%] h-auto rounded-2xl text-2xl">
-        <div className=" w-full h-[100px] bg-custom-gray-300 rounded-2xl grid grid-cols-6 items-center text-2xl ">
-          <p className="col-span-1 justify-center flex" />
+      <div
+        className={`h-auto rounded-2xl text-2xl ${orderPage ? "w-full" : "w-[90%]"}`}
+      >
+        <div
+          className={`w-full h-[100px] bg-custom-gray-300 rounded-2xl items-center grid text-2xl ${orderPage ? "grid-cols-5 pl-2" : "grid-cols-6"}`}
+        >
+          {!orderPage && <p className="col-span-1 justify-center flex" />}
           <p className="col-span-2 flex">Produkt:</p>
           <p className="col-span-1 justify-center flex">Cena:</p>
           <p className="col-span-1 justify-center flex">Ilosc:</p>
@@ -94,21 +98,26 @@ const CartItemsTable = ({ cartId }) => {
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -10, opacity: 0 }}
-                className="border-b-4 border-custom-gray-300 grid grid-cols-6 items-center pb-4 mt-4"
+                className={`border-b-4 border-custom-gray-300 grid items-center pb-4 mt-4 ${orderPage ? "grid-cols-5 text-xl pl-2" : "grid-cols-6"}`}
               >
                 <CartItemsTableRow
-                  columnWidth={"col-span-3"}
+                  columnWidth={orderPage ? "col-span-2" : "col-span-3"}
                   className={"items-center flex gap-8"}
                 >
-                  <AnimatedCancelButton
-                    onClick={() => deleteItemFromCart(data.id)}
-                    iconSize={"size-10"}
-                  />
-                  <img
-                    className="size-[100px] inset-0 object-cover"
-                    src={`data:image/png;base64,${data.mainImage}`}
-                    alt={data.productFullTitle}
-                  />
+                  {!orderPage && (
+                    <>
+                      {" "}
+                      <AnimatedCancelButton
+                        onClick={() => deleteItemFromCart(data.id)}
+                        iconSize={"size-10"}
+                      />
+                      <img
+                        className="size-[100px] inset-0 object-cover"
+                        src={`data:image/png;base64,${data.mainImage}`}
+                        alt={data.productFullTitle}
+                      />
+                    </>
+                  )}
                   <p>{`${data.productFullTitle} ${data.productSize !== null ? " - " + data.productSize : ""}`}</p>
                 </CartItemsTableRow>
                 <CartItemsTableRow>
@@ -118,15 +127,19 @@ const CartItemsTable = ({ cartId }) => {
                 </CartItemsTableRow>
                 <CartItemsTableRow>
                   <p className="col-span-1 justify-center flex">
-                    <ProductQuantityButton
-                      itemId={data.id}
-                      quantity={data.quantity}
-                      addFunction={handleQuantityAdding}
-                      subFunction={handleQuantitySubtraction}
-                      className={
-                        "flex justify-between border-2 border-black items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full"
-                      }
-                    />
+                    {orderPage ? (
+                      data.quantity
+                    ) : (
+                      <ProductQuantityButton
+                        itemId={data.id}
+                        quantity={data.quantity}
+                        addFunction={handleQuantityAdding}
+                        subFunction={handleQuantitySubtraction}
+                        className={
+                          "flex justify-between border-2 border-black items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full"
+                        }
+                      />
+                    )}
                   </p>
                 </CartItemsTableRow>
                 <CartItemsTableRow>

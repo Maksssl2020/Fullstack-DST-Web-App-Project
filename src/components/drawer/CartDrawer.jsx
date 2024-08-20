@@ -4,7 +4,7 @@ import { AuthContext } from "../../helpers/provider/AuthProvider";
 import ButtonWithLink from "../universal/ButtonWithLink";
 import { useQuery } from "react-query";
 import {
-  getShoppingCartByIdentifier,
+  fetchShoppingCartByIdentifier,
   getShoppingCartItems,
 } from "../../helpers/api-integration/ShoppingCartHandling";
 import CartItemCard from "../card/CartItemCard";
@@ -28,9 +28,10 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
 
   const { data: customerCart, isLoading: searchingCart } = useQuery(
     ["authenticatedCustomerCart", cartIdentifier, isAuthenticated],
-    () => getShoppingCartByIdentifier(cartIdentifier, isAuthenticated),
-    {
-      enabled: isOpen === true,
+    () => {
+      if (cartIdentifier) {
+        return fetchShoppingCartByIdentifier(cartIdentifier, isAuthenticated);
+      }
     },
   );
 
@@ -43,18 +44,16 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
   const { data: cartItems, isLoading: searchingCartItems } = useQuery(
     ["cartItems", cartId],
     () => {
-      if (isOpen) {
+      if (cartId) {
         return getShoppingCartItems(cartId);
       }
     },
   );
 
-  console.log(cartItems);
-  console.log(cartIdentifier);
-
-  const totalItemsPrice = cartItems?.reduce((accumulator, item) => {
-    return accumulator + Number.parseFloat(item.totalPrice);
-  }, 0);
+  // console.log(cartItems);
+  // console.log(cartIdentifier);
+  // console.log(cartId);
+  // console.log(customerCart);
 
   if (searchingCart || searchingCartItems) {
     return <Spinner />;
@@ -138,13 +137,13 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                 {cartItems && cartItems.length > 0 && (
                   <div className="w-full font-semibold h-auto flex text-lg justify-between mt-4 px-8">
                     <p>Kwota:</p>
-                    <p>{formatCurrency(totalItemsPrice)}</p>
+                    <p>{formatCurrency(customerCart.totalPrice)}</p>
                   </div>
                 )}
               </div>
               <div className="w-full h-auto flex flex-col gap-4 mt-8 px-8">
                 <ButtonWithLink
-                  link={`/rainbow-shop/cart/${customerCart.cartIdentifier}`}
+                  link={`/rainbow-shop/cart/${cartIdentifier}`}
                   title={"Zobacz koszyk"}
                   className={
                     "w-full h-[75px] bg-custom-gray-300 rounded-2xl hover:bg-custom-orange-200 text-white uppercase text-2xl flex justify-center items-center"

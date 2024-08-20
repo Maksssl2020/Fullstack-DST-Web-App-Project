@@ -31,14 +31,17 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void saveCartItem(Integer quantity, String size, Long productId, String cartIdentifier, boolean isUserRegistered) throws ChangeSetPersister.NotFoundException {
         Cart cart = cartService.getCartByIdentifier(cartIdentifier, isUserRegistered);
+        Product foundProduct = productRepository.findById(productId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+
         LocalDateTime now = LocalDateTime.now();
         cart.setLastUpdateDate(now);
-        Product foundProduct = productRepository.findById(productId).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
          if (!isItemCurrentlyInCart(foundProduct.getId(), size, quantity, cart.getId())) {
              CartItem cartItem = buildNewCartItem(quantity, size, foundProduct, now, cart);
              cartItemRepository.save(cartItem);
          }
+
+         updateCartTotalPrice(cart.getId());
     }
 
     private boolean isItemCurrentlyInCart(Long mainProductId, String size, Integer quantity, Long cartId) {
@@ -100,6 +103,15 @@ public class CartItemServiceImpl implements CartItemService {
         return cartItemRepository.findByCartId(cartId).stream()
                 .sorted(Comparator.comparing(CartItem::getDateAdded))
                 .collect(Collectors.toList());
+    }
+
+    private void updateCartTotalPrice(Long cartId) {
+        BigDecimal cartTotalPrice = cartItemRepository.findByCartId(cartId).stream()
+                .map(CartItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        log.info(cartTotalPrice.toString());
+        cartService.setCartTotalPrice(cartId, cartTotalPrice);
     }
 
     @Override
