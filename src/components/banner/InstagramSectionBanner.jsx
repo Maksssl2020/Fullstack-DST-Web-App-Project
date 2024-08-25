@@ -17,7 +17,7 @@ const InstagramSectionBanner = ({ instagramUserData }) => {
       </div>
       <div className="flex h-full w-[65%] max-md:gap-4 justify-center items-center rounded-full bg-custom-gray-200">
         <p className="max-md:ml-96 max-lg:ml-40 max-xl:ml-48 xl:ml-48 md:w-[20%] max-md:text-2xl font-lato max-lg:text-xl max-xl:text-3xl xl:text-4xl font-extrabold">
-          {instagramUserData.username}
+          {instagramUserData?.username}
         </p>
         <Link
           to="https://www.instagram.com/dwie_strony_teczy/?ref=dishapages&hl=en"

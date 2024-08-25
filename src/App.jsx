@@ -28,7 +28,10 @@ import WarnForm from "./pages/forms/WarnForm";
 import StatisticsForm from "./pages/forms/StatisticsForm";
 import DiscountCodeForm from "./pages/forms/DiscountCodeForm";
 import DiscountCodes from "./pages/DiscountCodes";
+import PlaceAnOrder from "./pages/PlaceAnOrder";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import OrderPage from "./pages/OrderPage";
+import Orders from "./pages/Orders";
 
 function App() {
   const router = createBrowserRouter([
@@ -152,7 +155,19 @@ function App() {
           element: <DiscountCodes />,
         },
         {
-          path: "/rainbow-shop/order/:cartIdentifier",
+          path: "/rainbow-shop/place-an-order/:cartIdentifier",
+          element: <PlaceAnOrder />,
+        },
+        {
+          path: "/payment-success",
+          element: <PaymentSuccess />,
+        },
+        {
+          path: "/orders",
+          element: <Orders />,
+        },
+        {
+          path: "/orders/:orderId",
           element: <OrderPage />,
         },
       ],

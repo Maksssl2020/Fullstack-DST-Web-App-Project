@@ -31,7 +31,11 @@ export const getShoppingCartItems = async (cartId) => {
   console.log(cartId);
 
   try {
-    const response = await axios.get(`/shop/carts/items/${cartId}`);
+    const response = await axios.get(`/items/cart/${cartId}`);
+
+    console.log(response.data);
+    console.log(response);
+
     return response.data;
   } catch (error) {
     console.log(error);
@@ -40,9 +44,7 @@ export const getShoppingCartItems = async (cartId) => {
 
 export const getShoppingCartAmountOfItems = async (cartId) => {
   try {
-    const response = await axios.get(
-      `/shop/carts/items/amount-of-items/${cartId}`,
-    );
+    const response = await axios.get(`/items/amount-of-items/${cartId}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -66,7 +68,7 @@ export const addProductToCart = async (
 
   try {
     const response = await axios.post(
-      `/shop/carts/items/add-item/${cartIdentifier}/${productId}`,
+      `/items/add-item/${cartIdentifier}/${productId}`,
       formData,
       {
         headers: "Content-Type/multipart/form-data",
@@ -84,7 +86,7 @@ export const updateProductQuantity = async (cartItemId, quantity) => {
 
   try {
     const response = await axios.put(
-      `/shop/carts/items/change-quantity/${cartItemId}`,
+      `/items/change-quantity/${cartItemId}`,
       formData,
     );
     return response.data;
@@ -95,9 +97,7 @@ export const updateProductQuantity = async (cartItemId, quantity) => {
 
 export const deleteProductFromCart = async (cartItemId) => {
   try {
-    const response = await axios.delete(
-      `/shop/carts/items/delete-item/${cartItemId}`,
-    );
+    const response = await axios.delete(`/items/delete-item/${cartItemId}`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -106,9 +106,7 @@ export const deleteProductFromCart = async (cartItemId) => {
 
 export const deleteAllProductsFromCart = async (cartId) => {
   try {
-    const response = await axios.delete(
-      `/shop/carts/items/delete-all-items/${cartId}`,
-    );
+    const response = await axios.delete(`/items/delete-all-items/${cartId}`);
     return response.data;
   } catch (error) {
     console.log(error);

@@ -1,25 +1,24 @@
 import React from "react";
+import DefaultModal from "../modal/DefaultModal";
+import ButtonWithLink from "../universal/ButtonWithLink";
+import { AnimatePresence, motion } from "framer-motion";
+import ItemsTableRow from "./ItemsTableRow";
+import AnimatedCancelButton from "../universal/AnimatedCancelButton";
+import { formatCurrency } from "../../helpers/CurrencyFormatter";
+import ProductQuantityButton from "../button/ProductQuantityButton";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   deleteProductFromCart,
-  getShoppingCartId,
   getShoppingCartItems,
 } from "../../helpers/api-integration/ShoppingCartHandling";
-import Spinner from "../universal/Spinner";
-import { formatCurrency } from "../../helpers/CurrencyFormatter";
-import AnimatedCancelButton from "../universal/AnimatedCancelButton";
-import CartItemsTableRow from "./CartItemsTableRow";
-import DefaultModal from "../modal/DefaultModal";
-import ButtonWithLink from "../universal/ButtonWithLink";
-import ProductQuantityButton from "../button/ProductQuantityButton";
 import toast from "react-hot-toast";
-import { AnimatePresence, motion } from "framer-motion";
+import Spinner from "../universal/Spinner";
 
-const CartItemsTable = ({ cartId, orderPage = false }) => {
+const CartItemsTable = ({ cartId }) => {
   const queryClient = useQueryClient();
 
-  const { data: cartItems, isLoading: fetchingCartItems } = useQuery(
-    ["cartPageItems", cartId],
+  const { data: cartItemsData, isLoading: fetchingCartItemsData } = useQuery(
+    ["cartTableData", cartId],
     () => getShoppingCartItems(cartId),
   );
 
@@ -47,13 +46,13 @@ const CartItemsTable = ({ cartId, orderPage = false }) => {
     return quantity + 1;
   };
 
-  if (fetchingCartItems || deletingItemFromCart) {
+  if (fetchingCartItemsData || deletingItemFromCart) {
     return <Spinner />;
   }
 
   return (
     <>
-      {cartItems?.length === 0 && (
+      {cartItemsData?.length === 0 && (
         <DefaultModal
           title={"Informacja"}
           subtitle={"Brak produktów w koszyku!"}
@@ -77,13 +76,11 @@ const CartItemsTable = ({ cartId, orderPage = false }) => {
         </DefaultModal>
       )}
 
-      <div
-        className={`h-auto rounded-2xl text-2xl ${orderPage ? "w-full" : "w-[90%]"}`}
-      >
+      <div className={`h-auto rounded-2xl text-2xl w-[90%]`}>
         <div
-          className={`w-full h-[100px] bg-custom-gray-300 rounded-2xl items-center grid text-2xl ${orderPage ? "grid-cols-5 pl-2" : "grid-cols-6"}`}
+          className={`w-full h-[100px] bg-custom-gray-300 rounded-2xl items-center grid text-2xl grid-cols-6`}
         >
-          {!orderPage && <p className="col-span-1 justify-center flex" />}
+          <p className="col-span-1 justify-center flex" />
           <p className="col-span-2 flex">Produkt:</p>
           <p className="col-span-1 justify-center flex">Cena:</p>
           <p className="col-span-1 justify-center flex">Ilosc:</p>
@@ -91,62 +88,53 @@ const CartItemsTable = ({ cartId, orderPage = false }) => {
         </div>
         <div className="w-full h-auto rounded-2xl text-2xl">
           <AnimatePresence mode={"popLayout"}>
-            {cartItems?.map((data) => (
+            {cartItemsData?.map((data) => (
               <motion.div
                 layout
                 key={data.id}
                 initial={{ x: -10, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 exit={{ x: -10, opacity: 0 }}
-                className={`border-b-4 border-custom-gray-300 grid items-center pb-4 mt-4 ${orderPage ? "grid-cols-5 text-xl pl-2" : "grid-cols-6"}`}
+                className={`border-b-4 border-custom-gray-300 grid items-center pb-4 mt-4 grid-cols-6`}
               >
-                <CartItemsTableRow
-                  columnWidth={orderPage ? "col-span-2" : "col-span-3"}
+                <ItemsTableRow
+                  columnWidth={"col-span-3"}
                   className={"items-center flex gap-8"}
                 >
-                  {!orderPage && (
-                    <>
-                      {" "}
-                      <AnimatedCancelButton
-                        onClick={() => deleteItemFromCart(data.id)}
-                        iconSize={"size-10"}
-                      />
-                      <img
-                        className="size-[100px] inset-0 object-cover"
-                        src={`data:image/png;base64,${data.mainImage}`}
-                        alt={data.productFullTitle}
-                      />
-                    </>
-                  )}
+                  <AnimatedCancelButton
+                    onClick={() => deleteItemFromCart(data.id)}
+                    iconSize={"size-10"}
+                  />
+                  <img
+                    className="size-[100px] inset-0 object-cover"
+                    src={`data:image/png;base64,${data.mainImage}`}
+                    alt={data.productFullTitle}
+                  />
                   <p>{`${data.productFullTitle} ${data.productSize !== null ? " - " + data.productSize : ""}`}</p>
-                </CartItemsTableRow>
-                <CartItemsTableRow>
+                </ItemsTableRow>
+                <ItemsTableRow>
                   <p className="col-span-1 justify-center flex">
                     {formatCurrency(data.unitPrice)}
                   </p>
-                </CartItemsTableRow>
-                <CartItemsTableRow>
+                </ItemsTableRow>
+                <ItemsTableRow>
                   <p className="col-span-1 justify-center flex">
-                    {orderPage ? (
-                      data.quantity
-                    ) : (
-                      <ProductQuantityButton
-                        itemId={data.id}
-                        quantity={data.quantity}
-                        addFunction={handleQuantityAdding}
-                        subFunction={handleQuantitySubtraction}
-                        className={
-                          "flex justify-between border-2 border-black items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full"
-                        }
-                      />
-                    )}
+                    <ProductQuantityButton
+                      itemId={data.id}
+                      quantity={data.quantity}
+                      addFunction={handleQuantityAdding}
+                      subFunction={handleQuantitySubtraction}
+                      className={
+                        "flex justify-between border-2 border-black items-center px-4 py-2 text-xl font-bold bg-white w-[125px] h-[50px] rounded-full"
+                      }
+                    />
                   </p>
-                </CartItemsTableRow>
-                <CartItemsTableRow>
+                </ItemsTableRow>
+                <ItemsTableRow>
                   <p className="col-span-1 justify-center flex">
                     {formatCurrency(data.totalPrice)}
                   </p>
-                </CartItemsTableRow>
+                </ItemsTableRow>
               </motion.div>
             ))}
           </AnimatePresence>

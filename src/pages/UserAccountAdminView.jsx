@@ -6,7 +6,7 @@ import {
   updateUserData,
 } from "../helpers/api-integration/UserDataHandling";
 import Spinner from "../components/universal/Spinner";
-import { GetRole } from "../helpers/RolesTranslate";
+import { getRole } from "../helpers/ApiDataTranslator";
 import { DateParser } from "../helpers/Date";
 import AccountImageCard from "../components/card/AccountImageCard";
 import InformationContainer from "../components/universal/InformationContainer";
@@ -123,7 +123,7 @@ const UserAccountAdminView = () => {
           <InformationContainer label={"Nazwa użytkownika"} value={username} />
           <InformationContainer
             label={"Rola użytkownika"}
-            value={GetRole(role)}
+            value={getRole(role)}
           />
           <InformationContainer
             label={"Data założenia konta"}

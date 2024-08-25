@@ -12,14 +12,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/shop/carts/items")
+@RequestMapping("/api/v1/items")
 public class CartItemController {
 
     private final CartItemServiceImpl cartItemService;
 
-    @GetMapping("/{cartId}")
+    @GetMapping("/cart/{cartId}")
     public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
-        return ResponseEntity.ok(cartItemService.getCartItems(cartId));
+        return ResponseEntity.ok(cartItemService.getCartItemsByCartId(cartId));
     }
 
     @GetMapping("/amount-of-items/{cartId}")

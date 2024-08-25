@@ -2,7 +2,7 @@ import React from "react";
 import { DateParser } from "../../helpers/Date";
 import { useQuery } from "react-query";
 import { fetchUserAvatar } from "../../helpers/api-integration/UserDataHandling";
-import { GetRole } from "../../helpers/RolesTranslate";
+import { getRole } from "../../helpers/ApiDataTranslator";
 import Spinner from "../universal/Spinner";
 import UserIcon from "../header/icons/UserIcon";
 import { Link } from "react-router-dom";
@@ -44,7 +44,7 @@ const UserCard = ({ userData }) => {
       </label>
       <label className="flex flex-col items-center h-full w-[15%] justify-between">
         <p>Rola:</p>
-        <p className="font-bold">{GetRole(role)}</p>
+        <p className="font-bold">{getRole(role)}</p>
       </label>
       <label className="flex flex-col items-center h-full w-[25%] justify-between">
         <p>Data założenia konta:</p>

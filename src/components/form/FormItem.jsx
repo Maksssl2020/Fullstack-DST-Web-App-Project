@@ -23,8 +23,8 @@ const FormItem = ({
           onKeyDown={onKeyDown}
           {...register}
         />
+        {errors && <p className="ml-3 mt-2 text-lg text-red-500">{errors}</p>}
       </div>
-      {errors && <p className="mt-2 text-lg text-red-500">{errors}</p>}
     </div>
   );
 };

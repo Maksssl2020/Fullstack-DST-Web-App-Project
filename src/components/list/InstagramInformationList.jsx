@@ -9,14 +9,14 @@ const InstagramInformationList = ({ instagramUserData }) => {
         <p className="bg-custom-gray-400 max-xl:size-2 xl:size-3 rounded-full"></p>
         <div className="flex flex-col items-center font-lato max-xl:text-sm xl:text-lg">
           <p>Postów</p>
-          <p className="font-bold">{instagramUserData.media_count}</p>
+          <p className="font-bold">{instagramUserData?.media_count}</p>
         </div>
       </li>
       <li className="flex items-center justify-center gap-2">
         <p className="bg-custom-gray-400 max-xl:size-2 xl:size-3 rounded-full"></p>
         <div className="flex flex-col items-center font-lato max-xl:text-sm xl:text-lg">
           <p>Obserwujących</p>
-          <p className="font-bold">{instagramUserData.followers_count}</p>
+          <p className="font-bold">{instagramUserData?.followers_count}</p>
         </div>
       </li>
       <li className="flex flex-1 items-center justify-center">

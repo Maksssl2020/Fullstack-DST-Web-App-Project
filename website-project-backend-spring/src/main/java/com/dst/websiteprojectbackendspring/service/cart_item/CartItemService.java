@@ -10,7 +10,7 @@ import java.util.List;
 public interface CartItemService {
 
     void saveCartItem(Integer quantity, String size, Long productId, String cartIdentifier, boolean isUserRegistered) throws ChangeSetPersister.NotFoundException;
-    List<CartItem> getCartItems(Long cartId);
+    List<CartItem> getCartItemsByCartId(Long cartId);
     void updateItemQuantity(Long itemId, Integer quantity) throws ChangeSetPersister.NotFoundException;
     void deleteCartItem(Long cartItemId);
     Long getAmountOfCartItems(Long cartId);

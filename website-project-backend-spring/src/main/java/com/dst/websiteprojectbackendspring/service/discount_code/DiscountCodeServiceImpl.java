@@ -152,10 +152,15 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         LocalDateTime now = LocalDateTime.now();
         List<DiscountCode> discountCodes = discountCodeRepository.findAll();
 
-        discountCodes
-                .stream()
-                .filter(discountCode -> discountCode.getExpirationDate().isBefore(now))
-                .forEach(discountCodeRepository::delete);
+        if (!discountCodes.isEmpty()) {
+            discountCodes
+                    .stream()
+                    .filter(discountCode -> discountCode.getExpirationDate().isBefore(now))
+                    .forEach(discountCode -> {
+                        discountCode.setActive(false);
+                        discountCodeRepository.save(discountCode);
+                    });
+        }
     }
 
     @Override

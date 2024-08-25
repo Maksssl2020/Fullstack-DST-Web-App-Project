@@ -7,6 +7,7 @@ import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.repository.CartItemRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.cart.CartServiceImpl;
+import com.dst.websiteprojectbackendspring.service.order.OrderServiceImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -69,7 +68,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     private List<CartItem> getCartItemsWithTheSameMainProductId(Long mainProductId, Long cartId) {
-        return getCartItems(cartId).stream()
+        return getCartItemsByCartId(cartId).stream()
                 .filter(item -> item.getMainProductId().equals(mainProductId))
                 .toList();
     }
@@ -81,28 +80,27 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     private static CartItem buildNewCartItem(Integer quantity, String size, Product foundProduct, LocalDateTime now, Cart cart) {
-        CartItem cartItem = CartItem.builder()
-                .mainProductId(foundProduct.getId())
-                .productFullTitle(foundProduct.getName())
-                .quantity(quantity)
-                .mainImage(foundProduct.getImages().getFirst().getImage())
-                .unitPrice(foundProduct.getPrice())
-                .totalPrice(foundProduct.getPrice().multiply(new BigDecimal(quantity)))
-                .dateAdded(now)
+        CartItem.CartItemBuilder<?, ?> cartItem = CartItem.builder()
                 .cart(cart)
-                .build();
+                .dateAdded(now)
+                .totalPrice(foundProduct.getPrice().multiply(new BigDecimal(quantity)))
+                .unitPrice(foundProduct.getPrice())
+                .mainImage(foundProduct.getImages().getFirst().getImage())
+                .quantity(quantity)
+                .productFullTitle(foundProduct.getName())
+                .mainProductId(foundProduct.getId());
+
 
         if (size != null) {
-            cartItem.setProductSize(Size.valueOf(size));
+            cartItem.productSize(Size.valueOf(size));
         }
-        return cartItem;
+
+        return cartItem.build();
     }
 
     @Override
-    public List<CartItem> getCartItems(Long cartId) {
-        return cartItemRepository.findByCartId(cartId).stream()
-                .sorted(Comparator.comparing(CartItem::getDateAdded))
-                .collect(Collectors.toList());
+    public List<CartItem> getCartItemsByCartId(Long cartId) {
+        return cartItemRepository.findByCartId(cartId);
     }
 
     private void updateCartTotalPrice(Long cartId) {

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm";
-import { GetRole } from "../../../helpers/RolesTranslate";
+import { getRole } from "../../../helpers/ApiDataTranslator";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
 import AddingPhotoModal from "../../modal/AddingPhotoModal";
@@ -69,7 +69,7 @@ const AccountUserSection = ({
       title: "Zdjęcie profilowe:",
       imageSrc: userData.avatar,
       bottomDataTitle: "Status konta:",
-      bottomData: GetRole(role),
+      bottomData: getRole(role),
     },
   ];
 

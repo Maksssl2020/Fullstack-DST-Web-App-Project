@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../helpers/provider/AuthProvider";
-import { GetRole } from "../../../helpers/RolesTranslate";
+import { getRole } from "../../../helpers/ApiDataTranslator";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm";
 import { useNavigate } from "react-router-dom";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto";
@@ -72,7 +72,7 @@ const AccountAdminSection = ({
             imageTitle={"Zdjęcie profilowe:"}
             mainImageSrc={avatar}
             bottomDataTitle={"Status konta:"}
-            bottomData={GetRole(role)}
+            bottomData={getRole(role)}
             openModal={handleModalOpen}
           />
         </div>
@@ -114,7 +114,7 @@ const AccountAdminSection = ({
         <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
           Zarządzanie Sklepem
         </div>
-        <div className="w-full h-[300px] text-xl justify-items-center grid grid-rows-3 grid-cols-2 px-6 py-6 gap-6">
+        <div className="w-full h-[400px] text-xl justify-items-center grid grid-rows-4 grid-cols-2 px-6 py-6 gap-6">
           {manageShopData.map((data, index) => (
             <button
               onClick={data.onClickFunction}
@@ -141,6 +141,15 @@ const AccountAdminSection = ({
             Zobacz: &nbsp;
             <span className="ml-2 uppercase text-custom-pink-200">
               kody rabatowe
+            </span>
+          </button>
+          <button
+            onClick={() => navigate("/orders")}
+            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
+          >
+            Zobacz: &nbsp;
+            <span className="ml-2 uppercase text-custom-pink-200">
+              Zamówienia
             </span>
           </button>
         </div>

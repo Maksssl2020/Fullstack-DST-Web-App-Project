@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import AnimatedPage from "../animation/AnimatedPage";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import { useParams } from "react-router-dom";
-import CartItemsTable from "../components/table/CartItemsTable";
 import ButtonWithLink from "../components/universal/ButtonWithLink";
 import CheckIcon from "../icons/CheckIcon";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -17,6 +16,7 @@ import { formatCurrency } from "../helpers/CurrencyFormatter";
 import { useForm } from "react-hook-form";
 import { fetchDiscountCode } from "../helpers/api-integration/DiscountCodesHandling";
 import { handleApplyingDiscountCode } from "../helpers/ApplyDiscountCodes";
+import CartItemsTable from "../components/table/CartItemsTable";
 
 const CartPage = () => {
   const { userId, isAuthenticated } = useContext(AuthContext);
@@ -168,7 +168,7 @@ const CartPage = () => {
                 </div>
               </div>
               <ButtonWithLink
-                link={`/rainbow-shop/order/${identifier}`}
+                link={`/rainbow-shop/place-an-order/${identifier}`}
                 title={"Przejdź do płatności"}
                 className={
                   "h-[75px] ml-auto mt-8 rounded-2xl flex items-center justify-center w-[350px] uppercase font-bold text-2xl bg-custom-gray-300 hover:bg-custom-orange-200 hover:text-white"

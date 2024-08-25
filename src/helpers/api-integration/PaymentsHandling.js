@@ -1,9 +1,10 @@
-import axiosConfig from "../AxiosConfig";
+import axios from "../AxiosConfig";
 
-export const testPayment = async (data) => {
+export const handleProcessPayment = async (paymentData) => {
+  console.log(paymentData);
+
   try {
-    const response = await axiosConfig.post("/payments/payment", data);
-    console.log(response);
+    const response = await axios.post("/payments/payment", paymentData);
     return response.data;
   } catch (error) {
     console.log(error);

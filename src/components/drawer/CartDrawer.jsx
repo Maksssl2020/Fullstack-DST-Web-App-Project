@@ -148,13 +148,15 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                   className={
                     "w-full h-[75px] bg-custom-gray-300 rounded-2xl hover:bg-custom-orange-200 text-white uppercase text-2xl flex justify-center items-center"
                   }
+                  disabled={cartItems?.length === 0}
                 />
                 <ButtonWithLink
-                  link={""}
+                  link={`/rainbow-shop/place-an-order/${cartIdentifier}`}
                   title={"kup teraz"}
                   className={
                     "w-full h-[75px] bg-custom-gray-300 rounded-2xl hover:bg-custom-orange-200 text-white uppercase text-2xl flex justify-center items-center"
                   }
+                  disabled={cartItems?.length === 0}
                 />
               </div>
             </div>

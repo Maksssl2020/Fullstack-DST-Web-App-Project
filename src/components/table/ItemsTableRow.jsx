@@ -1,6 +1,6 @@
 import React from "react";
 
-const CartItemsTableRow = ({
+const ItemsTableRow = ({
   children,
   columnWidth = "col-span-1",
   className = "justify-center flex",
@@ -8,4 +8,4 @@ const CartItemsTableRow = ({
   return <div className={`${columnWidth} ${className}`}>{children}</div>;
 };
 
-export default CartItemsTableRow;
+export default ItemsTableRow;
