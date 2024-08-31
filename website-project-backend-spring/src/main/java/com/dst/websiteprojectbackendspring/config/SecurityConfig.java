@@ -40,11 +40,13 @@ public class SecurityConfig {
                                 "/api/v1/instagram/**",
                                 "/api/v1/events/**",
                                 "/api/v1/notifications/**",
-                                "/api/v1/warns/**",
+                                "/api/v1/messages/**",
                                 "/api/v1/statistics/**",
                                 "/api/v1/shop/discount-codes/**",
                                 "/api/v1/payments/**",
-                                "/api/v1/orders/**"
+                                "/api/v1/orders/**",
+                                "/api/v1/orders/**",
+                                "/api/v1/requests-to-admin/**"
                 ).permitAll()
                         .anyRequest()
                         .authenticated())

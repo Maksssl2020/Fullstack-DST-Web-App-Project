@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AnimatedPage from "../animation/AnimatedPage";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import FormItem from "../components/form/FormItem";
@@ -10,7 +10,7 @@ import {
   orderFormWithAnotherAddress,
   orderFormWithoutAnotherAddress,
 } from "../helpers/ValidationSchemas";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import {
   deleteAllProductsFromCart,
@@ -20,15 +20,14 @@ import Spinner from "../components/universal/Spinner";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import { formatCurrency } from "../helpers/CurrencyFormatter";
 import { handleProcessPayment } from "../helpers/api-integration/PaymentsHandling";
-import {
-  handleAddItemsToOrder,
-  handleAddNewOrder,
-} from "../helpers/api-integration/OrdersHandling";
+import { handleAddNewOrder } from "../helpers/api-integration/OrdersHandling";
 import toast from "react-hot-toast";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable";
+import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes";
+import { handleApplyDiscountCodeInCart } from "../helpers/api-integration/DiscountCodesHandling";
 
 const PlaceAnOrder = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, userId } = useContext(AuthContext);
   const { cartIdentifier } = useParams();
   const [anotherAddress, setAnotherAddress] = React.useState(false);
   const [deliveryType, setDeliveryType] = useState();
@@ -64,6 +63,7 @@ const PlaceAnOrder = () => {
     mutationKey: ["createOrder", cartId, billingForm, shippingForm],
     mutationFn: () =>
       handleAddNewOrder({
+        authenticatedCustomerId: userId || null,
         cartId: cartId,
         billing: billingForm,
         shipping: shippingForm,
@@ -78,15 +78,18 @@ const PlaceAnOrder = () => {
     },
   });
 
-  console.log("ORDER ID ORDER ID " + orderId);
-
   const { mutate: handlePayment, isLoading: paying } = useMutation({
     mutationKey: ["pay", orderId],
     mutationFn: (orderId) => {
       if (orderId) {
         return handleProcessPayment({
           orderId: orderId,
-          amount: cartData.totalPrice,
+          amount: cartData.discountCode
+            ? calcCartTotalPriceWithDiscount(
+                cartData.discountCode,
+                cartData.totalPrice,
+              )
+            : cartData.totalPrice,
           paymentDescription: "Test Payment React",
           firstName: getValues().firstName,
           lastName: getValues().lastName,
@@ -95,12 +98,24 @@ const PlaceAnOrder = () => {
       }
     },
     onSuccess: (redirectUrl) => {
-      toast.loading(redirectUrl);
       window.location.replace(redirectUrl);
       toast.success("Złożono nowe zamówienie!");
-      deleteAllItemsInCart();
+      applyDiscountCodeInCart();
     },
     onError: (error) => console.log(error),
+  });
+
+  const {
+    mutate: applyDiscountCodeInCart,
+    isLoading: applyingDiscountCodeInCart,
+  } = useMutation({
+    mutationKey: ["applyDiscountCodeInCart", cartData?.cartIdentifier, userId],
+    mutationFn: () => {
+      if (cartData.cartIdentifier) {
+        return handleApplyDiscountCodeInCart(cartData?.cartIdentifier, userId);
+      }
+    },
+    onSuccess: () => deleteAllItemsInCart(),
   });
 
   const { mutate: deleteAllItemsInCart, isLoading: deletingAllItemsInCart } =
@@ -111,40 +126,6 @@ const PlaceAnOrder = () => {
 
   const handleSubmitOrder = () => {
     try {
-      const billingData = {
-        firstName: getValues().firstName,
-        lastName: getValues().lastName,
-        email: getValues().email,
-        phoneNumber: getValues().phoneNumber,
-        companyName: getValues().companyName,
-        city: getValues().city,
-        postalCode: getValues().postalCode,
-        street: getValues().street,
-        buildingNumber: getValues().buildingNumber,
-      };
-
-      const shippingData = anotherAddress
-        ? {
-            city: getValues().anotherCity,
-            postalCode: getValues().anotherPostalCode,
-            street: getValues().anotherStreet,
-            buildingNumber: getValues().anotherBuildingNumber,
-            shippingType: deliveryType,
-          }
-        : {
-            city: getValues().city,
-            postalCode: getValues().postalCode,
-            street: getValues().street,
-            buildingNumber: getValues().buildingNumber,
-            shippingType: deliveryType,
-          };
-
-      console.log(billingData);
-      console.log(shippingData);
-
-      setBillingForm(billingData);
-      setShippingForm(shippingData);
-
       createOrder();
     } catch (error) {
       console.error("Order processing error:", error);
@@ -153,6 +134,42 @@ const PlaceAnOrder = () => {
       );
     }
   };
+
+  useEffect(() => {
+    const billingData = {
+      firstName: getValues().firstName,
+      lastName: getValues().lastName,
+      email: getValues().email,
+      phoneNumber: getValues().phoneNumber,
+      companyName: getValues().companyName,
+      city: getValues().city,
+      postalCode: getValues().postalCode,
+      street: getValues().street,
+      buildingNumber: getValues().buildingNumber,
+    };
+
+    setBillingForm(billingData);
+
+    const shippingData = anotherAddress
+      ? {
+          city: getValues().anotherCity,
+          postalCode: getValues().anotherPostalCode,
+          street: getValues().anotherStreet,
+          buildingNumber: getValues().anotherBuildingNumber,
+          shippingType: deliveryType,
+        }
+      : {
+          city: getValues().city,
+          postalCode: getValues().postalCode,
+          street: getValues().street,
+          buildingNumber: getValues().buildingNumber,
+          shippingType: deliveryType,
+        };
+
+    console.log(shippingData);
+
+    setShippingForm(shippingData);
+  }, [anotherAddress, deliveryType, getValues]);
 
   const orderFormData = [
     {
@@ -177,7 +194,7 @@ const PlaceAnOrder = () => {
     },
     {
       label: "Kod pocztowy: *",
-      dataName: "zipCode",
+      dataName: "postalCode",
     },
     {
       label: "Miejscowość: *",
@@ -201,7 +218,7 @@ const PlaceAnOrder = () => {
     },
     {
       label: "Kod pocztowy: *",
-      dataName: "anotherZipCode",
+      dataName: "anotherPostalCode",
     },
     {
       label: "Miejscowość: *",
@@ -212,9 +229,11 @@ const PlaceAnOrder = () => {
   const firstTwoInputsData = orderFormData.slice(0, 2);
   const remainingInputsData = orderFormData.slice(2, 9);
   const anotherAddressInputsData = orderFormData.slice(9);
+  // console.log(getValues());
+  // console.log(errors);
+  // console.log(cartIdentifier);
+
   console.log(getValues());
-  console.log(errors);
-  console.log(cartIdentifier);
 
   const handleDeliveryChange = (buttonNumber) => {
     switch (buttonNumber) {
@@ -236,9 +255,17 @@ const PlaceAnOrder = () => {
     }
   };
 
-  if (fetchingCartData || paying || creatingOrder) {
+  if (
+    fetchingCartData ||
+    paying ||
+    creatingOrder ||
+    deletingAllItemsInCart ||
+    applyingDiscountCodeInCart
+  ) {
     return <Spinner />;
   }
+
+  // console.log(anotherAddress);
 
   return (
     <AnimatedPage>
@@ -376,7 +403,23 @@ const PlaceAnOrder = () => {
                 }
               >
                 <h3>ŁĄCZNIE:</h3>
-                <p>{formatCurrency(cartData.totalPrice)}</p>
+                <div className={"flex gap-2"}>
+                  <p
+                    className={`${cartData.discountCode ? "text-custom-gray-400 line-through" : "text-black"}`}
+                  >
+                    {formatCurrency(cartData.totalPrice)}
+                  </p>
+                  {cartData.discountCode && (
+                    <p>
+                      {formatCurrency(
+                        calcCartTotalPriceWithDiscount(
+                          cartData.discountCode,
+                          cartData.totalPrice,
+                        ),
+                      )}
+                    </p>
+                  )}
+                </div>
               </div>
               <div
                 className={

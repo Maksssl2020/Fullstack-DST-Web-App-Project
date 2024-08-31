@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchUserById,
   handleUpdateUserFiles,
-  updateUserData,
+  handleUpdateUserData,
 } from "../../../helpers/api-integration/UserDataHandling";
 import Spinner from "../../universal/Spinner";
 import { useForm } from "react-hook-form";
@@ -40,7 +40,7 @@ const AccountInformationSection = () => {
 
   const { mutate: updateUser, isLoading: updatingUser } = useMutation({
     mutationKey: ["accountUpdateUser", userId, updatedDataForm],
-    mutationFn: () => updateUserData(userId, updatedDataForm),
+    mutationFn: () => handleUpdateUserData(userId, updatedDataForm),
     onSuccess: () => {
       queryClient.invalidateQueries("accountUserData");
       setIsChangeInTextData(false);
@@ -178,9 +178,7 @@ const AccountInformationSection = () => {
   return (
     <>
       <div
-        className={
-          "w-full flex bg-custom-gray-300 flex-col font-lato min-h-[950px] h-auto"
-        }
+        className={`w-full flex bg-custom-gray-300 flex-col font-lato min-h-[950px] h-auto`}
       >
         <div className="flex items-center mt-8">
           <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>

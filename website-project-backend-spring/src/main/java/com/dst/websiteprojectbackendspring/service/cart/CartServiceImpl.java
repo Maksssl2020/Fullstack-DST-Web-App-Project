@@ -1,7 +1,9 @@
 package com.dst.websiteprojectbackendspring.service.cart;
 
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
+import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCode;
 import com.dst.websiteprojectbackendspring.repository.CartRepository;
+import com.dst.websiteprojectbackendspring.service.discount_code.DiscountCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -18,6 +20,7 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
+    private final DiscountCodeServiceImpl discountCodeService;
 
     @Override
     public boolean existsByIdentifier(String cartIdentifier) {
@@ -67,6 +70,36 @@ public class CartServiceImpl implements CartService {
             return cartRepository.findById(cartId).orElseThrow(ChangeSetPersister.NotFoundException::new);
         } catch (ChangeSetPersister.NotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void assignCodeToCart(String cartIdentifier, String discountCodeId) {
+        Cart foundCart = cartRepository.findByCartIdentifier(cartIdentifier);
+        DiscountCode foundDiscountCode = discountCodeService.getDiscountCode(discountCodeId);
+        foundCart.setDiscountCode(foundDiscountCode);
+        cartRepository.save(foundCart);
+    }
+
+    @Override
+    public void applyDiscountCode(String cartIdentifier, Long userId) {
+        log.info("APPLYING DISCOUNT CODE");
+        Cart foundCart = cartRepository.findByCartIdentifier(cartIdentifier);
+
+        if (foundCart.getDiscountCode() != null) {
+            String discountCodeId = foundCart.getDiscountCode().getCode();
+            boolean isGlobal = foundCart.getDiscountCode().isGlobal();
+            applyDiscountCodeDependsOnItAccessibility(discountCodeId, isGlobal, userId);
+            foundCart.setDiscountCode(null);
+            cartRepository.save(foundCart);
+        }
+    }
+
+    private void applyDiscountCodeDependsOnItAccessibility(String discountCodeId, boolean isGlobal,  Long userId) {
+        if (isGlobal) {
+            discountCodeService.applyGlobalDiscount(discountCodeId, userId);
+        } else {
+            discountCodeService.applyNonGlobalDiscount(discountCodeId);
         }
     }
 

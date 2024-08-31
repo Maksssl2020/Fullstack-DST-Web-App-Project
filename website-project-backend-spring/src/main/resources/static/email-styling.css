@@ -1,0 +1,46 @@
+.container {
+    font-family: Lato, sans-serif;
+    width: 650px;
+    padding: 16px;
+    background-color: #E7E7E7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-width: 4px;
+    border-color: black;
+    border-style: solid;
+    gap: 16px;
+    border-radius: 16px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.greeting {
+    margin-right: auto;
+}
+
+.activationCode {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 8px;
+}
+
+.buttonWithLink {
+    width: 250px;
+    height: 50px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    border-width: 4px;
+    border-color: black;
+    border-style: solid;
+    color: #FFFFFF;
+    font-weight: bold;
+    background-color: #FF5A5A;
+    text-transform: uppercase;
+    cursor: pointer;
+}

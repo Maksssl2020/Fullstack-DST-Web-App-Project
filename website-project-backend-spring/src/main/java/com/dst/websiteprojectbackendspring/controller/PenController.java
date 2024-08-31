@@ -22,7 +22,7 @@ public class PenController {
         return ResponseEntity.ok(penService.findAllPens());
     }
 
-    @PostMapping("/add-pen")
+    @PostMapping("/add")
     public ResponseEntity<HttpStatus> addClothing(
             @RequestParam("title") String title,
             @RequestParam("name") String name,

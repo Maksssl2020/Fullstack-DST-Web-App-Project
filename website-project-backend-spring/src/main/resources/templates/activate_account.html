@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Aktywacja Konta</title>
+    <style>
+      body {
+        font-family: Lato, sans-serif;
+        margin: 0;
+        background-color: #E7E7E7;
+        padding: 16px;
+      }
+      .container {
+        font-family: Lato, sans-serif;
+        margin: 10px auto;
+        padding: 16px;
+        width: 650px;
+        max-width: 650px;
+        background-color: #E7E7E7;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        place-self: center;
+        border-width: 4px;
+        border-color: black;
+        border-style: solid;
+        gap: 16px;
+        border-radius: 16px;
+      }
+
+      .title {
+        font-size: 28px;
+        font-weight: bold;
+      }
+
+      .greeting {
+        margin-right: auto;
+      }
+
+      .activationCode {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 8px;
+      }
+
+      .buttonWithLink {
+        width: 250px;
+        height: 50px;
+        margin-top: 16px;
+        margin-bottom: 16px;
+        border-radius: 16px;
+        border-width: 4px;
+        border-color: black;
+        border-style: solid;
+        color: #FFFFFF;
+        font-weight: bold;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        background-color: #FF5A5A;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+      .activationLink {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+</head>
+<body style="font-family: Lato, sans-serif">
+<div class="container">
+  <h1 class="title">Aktywacja Konta - Dwie Strony Tęczy</h1>
+  <p class="greeting" th:text="'Witaj, ' + ${username}"></p>
+  <p>Dziękujemy za założenie konta na naszej tęczowej stronie! Użyj poniższego kodu, żeby aktywować swoje konto.</p>
+  <div class="activationCode">
+    <span th:text="${activationCode}"></span>
+  </div>
+  <div class="buttonWithLink">
+    <a class="activationLink" href="http://localhost:3000/activate-account" target="_blank">Aktywuj swoje konto!</a>
+  </div>
+</div>
+</body>
+</html>

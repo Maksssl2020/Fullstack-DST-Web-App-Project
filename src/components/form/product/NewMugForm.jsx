@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from "react";
 import FormItem from "../FormItem";
 
-const NewMugForm = ({ formData }) => {
-  const [color, setColor] = useState("");
-  const [height, setHeight] = useState("");
-  const [material, setMaterial] = useState("");
-
-  useEffect(() => {
-    formData.append("color", color);
-    formData.append("height", height);
-    formData.append("material", material);
-  }, [formData]);
-
+const NewMugForm = ({ register }) => {
   const formDataStructure = [
     {
       title: "Wpisz kolor:",
-      function: setColor,
+      dataName: "color",
     },
     {
       title: "Wpisz wysokość:",
-      function: setHeight,
+      dataName: "height",
     },
     {
       title: "Wpisz materiał:",
-      function: setMaterial,
+      dataName: "material",
     },
   ];
-
-  console.log(color);
 
   return (
     <>
@@ -36,7 +24,7 @@ const NewMugForm = ({ formData }) => {
           key={index}
           labelData={data.title}
           type={"text"}
-          onChangeAction={(e) => data.function(e.target.value)}
+          register={{ ...register(data.dataName) }}
           inputStyling={
             "w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-lg h-[50px] font-medium border-4 rounded-2xl border-black resize-none"
           }

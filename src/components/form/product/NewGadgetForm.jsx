@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
 import FormItem from "../FormItem";
 
-const NewGadgetForm = ({ formData }) => {
-  const [type, setType] = useState("");
-  const [material, setMaterial] = useState("");
-
-  useEffect(() => {
-    formData.append("type", type);
-    formData.append("material", material);
-  }, [formData]);
-
+const NewGadgetForm = ({ register }) => {
   const formDataStructure = [
     {
       title: "Wpisz typ:",
-      function: setType,
+      dataName: "type",
     },
     {
       title: "Wpisz materiał:",
-      function: setMaterial,
+      dataName: "material",
     },
   ];
 
@@ -28,7 +20,7 @@ const NewGadgetForm = ({ formData }) => {
           key={index}
           labelData={data.title}
           type={"text"}
-          onChangeAction={(e) => data.function(e.target.value)}
+          register={{ ...register(data.dataName) }}
           inputStyling={
             "w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-lg h-[50px] font-medium border-4 rounded-2xl border-black resize-none"
           }

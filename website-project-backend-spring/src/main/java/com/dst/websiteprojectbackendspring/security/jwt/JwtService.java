@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.security.jwt;
 
+import com.dst.websiteprojectbackendspring.service.email.EmailServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,6 +28,7 @@ public class JwtService {
     private String SECRET_KEY;
 
     private final ObjectMapper objectMapper;
+    private final EmailServiceImpl emailService;
 
     public String generateJwtToken(UserDetails userDetails) {
         return generateJwtToken(new HashMap<>(), userDetails);

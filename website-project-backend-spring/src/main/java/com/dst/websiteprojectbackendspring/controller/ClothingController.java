@@ -22,7 +22,7 @@ public class ClothingController {
         return ResponseEntity.ok(clothingService.findAllClothes());
     }
 
-    @PostMapping("/add-clothing")
+    @PostMapping("/add")
     public ResponseEntity<HttpStatus> addClothing(
             @RequestParam("title") String title,
             @RequestParam("name") String name,

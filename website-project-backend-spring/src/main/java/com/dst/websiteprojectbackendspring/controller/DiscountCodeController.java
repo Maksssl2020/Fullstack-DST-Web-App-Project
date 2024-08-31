@@ -28,6 +28,11 @@ public class DiscountCodeController {
         return ResponseEntity.ok(discountCodeService.getDiscountCode(discountCode));
     }
 
+    @GetMapping("/{discountCode}/is-still-valid")
+    public ResponseEntity<Boolean> isDiscountCodeStillValid(@PathVariable String discountCode) {
+        return new ResponseEntity<>(discountCodeService.isDiscountCodeValid(discountCode), HttpStatus.OK);
+    }
+
     @GetMapping("/{discountCode}/apply-non-global-discount")
     public ResponseEntity<BigDecimal> applyNonGlobalDiscount(@PathVariable String discountCode) {
         return ResponseEntity.ok(discountCodeService.applyNonGlobalDiscount(discountCode));

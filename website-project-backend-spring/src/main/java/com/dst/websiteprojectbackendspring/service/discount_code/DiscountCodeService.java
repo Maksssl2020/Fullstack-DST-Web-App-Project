@@ -16,6 +16,7 @@ public interface DiscountCodeService {
     BigDecimal applyGlobalDiscount(String discountCode, Long userId);
     BigDecimal applyNonGlobalDiscount(String discountCode);
     String generateDiscountCode();
+    boolean isDiscountCodeValid(String discountCodeId);
     boolean isDiscountCodeUnique(String code);
     void increaseUsedCount(DiscountCode discountCode);
     void deleteDiscountCode(Long discountCodeId);

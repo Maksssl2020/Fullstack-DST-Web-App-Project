@@ -7,7 +7,6 @@ import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.repository.CartItemRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.cart.CartServiceImpl;
-import com.dst.websiteprojectbackendspring.service.order.OrderServiceImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -50,10 +50,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
     },
   );
 
-  // console.log(cartItems);
-  // console.log(cartIdentifier);
-  // console.log(cartId);
-  // console.log(customerCart);
+  console.log(customerCart);
 
   if (searchingCart || searchingCartItems) {
     return <Spinner />;

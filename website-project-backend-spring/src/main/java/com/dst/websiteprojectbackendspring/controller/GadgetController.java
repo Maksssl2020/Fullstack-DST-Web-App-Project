@@ -22,7 +22,7 @@ public class GadgetController {
         return ResponseEntity.ok(gadgetService.findAllGadgets());
     }
 
-    @PostMapping("/add-gadget")
+    @PostMapping("/add")
     public ResponseEntity<HttpStatus> addClothing(
             @RequestParam("title") String title,
             @RequestParam("name") String name,

@@ -22,6 +22,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAllOrders());
     }
 
+    @GetMapping("/user-orders/{userId}")
+    public ResponseEntity<List<Order>> getUserOrders(@PathVariable Long userId) {
+        return ResponseEntity.ok(orderService.findOrdersByAuthenticatedCustomerId(userId));
+    }
+
     @GetMapping("/{orderId}")
     public ResponseEntity<Order> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderById(orderId));
@@ -30,5 +35,11 @@ public class OrderController {
     @PostMapping("/save-order")
     public ResponseEntity<Long> saveNewOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         return new ResponseEntity<>(orderService.saveOrder(orderRequestDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update-order-status/{orderId}")
+    public ResponseEntity<HttpStatus> updateOrder(@PathVariable Long orderId, @RequestParam("orderStatus") String orderStatus) {
+        orderService.updateOrder(orderId, orderStatus);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

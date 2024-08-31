@@ -39,6 +39,4 @@ public class RegistrationRequest {
     @NotBlank(message = "Password cannot be blank!")
     @Size(min = 8, message = "Password should be 8 characters long minimum!")
     private String password;
-
-    private LocalDate accountCreationDate;
 }

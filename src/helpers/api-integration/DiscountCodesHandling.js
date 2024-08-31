@@ -54,6 +54,17 @@ export const generateRandomDiscountCode = async () => {
   }
 };
 
+export const isDiscountCodeStillValid = async (discountCode) => {
+  try {
+    const response = await axios.get(
+      `/shop/discount-codes/${discountCode}/is-still-valid`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const isEnteredCodeUnique = async (enteredCode) => {
   try {
     const response = await axios.get(
@@ -76,6 +87,33 @@ export const handleAddNewDiscountCode = async (discountCodeData) => {
     const response = await axios.post(
       "/shop/discount-codes/add-discount-code",
       discountCodeData,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const handleAssignDiscountCodeToCart = async (
+  cartIdentifier,
+  discountCodeId,
+) => {
+  try {
+    const response = await axios.put(
+      `/shop/carts/assign-discount/${cartIdentifier}/${discountCodeId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const handleApplyDiscountCodeInCart = async (cartIdentifier, userId) => {
+  try {
+    const response = await axios.put(
+      `/shop/carts/apply-discount/${cartIdentifier}/${userId}`,
     );
     return response.data;
   } catch (error) {

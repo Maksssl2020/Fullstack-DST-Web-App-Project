@@ -27,7 +27,20 @@ export const fetchAllOrders = async () => {
   }
 };
 
+export const fetchOrdersByUserId = async (userId) => {
+  console.log(userId);
+
+  try {
+    const response = await axios.get(`/orders/user-orders/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const handleAddNewOrder = async (orderData) => {
+  console.log(orderData);
+
   console.log(orderData);
 
   try {
@@ -50,6 +63,28 @@ export const handleAddItemsToOrder = async (cartId, orderId) => {
 
     console.log("ORDER HANDLING " + response.data);
 
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const handleUpdateOrderStatus = async (orderId, newOrderStatus) => {
+  console.log(newOrderStatus);
+
+  try {
+    const response = await axios.put(
+      `/orders/update-order-status/${orderId}`,
+      {
+        orderStatus: newOrderStatus,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
     return response.data;
   } catch (error) {
     console.log(error);

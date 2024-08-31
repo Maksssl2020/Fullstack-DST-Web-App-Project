@@ -28,6 +28,18 @@ public class UserServiceImpl implements UserService{
     private final UserDTOMapper userDTOMapper;
 
     @Override
+    public boolean isUsernameUnique(String username) {
+        return !userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public boolean isEmailUnique(String email) {
+        boolean b = userRepository.existsByEmail(email);
+        log.info(String.valueOf(b));
+        return !b;
+    }
+
+    @Override
     public List<UserDTO> findAllUsersWithoutAdmins() {
         return userRepository.findAll().stream()
                 .map(userDTOMapper)
@@ -97,11 +109,6 @@ public class UserServiceImpl implements UserService{
         } else {
             return null;
         }
-    }
-
-    @Override
-    public List<User> getAllUsersByEventId(Long eventId) {
-        return userRepository.findAllUsersByEventId(eventId);
     }
 
     @Override

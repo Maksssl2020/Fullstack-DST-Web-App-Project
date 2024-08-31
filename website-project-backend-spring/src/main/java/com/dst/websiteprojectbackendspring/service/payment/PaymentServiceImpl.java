@@ -7,6 +7,7 @@ import com.dst.websiteprojectbackendspring.model.payment.PaymentStatus;
 import com.dst.websiteprojectbackendspring.repository.OrderRepository;
 import com.dst.websiteprojectbackendspring.repository.PaymentRepository;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,9 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -40,6 +43,11 @@ public class PaymentServiceImpl implements PaymentService {
     private String accessToken;
     private LocalDateTime tokenExpiresDate;
 
+
+    @Override
+    public List<Payment> findAllPayments() {
+        return paymentRepository.findAll();
+    }
 
     @Override
     public void fetchTPayAccessToken() {
@@ -70,9 +78,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public String processTPayPayment(PaymentRequest paymentRequest) {
-        log.info("PROCESSING PAYMENT !!!!!!!!!!!!");
-
         if (isAccessTokenExpired()) {
             fetchTPayAccessToken();
         }
@@ -82,11 +89,11 @@ public class PaymentServiceImpl implements PaymentService {
                     .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
             Map<String, Object> paymentData = preparePaymentData(paymentRequest);
-            String redirectUrl = initiatePayment(paymentData, order);
+            Mono<String> redirectUrl = initiatePayment(paymentData, order);
 
-            log.info(redirectUrl);
+            log.info(redirectUrl.toString());
 
-            return redirectUrl;
+            return redirectUrl.block();
 
         } catch (ChangeSetPersister.NotFoundException e) {
             throw new RuntimeException(e);
@@ -120,49 +127,41 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentData;
     }
 
-    private String initiatePayment(Map<String, Object> paymentData, Order order) {
-        Mono<Map<String, Object>> response = webClient.post()
+    private Mono<String> initiatePayment(Map<String, Object> paymentData, Order order) {
+        return webClient.post()
                 .uri("https://openapi.sandbox.tpay.com/transactions")
                 .header("Authorization", "Bearer " + accessToken)
                 .body(BodyInserters.fromValue(paymentData))
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {});
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
+                .flatMap(response -> {
+                    String redirectUrl = response.get("transactionPaymentUrl").toString();
+                    String transactionId = response.get("transactionId").toString();
+                    BigDecimal amount = new BigDecimal(response.get("amount").toString());
 
-        Map<String, Object> responseBody = response.block();
+                    Payment payment = Payment.builder()
+                            .transactionId(transactionId)
+                            .amount(amount)
+                            .status(PaymentStatus.PENDING)
+                            .build();
 
-        log.info(responseBody.toString());
+                    paymentRepository.save(payment);
+                    order.setPayment(payment);
+                    orderRepository.save(order);
 
-        String redirectUrl = responseBody.get("transactionPaymentUrl").toString();
-        String transactionId = responseBody.get("transactionId").toString();
-        BigDecimal amount = new BigDecimal(responseBody.get("amount").toString());
-
-        Payment payment = Payment.builder()
-                .transactionId(transactionId)
-                .amount(amount)
-                .status(PaymentStatus.PENDING)
-                .build();
-
-        paymentRepository.save(payment);
-
-        order.setPayment(payment);
-        orderRepository.save(order);
-
-        log.info(redirectUrl);
-
-        return redirectUrl;
+                    return Mono.just(redirectUrl);
+                });
     }
 
 
     @Override
-    public Payment getYPaySpecifiedTransaction(String transactionId) {
-        Payment foundPayment = paymentRepository.findByTransactionId(transactionId);
-
+    public Mono<Payment> getTPaySpecifiedTransaction(String transactionId) {
         if (isAccessTokenExpired()) {
             log.info("Access token expired, fetching a new one.");
             fetchTPayAccessToken();
         }
 
-        Mono<Map<String, Object>> paymentData = webClient.get()
+        Mono<Payment> paymentMono = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
                         .host("openapi.sandbox.tpay.com")
@@ -170,18 +169,20 @@ public class PaymentServiceImpl implements PaymentService {
                         .build())
                 .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {
-                });
+                .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
+                })
+                .flatMap(response ->
+                        Mono.just(paymentRepository.findByTransactionId(transactionId))
+                                .flatMap(foundPayment -> {
+                                    foundPayment.setStatus(PaymentStatus.valueOf(response.get("status").toString().toUpperCase()));
+                                    foundPayment.setResult(response.get("result").toString());
+                                    log.info(foundPayment.toString());
 
-        Map<String, Object> payment = paymentData.block();
+                                    return Mono.just(foundPayment);
+                                })
+                );
 
-        if (payment != null) {
-            foundPayment.setResult(payment.get("result").toString());
-            foundPayment.setStatus(PaymentStatus.valueOf(payment.get("status").toString().toUpperCase()));
-            paymentRepository.save(foundPayment);
-        }
-
-        return foundPayment;
+        return Mono.just(paymentRepository.save(Objects.requireNonNull(paymentMono.block())));
     }
 
     private boolean isAccessTokenExpired() {

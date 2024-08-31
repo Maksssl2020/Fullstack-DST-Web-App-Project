@@ -1,136 +1,103 @@
-import React, { useState } from "react";
+import React from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import FormItem from "../components/form/FormItem";
 import { useNavigate } from "react-router-dom";
 import AnimatedPage from "../animation/AnimatedPage";
 import axios from "../helpers/AxiosConfig";
+import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { handleRegister } from "../helpers/api-integration/AuthenticationHandling";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { userRegistrationSchema } from "../helpers/ValidationSchemas";
+import Spinner from "../components/universal/Spinner";
+import toast from "react-hot-toast";
 
 const SignUp = () => {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = React.useState("");
-  const [password, setPassword] = useState("");
-  const [retypePassword, setRetypePassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const { register, handleSubmit, getValues, setError, formState } = useForm({
+    resolver: yupResolver(userRegistrationSchema),
+  });
+  const { errors } = formState;
   const navigate = useNavigate();
 
-  const handleRegister = async (event) => {
-    event.preventDefault();
-
-    if (password !== retypePassword) {
-      setErrors({ retypePassword: "Hasła powinny być identyczne!" });
-      return;
-    }
-
-    try {
-      await axios.post("/auth/register", {
-        firstName: firstName,
-        lastName: lastName,
-        username: username,
-        email: email,
-        dateOfBirth: dateOfBirth,
-        password: password,
-        accountCreationDate: new Date().toISOString(),
-      });
+  const { mutate: registerUser, isLoading: registeringUser } = useMutation({
+    mutationKey: ["registerUser"],
+    mutationFn: () =>
+      handleRegister({
+        firstName: getValues().firstName,
+        lastName: getValues().lastName,
+        username: getValues().username,
+        email: getValues().email,
+        dateOfBirth: getValues().dateOfBirth,
+        password: getValues().password,
+      }),
+    onSuccess: () => {
+      toast.success("Wysłaliśmy wiadomość e-mail z linkiem aktywującym konto!");
       navigate("/");
-    } catch (error) {
-      const errorsMessages = {};
-      let errorData = [];
-
-      if (error.response.data.validationErrors) {
-        errorData.push(error.response.data.validationErrors);
+    },
+    onError: (error) => {
+      if (error?.response?.data?.errorMessage?.includes("(email)=")) {
+        setError("email", {
+          type: "manual",
+          message: "Podany adres e-mail istnieje w bazie!",
+        });
       }
-      if (error.response.data.error) {
-        errorData.push(error.response.data.error);
+      if (error?.response?.data?.errorMessage?.includes("(username)=")) {
+        setError("username", {
+          type: "manual",
+          message: "Podana nazwa użytkownika istnieje w bazie!",
+        });
       }
-
-      errorData.forEach((error) => {
-        if (error.toString().includes("First name")) {
-          errorsMessages.firstName = "Imię nie może być puste!";
-        }
-        if (error.toString().includes("Last name")) {
-          errorsMessages.lastName = "Nazwisko nie może być puste!";
-        }
-        if (error.toString().includes("Password")) {
-          errorsMessages.password = "Hasło musi mieć conajmniej 8 znaków!";
-        }
-        if (error.toString().includes("Email cannot be blank")) {
-          errorsMessages.email = "Nieprawidłowy e-mail!";
-        }
-        if (error.toString().includes("(email)=")) {
-          errorsMessages.email = "Podany adres e-mail istnieje w bazie!";
-        }
-        if (error.toString().includes("Username cannot be blank")) {
-          errorsMessages.username = "Nieprawidłowa nazwa użytkownika!";
-        }
-        if (error.toString().includes("(username)=")) {
-          errorsMessages.username =
-            "Podana nazwa użytkownika istnieje w bazie!";
-        }
-        if (error.toString().includes("Date of birth")) {
-          errorsMessages.dateOfBirth = "Data urodzenia nie może być pusta!";
-        }
-        if (error.toString().includes("Date must be in the past")) {
-          errorsMessages.dateOfBirth = "Data urodzenia musi być w przeszłości!";
-        }
-      });
-
-      console.log(errorsMessages);
-      console.log(error);
-      setErrors(errorsMessages);
-    }
-  };
-
-  console.log(errors);
-  console.log(password);
-  console.log(retypePassword);
+    },
+  });
 
   const formData = [
     {
       title: "Imię",
       type: "text",
-      function: setFirstName,
-      errors: errors.firstName,
+      dataName: "firstName",
+      errors: errors?.firstName?.message,
     },
     {
       title: "Nazwisko",
       type: "text",
-      function: setLastName,
-      errors: errors.lastName,
+      dataName: "lastName",
+      errors: errors?.lastName?.message,
     },
     {
       title: "Nazwa użytkownika",
       type: "text",
-      function: setUsername,
-      errors: errors.username,
+      dataName: "username",
+      errors: errors?.username?.message,
     },
     {
       title: "E-mail",
-      type: "text",
-      function: setEmail,
-      errors: errors.email,
+      type: "email",
+      dataName: "email",
+      errors: errors?.email?.message,
     },
     {
       title: "Data urodzenia",
       type: "date",
-      function: setDateOfBirth,
-      errors: errors.dateOfBirth,
+      dataName: "dateOfBirth",
+      errors: errors?.dateOfBirth?.message,
     },
     {
       title: "Hasło",
       type: "password",
-      function: setPassword,
-      errors: errors.password,
+      dataName: "password",
+      errors: errors?.password?.message,
     },
     {
       title: "Powtórz hasło",
       type: "password",
-      function: setRetypePassword,
-      errors: errors.retypePassword,
+      dataName: "retypePassword",
+      errors: errors?.retypePassword?.message,
     },
   ];
+
+  if (registeringUser) {
+    return <Spinner />;
+  }
 
   return (
     <AnimatedPage>
@@ -142,16 +109,18 @@ const SignUp = () => {
         >
           {formData.map((data, index) => (
             <FormItem
+              key={index}
               labelData={data.title}
               type={data.type}
-              inputStyling={"focus:border-custom-orange-100"}
-              onChangeAction={(event) => data.function(event.target.value)}
+              inputStyling={"focus:border-custom-orange-200 rounded-xl px-2"}
+              register={{ ...register(data.dataName) }}
               errors={data.errors}
             />
           ))}
           <button
             type={"submit"}
-            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-full text-white uppercase font-bold"
+            onClick={handleSubmit(registerUser)}
+            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-2xl border-4 border-black text-white uppercase font-bold"
           >
             Zarejestruj się
           </button>

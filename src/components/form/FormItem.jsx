@@ -10,6 +10,7 @@ const FormItem = ({
   onChangeAction = undefined,
   errors = undefined,
   onKeyDown = undefined,
+  defaultValue = undefined,
 }) => {
   return (
     <div className={containerStyling}>
@@ -21,6 +22,7 @@ const FormItem = ({
           className={`w-full focus:outline-none placeholder:text-black h-[40px] border-2 border-black ${inputStyling} ${errors && "border-red-500"}`}
           onChange={onChangeAction}
           onKeyDown={onKeyDown}
+          defaultValue={defaultValue}
           {...register}
         />
         {errors && <p className="ml-3 mt-2 text-lg text-red-500">{errors}</p>}

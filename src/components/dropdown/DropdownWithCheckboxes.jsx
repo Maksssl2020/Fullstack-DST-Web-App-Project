@@ -1,7 +1,12 @@
 import React from "react";
 import CheckIcon from "../../icons/CheckIcon";
 
-const DropdownWithCheckboxes = ({ title, options, setChosenOptions }) => {
+const DropdownWithCheckboxes = ({
+  title,
+  options,
+  setChosenOptions,
+  containerClassName = "relative w-[350px]",
+}) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedOptions, setSelectedOptions] = React.useState([]);
 
@@ -21,7 +26,7 @@ const DropdownWithCheckboxes = ({ title, options, setChosenOptions }) => {
 
   console.log(selectedOptions);
   return (
-    <div className="relative w-[250px]">
+    <div className={containerClassName}>
       <button
         onClick={handleOpenClick}
         className={`w-full uppercase bg-custom-gray-200 p-4 flex flex-col items-center text-xl border-4 border-black rounded-2xl ${isOpen && "bg-custom-orange-200 text-white font-bold"}`}

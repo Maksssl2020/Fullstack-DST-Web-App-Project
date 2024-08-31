@@ -25,7 +25,7 @@ const OrderPageItemsTable = ({
   return (
     <div className={`h-auto rounded-2xl text-2xl w-full`}>
       <div
-        className={`w-full h-[100px] bg-custom-gray-300 rounded-2xl items-center grid text-2xl grid-cols-5 pl-2`}
+        className={`w-full h-auto bg-custom-gray-300 rounded-2xl items-start grid text-2xl grid-cols-5 pl-2`}
       >
         <p className="col-span-2 flex">Produkt:</p>
         <p className="col-span-1 justify-center flex">Cena:</p>

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchUserById,
-  updateUserData,
+  handleUpdateUserData,
 } from "../helpers/api-integration/UserDataHandling";
 import Spinner from "../components/universal/Spinner";
 import { getRole } from "../helpers/ApiDataTranslator";
@@ -11,6 +11,7 @@ import { DateParser } from "../helpers/Date";
 import AccountImageCard from "../components/card/AccountImageCard";
 import InformationContainer from "../components/universal/InformationContainer";
 import DefaultModal from "../components/modal/DefaultModal";
+import { AnimatePresence } from "framer-motion";
 
 const UserAccountAdminView = () => {
   const { userId } = useParams();
@@ -25,7 +26,7 @@ const UserAccountAdminView = () => {
 
   const { mutate: updateUser, isLoading: updatingUserData } = useMutation({
     mutationKey: ["updateUser", userId, userUpdateData],
-    mutationFn: () => updateUserData(userId, userUpdateData),
+    mutationFn: () => handleUpdateUserData(userId, userUpdateData),
     onSuccess: () => {
       queryClient.invalidateQueries("userAccountViewData");
       queryClient.invalidateQueries("allUsersData");
@@ -82,9 +83,10 @@ const UserAccountAdminView = () => {
       action: "IDENTIFY",
     },
     {
-      name: "Daj warna",
-      onClick: () => handleOpenModal(`Daj warna użytkownika ${username}`),
-      action: "WARN",
+      name: "Wyślij wiadomość",
+      onClick: () =>
+        handleOpenModal(`Wyślij wiadomość użytkownikowi ${username}`),
+      action: "MESSAGE",
     },
   ];
 
@@ -166,30 +168,32 @@ const UserAccountAdminView = () => {
           ))}
         </div>
       </div>
-      {isModalOpen && (
-        <DefaultModal subtitle={modalContent}>
-          <div className="flex gap-6">
-            <button
-              className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Anuluj
-            </button>
-            <button
-              onClick={() => {
-                if (modalContent.includes("warn")) {
-                  navigate(`/users/create-warn/${userId}/${username}`);
-                } else {
-                  updateUser();
-                }
-              }}
-              className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-            >
-              Potwierdź
-            </button>
-          </div>
-        </DefaultModal>
-      )}
+      <AnimatePresence>
+        {isModalOpen && (
+          <DefaultModal subtitle={modalContent}>
+            <div className="flex gap-6">
+              <button
+                className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Anuluj
+              </button>
+              <button
+                onClick={() => {
+                  if (modalContent.includes("wiadomość")) {
+                    navigate(`/users/create-message/${userId}/${username}`);
+                  } else {
+                    updateUser();
+                  }
+                }}
+                className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+              >
+                Potwierdź
+              </button>
+            </div>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -59,6 +59,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         if (isDiscountCodeValid(foundDiscountCode) && isPossibleToUseDiscountByUser(foundDiscountCode, userId)) {
             return foundDiscountCode.getDiscountValue();
         } else  {
+            foundDiscountCode.setActive(false);
             return BigDecimal.ZERO;
         }
     }
@@ -71,11 +72,19 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
             increaseUsedCount(foundDiscountCode);
             return foundDiscountCode.getDiscountValue();
         } else {
+            foundDiscountCode.setActive(false);
             return BigDecimal.ZERO;
         }
     }
 
-    private static boolean isDiscountCodeValid(DiscountCode foundDiscountCode) {
+    private  boolean isDiscountCodeValid(DiscountCode foundDiscountCode) {
+        return foundDiscountCode.isActive() || !LocalDateTime.now().isAfter(foundDiscountCode.getExpirationDate());
+    }
+
+    @Override
+    public boolean isDiscountCodeValid(String discountCodeId) {
+        DiscountCode foundDiscountCode = getDiscountCode(discountCodeId);
+
         return foundDiscountCode.isActive() || !LocalDateTime.now().isAfter(foundDiscountCode.getExpirationDate());
     }
 

@@ -14,8 +14,11 @@ import Spinner from "../components/universal/Spinner";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import { formatCurrency } from "../helpers/CurrencyFormatter";
 import { useForm } from "react-hook-form";
-import { fetchDiscountCode } from "../helpers/api-integration/DiscountCodesHandling";
-import { handleApplyingDiscountCode } from "../helpers/ApplyDiscountCodes";
+import {
+  handleAssignDiscountCodeToCart,
+  isDiscountCodeStillValid,
+} from "../helpers/api-integration/DiscountCodesHandling";
+import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes";
 import CartItemsTable from "../components/table/CartItemsTable";
 
 const CartPage = () => {
@@ -29,7 +32,6 @@ const CartPage = () => {
     formState: { errors },
   } = useForm();
   const queryClient = useQueryClient();
-  const [orderValueWithDiscount, setOrderValueWithDiscount] = useState();
 
   const { data: cartData, isLoading: fetchingCartData } = useQuery(
     ["userCartData", identifier, isAuthenticated],
@@ -50,35 +52,46 @@ const CartPage = () => {
     onError: (error) => console.log(error),
   });
 
-  const { mutate: applyDiscountCode, isLoading: applyingDiscountCode } =
+  const { mutate: assignDiscountCodeToCart, isLoading: assigningDiscountCode } =
     useMutation({
-      mutationKey: ["applyDiscountCode", getValues().discountCode],
+      mutationKey: ["assignDiscountCodeToCart", getValues().discountCode],
       mutationFn: async () => {
-        if (!errors?.discountCode) {
-          const discountCodeData = await fetchDiscountCode(
-            getValues().discountCode,
-          );
+        const discountCode = getValues().discountCode;
 
-          return handleApplyingDiscountCode(
-            discountCodeData,
-            cartData.totalPrice,
-            userId,
-          );
+        if (!discountCode) {
+          throw new Error("Kod rabatowy jest wymagany!");
         }
+
+        const isValid = await isDiscountCodeStillValid(
+          getValues().discountCode,
+        );
+
+        if (!isValid) {
+          throw new Error("Ten kod rabatowy jest nieważny lub wygasł.");
+        }
+
+        return handleAssignDiscountCodeToCart(
+          cartData.cartIdentifier,
+          getValues().discountCode,
+        );
       },
-      onSuccess: (value) => {
-        setOrderValueWithDiscount(value);
-        toast.success(`Zastosowano kod zniżkowy: ${getValues().discountCode}!`);
+      onSuccess: () => {
+        queryClient.invalidateQueries("userCartData");
+        toast.success(
+          `Dodano kod zniżkowy do koszyka: ${getValues().discountCode}!`,
+        );
         reset();
       },
       onError: (error) => {
-        toast.error(error.message);
+        toast.error("Nie można zastosować kodu zniżkowego!");
       },
     });
 
-  if (fetchingCartData || deletingAllItemsFromCart || applyingDiscountCode) {
+  if (fetchingCartData || deletingAllItemsFromCart || assigningDiscountCode) {
     return <Spinner />;
   }
+
+  console.log(cartData);
 
   return (
     <AnimatedPage>
@@ -126,7 +139,7 @@ const CartPage = () => {
                 })}
               />
               <button
-                onClick={handleSubmit(applyDiscountCode)}
+                onClick={handleSubmit(assignDiscountCodeToCart)}
                 className="ml-auto font-bold text-xl border-b-2 border-custom-orange-200"
               >
                 Aktywuj kod
@@ -145,26 +158,37 @@ const CartPage = () => {
             </div>
             <div className="ml-auto w-[42%]">
               <h3 className="font-bold text-2xl">Podsumowanie koszyka</h3>
-              <div className="w-full h-auto p-4 bg-custom-gray-300 text-xl rounded-2xl grid grid-cols-2">
-                <div className="col-span-1 uppercase grid grid-rows-5 gap-8">
+              <div
+                className={
+                  "w-full h-auto p-4 bg-custom-gray-300 text-xl rounded-2xl grid grid-cols-2 "
+                }
+              >
+                <div className="col-span-1 uppercase grid grid-rows-3 gap-4">
                   <p className="row-span-1">Suma:</p>
-                  <p className="row-span-3">Wysyłka:</p>
+                  <p className="row-span-1">Zniżka:</p>
                   <p className="row-span-1">Łącznie:</p>
                 </div>
-                <div className="col-span-1 uppercase grid grid-rows-5 gap-8">
+                <div className="ml-auto col-span-1 uppercase grid grid-rows-3 gap-4">
                   <p className="row-span-1">
-                    {orderValueWithDiscount
-                      ? orderValueWithDiscount
-                      : formatCurrency(cartData.totalPrice)}
+                    {formatCurrency(cartData.totalPrice)}
                   </p>
-                  <div className="row-span-3">
-                    <ul>
-                      <li></li>
-                      <li></li>
-                      <li></li>
-                    </ul>
-                  </div>
-                  <p className="row-span-1">265,50 zł</p>
+                  {cartData.discountCode ? (
+                    <p className="row-span-1">{`${cartData.discountCode.discountType === "FIXED_AMOUNT" ? formatCurrency(cartData.discountCode.discountValue) : `${cartData.discountCode.discountValue} %`}`}</p>
+                  ) : (
+                    <p className="row-span-1">BRAK</p>
+                  )}
+                  {cartData.discountCode ? (
+                    <p className="row-span-1">
+                      {calcCartTotalPriceWithDiscount(
+                        cartData.discountCode,
+                        cartData.totalPrice,
+                      )}
+                    </p>
+                  ) : (
+                    <p className="row-span-1">
+                      {formatCurrency(cartData.totalPrice)}
+                    </p>
+                  )}
                 </div>
               </div>
               <ButtonWithLink

@@ -82,3 +82,20 @@ export const fetchProductSizes = async (productId) => {
     console.log(error);
   }
 };
+
+export const handleAddNewProduct = async (productData, productCategory) => {
+  try {
+    const response = await axios.post(
+      `/products/${productCategory}/add`,
+      productData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

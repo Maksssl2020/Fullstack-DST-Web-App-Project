@@ -45,6 +45,16 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserIdByUsername(username));
     }
 
+    @GetMapping("/is-username-unique")
+    public ResponseEntity<Boolean> isUsernameUnique(@RequestParam String username) {
+        return ResponseEntity.ok(userService.isUsernameUnique(username));
+    }
+
+    @GetMapping("/is-email-unique")
+    public ResponseEntity<Boolean> isEmailUnique(@RequestParam String email) {
+        return ResponseEntity.ok(userService.isEmailUnique(email));
+    }
+
     @PutMapping("/{id}/update-files")
     public ResponseEntity<HttpStatus> updateUserFiles(
             @PathVariable Long id,

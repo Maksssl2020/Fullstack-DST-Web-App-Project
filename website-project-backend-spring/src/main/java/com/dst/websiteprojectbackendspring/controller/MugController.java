@@ -22,7 +22,7 @@ public class MugController {
         return ResponseEntity.ok(mugService.findAllMugs());
     }
 
-    @PostMapping("/add-mug")
+    @PostMapping("/add")
     public ResponseEntity<HttpStatus> addMug(
             @RequestParam("title") String title,
             @RequestParam("name") String name,

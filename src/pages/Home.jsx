@@ -5,29 +5,29 @@ import HomeInstagramSection from "../components/section/HomeInstagramSection.jsx
 import AnimatedPage from "../animation/AnimatedPage";
 import { AuthContext } from "../helpers/provider/AuthProvider";
 import { useQuery } from "react-query";
-import { fetchUserAllNonReadWarns } from "../helpers/api-integration/UserDataHandling";
-import UserWarnModal from "../components/modal/UserWarnModal";
+import { fetchUserAllNonReadMessages } from "../helpers/api-integration/UserDataHandling";
+import UserMessageModal from "../components/modal/UserMessageModal";
 
 const Home = () => {
   const { isAuthenticated, userId } = useContext(AuthContext);
 
-  const { data: userWarns, isLoading: fetchingUserWarns } = useQuery(
-    ["allUserNonReadWarns", userId],
+  const { data: userMessages, isLoading: fetchingUserMessages } = useQuery(
+    ["allUserNonReadMessages", userId],
     () => {
       if (isAuthenticated && userId) {
-        return fetchUserAllNonReadWarns(userId);
+        return fetchUserAllNonReadMessages(userId);
       }
     },
   );
 
-  if (fetchingUserWarns) {
+  if (fetchingUserMessages) {
     return;
   }
 
   return (
     <AnimatedPage>
-      {userWarns?.length > 0 && (
-        <UserWarnModal warnData={userWarns[0]} userId={userId} />
+      {userMessages?.length > 0 && (
+        <UserMessageModal messageData={userMessages[0]} userId={userId} />
       )}
       <div className="w-full">
         <div className="mt-8 flex items-center max-xl:justify-center h-[200px] bg-custom-gray-200">

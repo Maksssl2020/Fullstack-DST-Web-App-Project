@@ -1,6 +1,7 @@
 package com.dst.websiteprojectbackendspring.model.cart;
 
 import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
+import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -36,6 +37,9 @@ public class Cart {
     private LocalDateTime lastUpdateDate;
 
     private boolean userRegistered;
+
+    @ManyToOne
+    private DiscountCode discountCode;
 
     @JsonIgnore
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)

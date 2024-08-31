@@ -4,6 +4,7 @@ import com.dst.websiteprojectbackendspring.dto.order.OrderRequestDTO;
 import com.dst.websiteprojectbackendspring.model.order.Order;
 import com.dst.websiteprojectbackendspring.model.order.OrderStatus;
 import com.dst.websiteprojectbackendspring.model.payment.Payment;
+import com.dst.websiteprojectbackendspring.model.payment.PaymentStatus;
 import com.dst.websiteprojectbackendspring.repository.OrderRepository;
 import com.dst.websiteprojectbackendspring.service.biling.BillingServiceImpl;
 import com.dst.websiteprojectbackendspring.service.order_item.OrderItemServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -39,6 +41,13 @@ public class OrderServiceImpl implements OrderService {
     public Long saveOrder(OrderRequestDTO orderRequestDTO) {
         log.info("SAVING ORDER!");
         Order order = new Order();
+
+        if (orderRequestDTO.authenticatedCustomerId() != null) {
+            order.setAuthenticatedCustomerId(orderRequestDTO.authenticatedCustomerId());
+        }
+
+
+        log.info(orderRequestDTO.shipping().toString());
         billingService.saveBilling(orderRequestDTO.billing());
         shippingService.saveShipping(orderRequestDTO.shipping());
 
@@ -58,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
             Order order = orderRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
             if (order.getPayment() != null) {
-                Payment payment = paymentService.getYPaySpecifiedTransaction(order.getPayment().getTransactionId());
+                Payment payment = paymentService.getTPaySpecifiedTransaction(order.getPayment().getTransactionId()).block();
                 order.setPayment(payment);
                 orderRepository.save(order);
             }
@@ -71,7 +80,51 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+        updatePaymentsStatusBeforeFetchingItByUsers(null);
+
+        return orderRepository.findAll().stream()
+                .sorted(Comparator.comparing(Order::getId).reversed())
+                .toList();
+    }
+
+    @Override
+    public List<Order> findOrdersByAuthenticatedCustomerId(Long userId) {
+        updatePaymentsStatusBeforeFetchingItByUsers(userId);
+
+        return orderRepository.findByAuthenticatedCustomerId(userId).stream()
+                .sorted(Comparator.comparing(Order::getId).reversed())
+                .toList();
+    }
+
+    private void updatePaymentsStatusBeforeFetchingItByUsers(Long userId) {
+        List<Payment> payments;
+
+        if (userId != null) {
+            payments = orderRepository.findByAuthenticatedCustomerId(userId).stream()
+                    .map(Order::getPayment)
+                    .filter(payment -> !payment.getStatus().equals(PaymentStatus.CORRECT))
+                    .toList();
+        } else {
+            payments = paymentService.findAllPayments().stream()
+                    .filter(payment -> !payment.getStatus().equals(PaymentStatus.CORRECT))
+                    .toList();
+        }
+
+
+        log.info("UPDATING TRANSACTIONS!");
+        log.info("PAYMENTS: {}", payments);
+        payments.forEach(payment -> paymentService.getTPaySpecifiedTransaction(payment.getTransactionId()));
+    }
+
+    @Override
+    public void updateOrder(Long orderId, String orderStatus) {
+        try {
+            Order foundOrder = orderRepository.findById(orderId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundOrder.setOrderStatus(OrderStatus.valueOf(orderStatus));
+            orderRepository.save(foundOrder);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

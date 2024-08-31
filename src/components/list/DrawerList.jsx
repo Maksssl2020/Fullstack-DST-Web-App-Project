@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
 
 const DrawerList = () => {
-  const { role } = useContext(AuthContext);
+  const { role, isAuthenticated, userId } = useContext(AuthContext);
 
   const drawerListData = [
     {
@@ -57,9 +57,28 @@ const DrawerList = () => {
         </Link>
       ))}
       {role === "ADMIN" && (
-        <Link to={"/users"}>
+        <>
+          <Link to={"/users"}>
+            <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
+              {"Użytkownicy"}
+            </li>
+          </Link>
+          <Link to={"/orders"}>
+            <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
+              {"Zamówienia"}
+            </li>
+          </Link>
+          <Link to={"/users/requests"}>
+            <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
+              {"Prośby Użytkowników"}
+            </li>
+          </Link>
+        </>
+      )}
+      {role !== "ADMIN" && isAuthenticated && (
+        <Link to={`/my-orders/${userId}`}>
           <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
-            {"Użytkownicy"}
+            {"Moje zamówienia"}
           </li>
         </Link>
       )}

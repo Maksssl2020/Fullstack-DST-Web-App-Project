@@ -34,6 +34,9 @@ export const getShippingType = (shippingType) => {
 
 export const getOrderStatus = (orderStatus) => {
   switch (orderStatus) {
+    case "WAITING_FOR_PAYMENT": {
+      return "Oczekiwanie na płatność";
+    }
     case "ACCEPTED": {
       return "Zaakceptowane";
     }

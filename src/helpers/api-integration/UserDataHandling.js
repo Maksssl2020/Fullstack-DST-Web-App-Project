@@ -1,5 +1,34 @@
 import axios from "../AxiosConfig";
 
+export const checkUsernameIsUnique = async (username) => {
+  console.log(username);
+
+  try {
+    const response = await axios.get("/users/is-username-unique", {
+      params: {
+        username: username,
+      },
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const checkEmailIsUnique = async (email) => {
+  try {
+    const response = await axios.get("/users/is-email-unique", {
+      params: {
+        email: email,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const fetchAllUsers = async () => {
   try {
     const response = await axios.get("/users/all");
@@ -54,9 +83,12 @@ export const fetchUserIdByUsername = async (username) => {
   }
 };
 
-export const handleSendUserWarn = async (userId, warnData) => {
+export const handleSendUserMessage = async (userId, messageData) => {
   try {
-    const response = await axios.post(`/warns/${userId}/send-warn`, warnData);
+    const response = await axios.post(
+      `/messages/${userId}/send-message`,
+      messageData,
+    );
     return response.data;
   } catch (error) {
     console.log(error);
@@ -64,18 +96,18 @@ export const handleSendUserWarn = async (userId, warnData) => {
   }
 };
 
-export const fetchUserAllNonReadWarns = async (userId) => {
+export const fetchUserAllNonReadMessages = async (userId) => {
   try {
-    const response = await axios.get(`/warns/${userId}/get-non-reads`);
+    const response = await axios.get(`/messages/${userId}/get-non-reads`);
     return response.data;
   } catch (error) {
     console.log(error);
   }
 };
 
-export const handleMarkWarnAsRead = async (warnId) => {
+export const handleMessageAsRead = async (warnId) => {
   try {
-    const response = await axios.put(`/warns/${warnId}/is-read`);
+    const response = await axios.put(`/messages/${warnId}/is-read`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -83,7 +115,7 @@ export const handleMarkWarnAsRead = async (warnId) => {
   }
 };
 
-export const updateUserData = async (userId, updateData) => {
+export const handleUpdateUserData = async (userId, updateData) => {
   try {
     const response = await axios.patch(`/users/${userId}/update`, updateData);
     return response.data;

@@ -14,7 +14,7 @@ import ContactUs from "./pages/ContactUs";
 import ShopProductPage from "./pages/ShopProductPage";
 import NewsPostForm from "./pages/forms/NewsPostForm";
 import HomeNewsPostForm from "./pages/forms/HomeNewsPostForm";
-import ProductForm from "./pages/ProductForm";
+import ProductForm from "./pages/forms/ProductForm";
 import { AnimatePresence } from "framer-motion";
 import Article from "./pages/Article";
 import ArticleForm from "./pages/forms/ArticleForm";
@@ -24,7 +24,7 @@ import EventForm from "./pages/forms/EventForm";
 import React from "react";
 import Users from "./pages/Users";
 import UserAccountAdminView from "./pages/UserAccountAdminView";
-import WarnForm from "./pages/forms/WarnForm";
+import MessageForm from "./pages/forms/MessageForm";
 import StatisticsForm from "./pages/forms/StatisticsForm";
 import DiscountCodeForm from "./pages/forms/DiscountCodeForm";
 import DiscountCodes from "./pages/DiscountCodes";
@@ -32,6 +32,9 @@ import PlaceAnOrder from "./pages/PlaceAnOrder";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import OrderPage from "./pages/OrderPage";
 import Orders from "./pages/Orders";
+import UserOrdersPage from "./pages/UserOrdersPage";
+import AccountActivation from "./pages/AccountActivation";
+import UsersRequests from "./pages/UsersRequests";
 
 function App() {
   const router = createBrowserRouter([
@@ -95,6 +98,10 @@ function App() {
           element: <SignUp />,
         },
         {
+          path: "/activate-account",
+          element: <AccountActivation />,
+        },
+        {
           path: "/sign-in",
           element: <SignIn />,
         },
@@ -139,8 +146,8 @@ function App() {
           element: <UserAccountAdminView />,
         },
         {
-          path: "/users/create-warn/:userId/:user",
-          element: <WarnForm />,
+          path: "/users/create-message/:userId/:user",
+          element: <MessageForm />,
         },
         {
           path: "/change-statistics",
@@ -169,6 +176,14 @@ function App() {
         {
           path: "/orders/:orderId",
           element: <OrderPage />,
+        },
+        {
+          path: "/my-orders/:userId",
+          element: <UserOrdersPage />,
+        },
+        {
+          path: "/users/requests",
+          element: <UsersRequests />,
         },
       ],
     },

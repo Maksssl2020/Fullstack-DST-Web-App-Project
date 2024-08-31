@@ -57,7 +57,13 @@ const EventCard = ({ eventData, number }) => {
   console.log(amountOfBasicUsersInEvent);
 
   const currentDate = new Date();
-  const eventDateObject = new Date(...eventDate);
+  const eventDateObject = new Date(
+    eventDate[0],
+    eventDate[1] - 1,
+    eventDate[2],
+    eventDate[3],
+    eventDate[4],
+  );
   const isEventFinished = eventDateObject < currentDate;
 
   if (
@@ -68,6 +74,9 @@ const EventCard = ({ eventData, number }) => {
   ) {
     return <Spinner />;
   }
+
+  console.log(currentDate);
+  console.log(eventDateObject);
 
   return (
     <div className="w-full h-[500px] bg-custom-pink-100 rounded-2xl">

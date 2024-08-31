@@ -110,7 +110,7 @@ const AccountUserSection = ({
           ))}
         </div>
       </div>
-      <div className="ml-auto w-[30%] bg-custom-pink-100 rounded-2xl h-full overflow-y-auto">
+      <div className="ml-auto w-[30%] bg-custom-pink-100 rounded-2xl h-[700px] overflow-y-auto">
         <div className="w-full h-[100px] bg-custom-orange-200 rounded-2xl flex justify-center items-center">
           <h2 className="text-white text-4xl font-bold italic">Sprawdź:</h2>
         </div>

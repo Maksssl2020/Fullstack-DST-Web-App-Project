@@ -4,12 +4,6 @@ export const generateCartIdentifier = () => {
   return uuid();
 };
 
-const saveCartIdInLocalStorage = (cartId) => {
-  cartId = generateCartIdentifier();
-  localStorage.setItem("cartId", cartId);
-  localStorage.setItem("cartIdTimeStamp", Date.now());
-};
-
 export const getCartIdForNonRegisterUser = () => {
   let cartId = localStorage.getItem("cartId");
 
@@ -26,4 +20,10 @@ export const getCartIdForNonRegisterUser = () => {
   }
 
   return cartId;
+};
+
+const saveCartIdInLocalStorage = (cartId) => {
+  cartId = generateCartIdentifier();
+  localStorage.setItem("cartId", cartId);
+  localStorage.setItem("cartIdTimeStamp", Date.now());
 };

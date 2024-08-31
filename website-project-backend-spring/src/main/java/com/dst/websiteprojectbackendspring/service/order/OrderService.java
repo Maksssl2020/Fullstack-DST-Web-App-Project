@@ -13,5 +13,7 @@ public interface OrderService {
     Long saveOrder(OrderRequestDTO orderRequestDTO);
     Order findOrderById(Long id);
     List<Order> findAllOrders();
+    List<Order> findOrdersByAuthenticatedCustomerId(Long userId);
+    void updateOrder(Long orderId, String orderStatus);
     void deleteOrder(Long id);
 }

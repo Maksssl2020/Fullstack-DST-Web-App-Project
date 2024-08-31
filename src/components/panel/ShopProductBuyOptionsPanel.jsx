@@ -74,6 +74,7 @@ const ShopProductBuyOptionsPanel = ({
       onSuccess: () => {
         queryClient.invalidateQueries("cartItems");
         queryClient.invalidateQueries("amountOfItemsInCart");
+        queryClient.invalidateQueries("authenticatedCustomerCart");
         toast.success("Produkt dodany do koszyka!", {
           position: "top-center",
         });

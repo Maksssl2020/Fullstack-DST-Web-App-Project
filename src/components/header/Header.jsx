@@ -2,7 +2,7 @@ import BellIcon from "./icons/BellIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import RightDrawer from "../drawer/RightDrawer";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "../../icons/ShoppingBagIcon";
@@ -13,10 +13,7 @@ import {
   getShoppingCartId,
 } from "../../helpers/api-integration/ShoppingCartHandling";
 import { AuthContext } from "../../helpers/provider/AuthProvider";
-import {
-  generateCartIdentifier,
-  getCartIdForNonRegisterUser,
-} from "../../helpers/NonRegisteredUserCartId";
+import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId";
 import Spinner from "../universal/Spinner";
 import Badge from "../badge/Badge";
 import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling";

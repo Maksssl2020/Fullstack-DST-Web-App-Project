@@ -26,6 +26,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "userId")
+    private Long authenticatedCustomerId;
+
     private LocalDateTime orderDate;
 
     @Enumerated(EnumType.STRING)

@@ -12,12 +12,13 @@ import java.util.Map;
 @Service
 public interface UserService {
 
+    boolean isUsernameUnique(String username);
+    boolean isEmailUnique(String email);
     List<UserDTO> findAllUsersWithoutAdmins();
     List<UserDTO> findAllVolunteers();
     User getUserById(Long userId) throws ChangeSetPersister.NotFoundException;
     void updateUserFiles(Long userId, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException;
     void updateUser(Long id, Map<String, Object> updates) throws ChangeSetPersister.NotFoundException;
     String getUserAvatarByUsername(Long userId) throws ChangeSetPersister.NotFoundException;
-    List<User> getAllUsersByEventId(Long eventId);
     Long getUserIdByUsername(String username) throws ChangeSetPersister.NotFoundException;
 }

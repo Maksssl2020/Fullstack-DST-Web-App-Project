@@ -143,15 +143,6 @@ const AccountAdminSection = ({
               kody rabatowe
             </span>
           </button>
-          <button
-            onClick={() => navigate("/orders")}
-            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
-          >
-            Zobacz: &nbsp;
-            <span className="ml-2 uppercase text-custom-pink-200">
-              Zamówienia
-            </span>
-          </button>
         </div>
       </div>
       {openModal && (
