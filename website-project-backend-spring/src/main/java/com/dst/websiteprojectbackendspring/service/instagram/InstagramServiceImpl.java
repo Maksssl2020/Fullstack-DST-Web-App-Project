@@ -1,12 +1,14 @@
 package com.dst.websiteprojectbackendspring.service.instagram;
 
+import com.dst.websiteprojectbackendspring.model.external_token.ExternalToken;
+import com.dst.websiteprojectbackendspring.model.external_token.ExternalTokenType;
 import com.dst.websiteprojectbackendspring.model.instagram.InstagramMediaDataResponse;
 import com.dst.websiteprojectbackendspring.model.instagram.InstagramUserDataResponse;
 import com.dst.websiteprojectbackendspring.model.instagram.MediaData;
 import com.dst.websiteprojectbackendspring.model.instagram.MediaImage;
+import com.dst.websiteprojectbackendspring.service.external_token.ExternalTokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -20,12 +22,17 @@ import java.util.stream.Collectors;
 public class InstagramServiceImpl implements InstagramService {
 
     private final WebClient webClient;
+    private final ExternalTokenServiceImpl externalTokenService;
 
-    @Value("${instagram.access-token}")
     private String ACCESS_TOKEN;
 
     @Override
     public Mono<InstagramUserDataResponse> getInstagramUserData() {
+        if (ACCESS_TOKEN == null) {
+            ExternalToken token = externalTokenService.getToken(ExternalTokenType.INSTAGRAM);
+            ACCESS_TOKEN = token.getToken();
+        }
+
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -40,6 +47,11 @@ public class InstagramServiceImpl implements InstagramService {
 
     @Override
     public Mono<List<MediaData>> getInstagramPostsData() {
+        if (ACCESS_TOKEN == null) {
+            ExternalToken token = externalTokenService.getToken(ExternalTokenType.INSTAGRAM);
+            ACCESS_TOKEN = token.getToken();
+        }
+
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .scheme("https")
@@ -55,6 +67,11 @@ public class InstagramServiceImpl implements InstagramService {
 
     @Override
     public Mono<List<MediaImage>> getInstagramMediaAllImages(String postId) {
+        if (ACCESS_TOKEN == null) {
+            ExternalToken token = externalTokenService.getToken(ExternalTokenType.INSTAGRAM);
+            ACCESS_TOKEN = token.getToken();
+        }
+
         log.info(postId);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder

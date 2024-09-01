@@ -15,5 +15,5 @@ public interface CartService {
     Cart addProductToCart(Long cartId, Long productId, Integer quantity);
     Cart findCartById(Long cartId);
     void assignCodeToCart(String cartIdentifier, String discountCodeId);
-    void applyDiscountCode(String cartIdentifier, Long userId);
+    void applyDiscountCode(Long cartId, Long userId);
 }

@@ -83,7 +83,7 @@ const CartPage = () => {
         reset();
       },
       onError: (error) => {
-        toast.error("Nie można zastosować kodu zniżkowego!");
+        toast.error(error);
       },
     });
 
@@ -92,6 +92,7 @@ const CartPage = () => {
   }
 
   console.log(cartData);
+  console.log(userId);
 
   return (
     <AnimatedPage>

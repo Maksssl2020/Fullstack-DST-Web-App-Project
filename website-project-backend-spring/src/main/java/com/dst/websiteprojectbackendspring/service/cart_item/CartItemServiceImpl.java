@@ -132,6 +132,7 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     @Transactional
     public void deleteAllItemsFromCart(Long cartId) {
+        log.info("DELETING!");
         cartItemRepository.deleteAllByCartId(cartId);
     }
 }

@@ -110,10 +110,10 @@ export const handleAssignDiscountCodeToCart = async (
   }
 };
 
-export const handleApplyDiscountCodeInCart = async (cartIdentifier, userId) => {
+export const handleApplyDiscountCodeInCart = async (cartId, userId) => {
   try {
     const response = await axios.put(
-      `/shop/carts/apply-discount/${cartIdentifier}/${userId}`,
+      `/shop/carts/apply-discount/${cartId}/${userId}`,
     );
     return response.data;
   } catch (error) {

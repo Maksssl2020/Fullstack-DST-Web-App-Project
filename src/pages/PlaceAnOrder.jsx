@@ -54,6 +54,7 @@ const PlaceAnOrder = () => {
     () => fetchShoppingCartByIdentifier(cartIdentifier, isAuthenticated),
     {
       onSuccess: (response) => {
+        console.log(response);
         setCartId(response.id);
       },
     },
@@ -100,7 +101,12 @@ const PlaceAnOrder = () => {
     onSuccess: (redirectUrl) => {
       window.location.replace(redirectUrl);
       toast.success("Złożono nowe zamówienie!");
-      applyDiscountCodeInCart();
+
+      if (cartData.discountCode !== null) {
+        return applyDiscountCodeInCart(cartId);
+      } else {
+        return deleteAllItemsInCart(cartId);
+      }
     },
     onError: (error) => console.log(error),
   });
@@ -109,19 +115,25 @@ const PlaceAnOrder = () => {
     mutate: applyDiscountCodeInCart,
     isLoading: applyingDiscountCodeInCart,
   } = useMutation({
-    mutationKey: ["applyDiscountCodeInCart", cartData?.cartIdentifier, userId],
-    mutationFn: () => {
-      if (cartData.cartIdentifier) {
-        return handleApplyDiscountCodeInCart(cartData?.cartIdentifier, userId);
+    mutationKey: ["applyDiscountCodeInCart", cartId, userId],
+    mutationFn: (cartId) => {
+      if (cartId) {
+        return handleApplyDiscountCodeInCart(cartId, userId);
       }
     },
-    onSuccess: () => deleteAllItemsInCart(),
+    onSuccess: () => {
+      return deleteAllItemsInCart(cartId);
+    },
   });
 
   const { mutate: deleteAllItemsInCart, isLoading: deletingAllItemsInCart } =
     useMutation({
-      mutationKey: ["deleteAllItemsInCart", cartData?.id],
-      mutationFn: () => deleteAllProductsFromCart(cartData?.id),
+      mutationKey: ["deleteAllItemsInCart", cartId],
+      mutationFn: (cartId) => {
+        if (cartId) {
+          return deleteAllProductsFromCart(cartId);
+        }
+      },
     });
 
   const handleSubmitOrder = () => {

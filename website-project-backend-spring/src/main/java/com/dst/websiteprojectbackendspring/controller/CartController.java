@@ -42,9 +42,9 @@ public class CartController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/apply-discount/{cartIdentifier}/{userId}")
-    public ResponseEntity<HttpStatus> applyDiscount(@PathVariable String cartIdentifier, @PathVariable Long userId) {
-        cartService.applyDiscountCode(cartIdentifier, userId);
+    @PutMapping("/apply-discount/{cartId}/{userId}")
+    public ResponseEntity<HttpStatus> applyDiscount(@PathVariable Long cartId, @PathVariable Long userId) {
+        cartService.applyDiscountCode(cartId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

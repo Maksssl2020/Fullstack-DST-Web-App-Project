@@ -51,6 +51,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
   );
 
   console.log(customerCart);
+  console.log(cartItems);
 
   if (searchingCart || searchingCartItems) {
     return <Spinner />;

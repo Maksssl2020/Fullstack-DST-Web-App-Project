@@ -82,9 +82,15 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void applyDiscountCode(String cartIdentifier, Long userId) {
+    public void applyDiscountCode(Long cartId, Long userId) {
         log.info("APPLYING DISCOUNT CODE");
-        Cart foundCart = cartRepository.findByCartIdentifier(cartIdentifier);
+        Cart foundCart;
+
+        try {
+            foundCart = cartRepository.findById(cartId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
         if (foundCart.getDiscountCode() != null) {
             String discountCodeId = foundCart.getDiscountCode().getCode();
