@@ -1,17 +1,19 @@
 package com.dst.websiteprojectbackendspring.service.product.clothing;
 
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
+import com.dst.websiteprojectbackendspring.dto.product.clothing.ClothingRequest;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.clothing.Clothing;
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ClothingRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements ClothingService {
 
@@ -24,20 +26,12 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
 
     @Override
     @Transactional
-    public void saveClothing(
-            String title, String name, String description, String packageSize,
-            String weight, String price, List<String> categories, MultipartFile[] images,
-            String color, String productComposition, String productOverprint, List<String> productsSizes
-    ) {
-        Clothing clothing = setClothing(
-                title, name, description, packageSize,
-                weight, price, color, productComposition, productOverprint
-        );
-        clothingRepository.save(clothing);
+    public void saveClothing(ClothingRequest clothingRequest) {
+        Clothing clothing = setClothing(clothingRequest);
 
-        clothing.setImages(createImages(images, clothing));
-        clothing.setCategories(createProductCategories(categories, clothing));
-        clothing.setProductSize(createProductSizes(productsSizes, clothing));
+        clothing.setImages(createImages(clothingRequest.getImages(), clothing));
+        clothing.setCategories(createProductCategories(clothingRequest.getCategories(), clothing));
+        clothing.setProductSize(createProductSizes(clothingRequest.getProductsSizes(), clothing));
 
         clothingRepository.save(clothing);
     }
@@ -48,28 +42,22 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
     }
 
     @Override
-    public Clothing findClothingById(Long id) {
-        return null;
+    public void updateClothing(Long id, ClothingRequest clothingRequest) {
+        Clothing clothing = setClothing(clothingRequest);
+        clothing.setId(id);
+
+        clothing.setImages(createImages(clothingRequest.getImages(), clothing));
+        clothing.setCategories(createProductCategories(clothingRequest.getCategories(), clothing));
+        clothing.setProductSize(createProductSizes(clothingRequest.getProductsSizes(), clothing));
+
+        clothingRepository.save(clothing);
     }
 
-    @Override
-    public void updateClothing(Long id, Clothing clothing) {
-
-    }
-
-    @Override
-    public void deleteClothingById(Long id) {
-
-    }
-
-    public Clothing setClothing(
-            String title, String name, String description, String packageSize,
-            String weight, String price, String color, String productComposition, String productOverprint
-    ) {
-        Clothing clothing = setProduct(new Clothing(), title, name, description, packageSize, weight, price);
-        clothing.setColor(color);
-        clothing.setProductComposition(productComposition);
-        clothing.setProductOverprint(productOverprint);
+    public Clothing setClothing(ClothingRequest clothingRequest) {
+        Clothing clothing = setProduct(new Clothing(), clothingRequest.getTitle(), clothingRequest.getName(), clothingRequest.getDescription(), clothingRequest.getPackageSize(), clothingRequest.getWeight(), clothingRequest.getPrice());
+        clothing.setColor(clothingRequest.getColor());
+        clothing.setProductComposition(clothingRequest.getProductComposition());
+        clothing.setProductOverprint(clothingRequest.getProductOverprint());
         clothing.setProductType(ProductType.CLOTHING);
 
         return clothing;

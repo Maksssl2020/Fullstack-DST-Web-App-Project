@@ -83,10 +83,12 @@ export const fetchProductSizes = async (productId) => {
   }
 };
 
-export const handleAddNewProduct = async (productData, productCategory) => {
+export const handleAddNewProduct = async (productData, productType) => {
+  console.log(productData);
+
   try {
     const response = await axios.post(
-      `/products/${productCategory}/add`,
+      `/products/${productType}/add`,
       productData,
       {
         headers: {
@@ -94,6 +96,36 @@ export const handleAddNewProduct = async (productData, productCategory) => {
         },
       },
     );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const handleUpdateProduct = async (
+  productId,
+  productData,
+  productType,
+) => {
+  try {
+    const response = await axios.put(
+      `/products/${productType}/update/${productId}`,
+      productData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const handleDeleteProduct = async (productId) => {
+  try {
+    const response = await axios.delete(`/products/delete/${productId}`);
     return response.data;
   } catch (error) {
     throw error;

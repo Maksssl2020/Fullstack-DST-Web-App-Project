@@ -90,7 +90,11 @@ function App() {
           element: <CartPage />,
         },
         {
-          path: "/rainbow-shop/products/admin-options/:category/:type",
+          path: "/rainbow-shop/products/admin-options/:type/add",
+          element: <ProductForm />,
+        },
+        {
+          path: "/rainbow-shop/products/admin-options/:type/edit/:id",
           element: <ProductForm />,
         },
         {

@@ -1,12 +1,12 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.product.clothing.GadgetRequest;
 import com.dst.websiteprojectbackendspring.model.product.gadget.Gadget;
 import com.dst.websiteprojectbackendspring.service.product.gadget.GadgetServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,23 +23,14 @@ public class GadgetController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> addClothing(
-            @RequestParam("title") String title,
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("packageSize") String packageSize,
-            @RequestParam("weight") String weight,
-            @RequestParam("price") String price,
-            @RequestParam("categories") List<String> categories,
-            @RequestParam(value = "images", required = false) MultipartFile[] images,
-            @RequestParam("type") String type,
-            @RequestParam("material") String material
-    ) {
-        gadgetService.saveGadget(
-                title, name, description,
-                packageSize, weight, price, categories,
-                images, type, material
-        );
+    public ResponseEntity<HttpStatus> addClothing(@ModelAttribute GadgetRequest gadgetRequest) {
+        gadgetService.saveGadget(gadgetRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<HttpStatus> updateGadget(@PathVariable Long id, @ModelAttribute GadgetRequest gadgetRequest) {
+        gadgetService.updateGadget(id, gadgetRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

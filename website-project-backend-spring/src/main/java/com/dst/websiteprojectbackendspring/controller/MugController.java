@@ -1,12 +1,12 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.product.clothing.MugRequest;
 import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
 import com.dst.websiteprojectbackendspring.service.product.mug.MugServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,24 +23,14 @@ public class MugController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> addMug(
-            @RequestParam("title") String title,
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("packageSize") String packageSize,
-            @RequestParam("weight") String weight,
-            @RequestParam("price") String price,
-            @RequestParam("categories") List<String> categories,
-            @RequestParam(value = "images", required = false) MultipartFile[] images,
-            @RequestParam("color") String color,
-            @RequestParam("height") String height,
-            @RequestParam("material") String material
-    ) {
-        mugService.saveMug(
-                title, name, description,
-                packageSize, weight, price, categories,
-                images, color, height, material
-        );
+    public ResponseEntity<HttpStatus> addMug(@ModelAttribute MugRequest mugRequest) {
+        mugService.saveMug(mugRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<HttpStatus> updateMug(@PathVariable Long id, @ModelAttribute MugRequest mugRequest) {
+        mugService.updateMug(id, mugRequest);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

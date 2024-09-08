@@ -1,13 +1,13 @@
 package com.dst.websiteprojectbackendspring.service.product.pen;
 
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
+import com.dst.websiteprojectbackendspring.dto.product.clothing.PenRequest;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.PenRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,14 +21,12 @@ public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenServic
         this.penRepository = penRepository;
     }
 
-
     @Override
-    public void savePen(String title, String name, String description, String packageSize, String weight, String price, List<String> categories, MultipartFile[] images, String color, String inkColor) {
-        Pen pen = setPen(title, name, description, packageSize, weight, price, color, inkColor);
-        penRepository.save(pen);
+    public void savePen(PenRequest penRequest) {
+        Pen pen = setPen(penRequest);
 
-        pen.setCategories(createProductCategories(categories, pen));
-        pen.setImages(createImages(images, pen));
+        pen.setCategories(createProductCategories(penRequest.getCategories(), pen));
+        pen.setImages(createImages(penRequest.getImages(), pen));
 
         penRepository.save(pen);
     }
@@ -39,26 +37,20 @@ public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenServic
     }
 
     @Override
-    public Pen findPenById(Long id) {
-        return null;
+    public void updatePen(Long id, PenRequest penRequest) {
+        Pen pen = setPen(penRequest);
+        pen.setId(id);
+
+        pen.setCategories(createProductCategories(penRequest.getCategories(), pen));
+        pen.setImages(createImages(penRequest.getImages(), pen));
+
+        penRepository.save(pen);
     }
 
-    @Override
-    public void updatePen(Long id, Pen pen) {
-
-    }
-
-    @Override
-    public void deletePenById(Long id) {
-
-    }
-
-    private Pen setPen (
-            String title, String name, String description, String packageSize,
-            String weight, String price, String color, String inkColor) {
-        Pen pen = setProduct(new Pen(), title, name, description, packageSize, weight, price);
-        pen.setColor(color);
-        pen.setInkColor(inkColor);
+    private Pen setPen (PenRequest penRequest) {
+        Pen pen = setProduct(new Pen(), penRequest.getTitle(), penRequest.getName(), penRequest.getDescription(), penRequest.getPackageSize(), penRequest.getWeight(), penRequest.getPrice());
+        pen.setColor(penRequest.getColor());
+        pen.setInkColor(penRequest.getInkColor());
         pen.setProductType(ProductType.PEN);
 
         return pen;

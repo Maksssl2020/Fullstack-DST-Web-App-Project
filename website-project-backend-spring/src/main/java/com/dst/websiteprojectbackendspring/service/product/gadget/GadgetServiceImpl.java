@@ -1,14 +1,13 @@
 package com.dst.websiteprojectbackendspring.service.product.gadget;
 
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
+import com.dst.websiteprojectbackendspring.dto.product.clothing.GadgetRequest;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.gadget.Gadget;
-import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.GadgetRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,12 +22,11 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
     }
 
     @Override
-    public void saveGadget(String title, String name, String description, String packageSize, String weight, String price, List<String> categories, MultipartFile[] images, String type, String material) {
-        Gadget gadget = setGadget(title, name, description, packageSize, weight, price, type, material);
-        gadgetRepository.save(gadget);
+    public void saveGadget(GadgetRequest gadgetRequest) {
+        Gadget gadget = setGadget(gadgetRequest);
 
-        gadget.setCategories(createProductCategories(categories, gadget));
-        gadget.setImages(createImages(images, gadget));
+        gadget.setCategories(createProductCategories(gadgetRequest.getCategories(), gadget));
+        gadget.setImages(createImages(gadgetRequest.getImages(), gadget));
 
         gadgetRepository.save(gadget);
     }
@@ -39,27 +37,20 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
     }
 
     @Override
-    public Gadget findGadgetById(Long id) {
-        return null;
+    public void updateGadget(Long id, GadgetRequest gadgetRequest) {
+        Gadget gadget = setGadget(gadgetRequest);
+        gadget.setId(id);
+
+        gadget.setCategories(createProductCategories(gadgetRequest.getCategories(), gadget));
+        gadget.setImages(createImages(gadgetRequest.getImages(), gadget));
+
+        gadgetRepository.save(gadget);
     }
 
-    @Override
-    public void updateGadget(Long id, Pen pen) {
-
-    }
-
-    @Override
-    public void deleteGadgetById(Long id) {
-
-    }
-
-    private Gadget setGadget(
-            String title, String name, String description, String packageSize,
-            String weight, String price, String type, String material
-    ) {
-        Gadget gadget = setProduct(new Gadget(), title, name, description, packageSize, weight, price);
-        gadget.setType(type);
-        gadget.setMaterial(material);
+    private Gadget setGadget(GadgetRequest gadgetRequest) {
+        Gadget gadget = setProduct(new Gadget(), gadgetRequest.getTitle(), gadgetRequest.toString(), gadgetRequest.getDescription(), gadgetRequest.getPackageSize(), gadgetRequest.getWeight(), gadgetRequest.getPrice());
+        gadget.setType(gadgetRequest.getType());
+        gadget.setMaterial(gadgetRequest.getMaterial());
         gadget.setProductType(ProductType.GADGET);
 
         return gadget;

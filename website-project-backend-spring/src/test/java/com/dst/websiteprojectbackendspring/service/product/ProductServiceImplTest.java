@@ -95,9 +95,9 @@ class ProductServiceImplTest {
     void canMapProductsIntoProductDTOForCard() {
         given(productRepository.findAll()).willReturn(productList);
         given(productDTOForCardMapper.apply(product1))
-                .willReturn(new ProductDTOForCard(product1.getId(), product1.getTitle(), product1.getPrice()));
+                .willReturn(new ProductDTOForCard(product1.getId(), product1.getTitle(), product1.getPrice(), product1.getProductType().toString()));
         given(productDTOForCardMapper.apply(product2))
-                .willReturn(new ProductDTOForCard(product2.getId(), product2.getTitle(), product2.getPrice()));
+                .willReturn(new ProductDTOForCard(product2.getId(), product2.getTitle(), product2.getPrice(), product2.getProductType().toString()));
 
         List<ProductDTOForCard> allProductsDTO = productService.findAllProductsDTOForCard();
 

@@ -1,13 +1,13 @@
 package com.dst.websiteprojectbackendspring.service.product.mug;
 
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
+import com.dst.websiteprojectbackendspring.dto.product.clothing.MugRequest;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.MugRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.service.product.ProductServiceImpl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,13 +22,11 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
     }
 
     @Override
-    public void saveMug(String title, String name, String description, String packageSize, String weight, String price, List<String> categories, MultipartFile[] images, String color, String height, String material) {
-        System.out.println(categories);
-        Mug mug = setMug(title, name, description, packageSize, weight, price, color, height, material);
-        mugRepository.save(mug);
+    public void saveMug(MugRequest mugRequest) {
+        Mug mug = setMug(mugRequest);
 
-        mug.setCategories(createProductCategories(categories, mug));
-        mug.setImages(createImages(images, mug));
+        mug.setCategories(createProductCategories(mugRequest.getCategories(), mug));
+        mug.setImages(createImages(mugRequest.getImages(), mug));
 
         mugRepository.save(mug);
     }
@@ -39,28 +37,21 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
     }
 
     @Override
-    public Mug findMugById(Long id) {
-        return null;
+    public void updateMug(Long id, MugRequest mugRequest) {
+        Mug mug = setMug(mugRequest);
+        mug.setId(id);
+
+        mug.setCategories(createProductCategories(mugRequest.getCategories(), mug));
+        mug.setImages(createImages(mugRequest.getImages(), mug));
+
+        mugRepository.save(mug);
     }
 
-    @Override
-    public void updateMug(Long id, Mug clothing) {
-
-    }
-
-    @Override
-    public void deleteMugById(Long id) {
-
-    }
-
-    private Mug setMug(
-            String title, String name, String description, String packageSize,
-            String weight, String price, String color, String height, String material
-    ) {
-        Mug mug = setProduct(new Mug(), title, name, description, packageSize, weight, price);
-        mug.setColor(color);
-        mug.setHeight(height);
-        mug.setMaterial(material);
+    private Mug setMug(MugRequest mugRequest) {
+        Mug mug = setProduct(new Mug(), mugRequest.getTitle(), mugRequest.getName(), mugRequest.getDescription(), mugRequest.getPackageSize(), mugRequest.getWeight(), mugRequest.getPrice());
+        mug.setColor(mugRequest.getColor());
+        mug.setHeight(mugRequest.getHeight());
+        mug.setMaterial(mugRequest.getMaterial());
         mug.setProductType(ProductType.MUG);
 
         return mug;

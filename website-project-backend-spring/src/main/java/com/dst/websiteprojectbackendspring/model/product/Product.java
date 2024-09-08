@@ -3,7 +3,7 @@ package com.dst.websiteprojectbackendspring.model.product;
 import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -57,11 +58,11 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private ProductType productType;
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductCategory> categories;
+    private List<ProductCategory> categories = new ArrayList<>();
 
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductImage> images;
+    private List<ProductImage> images = new ArrayList<>();
 }

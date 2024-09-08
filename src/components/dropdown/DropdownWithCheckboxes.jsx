@@ -1,30 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CheckIcon from "../../icons/CheckIcon";
 
 const DropdownWithCheckboxes = ({
   title,
   options,
-  setChosenOptions,
+  fieldName,
+  value,
+  setValue,
   containerClassName = "relative w-[350px]",
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [selectedOptions, setSelectedOptions] = React.useState([]);
 
+  useEffect(() => {
+    if (value) {
+      setSelectedOptions(value);
+    }
+  }, [value]);
+
   const handleOpenClick = () => {
-    setChosenOptions(selectedOptions);
-    console.log(selectedOptions);
     setIsOpen(!isOpen);
   };
 
   const handleChoosingOptions = (option) => {
+    let updatedOptions;
+
     if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+      updatedOptions = selectedOptions.filter((item) => item !== option);
     } else {
-      setSelectedOptions([...selectedOptions, option]);
+      updatedOptions = [...selectedOptions, option];
     }
+    setSelectedOptions(updatedOptions);
+    setValue(fieldName, updatedOptions);
   };
 
+  console.log(value);
   console.log(selectedOptions);
+
   return (
     <div className={containerClassName}>
       <button

@@ -39,7 +39,7 @@ const ForumPostPageForm = () => {
 
   useEffect(() => {
     if (isEditing) {
-      postToUpdateData.postType === "ANONYMOUS"
+      postToUpdateData?.postType === "ANONYMOUS"
         ? setOptionIndex(0)
         : setOptionIndex(1);
     }

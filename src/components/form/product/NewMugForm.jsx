@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from "react";
 import FormItem from "../FormItem";
 
-const NewMugForm = ({ register }) => {
+const NewMugForm = ({ register, errors }) => {
   const formDataStructure = [
     {
       title: "Wpisz kolor:",
       dataName: "color",
+      type: "text",
+      errors: errors?.color?.message,
     },
     {
       title: "Wpisz wysokość:",
       dataName: "height",
+      type: "number",
+      errors: errors?.height?.message,
     },
     {
       title: "Wpisz materiał:",
       dataName: "material",
+      type: "text",
+      errors: errors?.material?.message,
     },
   ];
 
@@ -23,12 +29,15 @@ const NewMugForm = ({ register }) => {
         <FormItem
           key={index}
           labelData={data.title}
-          type={"text"}
+          type={data.type}
           register={{ ...register(data.dataName) }}
-          inputStyling={
-            "w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-lg h-[50px] font-medium border-4 rounded-2xl border-black resize-none"
+          containerStyling={
+            "w-full h-auto flex flex-col font-bold text-xl gap-2 items-center"
           }
-          containerStyling={"font-bold text-xl"}
+          inputStyling={
+            "border-4 border-black px-2 h-[50px] rounded-2xl focus:border-custom-orange-200 text-lg flex text-black bg-custom-gray-200 "
+          }
+          errors={data.errors}
         />
       ))}
     </>

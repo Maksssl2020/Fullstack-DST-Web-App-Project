@@ -14,4 +14,5 @@ public interface ProductService {
     List<ProductDTOForCard> findAllProductsDTOForCard();
     Product findProductById(Long id) throws ChangeSetPersister.NotFoundException;
     ProductDTOForCard findProductDTOForCardById(Long id) throws ChangeSetPersister.NotFoundException;
+    void deleteProductById(Long id);
 }

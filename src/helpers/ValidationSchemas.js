@@ -1,4 +1,6 @@
 import * as Yup from "yup";
+import instance from "./AxiosConfig";
+import { ArraySchema, object } from "yup";
 
 export const discountCodeSchema = Yup.object().shape({
   code: Yup.string().required("Kod nie może być pusty!"),
@@ -105,3 +107,60 @@ export const userRegistrationSchema = Yup.object().shape({
     "Hasła nie mogę się różnić!",
   ),
 });
+
+const getAdditionalProductFieldsSchema = (productType) => {
+  switch (productType) {
+    case "clothes": {
+      return {
+        color: Yup.string().required("Kolor nie może być pusty!"),
+        productComposition: Yup.string().required("Skład nie może być pusty!"),
+        productOverprint: Yup.string().required("Nadruk nie może być pusty!"),
+        sizes: Yup.array().required("Produkt musi mieć co najmniej 1 rozmiar!"),
+      };
+    }
+    case "pens": {
+      return {
+        color: Yup.string().required("Kolor nie może być pusty!"),
+        inkColor: Yup.string().required("Kolor tuszu nie może być pusty!"),
+      };
+    }
+    case "mugs": {
+      return {
+        color: Yup.string().required("Kolor nie może być pusty!"),
+        height: Yup.number()
+          .typeError("Wysokość musi być poprawną liczbą!")
+          .required("Wysokość nie może być pusta!")
+          .min(0.1, "Wysokość musi być większa bądź równa 0.1!"),
+        material: Yup.string().required("Materiał nie może być pusty!"),
+      };
+    }
+    case "gadgets": {
+      return {
+        type: Yup.string().required("Typ nie może być pusty!"),
+        material: Yup.string().required("Materiał nie może być pusty!"),
+      };
+    }
+    default:
+      return {};
+  }
+};
+
+export const newProductFormSchema = (productType) =>
+  Yup.object().shape({
+    title: Yup.string().required("Tytuł nie może być pusty!"),
+    fullName: Yup.string().required("Pełna nazwa nie może być pusta!"),
+    description: Yup.string().required("Opis nie może być pusty!"),
+    packageSize: Yup.string().required("Rozmiar paczki nie może być pusty!"),
+    weight: Yup.number()
+      .typeError("Waga musi być prawidłową liczbą!")
+      .required("Waga nie może być pusta!")
+      .min(0.1, "Waga musi być większa bądź równa 0.1!"),
+    price: Yup.number()
+      .typeError("Cena musi być prawidłową liczbą!")
+      .required("Cena nie może być pusta!")
+      .min(0.0, "Cena musi być większa bądź równa 0.0!"),
+    categories: Yup.array().required(
+      "Produkt musi mieć co najmniej 1 kategorię!",
+    ),
+    ...getAdditionalProductFieldsSchema(productType),
+  });

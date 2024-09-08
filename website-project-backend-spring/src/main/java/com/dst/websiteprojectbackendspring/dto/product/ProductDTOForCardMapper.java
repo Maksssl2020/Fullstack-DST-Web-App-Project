@@ -12,7 +12,8 @@ public class ProductDTOForCardMapper implements Function<Product, ProductDTOForC
         return new ProductDTOForCard(
                 product.getId(),
                 product.getTitle(),
-                product.getPrice()
+                product.getPrice(),
+                product.getProductType().toString()
         );
     }
 }

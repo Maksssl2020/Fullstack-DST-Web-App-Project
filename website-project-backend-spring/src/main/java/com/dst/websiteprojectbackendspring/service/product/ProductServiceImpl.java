@@ -10,6 +10,7 @@ import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl<T extends Product> implements ProductService {
@@ -59,6 +61,11 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
+    @Override
+    public void deleteProductById(Long id) {
+        productRepository.deleteById(id);
+    }
+
     public T setProduct(
             T product, String title, String name, String description,
             String packageSize, String weight, String price
@@ -74,6 +81,9 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
     }
 
     protected List<ProductImage> createImages(MultipartFile[] images, T product) {
+        log.info("IMAGES!");
+        log.info(Arrays.toString(images));
+
         return Arrays.stream(images)
                 .map(image -> {
                     ProductImage productImage = new ProductImage();
@@ -90,7 +100,6 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
     }
 
     protected List<ProductCategory> createProductCategories(List<String> productCategories, T product) {
-        System.out.println(productCategories);
         return productCategories
                 .stream()
                 .map(category -> {

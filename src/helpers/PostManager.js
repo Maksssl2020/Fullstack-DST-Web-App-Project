@@ -8,3 +8,10 @@ export const decodeImageFile = (imageFile) => {
   const byteArr = new Uint8Array(byteNumbers);
   return new Blob([byteArr], { type: "image/png" });
 };
+
+export const createFile = (imageFile) => {
+  const decodedFile = decodeImageFile(imageFile);
+  console.log(decodedFile);
+
+  return new File(decodedFile, "DDD");
+};
