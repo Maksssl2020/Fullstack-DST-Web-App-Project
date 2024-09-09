@@ -12,22 +12,24 @@ const ProductQuantityButton = ({
 }) => {
   const queryClient = useQueryClient();
 
+  console.log(itemId);
+
   const {
     mutate: updateCartProductQuantity,
     isLoading: updatingProductQuantity,
   } = useMutation({
     mutationKey: ["updateCartProductQuantity", itemId, quantity],
-    mutationFn: (newQuantity) => updateProductQuantity(itemId, newQuantity),
-    enabled: itemId !== undefined,
+    mutationFn: (newQuantity) => {
+      if (itemId) {
+        return updateProductQuantity(itemId, newQuantity);
+      }
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: "cartPageItems" });
+      queryClient.invalidateQueries("cartTableData");
+      queryClient.invalidateQueries("userCartData");
     },
     onError: (error) => console.log(error),
   });
-
-  if (updatingProductQuantity) {
-    return <Spinner />;
-  }
 
   const handleSubtract = () => {
     if (itemId && quantity - 1 >= 1) {
@@ -46,6 +48,10 @@ const ProductQuantityButton = ({
       addFunction();
     }
   };
+
+  // if (updatingProductQuantity) {
+  //   return;
+  // }
 
   return (
     <div className={className}>

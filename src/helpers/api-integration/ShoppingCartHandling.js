@@ -28,14 +28,8 @@ export const getShoppingCartId = async (cartIdentifier, isAuthenticated) => {
 };
 
 export const getShoppingCartItems = async (cartId) => {
-  console.log(cartId);
-
   try {
     const response = await axios.get(`/items/cart/${cartId}`);
-
-    console.log(response.data);
-    console.log(response);
-
     return response.data;
   } catch (error) {
     console.log(error);

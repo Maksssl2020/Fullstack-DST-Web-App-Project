@@ -14,7 +14,7 @@ export const fetchDiscountCode = async (discountCode) => {
     const response = await axios.get(`/shop/discount-codes/${discountCode}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 

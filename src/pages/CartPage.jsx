@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import AnimatedPage from "../animation/AnimatedPage";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo";
 import { useParams } from "react-router-dom";
@@ -15,11 +15,13 @@ import { AuthContext } from "../helpers/provider/AuthProvider";
 import { formatCurrency } from "../helpers/CurrencyFormatter";
 import { useForm } from "react-hook-form";
 import {
+  fetchDiscountCode,
   handleAssignDiscountCodeToCart,
   isDiscountCodeStillValid,
 } from "../helpers/api-integration/DiscountCodesHandling";
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes";
 import CartItemsTable from "../components/table/CartItemsTable";
+import { isDiscountCodeValid } from "../helpers/DiscountCodesHandler";
 
 const CartPage = () => {
   const { userId, isAuthenticated } = useContext(AuthContext);
@@ -52,28 +54,34 @@ const CartPage = () => {
     onError: (error) => console.log(error),
   });
 
+  const { mutate: fetchDiscountCodeData, isLoading: fetchingDiscountCodeData } =
+    useMutation({
+      mutationKey: ["enteredDiscountCodeData", getValues().discountCode],
+      mutationFn: () => fetchDiscountCode(getValues().discountCode),
+      onSuccess: (discountCodeData) => {
+        assignDiscountCodeToCart(discountCodeData);
+      },
+      onError: () => {
+        toast.error("Wprowadzony kod jest nieprawidłowy bądż nieaktywny!");
+      },
+    });
+
   const { mutate: assignDiscountCodeToCart, isLoading: assigningDiscountCode } =
     useMutation({
-      mutationKey: ["assignDiscountCodeToCart", getValues().discountCode],
-      mutationFn: async () => {
-        const discountCode = getValues().discountCode;
-
-        if (!discountCode) {
-          throw new Error("Kod rabatowy jest wymagany!");
+      mutationKey: ["assignDiscountCodeToCart"],
+      mutationFn: (discountCodeData) => {
+        if (
+          isDiscountCodeValid(
+            discountCodeData,
+            cartData.totalPrice,
+            isAuthenticated,
+          )
+        ) {
+          return handleAssignDiscountCodeToCart(
+            cartData.cartIdentifier,
+            getValues().discountCode,
+          );
         }
-
-        const isValid = await isDiscountCodeStillValid(
-          getValues().discountCode,
-        );
-
-        if (!isValid) {
-          throw new Error("Ten kod rabatowy jest nieważny lub wygasł.");
-        }
-
-        return handleAssignDiscountCodeToCart(
-          cartData.cartIdentifier,
-          getValues().discountCode,
-        );
       },
       onSuccess: () => {
         queryClient.invalidateQueries("userCartData");
@@ -83,11 +91,16 @@ const CartPage = () => {
         reset();
       },
       onError: (error) => {
-        toast.error(error);
+        toast.error(error.message);
       },
     });
 
-  if (fetchingCartData || deletingAllItemsFromCart || assigningDiscountCode) {
+  if (
+    fetchingCartData ||
+    deletingAllItemsFromCart ||
+    fetchingDiscountCodeData ||
+    assigningDiscountCode
+  ) {
     return <Spinner />;
   }
 
@@ -140,7 +153,7 @@ const CartPage = () => {
                 })}
               />
               <button
-                onClick={handleSubmit(assignDiscountCodeToCart)}
+                onClick={handleSubmit(fetchDiscountCodeData)}
                 className="ml-auto font-bold text-xl border-b-2 border-custom-orange-200"
               >
                 Aktywuj kod
@@ -180,9 +193,11 @@ const CartPage = () => {
                   )}
                   {cartData.discountCode ? (
                     <p className="row-span-1">
-                      {calcCartTotalPriceWithDiscount(
-                        cartData.discountCode,
-                        cartData.totalPrice,
+                      {formatCurrency(
+                        calcCartTotalPriceWithDiscount(
+                          cartData.discountCode,
+                          cartData.totalPrice,
+                        ),
                       )}
                     </p>
                   ) : (

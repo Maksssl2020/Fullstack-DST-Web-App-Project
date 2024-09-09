@@ -30,12 +30,12 @@ const SignIn = () => {
 
   let errorMessage;
 
-  if (errors?.response?.data?.errorMessage.includes("locked")) {
+  if (errors?.response?.data?.errorMessage?.includes("locked")) {
     errorMessage = "Konto zostało zbanowane!";
-  } else if (errors?.response?.data?.errorMessage.includes("credentials")) {
+  } else if (errors?.response?.data?.errorMessage?.includes("credentials")) {
     errorMessage = "Nieprawidłowa nazwa użytkownika lub hasło!";
   } else if (
-    errors?.response?.data?.errorMessage.includes("Account isn't activated")
+    errors?.response?.data?.errorMessage?.includes("Account isn't activated")
   ) {
     errorMessage = "Konto nie zostało aktywowane! Sprawdź e-mail.";
   }

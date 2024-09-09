@@ -3,6 +3,7 @@ package com.dst.websiteprojectbackendspring.service.cart_item;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
 import com.dst.websiteprojectbackendspring.model.product.Product;
+import com.dst.websiteprojectbackendspring.model.product_item.ProductItem;
 import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.repository.CartItemRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Slf4j
@@ -99,7 +101,9 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public List<CartItem> getCartItemsByCartId(Long cartId) {
-        return cartItemRepository.findByCartId(cartId);
+        return cartItemRepository.findByCartId(cartId).stream()
+                .sorted(Comparator.comparing(ProductItem::getId).reversed())
+                .toList();
     }
 
     private void updateCartTotalPrice(Long cartId) {
@@ -117,6 +121,7 @@ public class CartItemServiceImpl implements CartItemService {
         foundItem.setQuantity(quantity);
         foundItem.setTotalPrice(foundItem.getUnitPrice().multiply(new BigDecimal(quantity)));
         cartItemRepository.save(foundItem);
+        updateCartTotalPrice(foundItem.getCart().getId());
     }
 
     @Override
