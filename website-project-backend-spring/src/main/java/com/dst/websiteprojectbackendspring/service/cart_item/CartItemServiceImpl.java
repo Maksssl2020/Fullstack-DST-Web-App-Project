@@ -86,7 +86,7 @@ public class CartItemServiceImpl implements CartItemService {
                 .dateAdded(now)
                 .totalPrice(foundProduct.getPrice().multiply(new BigDecimal(quantity)))
                 .unitPrice(foundProduct.getPrice())
-                .mainImage(foundProduct.getImages().getFirst().getImage())
+                .mainImage(foundProduct.getImages().getFirst().getImageData())
                 .quantity(quantity)
                 .productFullTitle(foundProduct.getName())
                 .mainProductId(foundProduct.getId());

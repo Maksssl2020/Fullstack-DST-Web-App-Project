@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product;
 
 import com.dst.websiteprojectbackendspring.model.product.Product;
-import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
@@ -86,15 +86,15 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
 
         return Arrays.stream(images)
                 .map(image -> {
-                    ProductImage productImage = new ProductImage();
                     try {
-                        productImage.setImage(image.getBytes());
+                        ProductImage productImage = new ProductImage();
+                        productImage.setImageData(image.getBytes());
+                        productImage.setProduct(product);
+
+                        return productImage;
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
-                    productImage.setProduct(product);
-
-                    return productImage;
                 })
                 .collect(Collectors.toList());
     }

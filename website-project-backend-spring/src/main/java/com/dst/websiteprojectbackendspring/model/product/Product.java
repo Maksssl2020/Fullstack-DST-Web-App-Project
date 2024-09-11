@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.model.product;
 
-import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

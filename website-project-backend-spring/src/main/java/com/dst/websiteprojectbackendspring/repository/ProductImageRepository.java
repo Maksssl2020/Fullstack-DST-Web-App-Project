@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.repository;
 
-import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

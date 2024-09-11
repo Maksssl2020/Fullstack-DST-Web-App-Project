@@ -28,11 +28,9 @@ const ArticleForm = () => {
   articleData.append("author", username);
   articleData.append("creationDate", new Date().toISOString());
 
-  if (getValues().images[0]) {
-    articleData.append("images", getValues().images[0]);
-  }
-
-  console.log(articleData);
+  Array.from(getValues().images).forEach((image) => {
+    articleData.append("images", image);
+  });
 
   const { mutate: addNewArticle, isLoading: addingNewArticle } = useMutation({
     mutationKey: ["addNewArticle", articleData],
@@ -83,15 +81,17 @@ const ArticleForm = () => {
               }),
             }}
           />
-          <FormItem
-            labelData={"Wybierz zdjęcie ( opcjonalne ):"}
-            type={"file"}
-            containerStyling={"text-lg font-bold w-full"}
-            inputStyling={
-              "w-full px-0 file:w-[25%] rounded-2xl file:border-0 border-4 border-black file:flex-wrap file:border-r-4 file:bg-custom-orange-200 file:text-white file:font-bold file:hover:bg-custom-orange-100 file:text-sm file:uppercase file:h-full h-[75px] font-bold text-lg flex text-black bg-custom-gray-200 "
-            }
-            register={{ ...register("images") }}
-          />
+          <div className={"text-lg font-bold w-full space-y-2"}>
+            <label className={"ml-3"}>Wybierz zdjęcia:</label>
+            <input
+              type={"file"}
+              multiple
+              className={
+                "w-full px-0 file:w-[25%] rounded-2xl file:border-0 border-4 border-black file:flex-wrap file:border-r-4 file:bg-custom-orange-200 file:text-white file:font-bold file:hover:bg-custom-orange-100 file:text-sm file:uppercase file:h-full h-[75px] font-bold text-lg flex text-black bg-custom-gray-200 "
+              }
+              {...register("images")}
+            />
+          </div>
           <div className="w-full h-auto">
             <p className="text-2xl font-bold mb-2 mt-6 ml-4">Wpisz treść:</p>
             <textarea

@@ -1,14 +1,16 @@
 package com.dst.websiteprojectbackendspring.model.article;
 
+import com.dst.websiteprojectbackendspring.model.article_image.ArticleImage;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -30,7 +32,7 @@ public class Article {
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate creationDate;
 
-    @Lob
-    @JsonDeserialize(using = NumberDeserializers.ByteDeserializer.class)
-    private byte[] image;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<ArticleImage> images = new ArrayList<>();
 }

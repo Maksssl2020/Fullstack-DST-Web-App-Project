@@ -33,6 +33,7 @@ const RainbowShopProductCard = ({
   );
 
   console.log(cardData);
+  console.log(productImages);
 
   const { mutate: deleteProduct, isLoading: deletingProduct } = useMutation({
     mutationKey: ["deleteProductById", id],
@@ -61,7 +62,7 @@ const RainbowShopProductCard = ({
           " " + cardColor,
         )}
       >
-        {role === "ADMIN" && (
+        {role === "ADMIN" && cardType === "MAIN" && (
           <div className={"flex ml-auto mr-4 gap-2"}>
             <motion.button
               whileHover={{ scale: 1.1 }}

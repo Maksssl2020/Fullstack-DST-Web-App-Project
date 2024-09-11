@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product_image;
 
 import com.dst.websiteprojectbackendspring.model.product.Product;
-import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTO;
 import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductImageRepository;

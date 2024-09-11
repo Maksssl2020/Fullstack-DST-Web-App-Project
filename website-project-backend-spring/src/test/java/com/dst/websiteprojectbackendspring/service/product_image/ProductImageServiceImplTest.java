@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product_image;
 
 import com.dst.websiteprojectbackendspring.model.product.Product;
-import com.dst.websiteprojectbackendspring.model.product.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTO;
@@ -61,13 +61,13 @@ class ProductImageServiceImplTest {
 
         productImage1 = ProductImage.builder()
                 .id(1L)
-                .image("test data sample".getBytes())
+                .imageData("test data sample".getBytes())
                 .product(product)
                 .build();
 
         productImage2 = ProductImage.builder()
                 .id(2L)
-                .image("test data sample".getBytes())
+                .imageData("test data sample".getBytes())
                 .product(product)
                 .build();
     }
@@ -78,7 +78,7 @@ class ProductImageServiceImplTest {
         ProductImage savedProductImage = productImageRepository.save(productImage1);
 
         assertThat(savedProductImage).isNotNull();
-        assertThat(savedProductImage.getImage()).isEqualTo(productImage1.getImage());
+        assertThat(savedProductImage.getImageData()).isEqualTo(productImage1.getImageData());
         verify(productImageRepository).save(productImage1);
     }
 
