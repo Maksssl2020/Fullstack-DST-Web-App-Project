@@ -22,9 +22,9 @@ import org.hibernate.annotations.OnDeleteAction;
 @EqualsAndHashCode(callSuper = true)
 public class ArticleImage extends Image {
 
+    @JsonBackReference
     @ManyToOne(optional = false)
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "article_id", referencedColumnName = "id")
-    @JsonBackReference
     private Article article;
 }

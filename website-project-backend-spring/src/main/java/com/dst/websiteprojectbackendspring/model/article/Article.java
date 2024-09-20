@@ -1,6 +1,7 @@
 package com.dst.websiteprojectbackendspring.model.article;
 
 import com.dst.websiteprojectbackendspring.model.article_image.ArticleImage;
+import com.dst.websiteprojectbackendspring.model.social_media_link.SocialMediaLink;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,4 +36,9 @@ public class Article {
     @JsonManagedReference
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ArticleImage> images = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<SocialMediaLink> socialMediaLinks = new ArrayList<>();
+
 }

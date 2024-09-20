@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
 import com.dst.websiteprojectbackendspring.model.article.Article;
-import com.dst.websiteprojectbackendspring.model.article.ArticleRequest;
+import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
