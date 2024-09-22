@@ -1,6 +1,6 @@
 import React from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import AcceptIcon from "../../icons/AcceptIcon.jsx";
 import { useForm } from "react-hook-form";
@@ -81,7 +81,7 @@ const DiscountCodeForm = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto my-8 flex flex-col items-center font-lato">
-        <AdminForumSection
+        <AdminFormSection
           submitTitle={"Utwórz kod"}
           disabledButton={errors.length > 0}
           handleSubmit={handleSubmit(addNewDiscountCode)}
@@ -223,7 +223,7 @@ const DiscountCodeForm = () => {
               </p>
             </div>
           </div>
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

@@ -29,13 +29,13 @@ const RainbowShop = () => {
           <AnimatePresence mode={"wait"}>
             <ul className={"flex flex-wrap"}>
               {productsData.map((cardData, index) => (
-                <motion.li whileHover={{ scale: 1.05 }}>
+                <li key={index}>
                   <RainbowShopProductCard
                     key={index}
                     cardData={cardData}
                     cardColor={getBackgroundColor(index)}
                   />
-                </motion.li>
+                </li>
               ))}
             </ul>
           </AnimatePresence>

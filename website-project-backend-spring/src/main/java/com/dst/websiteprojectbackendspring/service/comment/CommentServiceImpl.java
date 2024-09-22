@@ -1,13 +1,20 @@
 package com.dst.websiteprojectbackendspring.service.comment;
 
+import com.dst.websiteprojectbackendspring.dto.comment.CommentDTO;
+import com.dst.websiteprojectbackendspring.dto.comment.CommentDTOMapper;
+import com.dst.websiteprojectbackendspring.dto.comment.CommentRequest;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
+import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.repository.CommentRepository;
 import com.dst.websiteprojectbackendspring.repository.ForumPostRepository;
+import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -16,17 +23,21 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final ForumPostRepository forumPostRepository;
+    private final UserRepository userRepository;
+    private final CommentDTOMapper commentDTOMapper;
 
     @Override
-    public void saveComment(Comment comment, Long postId) throws ChangeSetPersister.NotFoundException {
-        ForumPost forumPost = forumPostRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        comment.setForumPost(forumPost);
+    public void saveComment(CommentRequest commentRequest, Long postId) throws ChangeSetPersister.NotFoundException {
+        Comment comment = setComment(commentRequest, postId);
         commentRepository.save(comment);
     }
 
     @Override
-    public List<Comment> getCommentsByPostId(Long postId) {
-        return commentRepository.findByForumPostId(postId);
+    public List<CommentDTO> getCommentsByPostId(Long postId) {
+        return commentRepository.findByForumPostId(postId).stream()
+                .map(commentDTOMapper)
+                .sorted(Comparator.comparing(CommentDTO::postId).reversed())
+                .toList();
     }
 
     @Override
@@ -48,6 +59,22 @@ public class CommentServiceImpl implements CommentService {
     public void deleteComment(Long postId, Long commentId) {
         if (commentRepository.existsById(commentId)) {
             commentRepository.deleteById(commentId);
+        }
+    }
+
+    private Comment setComment(CommentRequest commentRequest, Long postId) {
+        try {
+            ForumPost forumPost  = forumPostRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            User foundUser = userRepository.findById(commentRequest.authorId()).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            Comment comment = new Comment();
+            comment.setContent(commentRequest.content());
+            comment.setCreationDate(LocalDateTime.now());
+            comment.setForumPost(forumPost);
+            comment.setUser(foundUser);
+
+            return comment;
+        } catch (ChangeSetPersister.NotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 }

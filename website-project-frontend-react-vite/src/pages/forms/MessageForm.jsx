@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
@@ -40,7 +40,7 @@ const MessageForm = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
-        <AdminForumSection
+        <AdminFormSection
           cancelLink={"/users"}
           handleSubmit={handleSubmit(sendMessageToUser)}
           submitTitle={"Wyślij wiadomość"}
@@ -59,7 +59,7 @@ const MessageForm = () => {
               {errors?.messageContent?.message}
             </label>
           )}
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

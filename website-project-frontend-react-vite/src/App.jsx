@@ -49,7 +49,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/home-news/edit-post/:id",
-        element: <HomeNewsPostForm />,
+        element: <HomeNewsPostForm isEditing={true} />,
       },
       {
         path: "/account",
@@ -93,7 +93,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/rainbow-shop/products/admin-options/:type/edit/:id",
-        element: <ProductForm />,
+        element: <ProductForm isEditing={true} />,
       },
       {
         path: "/sign-up",
@@ -117,7 +117,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/forum/edit-post/:id",
-        element: <ForumPostForm />,
+        element: <ForumPostForm isEditing={true} />,
       },
       {
         path: "/contact-us",

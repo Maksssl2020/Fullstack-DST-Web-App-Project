@@ -12,16 +12,17 @@ import {
 } from "../../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
+import { motion } from "framer-motion";
 
 const ForumPostCardCommentsPanel = ({ postId }) => {
-  const { isAuthenticated, role, username } = useContext(AuthContext);
+  const { isAuthenticated, role, userId } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const { register, handleSubmit, resetField, formState, getValues } =
     useForm();
   const { errors } = formState;
 
   const { data: postComments, isLoading: fetchingPostComments } = useQuery(
-    ["forumPostComments", postId],
+    [`forumPostComments${postId}`, postId],
     () => fetchPostUsersComments(postId),
   );
 
@@ -29,12 +30,10 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     mutationFn: () =>
       handleAddComment(postId, {
         content: getValues().commentContent,
-        author: username,
-        authorRole: role,
-        creationDate: new Date().toISOString(),
+        authorId: userId,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+      queryClient.invalidateQueries(`forumPostComments${postId}`);
       resetField("commentContent");
     },
     onError: (error) => console.log(error),
@@ -44,21 +43,21 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     return <Spinner />;
   }
 
+  console.log(postComments);
+
   return (
     <div className="w-[45%] justify-between flex flex-col h-full p-4 rounded-2xl bg-custom-gray-100">
       <div className="w-full h-[50px] flex text-white font-bold items-center justify-center text-4xl rounded-full bg-custom-blue-400">
         Komentarze
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
-        {postComments
-          .sort((commentA, commentB) => commentA.id - commentB.id)
-          .map((commentData) => (
-            <Comment
-              key={commentData.id}
-              commentData={commentData}
-              postId={postId}
-            />
-          ))}
+        {postComments?.map((commentData) => (
+          <Comment
+            key={commentData.id}
+            commentData={commentData}
+            postId={postId}
+          />
+        ))}
       </div>
       <div className={`h-[65px] relative w-full`}>
         {!isAuthenticated && (
@@ -98,9 +97,12 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
             })}
           />
           <div className="w-[15%] flex justify-center items-center h-full bg-custom-gray-200 rounded-r-full">
-            <button onClick={handleSubmit(addComment)}>
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              onClick={handleSubmit(addComment)}
+            >
               <AddInCircleIcon size={"size-10"} />
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

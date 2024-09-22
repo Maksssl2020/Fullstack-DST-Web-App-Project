@@ -40,3 +40,15 @@ export const handleUpdateArticle = async (articleId, articleData) => {
     throw error;
   }
 };
+
+export const handleDeleteArticle = async (articleId) => {
+  try {
+    const response = await axios.delete(
+      `/articles/delete-article/${articleId}`,
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

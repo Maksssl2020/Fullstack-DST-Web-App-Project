@@ -6,6 +6,7 @@ import { fetchInstagramPostAllImages } from "../../helpers/api-integration/Insta
 import Spinner from "../universal/Spinner.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
+import { motion } from "framer-motion";
 
 const InstagramPostModal = ({ selectedPost, onClick }) => {
   const { data: postImages, isLoading: fetchingPostImages } = useQuery(
@@ -18,7 +19,10 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
   }
 
   return createPortal(
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       className={`fixed inset-0 z-50 flex transition-opacity ease-in-out duration-300 items-center justify-center bg-black backdrop-blur bg-opacity-60 opacity-100`}
     >
       <button
@@ -88,7 +92,7 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
           </a>
         </div>
       </div>
-    </div>,
+    </motion.div>,
     document.body,
   );
 };

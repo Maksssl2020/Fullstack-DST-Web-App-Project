@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import {
@@ -69,22 +69,22 @@ const ArticleForm = ({ isEditing = false }) => {
   const articleData = new FormData();
   const navigate = useNavigate();
 
-  const { data: articleCurrentData, isLoading: fetchingArticleCurrentData } =
-    useQuery(
-      [`articleCurrentData${id}`, id],
-      () => {
-        if (isEditing) {
-          return fetchArticleData(id);
-        }
-      },
-      {
-        onSuccess: () => {
-          setCurrentArticleDataInInputs();
-        },
-      },
-    );
+  const {
+    mutate: fetchArticleCurrentData,
+    isLoading: fetchingArticleCurrentData,
+  } = useMutation([`articleCurrentData${id}`, id], () => fetchArticleData(id), {
+    onSuccess: (articleCurrentData) => {
+      setCurrentArticleDataInInputs(articleCurrentData);
+    },
+  });
 
-  const setCurrentArticleDataInInputs = () => {
+  useEffect(() => {
+    if (isEditing && id) {
+      fetchArticleCurrentData();
+    }
+  }, [fetchArticleCurrentData, id, isEditing]);
+
+  const setCurrentArticleDataInInputs = (articleCurrentData) => {
     console.log(articleCurrentData);
 
     const decodedImages = articleCurrentData?.images?.map((value) =>
@@ -175,7 +175,7 @@ const ArticleForm = ({ isEditing = false }) => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
-        <AdminForumSection
+        <AdminFormSection
           disabledButton={errors.length > 0}
           handleSubmit={handleSubmit(() => {
             prepareDataToSend();
@@ -253,7 +253,7 @@ const ArticleForm = ({ isEditing = false }) => {
           <div className="w-full h-[60px] flex justify-center items-center text-2xl border-4 border-black rounded-xl  bg-custom-orange-200 text-white font-bold">
             {`Liczba liter: ${contentLength.length}`}
           </div>
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

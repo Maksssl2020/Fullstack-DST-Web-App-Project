@@ -1,8 +1,9 @@
 package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
+import com.dst.websiteprojectbackendspring.dto.user.UserDisplayDataDTO;
 import com.dst.websiteprojectbackendspring.model.user.User;
-import com.dst.websiteprojectbackendspring.service.user.UserServiceImpl;
+import com.dst.websiteprojectbackendspring.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @GetMapping("/all")
     public ResponseEntity<List<UserDTO>> getAllUsersWithoutAdmins() {
@@ -35,13 +36,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 
-    @GetMapping("/{userId}/avatar")
-    public ResponseEntity<String> getUserAvatar(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(userService.getUserAvatarByUsername(userId));
+    @GetMapping("/{userId}/display-data")
+    public ResponseEntity<UserDisplayDataDTO> getUserDisplayData(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(userService.getUserDisplayData(userId));
     }
 
     @GetMapping("/{username}/id")
-    public ResponseEntity<Long> getUserIdByUsername(@PathVariable String username) {
+    public ResponseEntity<Long> getUserIdByUsername(@PathVariable String username) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(userService.getUserIdByUsername(username));
     }
 

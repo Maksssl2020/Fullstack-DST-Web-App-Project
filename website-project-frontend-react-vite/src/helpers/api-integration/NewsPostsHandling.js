@@ -54,6 +54,32 @@ export const fetchHomeNewsPostsData = async () => {
   }
 };
 
+export const fetchHomeNewsPostData = async (postId) => {
+  try {
+    const response = await axios.get(`/home/posts/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const handleHomeNewsPostUpdate = async (postId, updatedContent) => {
+  try {
+    const response = await axios.put(
+      `home/posts/edit-post/${postId}`,
+      updatedContent,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const handleHomeNewsPostDelete = async (postId) => {
   try {
     const response = await axios.delete(`/home/posts/delete-post/${postId}`);

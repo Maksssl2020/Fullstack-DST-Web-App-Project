@@ -1,10 +1,9 @@
 package com.dst.websiteprojectbackendspring.model.forum_post;
 
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.dst.websiteprojectbackendspring.model.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,7 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,16 +40,18 @@ public class ForumPost {
     @Column(length = 500)
     private String content;
 
-    private String author;
-    private String authorRole;
-
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "post_type")
     private PostType postType;
 
-    @JsonIgnore
+    @JsonBackReference
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User author;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "forumPost", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 }

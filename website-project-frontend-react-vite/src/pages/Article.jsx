@@ -1,8 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useQuery } from "react-query";
-import { fetchArticleData } from "../helpers/api-integration/ArticleDataHandling.js";
+import { useMutation, useQuery } from "react-query";
+import {
+  fetchArticleData,
+  handleDeleteArticle,
+} from "../helpers/api-integration/ArticleDataHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import ArticleImageModal from "../components/modal/ArticleImageModal.jsx";
 import { AnimatePresence } from "framer-motion";
@@ -12,8 +15,8 @@ import XIcon from "../icons/XIcon.jsx";
 import YouTubeIcon from "../icons/YouTubeIcon.jsx";
 import TikTokIcon from "../icons/TikTokIcon.jsx";
 import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
-import EditIcon from "../icons/EditIcon.jsx";
-import DeleteIcon from "../icons/DeleteIcon.jsx";
+import AdminOptionsButtons from "../components/button/AdminOptionsButtons.jsx";
+import toast from "react-hot-toast";
 
 const socialMediaIcons = [
   {
@@ -51,6 +54,17 @@ const Article = () => {
     () => fetchArticleData(id),
   );
 
+  const { mutate: deleteArticle, isLoading: deletingArticle } = useMutation(
+    [`deleteArticle${id}`, id],
+    () => handleDeleteArticle(id),
+    {
+      onSuccess: () => {
+        toast.success("Usunięto artykuł!");
+        navigate(-1);
+      },
+    },
+  );
+
   useEffect(() => {
     if (textAreaRef.current) {
       textAreaRef.current.style.height = "auto";
@@ -67,28 +81,20 @@ const Article = () => {
   };
   console.log(articleData);
 
+  if (fetchingArticleData || deletingArticle) {
+    return <Spinner />;
+  }
+
   return (
     <AnimatedPage>
       <div className="w-full h-auto font-lato flex justify-center">
         <div className="w-[1250px] h-auto mt-8 relative bg-custom-gray-200 flex flex-col p-24 rounded-2xl border-4 border-black">
           {role === "ADMIN" && (
-            <div className={"w-auto absolute top-4 right-4 gap-2 flex"}>
-              <button
-                onClick={() => navigate(`/article/edit-article/${id}`)}
-                className={
-                  "rounded-full size-12 bg-white flex justify-center items-center border-2 border-black"
-                }
-              >
-                <EditIcon size={"size-8"} />
-              </button>
-              <button
-                className={
-                  "rounded-full size-12 bg-white flex justify-center items-center border-2 border-black"
-                }
-              >
-                <DeleteIcon size={"size-8"} />
-              </button>
-            </div>
+            <AdminOptionsButtons
+              editButtonLink={`/article/edit-article/${id}`}
+              modalSubtitle={"Czy na pewno chcesz usunąć artykuł?"}
+              deleteFunction={deleteArticle}
+            />
           )}
           <div className="w-full h-auto flex flex-col gap-12 text-xl italic font-bold">
             <div className="flex gap-6">
@@ -143,7 +149,7 @@ const Article = () => {
                 <img
                   src={`data:image/png;base64,${image.imageData}`}
                   alt={articleData.title}
-                  className="size-full inset-0 object-cover rounded-xl"
+                  className="size-full inset-0 object-cover rounded-xl hover:cursor-pointer"
                 />
               </div>
             ))}

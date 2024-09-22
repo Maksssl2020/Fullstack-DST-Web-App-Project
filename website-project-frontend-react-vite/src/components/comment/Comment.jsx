@@ -12,40 +12,32 @@ import {
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import Spinner from "../universal/Spinner.jsx";
-import {
-  fetchUserAvatar,
-  fetchUserIdByUsername,
-} from "../../helpers/api-integration/UserDataHandling.js";
+import { fetchUserDisplayData } from "../../helpers/api-integration/UserDataHandling.js";
 
 const Comment = ({ commentData, postId }) => {
   const { username, role } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const { register, handleSubmit, getValues, formState } = useForm();
-  const { errors } = formState;
-  const { id, content, author, authorRole, creationDate } = commentData;
+  const { id, content, authorId } = commentData;
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
-  const { data: userId, isLoading: fetchingUserId } = useQuery(
-    ["userId", author],
-    () => fetchUserIdByUsername(author),
-  );
+  console.log(authorId);
+  console.log(commentData);
 
-  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostCommentsUserAvatar", userId],
-    () => fetchUserAvatar(userId),
-  );
+  const { data: userDisplayData, isLoading: fetchingUserDisplayData } =
+    useQuery(["forumPostCommentsUserAvatar", authorId], () =>
+      fetchUserDisplayData(authorId),
+    );
 
   const { mutate: updateComment, isLoading: updatingComment } = useMutation({
     mutationFn: () =>
       handleCommentUpdate(postId, id, {
-        author: author,
-        authorRole: authorRole,
+        authorId: authorId,
         content: getValues().commentNewContent,
-        creationDate: creationDate,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+      queryClient.invalidateQueries(`forumPostComments${postId}`);
       setIsEditing(false);
     },
     onError: (error) => console.log(error),
@@ -54,7 +46,7 @@ const Comment = ({ commentData, postId }) => {
   const { mutate: deleteComment, isLoading: deletingComment } = useMutation({
     mutationFn: () => handleCommentDelete(postId, id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
+      queryClient.invalidateQueries(`forumPostComments${postId}`);
     },
     onError: (error) => console.log(error),
   });
@@ -71,7 +63,7 @@ const Comment = ({ commentData, postId }) => {
     setOpenModal(false);
   };
 
-  if (updatingComment || fetchingUserAvatar || deletingComment) {
+  if (updatingComment || fetchingUserDisplayData || deletingComment) {
     return <Spinner />;
   }
 
@@ -79,17 +71,17 @@ const Comment = ({ commentData, postId }) => {
     <div className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200">
       <div className="w-[100px] h-[115px] gap-2 border-2 flex flex-col justify-center items-center border-custom-blue-400 rounded-2xl">
         <p className="size-12 rounded-full bg-white flex items-center justify-center">
-          {userAvatar ? (
+          {userDisplayData ? (
             <img
               className="rounded-full inset-0 object-cover size-full"
-              src={`data:image/png;base64,${userAvatar}`}
-              alt={author}
+              src={`data:image/png;base64,${userDisplayData.avatar}`}
+              alt={authorId}
             />
           ) : (
             <UserIcon size={"size-8"} />
           )}
         </p>
-        <p className="font-bold text-sm">{author}</p>
+        <p className="font-bold text-sm">{userDisplayData.username}</p>
       </div>
       <textarea
         defaultValue={content}
@@ -100,7 +92,7 @@ const Comment = ({ commentData, postId }) => {
         })}
       ></textarea>
       <div className="flex flex-col gap-2">
-        {username === author && (
+        {username === userDisplayData.username && (
           <button
             onClick={handleEditClick}
             className="size-8 rounded-full bg-white flex items-center justify-center"
@@ -108,7 +100,7 @@ const Comment = ({ commentData, postId }) => {
             <EditIcon size={"size-6"} />
           </button>
         )}
-        {(username === author || role === "ADMIN") && (
+        {(username === userDisplayData.username || role === "ADMIN") && (
           <button
             onClick={handleOpenModal}
             className="size-8 rounded-full bg-white flex items-center justify-center"

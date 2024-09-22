@@ -1,7 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { updateProductQuantity } from "../../helpers/api-integration/ShoppingCartHandling.js";
-import Spinner from "../universal/Spinner.jsx";
 
 const ProductQuantityButton = ({
   itemId = undefined,

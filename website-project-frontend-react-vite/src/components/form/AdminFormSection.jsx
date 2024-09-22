@@ -5,14 +5,14 @@ import { useMutation, useQueryClient } from "react-query";
 import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 
-const AdminForumSection = ({
+const AdminFormSection = ({
   children,
   handleSubmit,
   disabledButton,
   submitTitle,
   cancelLink = "/",
   notificationData = undefined,
-  onSuccess = false,
+  sendNotification = false,
 }) => {
   const { username } = useContext(AuthContext);
   const queryClient = useQueryClient();
@@ -22,7 +22,7 @@ const AdminForumSection = ({
     useMutation({
       mutationKey: ["createNewNotification", notificationData],
       mutationFn: () => {
-        if (onSuccess) {
+        if (sendNotification) {
           return sendNewNotification(notificationData);
         }
       },
@@ -67,4 +67,4 @@ const AdminForumSection = ({
   );
 };
 
-export default AdminForumSection;
+export default AdminFormSection;

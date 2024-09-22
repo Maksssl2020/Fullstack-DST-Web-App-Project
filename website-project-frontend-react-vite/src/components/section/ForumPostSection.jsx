@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "../../helpers/AxiosConfig.js";
 import ForumPostCard from "../card/ForumPostCard.jsx";
 import Pagination from "../pagination/Pagination.jsx";
 import { useQuery } from "react-query";
@@ -17,6 +16,8 @@ const ForumPostSection = () => {
   if (loadingPosts) {
     return <Spinner />;
   }
+
+  console.log([postsData]);
 
   return (
     <>

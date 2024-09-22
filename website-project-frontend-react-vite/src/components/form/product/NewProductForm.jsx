@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import FormItem from "../FormItem.jsx";
 import AnimatedPage from "../../../animation/AnimatedPage.jsx";
@@ -7,9 +7,9 @@ import DropdownWithCheckboxes from "../../dropdown/DropdownWithCheckboxes.jsx";
 import NewPenForm from "./NewPenForm.jsx";
 import NewMugForm from "./NewMugForm.jsx";
 import NewGadgetForm from "./NewGadgetForm.jsx";
-import AdminForumSection from "../AdminForumSection.jsx";
+import AdminFormSection from "../AdminFormSection.jsx";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import {
   fetchProductData,
   handleAddNewProduct,
@@ -27,9 +27,8 @@ import {
 import { decodeImageFile } from "../../../helpers/PostManager.js";
 import ItemCurrentImages from "../../list/ItemCurrentImages.jsx";
 
-const NewProductForm = () => {
+const NewProductForm = ({ isEditing }) => {
   const { type, id } = useParams();
-  const productEditing = id !== undefined && id !== null;
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const {
@@ -45,12 +44,14 @@ const NewProductForm = () => {
     resolver: yupResolver(newProductFormSchema(type)),
   });
 
-  const { data: productDataToEdit, isLoading: fetchingProductDataToEdit } =
-    useQuery(["productDataToEdit", id], () => {
-      if (id !== undefined && id !== null) {
-        return fetchProductData(id);
-      }
-    });
+  const {
+    mutate: fetchProductDataToUpdate,
+    isLoading: fetchingProductDataToUpdate,
+  } = useMutation(["productDataToEdit", id], () => fetchProductData(id), {
+    onSuccess: (productData) => {
+      setCurrentProductData(productData);
+    },
+  });
 
   const { mutate: addNewProduct, isLoading: addingNewProduct } = useMutation({
     mutationKey: ["addNewProduct"],
@@ -69,7 +70,7 @@ const NewProductForm = () => {
   const { mutate: updateProduct, isLoading: updatingProduct } = useMutation({
     mutationKey: ["updateProduct", id],
     mutationFn: () => {
-      if (productEditing) {
+      if (isEditing) {
         return handleUpdateProduct(
           id,
           getProductDataFormDependsOnProductType(),
@@ -84,49 +85,53 @@ const NewProductForm = () => {
     onError: (error) => console.log(error),
   });
 
-  console.log(productDataToEdit);
-
   useEffect(() => {
-    if (productEditing && productDataToEdit) {
-      const currentValues = {
-        title: productDataToEdit.title,
-        fullName: productDataToEdit.name,
-        description: productDataToEdit.description,
-        packageSize: productDataToEdit.packageSize,
-        weight: productDataToEdit.weight,
-        price: productDataToEdit.price,
-        categories: [
-          ...productDataToEdit.categories.map((value) => value.category),
-        ],
-        images: [
-          ...productDataToEdit.images.map((value) =>
-            decodeImageFile(value.image),
-          ),
-        ],
-      };
-
-      if (type === "clothes") {
-        currentValues.color = productDataToEdit.color;
-        currentValues.productComposition = productDataToEdit.productComposition;
-        currentValues.productOverprint = productDataToEdit.productOverprint;
-        currentValues.sizes = [
-          ...productDataToEdit.productSize.map((value) => value.size),
-        ];
-      } else if (type === "pens") {
-        currentValues.color = productDataToEdit.color;
-        currentValues.inkColor = productDataToEdit.inkColor;
-      } else if (type === "mugs") {
-        currentValues.material = productDataToEdit.material;
-        currentValues.height = productDataToEdit.height;
-        currentValues.color = productDataToEdit.color;
-      } else {
-        currentValues.material = productDataToEdit.material;
-        currentValues.type = productDataToEdit.type;
-      }
-
-      reset(currentValues);
+    if (isEditing && id) {
+      fetchProductDataToUpdate();
     }
-  }, [id, productDataToEdit, productEditing, reset, setValue, type]);
+  }, [fetchProductDataToUpdate, id, isEditing]);
+
+  const setCurrentProductData = (currentProductData) => {
+    console.log(currentProductData);
+
+    const currentValues = {
+      title: currentProductData.title,
+      fullName: currentProductData.name,
+      description: currentProductData.description,
+      packageSize: currentProductData.packageSize,
+      weight: currentProductData.weight,
+      price: currentProductData.price,
+      categories: [
+        ...currentProductData.categories.map((value) => value.category),
+      ],
+      images: [
+        ...currentProductData.images.map((value) =>
+          decodeImageFile(value.imageData),
+        ),
+      ],
+    };
+
+    if (type === "clothes") {
+      currentValues.color = currentProductData.color;
+      currentValues.productComposition = currentProductData.productComposition;
+      currentValues.productOverprint = currentProductData.productOverprint;
+      currentValues.sizes = [
+        ...currentProductData.productSize.map((value) => value.size),
+      ];
+    } else if (type === "pens") {
+      currentValues.color = currentProductData.color;
+      currentValues.inkColor = currentProductData.inkColor;
+    } else if (type === "mugs") {
+      currentValues.material = currentProductData.material;
+      currentValues.height = currentProductData.height;
+      currentValues.color = currentProductData.color;
+    } else {
+      currentValues.material = currentProductData.material;
+      currentValues.type = currentProductData.type;
+    }
+
+    reset(currentValues);
+  };
 
   const getFormDependsOnProductType = () => {
     switch (type) {
@@ -220,7 +225,7 @@ const NewProductForm = () => {
     }
   };
 
-  if (addingNewProduct || fetchingProductDataToEdit || updatingProduct) {
+  if (addingNewProduct || fetchingProductDataToUpdate || updatingProduct) {
     return <Spinner />;
   }
 
@@ -229,11 +234,11 @@ const NewProductForm = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
-        <AdminForumSection
-          cancelLink={productEditing ? "/rainbow-shop" : "/account"}
-          submitTitle={productEditing ? "zaktualizuj produkt" : "dodaj produkt"}
+        <AdminFormSection
+          cancelLink={isEditing ? "/rainbow-shop" : "/account"}
+          submitTitle={isEditing ? "zaktualizuj produkt" : "dodaj produkt"}
           handleSubmit={
-            productEditing
+            isEditing
               ? handleSubmit(updateProduct)
               : handleSubmit(handleProductSubmit)
           }
@@ -292,7 +297,7 @@ const NewProductForm = () => {
               </div>
             )}
           </div>
-          {productEditing && <ItemCurrentImages images={getValues()?.images} />}
+          {isEditing && <ItemCurrentImages images={getValues()?.images} />}
           <div className="w-full">
             <p className="text-xl font-bold ml-4">
               Wybierz zdjęcia ( maksymalnie 4 ):
@@ -327,7 +332,7 @@ const NewProductForm = () => {
               </p>
             )}
           </div>
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

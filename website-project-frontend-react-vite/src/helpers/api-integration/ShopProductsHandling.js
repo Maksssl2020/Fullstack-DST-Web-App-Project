@@ -10,6 +10,8 @@ export const fetchAllProducts = async () => {
 };
 
 export const fetchProductData = async (productId) => {
+  console.log(productId);
+
   try {
     const response = await axios.get(`/products/${productId}`);
     return response.data;

@@ -1,10 +1,9 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
-import com.dst.websiteprojectbackendspring.service.forum_post.ForumPostServiceImpl;
-import jakarta.validation.Valid;
+import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostDTO;
+import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostRequest;
+import com.dst.websiteprojectbackendspring.service.forum_post.ForumPostService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,43 +15,41 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/forum")
 @RequiredArgsConstructor
-@Log4j2
 public class ForumPostController {
 
-    private final ForumPostServiceImpl forumPostServiceImpl;
+    private final ForumPostService forumPostService;
 
     @GetMapping("/posts")
-    public ResponseEntity<Page<ForumPost>> getAllPosts(@RequestParam int page, @RequestParam int size) {
-        Page<ForumPost> forumPosts = forumPostServiceImpl.getForumPosts(PageRequest.of(page, size, Sort.by("id").descending()));
+    public ResponseEntity<Page<ForumPostDTO>> getAllPosts(@RequestParam int page, @RequestParam int size) {
+        Page<ForumPostDTO> forumPosts = forumPostService.getForumPosts(PageRequest.of(page, size, Sort.by("id").descending()));
         return ResponseEntity.ok(forumPosts);
     }
 
     @GetMapping("/posts/{id}")
-    public ResponseEntity<ForumPost> getPost(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
-        return ResponseEntity.ok(forumPostServiceImpl.getForumPostById(id));
+    public ResponseEntity<ForumPostDTO> getPost(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(forumPostService.getForumPostById(id));
     }
 
-    @GetMapping("/posts/author/{author}")
-    public ResponseEntity<Long> countByAuthor(@PathVariable String author) {
-        return ResponseEntity.ok(forumPostServiceImpl.countByAuthor(author));
+    @GetMapping("/posts/author/{authorId}")
+    public ResponseEntity<Long> countByAuthor(@PathVariable Long authorId) {
+        return ResponseEntity.ok(forumPostService.countByAuthor(authorId));
     }
 
     @PostMapping("/create-post")
-    public ResponseEntity<HttpStatus> createPost(@RequestBody @Valid ForumPost forumPost) {
-        forumPostServiceImpl.saveForumPost(forumPost);
+    public ResponseEntity<HttpStatus> createPost(@RequestBody ForumPostRequest forumPostRequest) {
+        forumPostService.saveForumPost(forumPostRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/posts/edit-post/{id}")
-    public ResponseEntity<HttpStatus> editPost(@PathVariable Long id, @RequestBody @Valid ForumPost forumPost) {
-        forumPostServiceImpl.update(id, forumPost);
+    public ResponseEntity<HttpStatus> editPost(@PathVariable Long id, @RequestBody ForumPostRequest forumPost) {
+        forumPostService.update(id, forumPost);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/posts/delete-post/{id}")
     public ResponseEntity<HttpStatus> deletePost(@PathVariable Long id) throws ChangeSetPersister.NotFoundException {
-        log.info("Deleting post with id {}", id);
-        forumPostServiceImpl.delete(id);
+        forumPostService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

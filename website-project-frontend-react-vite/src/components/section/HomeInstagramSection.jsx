@@ -9,6 +9,7 @@ import {
 } from "../../helpers/api-integration/InstagramDataHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import InstagramPostModal from "../modal/InstagramPostModal.jsx";
+import { AnimatePresence } from "framer-motion";
 
 const HomeInstagramSection = () => {
   const [selectedPost, setSelectedPost] = useState(null);
@@ -40,12 +41,14 @@ const HomeInstagramSection = () => {
           handlePostClick={handlePostClick}
         />
       </div>
-      {selectedPost && (
-        <InstagramPostModal
-          selectedPost={selectedPost}
-          onClick={handleCloseModal}
-        />
-      )}
+      <AnimatePresence>
+        {selectedPost && (
+          <InstagramPostModal
+            selectedPost={selectedPost}
+            onClick={handleCloseModal}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

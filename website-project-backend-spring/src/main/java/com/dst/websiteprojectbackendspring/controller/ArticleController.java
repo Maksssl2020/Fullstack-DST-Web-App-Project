@@ -2,7 +2,7 @@ package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import com.dst.websiteprojectbackendspring.model.article.Article;
-import com.dst.websiteprojectbackendspring.service.article.ArticleServiceImpl;
+import com.dst.websiteprojectbackendspring.service.article.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ArticleController {
 
-    private final ArticleServiceImpl articleService;
+    private final ArticleService articleService;
 
     @GetMapping
     public ResponseEntity<List<Article>> getAllArticles() {
@@ -39,6 +39,12 @@ public class ArticleController {
     @PutMapping("/update-article/{id}")
     public ResponseEntity<HttpStatus> updateArticle(@PathVariable Long id, @ModelAttribute ArticleRequest articleRequest) {
         articleService.update(id, articleRequest);
+        return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/delete-article/{id}")
+    public ResponseEntity<HttpStatus> deleteArticle(@PathVariable Long id) {
+        articleService.delete(id);
         return ResponseEntity.ok(HttpStatus.NO_CONTENT);
     }
 }

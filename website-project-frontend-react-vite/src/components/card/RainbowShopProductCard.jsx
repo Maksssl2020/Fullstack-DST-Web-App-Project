@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { transformProductTitleIntoLinkTitle } from "../../helpers/transformProductTitle.js";
-import axios from "../../helpers/AxiosConfig.js";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchProductImages,
@@ -9,11 +8,9 @@ import {
 } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
-import DeleteIcon from "../../icons/DeleteIcon.jsx";
-import EditIcon from "../../icons/EditIcon.jsx";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import DefaultModal from "../modal/DefaultModal.jsx";
+import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";
 
 const RainbowShopProductCard = ({
   cardData,
@@ -23,7 +20,6 @@ const RainbowShopProductCard = ({
 }) => {
   const { role } = useContext(AuthContext);
   const { id, title, price, productType } = cardData;
-  const [openModal, setOpenModal] = useState();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -50,7 +46,7 @@ const RainbowShopProductCard = ({
   }
 
   return (
-    <div className="w-auto h-auto">
+    <motion.div whileHover={{ scale: 1.05 }} className="w-auto h-auto">
       <div
         onClick={() =>
           navigate(
@@ -58,39 +54,16 @@ const RainbowShopProductCard = ({
             { state: { cardColor } },
           )
         }
-        className={`flex flex-col justify-center items-center hover:cursor-pointer ${size}`.concat(
+        className={`flex flex-col relative justify-center items-center hover:cursor-pointer ${size}`.concat(
           " " + cardColor,
         )}
       >
         {role === "ADMIN" && cardType === "MAIN" && (
-          <div className={"flex ml-auto mr-4 gap-2"}>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(
-                  `/rainbow-shop/products/admin-options/${productType !== "CLOTHING" ? productType.toLowerCase().concat("s") : "clothes"}/edit/${id}`,
-                );
-              }}
-              className={
-                "size-12 rounded-full bg-white border-2 border-black flex justify-center items-center"
-              }
-            >
-              <EditIcon size={"size-10"} />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenModal(true);
-              }}
-              className={
-                "size-12 rounded-full bg-white border-2 border-black flex justify-center items-center"
-              }
-            >
-              <DeleteIcon size={"size-10"} />
-            </motion.button>
-          </div>
+          <AdminOptionsButtons
+            deleteFunction={deleteProduct}
+            editButtonLink={`/rainbow-shop/products/admin-options/${productType !== "CLOTHING" ? productType.toLowerCase().concat("s") : "clothes"}/edit/${id}`}
+            modalSubtitle={"Czy na pewno chesz usunąć ten produkt?"}
+          />
         )}
         <div className="size-[350px] flex justify-center items-center">
           <img
@@ -111,35 +84,7 @@ const RainbowShopProductCard = ({
           <p className="font-light">{price}</p>
         </div>
       )}
-      <AnimatePresence>
-        {openModal && (
-          <DefaultModal
-            title="UWAGA!"
-            subtitle="Czy na pewno chcesz usunąć produkt?"
-          >
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteProduct();
-                setOpenModal(false);
-              }}
-              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
-            >
-              tak
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setOpenModal(false);
-              }}
-              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-4 border-black bg-custom-orange-200 py-1 rounded-full"
-            >
-              nie
-            </button>
-          </DefaultModal>
-        )}
-      </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

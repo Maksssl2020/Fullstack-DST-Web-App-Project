@@ -1,6 +1,6 @@
 import React from "react";
 import FormItem from "../../components/form/FormItem.jsx";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import PlusIcon from "../../icons/PlusIcon.jsx";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
@@ -81,7 +81,7 @@ const EventForm = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
-        <AdminForumSection
+        <AdminFormSection
           handleSubmit={handleSubmit(addNewEvent)}
           disabledButton={errors.length > 0}
           submitTitle={"Dodaj wydarzenie"}
@@ -205,7 +205,7 @@ const EventForm = () => {
               ))}
             </ul>
           )}
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

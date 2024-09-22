@@ -56,18 +56,18 @@ export const fetchUserById = async (userId) => {
   }
 };
 
-export const fetchUserAvatar = async (userId) => {
+export const fetchUserDisplayData = async (userId) => {
   try {
-    const response = await axios.get(`/users/${userId}/avatar`);
+    const response = await axios.get(`/users/${userId}/display-data`);
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
 
-export const fetchUserAmountOfCreatedForumPosts = async (username) => {
+export const fetchUserAmountOfCreatedForumPosts = async (authorId) => {
   try {
-    const response = await axios.get(`/forum/posts/author/${username}`);
+    const response = await axios.get(`/forum/posts/author/${authorId}`);
     return response.data;
   } catch (error) {
     console.log(error);

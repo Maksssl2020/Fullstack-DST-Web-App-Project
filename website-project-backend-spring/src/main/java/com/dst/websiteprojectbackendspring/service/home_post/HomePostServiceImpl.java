@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.home_post;
 
+import com.dst.websiteprojectbackendspring.dto.home_post.HomePostRequest;
 import com.dst.websiteprojectbackendspring.model.home_post.HomePost;
 import com.dst.websiteprojectbackendspring.repository.HomePostRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,7 @@ public class HomePostServiceImpl implements HomePostService {
 
     @Override
     public List<HomePost> findAll() {
-        return homePostRepository.findAll();
+        return homePostRepository.findAll().stream().limit(6).toList();
     }
 
     @Override
@@ -41,10 +42,15 @@ public class HomePostServiceImpl implements HomePostService {
     }
 
     @Override
-    public void update(Long id, String content, String author, String creationDate, MultipartFile image) {
-        HomePost homePost = setHomePost(content, author, creationDate, image);
-        homePost.setId(id);
-        homePostRepository.save(homePost);
+    public void update(Long id, HomePostRequest homePostRequest) {
+        try {
+            HomePost foundHomePost = homePostRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundHomePost.setContent(homePostRequest.content());
+            foundHomePost.setImage(homePostRequest.image().getBytes());
+            homePostRepository.save(foundHomePost);
+        } catch (ChangeSetPersister.NotFoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

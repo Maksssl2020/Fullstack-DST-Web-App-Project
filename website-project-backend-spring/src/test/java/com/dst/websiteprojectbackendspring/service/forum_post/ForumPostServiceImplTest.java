@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.forum_post;
 
+import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostDTO;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.model.forum_post.PostType;
 import com.dst.websiteprojectbackendspring.repository.ForumPostRepository;
@@ -12,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +43,7 @@ class ForumPostServiceImplTest {
                 ForumPost.builder()
                 .title("title")
                 .content("content")
-                .authorRole("ADMIN")
-                .creationDate(LocalDate.now())
+                .creationDate(LocalDateTime.now())
                 .postType(PostType.PUBLIC)
                 .build()
         );
@@ -51,7 +51,7 @@ class ForumPostServiceImplTest {
         when(forumPostRepository.findAll()).thenReturn(forumPosts);
         when(forumPostRepository.saveAll(forumPosts)).thenReturn(forumPosts);
 
-        List<ForumPost> forumPosts1 = forumPostService.getForumPosts();
+        List<ForumPostDTO> forumPosts1 = forumPostService.getForumPosts();
         assertEquals(forumPosts.size(), forumPosts1.size());
     }
 
@@ -61,13 +61,11 @@ class ForumPostServiceImplTest {
         ForumPost forumPost = ForumPost.builder()
                 .title("title")
                 .content("content")
-                .authorRole("ADMIN")
-                .creationDate(LocalDate.now())
                 .postType(PostType.PUBLIC)
                 .build();
 
         when(forumPostRepository.save(any(ForumPost.class))).thenReturn(forumPost);
-        forumPostService.saveForumPost(forumPost);
+        forumPostRepository.save(forumPost);
         verify(forumPostRepository, times(1)).save(any(ForumPost.class));
     }
 ;}

@@ -9,7 +9,7 @@ import {
 import Spinner from "../../components/universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 
 const NewsPostForm = () => {
   const { id } = useParams();
@@ -43,7 +43,7 @@ const NewsPostForm = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
-        <AdminForumSection
+        <AdminFormSection
           handleSubmit={handleSubmit(updatePostData)}
           submitTitle={"Zaktualizuj post"}
           disabledButton={contentLength < 10}
@@ -58,7 +58,7 @@ const NewsPostForm = () => {
             className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[450px] border-4 rounded-2xl border-black resize-none"
             {...register("content")}
           />
-        </AdminForumSection>
+        </AdminFormSection>
       </div>
     </AnimatedPage>
   );

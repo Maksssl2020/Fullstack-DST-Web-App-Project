@@ -3,8 +3,7 @@ import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
 import ForumPostItem from "./ForumPostItem.jsx";
 import { TodayDate } from "../../helpers/Date.js";
 import UserIcon from "../header/icons/UserIcon.jsx";
-import { useParams } from "react-router-dom";
-import DefaultModal from "../modal/DefaultModal.jsx";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   fetchPostData,
@@ -15,46 +14,54 @@ import Spinner from "../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import {
   fetchUserAmountOfCreatedForumPosts,
-  fetchUserAvatar,
+  fetchUserDisplayData,
 } from "../../helpers/api-integration/UserDataHandling.js";
-import ButtonWithLink from "../universal/ButtonWithLink.jsx";
+import toast from "react-hot-toast";
 
-const ForumPostPageForm = () => {
+const ForumPostPageForm = ({ isEditing }) => {
   const { id } = useParams();
-  const { userId, username, role } = useContext(AuthContext);
+  const { userId, username } = useContext(AuthContext);
   const queryClient = useQueryClient();
-  const { register, handleSubmit, getValues, formState, watch } = useForm();
+  const { register, setValue, handleSubmit, getValues, formState, watch } =
+    useForm();
   const { errors } = formState;
   const [optionIndex, setOptionIndex] = React.useState(0);
-  const [isEditing, setIsEditing] = React.useState(id !== undefined);
-  const [showModal, setShowModal] = useState(false);
+  const [postCreationDate, setPostCreationDate] = useState(null);
+  const navigate = useNavigate();
 
-  const { data: postToUpdateData, isLoading: fetchingPostData } = useQuery(
-    ["postToUpdateData", id],
-    () => fetchPostData(id),
-    {
-      enabled: isEditing === true,
-    },
-  );
+  const { mutate: fetchPostDataToUpdate, isLoading: fetchingPostData } =
+    useMutation(["postToUpdateData", id], () => fetchPostData(id), {
+      onSuccess: (data) => {
+        setPostDataToUpdate(data);
+      },
+    });
 
   useEffect(() => {
     if (isEditing) {
-      postToUpdateData?.postType === "ANONYMOUS"
-        ? setOptionIndex(0)
-        : setOptionIndex(1);
+      fetchPostDataToUpdate();
     }
-  }, [id]);
+  }, [fetchPostDataToUpdate, id, isEditing]);
 
-  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostForumUserAvatar", userId],
-    () => fetchUserAvatar(userId),
-  );
+  const setPostDataToUpdate = (postDataToUpdate) => {
+    postDataToUpdate?.postType === "ANONYMOUS"
+      ? setOptionIndex(0)
+      : setOptionIndex(1);
+
+    setValue("postTitle", postDataToUpdate.title);
+    setValue("postContent", postDataToUpdate.content);
+    setPostCreationDate(postDataToUpdate.creationDate);
+  };
+
+  const { data: userDataToDisplay, isLoading: fetchingUserDataToDisplay } =
+    useQuery(["forumPostForumUserAvatar", userId], () =>
+      fetchUserDisplayData(userId),
+    );
 
   const {
     data: userAmountOfCreatedPosts,
     isLoading: fetchingAmountOfCreatedUserPosts,
-  } = useQuery(["amountOfCreatedUserPosts", username], () =>
-    fetchUserAmountOfCreatedForumPosts(username),
+  } = useQuery(["amountOfCreatedUserPosts", userId], () =>
+    fetchUserAmountOfCreatedForumPosts(userId),
   );
 
   const { mutate: addNewForumPost, isLoading: addingNewForumPost } =
@@ -64,14 +71,13 @@ const ForumPostPageForm = () => {
         handleAddForumPost({
           title: getValues().postTitle,
           content: getValues().postContent,
-          author: username,
-          authorRole: role,
-          creationDate: new Date(Date.now()).toISOString(),
           postType: postType,
+          authorId: userId,
         }),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
-        setShowModal(true);
+        queryClient.invalidateQueries(`forumPostComments${id}`);
+        toast.success("Utworzono nowy post na forum!");
+        navigate(-1);
       },
       onError: (error) => console.log(error),
     });
@@ -83,14 +89,13 @@ const ForumPostPageForm = () => {
         handleUpdateForumPost(id, {
           title: getValues().postTitle,
           content: getValues().postContent,
-          author: username,
-          authorRole: role,
-          creationDate: postToUpdateData.creationDate,
           postType: postType,
+          authorId: userId,
         }),
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["forumPostComments"] });
-        setShowModal(true);
+        queryClient.invalidateQueries(`forumPostComments${id}`);
+        toast.success("Zaktualizowano post na forum!");
+        navigate(-1);
       },
       onError: (error) => console.log(error),
     },
@@ -107,7 +112,7 @@ const ForumPostPageForm = () => {
     addingNewForumPost ||
     updatingForumPost ||
     fetchingPostData ||
-    fetchingUserAvatar ||
+    fetchingUserDataToDisplay ||
     fetchingAmountOfCreatedUserPosts
   ) {
     return <Spinner />;
@@ -126,7 +131,6 @@ const ForumPostPageForm = () => {
             {isEditing ? "Edytuj tytuł:" : "Wpisz tytuł:"}
           </p>
           <input
-            defaultValue={isEditing ? postToUpdateData.title : ""}
             maxLength={55}
             className={`px-4 mb-4 text-xl focus:outline-custom-blue-400 bg-custom-gray-100 w-full rounded-xl h-[50px] ${errors.postTitle && "border-2 border-red-500"}`}
             {...register("postTitle", {
@@ -144,7 +148,6 @@ const ForumPostPageForm = () => {
             {isEditing ? "Edytuj treść:" : "Wpisz treść:"}
           </p>
           <textarea
-            defaultValue={isEditing ? postToUpdateData.content : ""}
             className={`w-full focus:outline-custom-blue-400 h-[325px] p-4 text-xl resize-none rounded-xl bg-custom-gray-100 ${errors.postContent && "border-2 border-red-500 "}`}
             maxLength={500}
             {...register("postContent", {
@@ -170,12 +173,12 @@ const ForumPostPageForm = () => {
       <div className="w-[35%] relative flex flex-col items-center justify-between py-4 h-full rounded-2xl bg-white">
         <div className="bg-custom-blue-400 px-12 w-[90%] flex items-center justify-center h-[50px] rounded-full">
           <div className="absolute w-[85px] flex items-center justify-center h-[85px] translate-y-4 bg-custom-gray-100 rounded-2xl left-0 translate-x-5">
-            {userAvatar ? (
+            {userDataToDisplay ? (
               <p className="bg-white border-2 border-custom-blue-400 rounded-full flex justify-center items-center size-12">
                 <img
                   className="rounded-full inset-0 object-cover size-full"
-                  src={`data:image/png;base64,${userAvatar}`}
-                  alt={username}
+                  src={`data:image/png;base64,${userDataToDisplay.avatar}`}
+                  alt={userDataToDisplay.username}
                 />
               </p>
             ) : (
@@ -218,7 +221,7 @@ const ForumPostPageForm = () => {
         </div>
         <div className="w-[90%] h-[125px] relative items-center flex flex-col">
           <p className="w-[55%] text-2xl font-extrabold flex justify-center items-center pb-4 text-white h-[75px] translate-y-6 bg-custom-blue-200 rounded-t-2xl ml-auto">
-            {isEditing ? postToUpdateData.creationDate : TodayDate()}
+            {TodayDate()}
           </p>
           <div className="w-full bg-custom-blue-400 flex z-10 px-6 h-[55px] rounded-full">
             <p className="h-full items-center flex text-white text-xl font-bold">
@@ -230,39 +233,6 @@ const ForumPostPageForm = () => {
           </div>
         </div>
       </div>
-      {showModal && (
-        <div className="self-center flex absolute items-center justify-center">
-          <DefaultModal
-            title={
-              isEditing
-                ? "Wpis został zaktualizowany!"
-                : "Nowy wpis został utworzony!"
-            }
-            subtitle={"Przejdź na stronę główną forum, aby go zobaczyć."}
-            firstButtonLink={"/forum"}
-            fistButtonTitle={"Strona Główna Forum"}
-            secondButtonLink={"/"}
-            secondButtonTitle={"Strona główna"}
-          >
-            <div className="flex gap-6">
-              <ButtonWithLink
-                title={"Forum"}
-                link={"/forum"}
-                className={
-                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-                }
-              />
-              <ButtonWithLink
-                title={"Strona główna"}
-                link={"/"}
-                className={
-                  "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-                }
-              />
-            </div>
-          </DefaultModal>
-        </div>
-      )}
     </div>
   );
 };

@@ -9,34 +9,27 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { handlePostDelete } from "../../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import {
-  fetchUserAvatar,
+  fetchUserDisplayData,
   fetchUserIdByUsername,
 } from "../../../helpers/api-integration/UserDataHandling.js";
-import { DateParser } from "../../../helpers/Date.js";
+import { DateParser, DateTimeParser } from "../../../helpers/Date.js";
 
 const ForumPostCardMainDataPanel = ({ postData }) => {
   const { username, role } = useContext(AuthContext);
   const queryClient = useQueryClient();
-  const { id, title, content, author, creationDate, postType } = postData;
+  const { id, title, content, creationDate, postType, authorId } = postData;
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
 
-  const { data: userId, isLoading: fetchingUserId } = useQuery(
-    ["userId", author],
-    () => fetchUserIdByUsername(author),
-  );
-
-  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["forumPostUserAvatar", userId],
-    () => fetchUserAvatar(userId),
-  );
+  const { data: userDisplayData, isLoading: fetchingUserDisplayData } =
+    useQuery(["forumPostUserAvatar", authorId], () =>
+      fetchUserDisplayData(authorId),
+    );
 
   const { mutate, isLoading: deletingPost } = useMutation({
     mutationFn: handlePostDelete,
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["forumPostsData"],
-      });
+      queryClient.invalidateQueries("forumPostsData");
     },
     onError: (error) => console.log(error),
   });
@@ -49,7 +42,7 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
     setOpenModal(false);
   };
 
-  if (deletingPost || fetchingUserAvatar) {
+  if (deletingPost || fetchingUserDisplayData) {
     return <Spinner />;
   }
 
@@ -66,23 +59,23 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
       </textarea>
       <div className="w-full relative flex flex-col h-[100px]">
         <p className="w-[55%] text-white flex justify-center absolute rounded-2xl right-0 h-[75px] pb-4 text-2xl font-bold bg-custom-blue-200">
-          {DateParser(creationDate)}
+          {DateTimeParser(creationDate)}
         </p>
         <div className="z-10 text-white text-4xl font-bold mt-auto bg-custom-blue-400 flex px-2 items-center h-[65px] rounded-full">
           <p className="bg-white text-black mr-4 border-2 border-custom-blue-400 rounded-full flex justify-center items-center size-14">
-            {userAvatar && postType !== "ANONYMOUS" ? (
+            {userDisplayData && postType !== "ANONYMOUS" ? (
               <img
                 className="rounded-full inset-0 object-cover size-full"
-                src={`data:image/png;base64,${userAvatar}`}
-                alt={author}
+                src={`data:image/png;base64,${userDisplayData.avatar}`}
+                alt={userDisplayData.username}
               />
             ) : (
               <UserIcon size={"size-8"} />
             )}
           </p>
-          {postType === "PUBLIC" ? author : "Anonimowy"}
+          {postType === "PUBLIC" ? userDisplayData.username : "Anonimowy"}
           <div className="ml-auto flex items-center gap-2">
-            {username === author && (
+            {username === userDisplayData.username && (
               <button
                 onClick={() => navigate(`/forum/edit-post/${id}`)}
                 className="text-black rounded-full size-10 flex justify-center items-center bg-white"
@@ -90,7 +83,7 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
                 <EditIcon size={"size-8"} />
               </button>
             )}
-            {(username === author || role === "ADMIN") && (
+            {(username === userDisplayData.username || role === "ADMIN") && (
               <button
                 onClick={handleDeleteClick}
                 className="text-black rounded-full size-10 flex justify-center items-center bg-white"

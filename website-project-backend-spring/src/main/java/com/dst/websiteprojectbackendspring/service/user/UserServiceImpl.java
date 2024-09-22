@@ -2,6 +2,7 @@ package com.dst.websiteprojectbackendspring.service.user;
 
 import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
 import com.dst.websiteprojectbackendspring.dto.user.UserDTOMapper;
+import com.dst.websiteprojectbackendspring.dto.user.UserDisplayDataDTO;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
@@ -34,9 +35,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean isEmailUnique(String email) {
-        boolean b = userRepository.existsByEmail(email);
-        log.info(String.valueOf(b));
-        return !b;
+        return !userRepository.existsByEmail(email);
     }
 
     @Override
@@ -101,14 +100,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String getUserAvatarByUsername(Long userId) throws ChangeSetPersister.NotFoundException {
+    public UserDisplayDataDTO getUserDisplayData(Long userId) throws ChangeSetPersister.NotFoundException {
         User foundUser = userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        String username = foundUser.getUsername();
+        String avatar = null;
+
         if (foundUser.getAvatar() != null) {
             byte[] userAvatar = foundUser.getAvatar();
-            return Base64.getEncoder().encodeToString(userAvatar);
-        } else {
-            return null;
+            avatar =  Base64.getEncoder().encodeToString(userAvatar);
         }
+
+        return new UserDisplayDataDTO(username, avatar);
     }
 
     @Override

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
-import AdminForumSection from "../../components/form/AdminForumSection.jsx";
+import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import PlusIcon from "../../icons/PlusIcon.jsx";
 import { useForm } from "react-hook-form";
@@ -137,7 +137,7 @@ const StatisticsForm = () => {
         onKeyDown={handleKeyDown}
         className="w-full h-auto my-8 flex flex-col items-center"
       >
-        <AdminForumSection
+        <AdminFormSection
           disabledButton={
             calcStatisticsValuesSum() < 100 || calcStatisticsValuesSum() > 100
           }
@@ -263,7 +263,7 @@ const StatisticsForm = () => {
               </ul>
             </div>
           )}
-        </AdminForumSection>
+        </AdminFormSection>
       </form>
     </AnimatedPage>
   );

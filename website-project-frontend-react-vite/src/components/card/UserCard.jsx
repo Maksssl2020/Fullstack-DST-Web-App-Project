@@ -1,7 +1,7 @@
 import React from "react";
 import { DateParser } from "../../helpers/Date.js";
 import { useQuery } from "react-query";
-import { fetchUserAvatar } from "../../helpers/api-integration/UserDataHandling.js";
+import { fetchUserDisplayData } from "../../helpers/api-integration/UserDataHandling.js";
 import { getRole } from "../../helpers/ApiDataTranslator.js";
 import Spinner from "../universal/Spinner.jsx";
 import UserIcon from "../header/icons/UserIcon.jsx";
@@ -12,7 +12,7 @@ const UserCard = ({ userData }) => {
 
   const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
     ["userAvatar", id],
-    () => fetchUserAvatar(id),
+    () => fetchUserDisplayData(id),
   );
 
   if (fetchingUserAvatar) {

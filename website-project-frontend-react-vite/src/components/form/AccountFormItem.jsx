@@ -11,6 +11,7 @@ import {
   checkEmailIsUnique,
   checkUsernameIsUnique,
 } from "../../helpers/api-integration/UserDataHandling.js";
+import { motion } from "framer-motion";
 
 const AccountFormItem = ({ labelTitle, register, value, errors }) => {
   const { role, userId } = useContext(AuthContext);
@@ -87,7 +88,15 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
             className={`w-[80%] h-[60px] border-4 px-4 text-lg text-center focus:outline-none rounded-2xl ${editing ? "border-custom-orange-200" : "border-custom-gray-300"}`}
             {...register}
           />
-          <button
+          <motion.button
+            whileHover={{ backgroundColor: "#FF5A5A", color: "#FFFFFF" }}
+            style={{ backgroundColor: "#D0D0D0", color: "#111111" }}
+            initial={{ backgroundColor: "#D0D0D0", color: "#111111" }}
+            animate={
+              editing
+                ? { backgroundColor: "#FF5A5A", color: "#FFFFFF" }
+                : { backgroundColor: "#D0D0D0", color: "#111111" }
+            }
             onClick={() => {
               if (role === "ADMIN" || labelTitle.includes("Numer")) {
                 handleButtonClick();
@@ -95,10 +104,10 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
                 setOpenModal(true);
               }
             }}
-            className={`absolute font-bold ml-auto -translate-x-4 inset-0 w-[100px] h-[60px] rounded-2xl ${editing ? "bg-custom-orange-200 text-white" : "bg-custom-gray-300"}`}
+            className={`absolute font-bold ml-auto -translate-x-4 inset-0 w-[100px] h-[60px] rounded-2xl`}
           >
             ZMIEŃ
-          </button>
+          </motion.button>
         </div>
         {errors !== null && (
           <p className="text-lg text-red-500 mr-4">{errors}</p>

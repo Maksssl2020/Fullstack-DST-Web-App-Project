@@ -1,5 +1,7 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.comment.CommentDTO;
+import com.dst.websiteprojectbackendspring.dto.comment.CommentRequest;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.service.comment.CommentService;
 import jakarta.validation.Valid;
@@ -19,7 +21,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<Comment>> getCommentsByPostId(@PathVariable Long postId) {
+    public ResponseEntity<List<CommentDTO>> getCommentsByPostId(@PathVariable Long postId) {
         return ResponseEntity.ok(commentService.getCommentsByPostId(postId));
     }
 
@@ -29,8 +31,8 @@ public class CommentController {
     }
 
     @PostMapping("/post/{postId}/add-comment")
-    public ResponseEntity<HttpStatus> addComment(@PathVariable Long postId, @RequestBody @Valid Comment comment) throws ChangeSetPersister.NotFoundException {
-        commentService.saveComment(comment, postId);
+    public ResponseEntity<HttpStatus> addComment(@PathVariable Long postId, @RequestBody CommentRequest commentRequest) throws ChangeSetPersister.NotFoundException {
+        commentService.saveComment(commentRequest, postId);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

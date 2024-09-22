@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import ProductQuantityButton from "../button/ProductQuantityButton.jsx";
 import SizesDropdown from "../dropdown/SizesDropdown.jsx";
+import { motion } from "framer-motion";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -23,6 +24,7 @@ const ShopProductBuyOptionsPanel = ({
   const [cartIdentifier, setCartIdentifier] = useState("");
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
+  const [addedToFavourite, setAddedToFavourite] = useState(false);
   const queryClient = useQueryClient();
 
   const { data: productCategories, isLoading: categoriesLoading } = useQuery(
@@ -51,7 +53,9 @@ const ShopProductBuyOptionsPanel = ({
     }
   }, [isAuthenticated, userId]);
 
-  console.log(cartIdentifier);
+  const handleAddToFavourite = () => {
+    setAddedToFavourite(!addedToFavourite);
+  };
 
   const { mutate: addProductToUserCart, isLoading: addingProductToCart } =
     useMutation({
@@ -131,14 +135,22 @@ const ShopProductBuyOptionsPanel = ({
           }
         />
         <div className="w-full flex h-[75px] bg-white rounded-2xl">
-          <button
+          <motion.button
+            whileHover={{ backgroundColor: "#FF5A5A", color: "#FFFFFF" }}
+            style={{ backgroundColor: "#D0D0D0", color: "#111111" }}
             onClick={addProductToUserCart}
-            className=" w-[50%] rounded-2xl h-full hover:bg-custom-orange-200 hover:text-white uppercase text-2xl bg-custom-gray-300"
+            className=" w-[50%] rounded-2xl h-full  uppercase text-2xl"
           >
             Dodaj do koszyka
-          </button>
-          <button className="w-[50%] gap-2 h-full text-xl flex justify-center items-center">
-            <HeartIcon size={"size-10"} />
+          </motion.button>
+          <button
+            onClick={handleAddToFavourite}
+            className="w-[50%] gap-2 h-full text-xl flex justify-center items-center"
+          >
+            <HeartIcon
+              isFavourite={addedToFavourite}
+              className={"size-10 stroke-1"}
+            />
             <p>dodaj do ulubionych</p>
           </button>
         </div>
