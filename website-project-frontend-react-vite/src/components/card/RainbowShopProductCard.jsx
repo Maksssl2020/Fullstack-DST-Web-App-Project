@@ -7,7 +7,7 @@ import {
   handleDeleteProduct,
 } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";

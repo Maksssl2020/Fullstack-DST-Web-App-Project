@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDto;
 import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.service.article.ArticleService;
@@ -21,7 +22,7 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
+    public ResponseEntity<List<ArticleManagementDto>> getAllArticles() {
         return ResponseEntity.ok(articleService.findAll());
     }
 

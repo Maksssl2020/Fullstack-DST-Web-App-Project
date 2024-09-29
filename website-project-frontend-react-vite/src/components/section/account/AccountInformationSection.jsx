@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../../context/AuthProvider.jsx";
 import DefaultModal from "../../modal/DefaultModal.jsx";
 import AccountAdminSection from "./AccountAdminSection.jsx";
 import AccountUserSection from "./AccountUserSection.jsx";

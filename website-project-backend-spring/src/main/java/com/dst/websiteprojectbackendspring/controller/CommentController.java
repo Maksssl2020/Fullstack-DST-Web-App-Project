@@ -2,9 +2,8 @@ package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.dto.comment.CommentDTO;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentRequest;
-import com.dst.websiteprojectbackendspring.model.comment.Comment;
+import com.dst.websiteprojectbackendspring.dto.comment.CommentUpdateRequest;
 import com.dst.websiteprojectbackendspring.service.comment.CommentService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -37,14 +36,14 @@ public class CommentController {
     }
 
     @PutMapping("/post/{postId}/edit-comment/{commentId}")
-    public ResponseEntity<HttpStatus> updateComment(@PathVariable Long postId,@PathVariable Long commentId, @RequestBody @Valid Comment comment) throws ChangeSetPersister.NotFoundException {
-        commentService.updateComment(postId, commentId, comment);
+    public ResponseEntity<HttpStatus> updateComment(@PathVariable Long postId,@PathVariable Long commentId, @RequestBody CommentUpdateRequest commentUpdateRequest) throws ChangeSetPersister.NotFoundException {
+        commentService.updateComment(postId, commentId, commentUpdateRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/post/{postId}/delete-comment/{commentId}")
-    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Long postId, @PathVariable Long commentId) throws ChangeSetPersister.NotFoundException {
-        commentService.deleteComment(postId, commentId);
+    @DeleteMapping("/delete-comment/{commentId}")
+    public ResponseEntity<HttpStatus> deleteComment(@PathVariable Long commentId) throws ChangeSetPersister.NotFoundException {
+        commentService.deleteComment(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -1,5 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
+import com.dst.websiteprojectbackendspring.dto.article.ArticleDTOMapper;
+import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDto;
 import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.model.article_image.ArticleImage;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +35,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final NewsPostServiceImpl newsPostService;
     private final HomePostServiceImpl homePostService;
+    private final ArticleDTOMapper articleDTOMapper;
 
     @Override
     @Transactional
@@ -39,8 +43,6 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = setArticle(articleRequest);
         Article savedArticle = articleRepository.save(article);
         String truncatedText = articleRequest.content().substring(0, 150).concat("...");
-
-        log.info("ADDING ARTICLE!");
 
         newsPostService.save(NewsPost
                 .builder()
@@ -56,8 +58,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> findAll() {
-        return articleRepository.findAll();
+    public List<ArticleManagementDto> findAll() {
+        return articleRepository.findAll().stream()
+                .map(articleDTOMapper)
+                .sorted(Comparator.comparing(ArticleManagementDto::id).reversed())
+                .toList();
     }
 
     @Override

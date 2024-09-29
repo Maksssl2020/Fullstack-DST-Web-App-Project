@@ -13,7 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -27,8 +27,11 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String SECRET_KEY;
 
+    @Value("${security.jwt.refresh-token-expiration}")
+    private long JWT_REFRESH_TOKEN_EXPIRATION;
+
+
     private final ObjectMapper objectMapper;
-    private final EmailServiceImpl emailService;
 
     public String generateJwtToken(UserDetails userDetails) {
         return generateJwtToken(new HashMap<>(), userDetails);
@@ -39,10 +42,15 @@ public class JwtService {
         return buildJwtToken(claims, userDetails, JWT_EXPIRATION);
     }
 
+    public String generateRefreshJwtToken(UserDetails userDetails) {
+
+        return buildJwtToken(new HashMap<>(), userDetails, JWT_REFRESH_TOKEN_EXPIRATION);
+    }
+
     private String buildJwtToken(
             HashMap<String, Object> claims,
             UserDetails userDetails,
-            long jwtExpiration
+            long expiration
     ) {
         var authorities = userDetails.getAuthorities()
                 .stream()
@@ -50,14 +58,14 @@ public class JwtService {
                 .toList();
 
         Date issuedAtDate = new Date(System.currentTimeMillis());
-        Date expirationDate = new Date(issuedAtDate.getTime() + jwtExpiration);
+        Date expirationDate = new Date(issuedAtDate.getTime() + expiration);
         return Jwts
                 .builder()
-                .setClaims(claims)
-                .serializeToJsonWith(new JacksonSerializer<>(objectMapper))
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(issuedAtDate)
-                .setExpiration(expirationDate)
+                .claims(claims)
+                .json(new JacksonSerializer<>(objectMapper))
+                .subject(userDetails.getUsername())
+                .issuedAt(issuedAtDate)
+                .expiration(expirationDate)
                 .claim("authorities", authorities)
                 .signWith(getSignInKey())
                 .compact();
@@ -73,23 +81,23 @@ public class JwtService {
     }
 
     private Date extractExpiration(String token) {
-        return extractClaim(token).getExpiration();
+        return extractClaims(token).getExpiration();
     }
 
-    private Key getSignInKey() {
+    private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUsername(String jwtToken) {
-        return extractClaim(jwtToken).getSubject();
+        return extractClaims(jwtToken).getSubject();
     }
 
-    public Claims extractClaim(String jwtToken) {
+    public Claims extractClaims(String jwtToken) {
         return Jwts.parser()
-                .setSigningKey(getSignInKey())
+                .verifyWith(getSignInKey())
                 .build()
-                .parseClaimsJws(jwtToken)
-                .getBody();
+                .parseSignedClaims(jwtToken)
+                .getPayload();
     }
 }

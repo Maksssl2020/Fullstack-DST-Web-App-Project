@@ -17,7 +17,7 @@ import {
   fetchShoppingCartByIdentifier,
 } from "../helpers/api-integration/ShoppingCartHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../context/AuthProvider.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
 import { handleProcessPayment } from "../helpers/api-integration/PaymentsHandling.js";
 import { handleAddNewOrder } from "../helpers/api-integration/OrdersHandling.js";

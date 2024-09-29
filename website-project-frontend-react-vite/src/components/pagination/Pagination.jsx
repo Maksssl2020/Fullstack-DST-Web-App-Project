@@ -33,7 +33,7 @@ const Pagination = ({ totalPages, currentPage, setCurrentPageFunc }) => {
     "#D413CD",
   ];
 
-  const getColorForPaginationNumber = (index, styleElement) => {
+  const getColorForPaginationNumber = (index) => {
     let modulo = index % 7;
     return colors[modulo];
   };

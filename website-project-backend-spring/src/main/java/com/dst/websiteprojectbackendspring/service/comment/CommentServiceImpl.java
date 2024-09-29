@@ -3,6 +3,7 @@ package com.dst.websiteprojectbackendspring.service.comment;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentDTO;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentDTOMapper;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentRequest;
+import com.dst.websiteprojectbackendspring.dto.comment.CommentUpdateRequest;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -46,20 +47,16 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(Long postId, Long commentId, Comment comment) throws ChangeSetPersister.NotFoundException {
-        if (commentRepository.existsById(commentId)) {
-            comment.setId(commentId);
-            ForumPost forumPost = forumPostRepository.findById(postId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-            comment.setForumPost(forumPost);
-            commentRepository.save(comment);
-        }
+    public void updateComment(Long postId, Long commentId, CommentUpdateRequest commentUpdateRequest) throws ChangeSetPersister.NotFoundException {
+        Comment foundComment = commentRepository.findById(commentId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        foundComment.setId(commentId);
+        foundComment.setContent(commentUpdateRequest.commentContent());
+        commentRepository.save(foundComment);
     }
 
     @Override
-    public void deleteComment(Long postId, Long commentId) {
-        if (commentRepository.existsById(commentId)) {
-            commentRepository.deleteById(commentId);
-        }
+    public void deleteComment(Long commentId) {
+        commentRepository.deleteById(commentId);
     }
 
     private Comment setComment(CommentRequest commentRequest, Long postId) {

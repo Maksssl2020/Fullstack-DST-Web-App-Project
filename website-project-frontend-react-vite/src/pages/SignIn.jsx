@@ -1,15 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import FormItem from "../components/form/FormItem.jsx";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import { useMutation } from "react-query";
 import { handleLogin } from "../helpers/api-integration/AuthenticationHandling.js";
 import toast from "react-hot-toast";
+import useAuthentication from "../hooks/queries/useAuthentication.js";
 
 const SignIn = () => {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuthentication();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState(null);
@@ -19,8 +19,10 @@ const SignIn = () => {
     mutationKey: ["loginUser", username, password],
     mutationFn: () => handleLogin(username, password),
     onSuccess: (response) => {
-      login(response.token);
+      login(response);
       toast.success("Logowanie udane!");
+      setUsername("");
+      setPassword("");
       navigate("/");
     },
     onError: (error) => {

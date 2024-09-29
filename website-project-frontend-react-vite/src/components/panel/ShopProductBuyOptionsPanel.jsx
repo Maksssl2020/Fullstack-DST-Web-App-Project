@@ -6,7 +6,7 @@ import {
   fetchProductSizes,
 } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";

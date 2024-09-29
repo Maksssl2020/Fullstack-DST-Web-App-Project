@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import DefaultModal from "../modal/DefaultModal.jsx";
 import FormItem from "./FormItem.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";

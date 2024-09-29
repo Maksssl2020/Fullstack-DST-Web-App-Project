@@ -28,10 +28,10 @@ const LeftDrawer = () => {
       )}
 
       <div
-        className={`font-lato flex z-30 overflow-y-auto transition-transform inset-0 fixed h-screen w-[490px] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`font-lato  flex z-30 transition-transform inset-0 fixed h-screen w-[490px] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="w-full flex flex-col">
-          <div className="flex px-4 items-center justify-center gap-4 h-[11.5%] bg-drawer-background w-full">
+        <div className="w-full h-full flex flex-col ">
+          <div className="flex px-4 items-center justify-center gap-4 h-[11.5%] bg-drawer-background w-full ">
             <button
               className="rounded-full h-fit bg-custom-gray-100"
               onClick={toggleDrawer}
@@ -39,7 +39,7 @@ const LeftDrawer = () => {
               <CloseIcon />
             </button>
           </div>
-          <div className="my-8">
+          <div className="my-8 overflow-y-auto">
             <DrawerList />
           </div>
           <div className="mt-auto mb-12">

@@ -21,12 +21,15 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 1024)
     private String token;
 
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private LocalDateTime validatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private TokenType type;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

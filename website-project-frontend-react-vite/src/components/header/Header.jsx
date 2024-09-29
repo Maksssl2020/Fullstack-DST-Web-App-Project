@@ -12,7 +12,7 @@ import {
   getShoppingCartAmountOfItems,
   getShoppingCartId,
 } from "../../helpers/api-integration/ShoppingCartHandling.js";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import Spinner from "../universal/Spinner.jsx";
 import Badge from "../badge/Badge.jsx";
@@ -134,7 +134,7 @@ const Header = ({ forumAddPostButton }) => {
           >
             <ul className="flex gap-10 list-disc list-inside marker:text-lg marker:text-custom-gray-400">
               {getHeaderItemsDependsOnLocation().map((data, index) => (
-                <li>
+                <li key={index}>
                   <button onClick={() => navigate(data.link)}>
                     {data.name}
                   </button>

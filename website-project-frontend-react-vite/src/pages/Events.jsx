@@ -8,7 +8,7 @@ import {
   fetchEventsData,
 } from "../helpers/api-integration/EventsHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../context/AuthProvider.jsx";
 import DefaultModal from "../components/modal/DefaultModal.jsx";
 import ButtonWithLink from "../components/universal/ButtonWithLink.jsx";
 import { fetchAllVolunteers } from "../helpers/api-integration/UserDataHandling.js";

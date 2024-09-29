@@ -9,6 +9,15 @@ export const fetchArticleData = async (articleId) => {
   }
 };
 
+export const fetchManagementArticlesData = async () => {
+  try {
+    const response = await axios.get(`/articles`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const handleAddNewArticle = async (articleData) => {
   try {
     const response = await axios.post("/articles/add-article", articleData, {

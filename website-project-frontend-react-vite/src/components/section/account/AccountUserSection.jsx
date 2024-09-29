@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm.jsx";
 import { getRole } from "../../../helpers/ApiDataTranslator.js";
-import { AuthContext } from "../../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../../context/AuthProvider.jsx";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto.jsx";
 import AddingPhotoModal from "../../modal/AddingPhotoModal.jsx";
 import { useQuery } from "react-query";

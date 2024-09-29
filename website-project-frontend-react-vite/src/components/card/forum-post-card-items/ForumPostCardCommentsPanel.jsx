@@ -1,49 +1,31 @@
 import React, { useContext } from "react";
 import UserIcon from "../../header/icons/UserIcon.jsx";
 import AddInCircleIcon from "../../form/icons/AddInCircleIcon.jsx";
-import { AuthContext } from "../../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../../context/AuthProvider.jsx";
 import ButtonWithLink from "../../universal/ButtonWithLink.jsx";
 import Comment from "../../comment/Comment.jsx";
 import "./ForumPostCardCommentsPanel.css";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchPostUsersComments,
-  handleAddComment,
-} from "../../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import useForumPostComments from "../../../hooks/queries/useForumPostComments.js";
+import useAddForumPostCommentMutation from "../../../hooks/mutations/useAddForumPostCommentMutation.js";
 
 const ForumPostCardCommentsPanel = ({ postId }) => {
   const { isAuthenticated, role, userId } = useContext(AuthContext);
-  const queryClient = useQueryClient();
   const { register, handleSubmit, resetField, formState, getValues } =
     useForm();
   const { errors } = formState;
+  const { forumPostComments, fetchingForumPostComments } =
+    useForumPostComments(postId);
+  const { addForumPostComment, addingForumPostComment } =
+    useAddForumPostCommentMutation(postId, userId, () =>
+      resetField("commentContent"),
+    );
 
-  const { data: postComments, isLoading: fetchingPostComments } = useQuery(
-    [`forumPostComments${postId}`, postId],
-    () => fetchPostUsersComments(postId),
-  );
-
-  const { mutate: addComment, isLoading: addingNewComment } = useMutation({
-    mutationFn: () =>
-      handleAddComment(postId, {
-        content: getValues().commentContent,
-        authorId: userId,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(`forumPostComments${postId}`);
-      resetField("commentContent");
-    },
-    onError: (error) => console.log(error),
-  });
-
-  if (fetchingPostComments || addingNewComment) {
+  if (fetchingForumPostComments || addingForumPostComment) {
     return <Spinner />;
   }
-
-  console.log(postComments);
 
   return (
     <div className="w-[45%] justify-between flex flex-col h-full p-4 rounded-2xl bg-custom-gray-100">
@@ -51,7 +33,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
         Komentarze
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
-        {postComments?.map((commentData) => (
+        {forumPostComments?.map((commentData) => (
           <Comment
             key={commentData.id}
             commentData={commentData}
@@ -99,7 +81,9 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
           <div className="w-[15%] flex justify-center items-center h-full bg-custom-gray-200 rounded-r-full">
             <motion.button
               whileHover={{ scale: 1.1 }}
-              onClick={handleSubmit(addComment)}
+              onClick={handleSubmit((data) =>
+                addForumPostComment(data.commentContent),
+              )}
             >
               <AddInCircleIcon size={"size-10"} />
             </motion.button>

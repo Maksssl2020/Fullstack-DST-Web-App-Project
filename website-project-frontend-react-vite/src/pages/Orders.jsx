@@ -4,18 +4,14 @@ import { useQuery } from "react-query";
 import { fetchAllOrders } from "../helpers/api-integration/OrdersHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import OrderAdminCard from "../components/card/OrderAdminCard.jsx";
+import useOrders from "../hooks/queries/useOrders.js";
 
 const Orders = () => {
-  const { data: ordersData, isLoading: fetchingOrdersData } = useQuery(
-    ["ordersData"],
-    () => fetchAllOrders(),
-  );
+  const { orders, fetchingOrders } = useOrders();
 
-  if (fetchingOrdersData) {
+  if (fetchingOrders) {
     return <Spinner />;
   }
-
-  console.log(ordersData);
 
   return (
     <AnimatedPage>
@@ -25,7 +21,7 @@ const Orders = () => {
             "w-[1150px] h-auto bg-custom-gray-100 rounded-2xl flex flex-col p-4 gap-4"
           }
         >
-          {ordersData?.map((data, index) => (
+          {orders?.map((data, index) => (
             <OrderAdminCard orderData={data} key={index} />
           ))}
         </div>

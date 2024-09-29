@@ -3,7 +3,7 @@ import HomeAboutUsSection from "../components/section/HomeAboutUsSection.jsx";
 import HomeNewsSection from "../components/section/HomeNewsSection.jsx";
 import HomeInstagramSection from "../components/section/HomeInstagramSection.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../context/AuthProvider.jsx";
 import { useQuery } from "react-query";
 import { fetchUserAllNonReadMessages } from "../helpers/api-integration/UserDataHandling.js";
 import UserMessageModal from "../components/modal/UserMessageModal.jsx";

@@ -1,119 +1,105 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import ForumPostItem from "./ForumPostItem.jsx";
 import { TodayDate } from "../../helpers/Date.js";
 import UserIcon from "../header/icons/UserIcon.jsx";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchPostData,
-  handleAddForumPost,
-  handleUpdateForumPost,
-} from "../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
-import {
-  fetchUserAmountOfCreatedForumPosts,
-  fetchUserDisplayData,
-} from "../../helpers/api-integration/UserDataHandling.js";
 import toast from "react-hot-toast";
+import useAddForumPostMutation from "../../hooks/mutations/useAddForumPostMutation.js";
+import useUpdateForumPostMutation from "../../hooks/mutations/useUpdateForumPostMutation.js";
+import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
+import useForumPostMutation from "../../hooks/mutations/useForumPostMutation.js";
+import useUserAmountOfCreatedForumPosts from "../../hooks/queries/useUserAmountOfCreatedForumPosts.js";
 
 const ForumPostPageForm = ({ isEditing }) => {
   const { id } = useParams();
   const { userId, username } = useContext(AuthContext);
-  const queryClient = useQueryClient();
-  const { register, setValue, handleSubmit, getValues, formState, watch } =
-    useForm();
+  const {
+    register,
+    setValue,
+    handleSubmit,
+    getValues,
+    formState,
+    watch,
+    reset,
+  } = useForm();
   const { errors } = formState;
   const [optionIndex, setOptionIndex] = React.useState(0);
   const [postCreationDate, setPostCreationDate] = useState(null);
   const navigate = useNavigate();
-
-  const { mutate: fetchPostDataToUpdate, isLoading: fetchingPostData } =
-    useMutation(["postToUpdateData", id], () => fetchPostData(id), {
-      onSuccess: (data) => {
-        setPostDataToUpdate(data);
-      },
-    });
-
-  useEffect(() => {
-    if (isEditing) {
-      fetchPostDataToUpdate();
-    }
-  }, [fetchPostDataToUpdate, id, isEditing]);
-
-  const setPostDataToUpdate = (postDataToUpdate) => {
-    postDataToUpdate?.postType === "ANONYMOUS"
-      ? setOptionIndex(0)
-      : setOptionIndex(1);
-
-    setValue("postTitle", postDataToUpdate.title);
-    setValue("postContent", postDataToUpdate.content);
-    setPostCreationDate(postDataToUpdate.creationDate);
-  };
-
-  const { data: userDataToDisplay, isLoading: fetchingUserDataToDisplay } =
-    useQuery(["forumPostForumUserAvatar", userId], () =>
-      fetchUserDisplayData(userId),
-    );
-
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
   const {
-    data: userAmountOfCreatedPosts,
-    isLoading: fetchingAmountOfCreatedUserPosts,
-  } = useQuery(["amountOfCreatedUserPosts", userId], () =>
-    fetchUserAmountOfCreatedForumPosts(userId),
+    userAmountOfCreatedForumPosts,
+    fetchingUserAmountOfCreatedForumPosts,
+  } = useUserAmountOfCreatedForumPosts(userId);
+  const { forumPostData, fetchForumPostData, fetchingForumPostData } =
+    useForumPostMutation(id);
+  const { addNewForumPost, addingNewForumPost } = useAddForumPostMutation(
+    () => {
+      toast.success("Utworzono nowy post na forum!");
+      reset();
+      navigate(-1);
+    },
   );
-
-  const { mutate: addNewForumPost, isLoading: addingNewForumPost } =
-    useMutation({
-      mutationKey: ["forumPostsData"],
-      mutationFn: () =>
-        handleAddForumPost({
-          title: getValues().postTitle,
-          content: getValues().postContent,
-          postType: postType,
-          authorId: userId,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries(`forumPostComments${id}`);
-        toast.success("Utworzono nowy post na forum!");
-        navigate(-1);
-      },
-      onError: (error) => console.log(error),
-    });
-
-  const { mutate: updateForumPost, isLoading: updatingForumPost } = useMutation(
-    {
-      mutationKey: ["forumPostsData"],
-      mutationFn: () =>
-        handleUpdateForumPost(id, {
-          title: getValues().postTitle,
-          content: getValues().postContent,
-          postType: postType,
-          authorId: userId,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries(`forumPostComments${id}`);
-        toast.success("Zaktualizowano post na forum!");
-        navigate(-1);
-      },
-      onError: (error) => console.log(error),
+  const { updateForumPost, updatingForumPost } = useUpdateForumPostMutation(
+    id,
+    () => {
+      toast.success("Zaktualizowano post na forum!");
+      reset();
+      navigate(-1);
     },
   );
 
-  const handleOptionClick = (index) => {
-    setOptionIndex(index);
+  useEffect(() => {
+    if (isEditing) {
+      fetchForumPostData();
+    }
+  }, [fetchForumPostData, id, isEditing]);
+
+  useEffect(() => {
+    if (isEditing && forumPostData) {
+      setPostDataToUpdate(forumPostData);
+    }
+  }, [forumPostData, isEditing]);
+
+  const setPostDataToUpdate = (forumPostData) => {
+    if (isEditing) {
+      forumPostData?.postType === "ANONYMOUS"
+        ? setOptionIndex(0)
+        : setOptionIndex(1);
+
+      setValue("postTitle", forumPostData.title);
+      setValue("postContent", forumPostData.content);
+      setPostCreationDate(forumPostData.creationDate);
+    }
   };
 
   const postType = optionIndex === 0 ? "ANONYMOUS" : "PUBLIC";
   const postContentLength = watch("postContent", "");
 
+  const handleOptionClick = (index) => {
+    setOptionIndex(index);
+  };
+
+  const handleSubmitClick = handleSubmit((data) => {
+    const forumPostData = {
+      title: data.postTitle,
+      content: data.postContent,
+      postType: postType,
+      authorId: userId,
+    };
+
+    isEditing ? updateForumPost(forumPostData) : addNewForumPost(forumPostData);
+  });
+
   if (
     addingNewForumPost ||
     updatingForumPost ||
-    fetchingPostData ||
-    fetchingUserDataToDisplay ||
-    fetchingAmountOfCreatedUserPosts
+    fetchingForumPostData ||
+    fetchingUserDisplay ||
+    fetchingUserAmountOfCreatedForumPosts
   ) {
     return <Spinner />;
   }
@@ -173,12 +159,12 @@ const ForumPostPageForm = ({ isEditing }) => {
       <div className="w-[35%] relative flex flex-col items-center justify-between py-4 h-full rounded-2xl bg-white">
         <div className="bg-custom-blue-400 px-12 w-[90%] flex items-center justify-center h-[50px] rounded-full">
           <div className="absolute w-[85px] flex items-center justify-center h-[85px] translate-y-4 bg-custom-gray-100 rounded-2xl left-0 translate-x-5">
-            {userDataToDisplay ? (
+            {userDisplay ? (
               <p className="bg-white border-2 border-custom-blue-400 rounded-full flex justify-center items-center size-12">
                 <img
                   className="rounded-full inset-0 object-cover size-full"
-                  src={`data:image/png;base64,${userDataToDisplay.avatar}`}
-                  alt={userDataToDisplay.username}
+                  src={`data:image/png;base64,${userDisplay.avatar}`}
+                  alt={userDisplay.username}
                 />
               </p>
             ) : (
@@ -209,11 +195,7 @@ const ForumPostPageForm = ({ isEditing }) => {
             isChosen={optionIndex}
           />
           <button
-            onClick={
-              isEditing
-                ? handleSubmit(updateForumPost)
-                : handleSubmit(addNewForumPost)
-            }
+            onClick={handleSubmitClick}
             className="w-full h-[75px] uppercase text-2xl bg-custom-blue-500 rounded-full  text-white font-bold"
           >
             {isEditing ? "Zmień wpis" : "dodaj wpis"}
@@ -228,7 +210,7 @@ const ForumPostPageForm = ({ isEditing }) => {
               Liczba wpisów:
             </p>
             <p className="h-full w-[150px] flex justify-center items-center text-white font-bold text-4xl rounded-full ml-auto bg-custom-blue-500">
-              {userAmountOfCreatedPosts}
+              {userAmountOfCreatedForumPosts}
             </p>
           </div>
         </div>

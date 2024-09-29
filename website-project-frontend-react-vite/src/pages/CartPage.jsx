@@ -11,7 +11,7 @@ import {
 } from "../helpers/api-integration/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../components/universal/Spinner.jsx";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../context/AuthProvider.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
 import { useForm } from "react-hook-form";
 import {

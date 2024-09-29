@@ -23,12 +23,35 @@ export const handleAccountActivation = async (activationCode) => {
 
 export const handleLogin = async (username, password) => {
   try {
-    const response = await axios.post("/auth/login", {
-      username: username,
-      password: password,
-    });
+    const response = await axios.post(
+      "/auth/login",
+      {
+        username: username,
+        password: password,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+
     return response.data;
   } catch (error) {
     throw error;
+  }
+};
+
+export const handleRefreshToken = async () => {
+  try {
+    const response = await axios.post(
+      "/auth/refresh-token",
+      {},
+      {
+        withCredentials: true,
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
   }
 };

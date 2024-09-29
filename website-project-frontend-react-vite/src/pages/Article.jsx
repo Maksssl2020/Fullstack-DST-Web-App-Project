@@ -14,7 +14,7 @@ import InstagramIcon from "../icons/InstagramIcon.jsx";
 import XIcon from "../icons/XIcon.jsx";
 import YouTubeIcon from "../icons/YouTubeIcon.jsx";
 import TikTokIcon from "../icons/TikTokIcon.jsx";
-import { AuthContext } from "../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../context/AuthProvider.jsx";
 import AdminOptionsButtons from "../components/button/AdminOptionsButtons.jsx";
 import toast from "react-hot-toast";
 

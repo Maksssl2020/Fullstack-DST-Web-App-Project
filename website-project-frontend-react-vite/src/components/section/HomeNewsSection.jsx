@@ -4,12 +4,10 @@ import HomeNewsCardSlider from "../card-slider/HomeNewsCardSlider.jsx";
 import { useQuery } from "react-query";
 import { fetchHomeNewsPostsData } from "../../helpers/api-integration/NewsPostsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useHomeNewsPosts from "../../hooks/queries/useHomeNewsPosts.js";
 
 const HomeNewsSection = () => {
-  const { data: homeNewsPosts, isLoading: fetchingHomeNewsPosts } = useQuery(
-    ["homeNewsPostsData"],
-    () => fetchHomeNewsPostsData(),
-  );
+  const { homeNewsPosts, fetchingHomeNewsPosts } = useHomeNewsPosts();
 
   if (fetchingHomeNewsPosts) {
     return <Spinner />;

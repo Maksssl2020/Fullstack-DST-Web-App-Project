@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import CloseIcon from "./icons/CloseIcon.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
 import { useQuery } from "react-query";
 import {

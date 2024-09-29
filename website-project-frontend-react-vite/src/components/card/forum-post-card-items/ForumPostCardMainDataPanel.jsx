@@ -1,48 +1,25 @@
 import React, { useContext, useState } from "react";
 import UserIcon from "../../header/icons/UserIcon.jsx";
 import EditIcon from "../../../icons/EditIcon.jsx";
-import { AuthContext } from "../../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../../context/AuthProvider.jsx";
 import DeleteIcon from "../../../icons/DeleteIcon.jsx";
 import { useNavigate } from "react-router-dom";
-import DeleteWarningModal from "../../modal/DeleteWarningModal.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { handlePostDelete } from "../../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
-import {
-  fetchUserDisplayData,
-  fetchUserIdByUsername,
-} from "../../../helpers/api-integration/UserDataHandling.js";
-import { DateParser, DateTimeParser } from "../../../helpers/Date.js";
+import { DateTimeParser } from "../../../helpers/Date.js";
+import useUserDisplay from "../../../hooks/queries/useUserDisplay.js";
+import useDeleteForumPostMutation from "../../../hooks/mutations/useDeleteForumPostMutation.js";
+import DefaultModal from "../../modal/DefaultModal.jsx";
+import { AnimatePresence } from "framer-motion";
 
 const ForumPostCardMainDataPanel = ({ postData }) => {
   const { username, role } = useContext(AuthContext);
-  const queryClient = useQueryClient();
   const { id, title, content, creationDate, postType, authorId } = postData;
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(authorId);
+  const { deleteForumPost, deletingForumPost } = useDeleteForumPostMutation(id);
 
-  const { data: userDisplayData, isLoading: fetchingUserDisplayData } =
-    useQuery(["forumPostUserAvatar", authorId], () =>
-      fetchUserDisplayData(authorId),
-    );
-
-  const { mutate, isLoading: deletingPost } = useMutation({
-    mutationFn: handlePostDelete,
-    onSuccess: () => {
-      queryClient.invalidateQueries("forumPostsData");
-    },
-    onError: (error) => console.log(error),
-  });
-
-  const handleDeleteClick = () => {
-    setOpenModal(true);
-  };
-
-  const handleCancelDeleteClick = () => {
-    setOpenModal(false);
-  };
-
-  if (deletingPost || fetchingUserDisplayData) {
+  if (deletingForumPost || fetchingUserDisplay) {
     return <Spinner />;
   }
 
@@ -63,19 +40,19 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
         </p>
         <div className="z-10 text-white text-4xl font-bold mt-auto bg-custom-blue-400 flex px-2 items-center h-[65px] rounded-full">
           <p className="bg-white text-black mr-4 border-2 border-custom-blue-400 rounded-full flex justify-center items-center size-14">
-            {userDisplayData && postType !== "ANONYMOUS" ? (
+            {userDisplay && postType !== "ANONYMOUS" ? (
               <img
                 className="rounded-full inset-0 object-cover size-full"
-                src={`data:image/png;base64,${userDisplayData.avatar}`}
-                alt={userDisplayData.username}
+                src={`data:image/png;base64,${userDisplay.avatar}`}
+                alt={userDisplay.username}
               />
             ) : (
               <UserIcon size={"size-8"} />
             )}
           </p>
-          {postType === "PUBLIC" ? userDisplayData.username : "Anonimowy"}
+          {postType === "PUBLIC" ? userDisplay.username : "Anonimowy"}
           <div className="ml-auto flex items-center gap-2">
-            {username === userDisplayData.username && (
+            {username === userDisplay.username && (
               <button
                 onClick={() => navigate(`/forum/edit-post/${id}`)}
                 className="text-black rounded-full size-10 flex justify-center items-center bg-white"
@@ -83,9 +60,9 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
                 <EditIcon size={"size-8"} />
               </button>
             )}
-            {(username === userDisplayData.username || role === "ADMIN") && (
+            {(username === userDisplay.username || role === "ADMIN") && (
               <button
-                onClick={handleDeleteClick}
+                onClick={() => setOpenModal(true)}
                 className="text-black rounded-full size-10 flex justify-center items-center bg-white"
               >
                 <DeleteIcon size={"size-8"} />
@@ -94,13 +71,30 @@ const ForumPostCardMainDataPanel = ({ postData }) => {
           </div>
         </div>
       </div>
-      {openModal && (
-        <DeleteWarningModal
-          itemId={id}
-          handleDeleteFunc={mutate}
-          onClose={handleCancelDeleteClick}
-        />
-      )}
+      <AnimatePresence>
+        {openModal && (
+          <DefaultModal
+            title={"Uwaga!"}
+            subtitle={"Czy na pewno chcesz usunąć post?"}
+          >
+            <button
+              onClick={() => {
+                deleteForumPost(id);
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              tak
+            </button>
+            <button
+              onClick={() => setOpenModal(false)}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              nie
+            </button>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

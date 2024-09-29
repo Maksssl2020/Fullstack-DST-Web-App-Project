@@ -78,9 +78,6 @@ export const handleCommentUpdate = async (
   commentId,
   commentNewData,
 ) => {
-  console.log(commentId);
-  console.log(postId);
-  console.log(commentNewData);
   try {
     const response = await axios.put(
       `/comments/post/${postId}/edit-comment/${commentId}`,
@@ -92,9 +89,9 @@ export const handleCommentUpdate = async (
   }
 };
 
-export const handleCommentDelete = async (postId, commentId) => {
+export const handleCommentDelete = async (commentId) => {
   try {
-    await axios.delete(`/comments/post/${postId}/delete-comment/${commentId}`);
+    await axios.delete(`/comments/delete-comment/${commentId}`);
   } catch (error) {
     console.log(error);
   }

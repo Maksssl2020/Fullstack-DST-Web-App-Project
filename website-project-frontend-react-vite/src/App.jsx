@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ApplicationLayout from "../src/layout/ApplicationLayout.jsx";
 import Home from "../src/pages/Home.jsx";
 import Account from "../src/pages/Account";
@@ -31,174 +31,108 @@ import PlaceAnOrder from "../src/pages/PlaceAnOrder";
 import PaymentSuccess from "../src/pages/PaymentSuccess";
 import OrderPage from "../src/pages/OrderPage";
 import Orders from "../src/pages/Orders";
-import UserOrdersPage from "../src/pages/UserOrdersPage";
 import AccountActivation from "../src/pages/AccountActivation";
 import UsersRequests from "../src/pages/UsersRequests";
-
-const router = createBrowserRouter([
-  {
-    element: <ApplicationLayout />,
-    children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/home-news/add-post",
-        element: <HomeNewsPostForm />,
-      },
-      {
-        path: "/home-news/edit-post/:id",
-        element: <HomeNewsPostForm isEditing={true} />,
-      },
-      {
-        path: "/account",
-        element: <Account />,
-      },
-      {
-        path: "/support-us",
-        element: <SupportUs />,
-      },
-      {
-        path: "/news",
-        element: <News />,
-      },
-      {
-        path: "/news/add-post",
-        element: <NewsPostForm />,
-      },
-      {
-        path: "/news/edit-post/:id",
-        element: <NewsPostForm />,
-      },
-      {
-        path: "/about-us",
-        element: <AboutUs />,
-      },
-      {
-        path: "/rainbow-shop",
-        element: <RainbowShop />,
-      },
-      {
-        path: `/rainbow-shop/products/:id/:title`,
-        element: <ShopProductPage />,
-      },
-      {
-        path: "/rainbow-shop/cart/:identifier",
-        element: <CartPage />,
-      },
-      {
-        path: "/rainbow-shop/products/admin-options/:type/add",
-        element: <ProductForm />,
-      },
-      {
-        path: "/rainbow-shop/products/admin-options/:type/edit/:id",
-        element: <ProductForm isEditing={true} />,
-      },
-      {
-        path: "/sign-up",
-        element: <SignUp />,
-      },
-      {
-        path: "/activate-account",
-        element: <AccountActivation />,
-      },
-      {
-        path: "/sign-in",
-        element: <SignIn />,
-      },
-      {
-        path: "/forum",
-        element: <Forum />,
-      },
-      {
-        path: "/forum/create-post",
-        element: <ForumPostForm />,
-      },
-      {
-        path: "/forum/edit-post/:id",
-        element: <ForumPostForm isEditing={true} />,
-      },
-      {
-        path: "/contact-us",
-        element: <ContactUs />,
-      },
-      {
-        path: "/article/:id",
-        element: <Article />,
-      },
-      {
-        path: "/article/add-article",
-        element: <ArticleForm />,
-      },
-      {
-        path: "/article/edit-article/:id",
-        element: <ArticleForm isEditing={true} />,
-      },
-      {
-        path: "/events",
-        element: <Events />,
-      },
-      {
-        path: "/events/add-event",
-        element: <EventForm />,
-      },
-      {
-        path: "/users",
-        element: <Users />,
-      },
-      {
-        path: "/users/check-user/:userId",
-        element: <UserAccountAdminView />,
-      },
-      {
-        path: "/users/create-message/:userId/:user",
-        element: <MessageForm />,
-      },
-      {
-        path: "/change-statistics",
-        element: <StatisticsForm />,
-      },
-      {
-        path: "/rainbow-shop/create-discount-code",
-        element: <DiscountCodeForm />,
-      },
-      {
-        path: "/rainbow-shop/discount-codes",
-        element: <DiscountCodes />,
-      },
-      {
-        path: "/rainbow-shop/place-an-order/:cartIdentifier",
-        element: <PlaceAnOrder />,
-      },
-      {
-        path: "/payment-success",
-        element: <PaymentSuccess />,
-      },
-      {
-        path: "/orders",
-        element: <Orders />,
-      },
-      {
-        path: "/orders/:orderId",
-        element: <OrderPage />,
-      },
-      {
-        path: "/my-orders/:userId",
-        element: <UserOrdersPage />,
-      },
-      {
-        path: "/users/requests",
-        element: <UsersRequests />,
-      },
-    ],
-  },
-]);
+import Articles from "./pages/Articles.jsx";
+import ProtectedRouteAdmin from "./router/ProtectedRouteAdmin.jsx";
+import ProtectedRouteAuthenticatedUser from "./router/ProtectedRouteAuthenticatedUser.jsx";
+import UserOrdersPage from "./pages/UserOrdersPage.jsx";
 
 function App() {
   return (
     <AnimatePresence mode={"wait"}>
-      <RouterProvider router={router} />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<ApplicationLayout />}>
+            <Route path={"/"} element={<Home />} />
+            <Route path={"/support-us"} element={<SupportUs />} />
+            <Route path={"/news"} element={<News />} />
+            <Route path={"/about-us"} element={<AboutUs />} />
+            <Route path={"/contact-us"} element={<ContactUs />} />
+            <Route path={"/rainbow-shop"} element={<RainbowShop />} />
+            <Route
+              path={"/rainbow-shop/products/:id/:title"}
+              element={<ShopProductPage />}
+            />
+            <Route path={"/sign-up"} element={<SignUp />} />
+            <Route path={"/sign-in"} element={<SignIn />} />
+            <Route path={"/activate-account"} element={<AccountActivation />} />
+            <Route path={"/forum"} element={<Forum />} />
+            <Route path={"/article/:id"} element={<Article />} />
+            <Route
+              path={"/rainbow-shop/cart/:identifier"}
+              element={<CartPage />}
+            />
+            <Route
+              path={"/rainbow-shop/place-an-order/:cartIdentifier"}
+              element={<PlaceAnOrder />}
+            />
+            <Route path={"/payment-success"} element={<PaymentSuccess />} />
+
+            <Route element={<ProtectedRouteAuthenticatedUser />}>
+              <Route path={"/account"} element={<Account />} />
+              <Route path={"/forum/create-post"} element={<ForumPostForm />} />
+              <Route
+                path={"/forum/edit-post/:id"}
+                element={<ForumPostForm isEditing={true} />}
+              />
+              <Route path={"/events"} element={<Events />} />
+              <Route path={"/my-order/:orderId"} element={<OrderPage />} />
+              <Route path={"/my-orders/:userId"} element={<UserOrdersPage />} />
+            </Route>
+
+            <Route element={<ProtectedRouteAdmin />}>
+              <Route
+                path={"/home-news/add-post"}
+                element={<HomeNewsPostForm />}
+              />
+              <Route
+                path={"/home-news/edit-post/:id"}
+                element={<HomeNewsPostForm isEditing={true} />}
+              />
+              <Route path={"/news/add-post"} element={<NewsPostForm />} />
+              <Route path={"/news/edit-post/:id"} element={<NewsPostForm />} />
+              <Route path={"/account"} element={<Account />} />
+              <Route
+                path={"/rainbow-shop/products/admin-options/:type/add"}
+                element={<ProductForm />}
+              />
+              <Route
+                path={"/rainbow-shop/products/admin-options/:type/edit/:id"}
+                element={<ProductForm isEditing={true} />}
+              />
+              <Route path={"/article/add-article"} element={<ArticleForm />} />
+              <Route
+                path={"/article/edit-article/:id"}
+                element={<ArticleForm isEditing={true} />}
+              />
+              <Route path={"/articles"} element={<Articles />} />
+              <Route path={"/events/add-event"} element={<EventForm />} />
+              <Route path={"/users"} element={<Users />} />
+              <Route
+                path={"/users/check-user/:userId"}
+                element={<UserAccountAdminView />}
+              />
+              <Route
+                path={"/users/create-message/:userId/:user"}
+                element={<MessageForm />}
+              />
+              <Route path={"/change-statistics"} element={<StatisticsForm />} />
+              <Route
+                path={"/rainbow-shop/create-discount-code"}
+                element={<DiscountCodeForm />}
+              />
+              <Route
+                path={"/rainbow-shop/discount-codes"}
+                element={<DiscountCodes />}
+              />
+              <Route path={"/orders"} element={<Orders />} />
+              <Route path={"/orders/:orderId"} element={<OrderPage />} />
+              <Route path={"/users/requests"} element={<UsersRequests />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </AnimatePresence>
   );
 }

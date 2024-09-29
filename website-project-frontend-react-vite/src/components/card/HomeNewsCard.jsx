@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { handleHomeNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling.js";

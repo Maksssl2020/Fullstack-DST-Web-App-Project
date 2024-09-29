@@ -10,7 +10,7 @@ import {
   handleAddUserToTheEvent,
 } from "../../helpers/api-integration/EventsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const EventCard = ({ eventData, number }) => {
   const queryClient = useQueryClient();

@@ -1,27 +1,35 @@
 package com.dst.websiteprojectbackendspring.authentication;
 
 import com.dst.websiteprojectbackendspring.model.token.Token;
+import com.dst.websiteprojectbackendspring.model.token.TokenType;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.model.user.UserRole;
-import com.dst.websiteprojectbackendspring.repository.TokenRepository;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
 import com.dst.websiteprojectbackendspring.security.jwt.JwtService;
 import com.dst.websiteprojectbackendspring.service.email.EmailServiceImpl;
 import com.dst.websiteprojectbackendspring.service.email.EmailTemplateName;
+import com.dst.websiteprojectbackendspring.service.token.TokenService;
+import com.dst.websiteprojectbackendspring.service.token.TokenServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 @Slf4j
@@ -34,7 +42,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final EmailServiceImpl emailService;
-    private final TokenRepository tokenRepository;
+    private final TokenService tokenService;
 
 
     @Transactional
@@ -73,16 +81,11 @@ public class AuthenticationService {
     }
 
     private String generateActivationToken(User user) {
-        String generateActivationCode = generateActivationCode();
-        Token token = Token.builder()
-                .token(generateActivationCode)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusMinutes(20))
-                .user(user)
-                .build();
+        String generatedActivationCode = generateActivationCode();
+        Token token = TokenServiceImpl.createToken(generatedActivationCode, TokenType.ACCOUNT_ACTIVATION, user);
 
-        tokenRepository.save(token);
-        return generateActivationCode;
+        tokenService.save(token);
+        return generatedActivationCode;
     }
 
     private String generateActivationCode() {
@@ -111,8 +114,17 @@ public class AuthenticationService {
         claims.put("username", user.getUsername());
         claims.put("accountCreationDate", user.getAccountCreationDate());
         String jwtToken = jwtService.generateJwtToken(claims, user);
+        String refreshToken = jwtService.generateRefreshJwtToken(user);
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        revokeAllUserTokens(user.getId());
+        Token token = TokenServiceImpl.createToken(jwtToken, TokenType.USER_AUTHENTICATION, user);
+        tokenService.save(token);
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .userRole(user.getRole().toString())
+                .build();
     }
 
     @Transactional
@@ -121,7 +133,7 @@ public class AuthenticationService {
         User foundUser;
 
         try {
-            foundToken = tokenRepository.findByToken(activationCode).orElseThrow(ChangeSetPersister.NotFoundException::new);
+            foundToken = tokenService.findTokenByToken(activationCode);
         } catch (ChangeSetPersister.NotFoundException e) {
             throw new RuntimeException("There is no code like entered!");
         }
@@ -141,6 +153,51 @@ public class AuthenticationService {
         userRepository.save(foundUser);
 
         foundToken.setExpiresAt(LocalDateTime.now());
-        tokenRepository.save(foundToken);
+        tokenService.save(foundToken);
+    }
+
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String refreshToken;
+        String username;
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return;
+        }
+
+        refreshToken = authHeader.substring(7);
+        username = jwtService.extractUsername(refreshToken);
+
+        if (username != null) {
+            User user = userRepository.findByUsername(username).orElseThrow();
+
+            if (jwtService.isTokenValid(refreshToken, user)) {
+                String accessToken = jwtService.generateJwtToken(user);
+
+                revokeAllUserTokens(user.getId());
+                Token token = TokenServiceImpl.createToken(accessToken, TokenType.USER_AUTHENTICATION, user);
+                tokenService.save(token);
+
+                AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .userRole(user.getRole().toString())
+                        .build();
+
+                new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
+            }
+        }
+    }
+
+    private void revokeAllUserTokens(Long userId) {
+        List<Token> validUserTokens = tokenService.findAllValidUserAuthenticationTokens(userId);
+
+        if (!validUserTokens.isEmpty()) {
+            validUserTokens.forEach(token -> {
+                token.setValidatedAt(LocalDateTime.now());
+            });
+
+            tokenService.saveAll(validUserTokens);
+        }
     }
 }

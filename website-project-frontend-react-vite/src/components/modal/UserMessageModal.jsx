@@ -6,7 +6,7 @@ import {
   handleUpdateUserData,
 } from "../../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import toast from "react-hot-toast";
 
 const UserMessageModal = ({ messageData }) => {

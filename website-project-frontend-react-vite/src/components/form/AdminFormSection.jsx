@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";

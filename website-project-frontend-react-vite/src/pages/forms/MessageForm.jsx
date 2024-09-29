@@ -3,7 +3,7 @@ import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { handleSendUserMessage } from "../../helpers/api-integration/UserDataHandling.js";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";

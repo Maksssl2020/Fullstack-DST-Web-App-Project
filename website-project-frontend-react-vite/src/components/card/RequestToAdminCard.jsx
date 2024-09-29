@@ -12,7 +12,7 @@ import {
 } from "../../helpers/api-integration/RequestsToAdminHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import toast from "react-hot-toast";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const RequestToAdminCard = ({ data }) => {
   const { username } = useContext(AuthContext);

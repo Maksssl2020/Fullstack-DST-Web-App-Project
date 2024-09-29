@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const DrawerList = () => {
   const { role, isAuthenticated, userId } = useContext(AuthContext);
@@ -71,6 +71,11 @@ const DrawerList = () => {
           <Link to={"/users/requests"}>
             <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
               {"Prośby Użytkowników"}
+            </li>
+          </Link>
+          <Link to={"/articles"}>
+            <li className="py-2 rounded-lg bg-custom-gray-100 w-full px-8">
+              {"Artykuły"}
             </li>
           </Link>
         </>

@@ -1,12 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const MainBannerWithLogo = ({
   mainContainerStyling,
   imageContainerStyling,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div
-      className={"ml-6 flex items-center justify-center gap-4 rounded-full bg-custom-gray-100 ".concat(
+      onClick={() => navigate("/")}
+      className={"ml-6 flex items-center justify-center hover:cursor-pointer gap-4 rounded-full bg-custom-gray-100 ".concat(
         mainContainerStyling,
       )}
     >

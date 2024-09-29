@@ -5,7 +5,7 @@ import AppleIcon from "./icons/AppleIcon.jsx";
 import EmiailIcon from "./icons/EmiailIcon.jsx";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 
 const RightDrawer = ({ isOpen, closeFunction }) => {
   const { logout, isAuthenticated } = useContext(AuthContext);

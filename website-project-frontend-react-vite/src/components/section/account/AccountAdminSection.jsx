@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../../context/AuthProvider.jsx";
 import { getRole } from "../../../helpers/ApiDataTranslator.js";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm.jsx";
 import { useNavigate } from "react-router-dom";

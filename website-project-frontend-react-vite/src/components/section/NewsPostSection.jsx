@@ -7,19 +7,14 @@ import {
   getRandomBackgroundColor,
 } from "../../helpers/NewsPostStyling.js";
 import Pagination from "../pagination/Pagination.jsx";
-import { useQuery } from "react-query";
-import { fetchAllNewsPostsData } from "../../helpers/api-integration/NewsPostsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useNewsPosts from "../../hooks/queries/useNewsPosts.js";
 
 const NewsPostSection = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const { newsPosts, fetchingNewsPosts } = useNewsPosts(currentPage);
 
-  const { data: postsData, isLoading: fetchingPostsData } = useQuery(
-    ["newsSectionPostsData", currentPage],
-    () => fetchAllNewsPostsData(currentPage),
-  );
-
-  if (fetchingPostsData) {
+  if (fetchingNewsPosts) {
     return <Spinner />;
   }
 
@@ -30,7 +25,7 @@ const NewsPostSection = () => {
       </div>
       <div className="w-full relative flex flex-col justify-center bg-custom-gray-200 mt-4 p-4 h-auto">
         <Masonry columns={{ xl: 4, lg: 3, md: 2 }} spacing={5}>
-          {postsData.content.map((data, index) => (
+          {newsPosts.content.map((data, index) => (
             <NewsPostCard
               key={index}
               height={getHeightForPost(index)}
@@ -42,7 +37,7 @@ const NewsPostSection = () => {
       </div>
       <div>
         <Pagination
-          totalPages={postsData.totalPages}
+          totalPages={newsPosts.totalPages}
           currentPage={currentPage}
           setCurrentPageFunc={setCurrentPage}
         />

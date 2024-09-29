@@ -46,6 +46,7 @@ public class ForumPostServiceImpl implements ForumPostService {
         Page<ForumPost> allPosts = forumPostRepository.findAll(pageRequest);
         List<ForumPostDTO> sortedPosts = allPosts.stream()
                 .map(forumPostDTOMapper)
+                .sorted(Comparator.comparing(ForumPostDTO::id).reversed())
                 .collect(Collectors.toList());
 
 

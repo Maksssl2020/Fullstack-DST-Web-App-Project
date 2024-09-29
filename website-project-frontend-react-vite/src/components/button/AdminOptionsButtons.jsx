@@ -9,6 +9,8 @@ const AdminOptionsButtons = ({
   editButtonLink,
   deleteFunction,
   modalSubtitle,
+  buttonSize = undefined,
+  iconSize = undefined,
 }) => {
   const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
@@ -22,9 +24,11 @@ const AdminOptionsButtons = ({
             event.stopPropagation();
             navigate(editButtonLink);
           }}
-          className="border-2 border-black max-xl:size-12 size-14 bg-white rounded-full flex items-center justify-center"
+          className={`border-2 border-black max-xl:size-12 bg-white rounded-xl flex items-center justify-center ${buttonSize ? buttonSize : "size-14"}`}
         >
-          <EditIcon size={"max-xl:size-8 xl:size-10"} />
+          <EditIcon
+            size={`max-xl:size-8 ${iconSize ? iconSize : "xl:size-10"}`}
+          />
         </motion.button>
         <motion.button
           whileHover={{ scale: 1.1 }}
@@ -32,9 +36,11 @@ const AdminOptionsButtons = ({
             event.stopPropagation();
             setOpenModal(true);
           }}
-          className="border-2 border-black max-xl:size-12 size-14 bg-white rounded-full flex items-center justify-center"
+          className={`border-2 border-black max-xl:size-12 bg-white rounded-xl flex items-center justify-center ${buttonSize ? buttonSize : "size-14"}`}
         >
-          <DeleteIcon size={"max-xl:size-8 xl:size-10"} />
+          <DeleteIcon
+            size={`max-xl:size-8 ${iconSize ? iconSize : "xl:size-10"}`}
+          />
         </motion.button>
       </div>
 

@@ -1,69 +1,38 @@
 import React, { useContext, useState } from "react";
 import UserIcon from "../header/icons/UserIcon.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import EditIcon from "../../icons/EditIcon.jsx";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
 import AcceptIcon from "../../icons/AcceptIcon.jsx";
-import DeleteWarningModal from "../modal/DeleteWarningModal.jsx";
-import {
-  handleCommentDelete,
-  handleCommentUpdate,
-} from "../../helpers/api-integration/ForumPostsHandling.js";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import Spinner from "../universal/Spinner.jsx";
-import { fetchUserDisplayData } from "../../helpers/api-integration/UserDataHandling.js";
+import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
+import useUpdateForumPostCommentMutation from "../../hooks/mutations/useUpdateForumPostCommentMutation.js";
+import useDeleteForumPostCommentMutation from "../../hooks/mutations/useDeleteForumPostCommentMutation.js";
+import DefaultModal from "../modal/DefaultModal.jsx";
+import { AnimatePresence } from "framer-motion";
 
 const Comment = ({ commentData, postId }) => {
   const { username, role } = useContext(AuthContext);
-  const queryClient = useQueryClient();
   const { register, handleSubmit, getValues, formState } = useForm();
   const { id, content, authorId } = commentData;
   const [isEditing, setIsEditing] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-
-  console.log(authorId);
-  console.log(commentData);
-
-  const { data: userDisplayData, isLoading: fetchingUserDisplayData } =
-    useQuery(["forumPostCommentsUserAvatar", authorId], () =>
-      fetchUserDisplayData(authorId),
-    );
-
-  const { mutate: updateComment, isLoading: updatingComment } = useMutation({
-    mutationFn: () =>
-      handleCommentUpdate(postId, id, {
-        authorId: authorId,
-        content: getValues().commentNewContent,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(`forumPostComments${postId}`);
-      setIsEditing(false);
-    },
-    onError: (error) => console.log(error),
-  });
-
-  const { mutate: deleteComment, isLoading: deletingComment } = useMutation({
-    mutationFn: () => handleCommentDelete(postId, id),
-    onSuccess: () => {
-      queryClient.invalidateQueries(`forumPostComments${postId}`);
-    },
-    onError: (error) => console.log(error),
-  });
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(authorId);
+  const { updateForumPostComment, updatingForumPostComment } =
+    useUpdateForumPostCommentMutation(postId, id, () => setIsEditing(false));
+  const { deleteForumPostComment, deletingForumPostComment } =
+    useDeleteForumPostCommentMutation(postId, id);
 
   const handleEditClick = () => {
     setIsEditing(true);
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  if (updatingComment || fetchingUserDisplayData || deletingComment) {
+  if (
+    updatingForumPostComment ||
+    fetchingUserDisplay ||
+    deletingForumPostComment
+  ) {
     return <Spinner />;
   }
 
@@ -71,17 +40,17 @@ const Comment = ({ commentData, postId }) => {
     <div className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200">
       <div className="w-[100px] h-[115px] gap-2 border-2 flex flex-col justify-center items-center border-custom-blue-400 rounded-2xl">
         <p className="size-12 rounded-full bg-white flex items-center justify-center">
-          {userDisplayData ? (
+          {userDisplay ? (
             <img
               className="rounded-full inset-0 object-cover size-full"
-              src={`data:image/png;base64,${userDisplayData.avatar}`}
+              src={`data:image/png;base64,${userDisplay.avatar}`}
               alt={authorId}
             />
           ) : (
             <UserIcon size={"size-8"} />
           )}
         </p>
-        <p className="font-bold text-sm">{userDisplayData.username}</p>
+        <p className="font-bold text-sm">{userDisplay.username}</p>
       </div>
       <textarea
         defaultValue={content}
@@ -92,7 +61,7 @@ const Comment = ({ commentData, postId }) => {
         })}
       ></textarea>
       <div className="flex flex-col gap-2">
-        {username === userDisplayData.username && (
+        {username === userDisplay.username && (
           <button
             onClick={handleEditClick}
             className="size-8 rounded-full bg-white flex items-center justify-center"
@@ -100,9 +69,9 @@ const Comment = ({ commentData, postId }) => {
             <EditIcon size={"size-6"} />
           </button>
         )}
-        {(username === userDisplayData.username || role === "ADMIN") && (
+        {(username === userDisplay.username || role === "ADMIN") && (
           <button
-            onClick={handleOpenModal}
+            onClick={() => setOpenModal(true)}
             className="size-8 rounded-full bg-white flex items-center justify-center"
           >
             <DeleteIcon size={"size-6"} />
@@ -110,21 +79,39 @@ const Comment = ({ commentData, postId }) => {
         )}
         {isEditing && (
           <button
-            onClick={handleSubmit(updateComment)}
+            onClick={handleSubmit((data) =>
+              updateForumPostComment(data.commentNewContent),
+            )}
             className="size-8 text-white rounded-full bg-custom-blue-500 flex items-center justify-center"
           >
             <AcceptIcon size={"size-6"} />
           </button>
         )}
       </div>
-      {openModal && (
-        <DeleteWarningModal
-          itemId={postId}
-          secondItemId={id}
-          handleDeleteFunc={deleteComment}
-          onClose={handleCloseModal}
-        />
-      )}
+      <AnimatePresence>
+        {openModal && (
+          <DefaultModal
+            title={"Uwaga!"}
+            subtitle={"Czy na pewno chcesz usunąć komentarz?"}
+          >
+            <button
+              onClick={() => {
+                deleteForumPostComment();
+                setOpenModal(false);
+              }}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              tak
+            </button>
+            <button
+              onClick={() => setOpenModal(false)}
+              className="w-[50%] uppercase font-bold text-xl text-white h-[50px] flex items-center justify-center border-2 border-black bg-custom-orange-200 py-1 rounded-full"
+            >
+              nie
+            </button>
+          </DefaultModal>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

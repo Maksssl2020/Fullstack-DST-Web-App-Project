@@ -1,35 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ForumPostCard from "../card/ForumPostCard.jsx";
 import Pagination from "../pagination/Pagination.jsx";
-import { useQuery } from "react-query";
-import { fetchPostsData } from "../../helpers/api-integration/ForumPostsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useForumPosts from "../../hooks/queries/useForumPosts.js";
 
 const ForumPostSection = () => {
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(() => {
+    const savedCurrentPage = localStorage.getItem("currentForumPage");
 
-  const { data: postsData, isLoading: loadingPosts } = useQuery(
-    ["forumPostsData", currentPage],
-    () => fetchPostsData(currentPage),
-  );
+    return savedCurrentPage ? Number(savedCurrentPage) : 0;
+  });
+  const { forumPosts, fetchingForumPosts, refetch } =
+    useForumPosts(currentPage);
 
-  if (loadingPosts) {
+  useEffect(() => {
+    refetch();
+    localStorage.setItem("currentForumPage", currentPage);
+  }, [currentPage, refetch]);
+
+  if (fetchingForumPosts) {
     return <Spinner />;
   }
-
-  console.log([postsData]);
 
   return (
     <>
       <ul className="w-full flex flex-col">
-        {postsData.content.map((post, idx) => (
-          <li className="w-full flex justify-center" key={idx}>
+        {forumPosts.content.map((post) => (
+          <li className="w-full flex justify-center" key={post.id}>
             <ForumPostCard postData={post} />
           </li>
         ))}
       </ul>
       <Pagination
-        totalPages={postsData.totalPages}
+        totalPages={forumPosts.totalPages}
         currentPage={currentPage}
         setCurrentPageFunc={setCurrentPage}
       />

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import DeleteWarningModal from "../modal/DeleteWarningModal.jsx";
 import EditIcon from "../../icons/EditIcon.jsx";

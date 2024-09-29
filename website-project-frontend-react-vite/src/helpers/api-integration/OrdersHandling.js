@@ -1,8 +1,8 @@
 import axios from "../AxiosConfig.js";
 
-export const fetchOrderByOrderId = async (orderId) => {
+export const fetchOrderByOrderId = async (userId) => {
   try {
-    const response = await axios.get(`/orders/${orderId}`);
+    const response = await axios.get(`/user-orders/${userId}`);
     return response.data;
   } catch (error) {
     console.log(error);

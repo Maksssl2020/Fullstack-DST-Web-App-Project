@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
-import { AuthContext } from "../../helpers/provider/AuthProvider.jsx";
+import { AuthContext } from "../../context/AuthProvider.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import { useMutation, useQuery, useQueryClient } from "react-query";
