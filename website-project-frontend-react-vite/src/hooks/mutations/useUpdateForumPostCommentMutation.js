@@ -16,14 +16,37 @@ function UseUpdateForumPostCommentMutation(
       handleCommentUpdate(postId, commentId, {
         commentContent: commentContent,
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries(`forumPostComments${postId}`);
+    onMutate: async (newComment) => {
+      await queryClient.cancelQueries([`forumPostComments${postId}`]);
+      const previousComments = queryClient.getQueriesData([
+        `forumPostComments${postId}`,
+      ]);
 
+      queryClient.setQueriesData([`forumPostComments${postId}`], (old = []) => {
+        return old.map((comment) =>
+          comment.id === commentId
+            ? { ...comment, commentContent: newComment }
+            : comment,
+        );
+      });
+
+      return { previousComments };
+    },
+    onSuccess: () => {
       if (onSuccessCallback) {
         onSuccessCallback();
       }
     },
-    onError: (error) => console.log(error),
+    onError: (error, newComment, context) => {
+      queryClient.setQueriesData(
+        [`forumPostComments${postId}`],
+        context.previousComments,
+      );
+      console.log(error);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(`forumPostComments${postId}`);
+    },
   });
 
   return { updateForumPostComment, updatingForumPostComment };

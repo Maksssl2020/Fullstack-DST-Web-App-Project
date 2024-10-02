@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../context/AuthProvider.jsx";
+import React, { useEffect } from "react";
 import { getRole } from "../../../helpers/ApiDataTranslator.js";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm.jsx";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import AccountSectionUserPhoto from "./AccountSectionUserPhoto.jsx";
 import DefaultModal from "../../modal/DefaultModal.jsx";
 import CloseIcon from "../../drawer/icons/CloseIcon.jsx";
 import FormItem from "../../form/FormItem.jsx";
+import useAuthentication from "../../../hooks/queries/useAuthentication.js";
 
 const AccountAdminSection = ({
   userData,
@@ -16,7 +16,7 @@ const AccountAdminSection = ({
   watch,
   errors,
 }) => {
-  const { role, accountCreationDate } = useContext(AuthContext);
+  const { role, accountCreationDate } = useAuthentication();
   const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
   const manageShopData = [

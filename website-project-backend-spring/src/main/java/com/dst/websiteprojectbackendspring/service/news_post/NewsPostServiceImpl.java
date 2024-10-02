@@ -3,6 +3,7 @@ package com.dst.websiteprojectbackendspring.service.news_post;
 import com.dst.websiteprojectbackendspring.model.news_post.NewsPost;
 import com.dst.websiteprojectbackendspring.repository.NewsPostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NewsPostServiceImpl implements NewsPostService {
@@ -55,5 +57,11 @@ public class NewsPostServiceImpl implements NewsPostService {
     @Override
     public void delete(Long id) {
         newsPostRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByMainArticleId(Long mainArticleId) {
+        log.error("DELETING!");
+        newsPostRepository.deleteByMainArticleId(mainArticleId);
     }
 }

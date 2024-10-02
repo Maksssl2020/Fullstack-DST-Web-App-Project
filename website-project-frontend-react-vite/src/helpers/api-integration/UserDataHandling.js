@@ -57,11 +57,13 @@ export const fetchUserById = async (userId) => {
 };
 
 export const fetchUserDisplayData = async (userId) => {
-  try {
-    const response = await axios.get(`/users/${userId}/display-data`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
+  if (userId) {
+    try {
+      const response = await axios.get(`/users/${userId}/display-data`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
   }
 };
 

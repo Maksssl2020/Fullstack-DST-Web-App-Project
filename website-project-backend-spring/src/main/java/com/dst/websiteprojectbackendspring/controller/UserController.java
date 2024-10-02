@@ -2,7 +2,6 @@ package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
 import com.dst.websiteprojectbackendspring.dto.user.UserDisplayDataDTO;
-import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -32,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<User> getUser(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(userService.getUserById(userId));
     }
 

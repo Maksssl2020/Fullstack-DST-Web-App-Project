@@ -2,21 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import CloseIcon from "./icons/CloseIcon.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
-import { useQuery } from "react-query";
-import {
-  fetchShoppingCartByIdentifier,
-  getShoppingCartItems,
-} from "../../helpers/api-integration/ShoppingCartHandling.js";
 import CartItemCard from "../card/CartItemCard.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AnimatePresence, motion } from "framer-motion";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
+import useCart from "../../hooks/queries/useCart.js";
+import useCartItems from "../../hooks/queries/useCartItems.js";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {
   const { userId, isAuthenticated } = useContext(AuthContext);
   const [cartId, setCartId] = useState();
   const [cartIdentifier, setCartIdentifier] = useState("");
+  const { cart, fetchingCart } = useCart(cartIdentifier);
+  const { cartItems, fetchingCartItems } = useCartItems(cartId);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -26,34 +25,16 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
     }
   }, [isAuthenticated, userId]);
 
-  const { data: customerCart, isLoading: searchingCart } = useQuery(
-    ["authenticatedCustomerCart", cartIdentifier, isAuthenticated],
-    () => {
-      if (cartIdentifier) {
-        return fetchShoppingCartByIdentifier(cartIdentifier, isAuthenticated);
-      }
-    },
-  );
-
   useEffect(() => {
-    if (customerCart && !searchingCart) {
-      setCartId(customerCart.id);
+    if (cart && !fetchingCart) {
+      setCartId(cart.id);
     }
-  }, [customerCart, searchingCart]);
+  }, [cart, fetchingCart]);
 
-  const { data: cartItems, isLoading: searchingCartItems } = useQuery(
-    ["cartItems", cartId],
-    () => {
-      if (cartId) {
-        return getShoppingCartItems(cartId);
-      }
-    },
-  );
-
-  console.log(customerCart);
+  console.log(cart);
   console.log(cartItems);
 
-  if (searchingCart || searchingCartItems) {
+  if (fetchingCart || fetchingCartItems) {
     return <Spinner />;
   }
 
@@ -115,7 +96,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                             transition={{ type: "just", duration: 0.3 }}
                             className={`w-full ${index === 0 && "border-t-4 border-black"}`}
                           >
-                            <CartItemCard cartItemData={data} />
+                            <CartItemCard cartItemData={data} cartId={cartId} />
                           </motion.li>
                         ))}
                       </motion.ul>
@@ -135,7 +116,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                 {cartItems && cartItems.length > 0 && (
                   <div className="w-full font-semibold h-auto flex text-lg justify-between mt-4 px-8">
                     <p>Kwota:</p>
-                    <p>{formatCurrency(customerCart.totalPrice)}</p>
+                    <p>{formatCurrency(cart.totalPrice)}</p>
                   </div>
                 )}
               </div>

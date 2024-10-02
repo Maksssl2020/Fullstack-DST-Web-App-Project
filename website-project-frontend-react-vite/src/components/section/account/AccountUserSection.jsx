@@ -1,26 +1,25 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import AccountBasicDataForm from "../../form/AccountBasicDataForm.jsx";
 import { getRole } from "../../../helpers/ApiDataTranslator.js";
-import { AuthContext } from "../../../context/AuthProvider.jsx";
 import AccountSectionUserPhoto from "./AccountSectionUserPhoto.jsx";
-import AddingPhotoModal from "../../modal/AddingPhotoModal.jsx";
 import { useQuery } from "react-query";
 import { fetchUserNotifications } from "../../../helpers/api-integration/NotificationsHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import NotificationCard from "../../card/NotificationCard.jsx";
-import { useForm } from "react-hook-form";
 import DefaultModal from "../../modal/DefaultModal.jsx";
 import CloseIcon from "../../drawer/icons/CloseIcon.jsx";
 import FormItem from "../../form/FormItem.jsx";
+import useAuthentication from "../../../hooks/queries/useAuthentication.js";
 
 const AccountUserSection = ({
   userData,
+  userDisplayData,
   register,
   handleImagesChange,
   watch,
   errors,
 }) => {
-  const { userId, role, accountCreationDate } = useContext(AuthContext);
+  const { userId, role, accountCreationDate } = useAuthentication();
   const [fullName, setFullName] = React.useState("");
   const [openModal, setOpenModal] = React.useState(false);
   const [selectedImage, setSelectedImage] = React.useState(null);
@@ -61,13 +60,13 @@ const AccountUserSection = ({
   const imagesData = [
     {
       title: "Zdjęcie identyfikacyjne:",
-      imageSrc: userData.identifyPhoto,
+      imageSrc: userDisplayData.identifyPhoto,
       bottomDataTitle: "Data urodzenia:",
       bottomData: userData.dateOfBirth,
     },
     {
       title: "Zdjęcie profilowe:",
-      imageSrc: userData.avatar,
+      imageSrc: userDisplayData.avatar,
       bottomDataTitle: "Status konta:",
       bottomData: getRole(role),
     },

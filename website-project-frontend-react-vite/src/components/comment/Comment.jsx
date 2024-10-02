@@ -12,7 +12,7 @@ import useDeleteForumPostCommentMutation from "../../hooks/mutations/useDeleteFo
 import DefaultModal from "../modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
 
-const Comment = ({ commentData, postId }) => {
+const Comment = ({ commentData, postId, key }) => {
   const { username, role } = useContext(AuthContext);
   const { register, handleSubmit, getValues, formState } = useForm();
   const { id, content, authorId } = commentData;
@@ -31,13 +31,17 @@ const Comment = ({ commentData, postId }) => {
   if (
     updatingForumPostComment ||
     fetchingUserDisplay ||
-    deletingForumPostComment
+    deletingForumPostComment ||
+    !userDisplay
   ) {
     return <Spinner />;
   }
 
   return (
-    <div className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200">
+    <div
+      key={key}
+      className="w-full p-4 h-[150px] justify-between flex items-center rounded-2xl bg-custom-gray-200"
+    >
       <div className="w-[100px] h-[115px] gap-2 border-2 flex flex-col justify-center items-center border-custom-blue-400 rounded-2xl">
         <p className="size-12 rounded-full bg-white flex items-center justify-center">
           {userDisplay ? (

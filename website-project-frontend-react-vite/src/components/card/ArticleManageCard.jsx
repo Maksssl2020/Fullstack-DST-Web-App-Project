@@ -1,6 +1,4 @@
 import React from "react";
-import EditIcon from "../../icons/EditIcon.jsx";
-import DeleteIcon from "../../icons/DeleteIcon.jsx";
 import { DateParser } from "../../helpers/Date.js";
 import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";
 import { useMutation } from "react-query";
@@ -8,19 +6,16 @@ import { handleDeleteArticle } from "../../helpers/api-integration/ArticleDataHa
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../universal/Spinner.jsx";
+import useDeleteArticleMutation from "../../hooks/mutations/useDeleteArticleMutation.js";
 
 const ArticleManageCard = ({ articleData }) => {
   const navigate = useNavigate();
   const { id, author, title, creationDate } = articleData;
-
-  const { mutate: deleteArticle, isLoading: deletingArticle } = useMutation(
-    [`deleteArticle${id}`, id],
-    () => handleDeleteArticle(id),
-    {
-      onSuccess: () => {
-        toast.success("Usunięto artykuł!");
-        navigate(-1);
-      },
+  const { deleteArticle, deletingArticle } = useDeleteArticleMutation(
+    id,
+    () => {
+      toast.success("Usunięto artykuł!");
+      navigate(-1);
     },
   );
 

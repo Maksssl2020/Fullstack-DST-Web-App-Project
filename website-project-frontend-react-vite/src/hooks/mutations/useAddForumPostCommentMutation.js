@@ -10,20 +10,42 @@ function UseAddForumPostCommentMutation(
 
   const { mutate: addForumPostComment, isLoading: addingForumPostComment } =
     useMutation({
-      mutationKey: "addingForumPostComment",
+      mutationKey: ["addingForumPostComment", forumPostId],
       mutationFn: (content) =>
         handleAddComment(forumPostId, {
           content: content,
           authorId: userId,
         }),
-      onSuccess: () => {
-        queryClient.invalidateQueries(`forumPostComments${forumPostId}`);
+      onMutate: async (newComment) => {
+        await queryClient.cancelQueries([`forumPostComments${forumPostId}`]);
+        const previousCommentsData = queryClient.getQueriesData([
+          `forumPostComments${forumPostId}`,
+        ]);
 
+        queryClient.setQueriesData(
+          [`forumPostComments${forumPostId}`],
+          (old) => {
+            return [...old, { id: old?.id + 1 || 1, content: newComment }];
+          },
+        );
+
+        return { previousCommentsData };
+      },
+      onSuccess: () => {
         if (onSuccessCallback) {
           onSuccessCallback();
         }
       },
-      onError: (error) => console.log(error),
+      onError: (error, newComment, context) => {
+        queryClient.setQueriesData(
+          [`forumPostComments${forumPostId}`],
+          context.previousCommentsData,
+        );
+        console.log(error);
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries([`forumPostComments${forumPostId}`]);
+      },
     });
 
   return { addForumPostComment, addingForumPostComment };

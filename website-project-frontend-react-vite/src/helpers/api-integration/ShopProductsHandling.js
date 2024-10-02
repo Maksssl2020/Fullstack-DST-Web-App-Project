@@ -58,7 +58,7 @@ export const fetchProductImages = async (productId) => {
   }
 };
 
-export const fetchAllProductsCategories = async () => {
+export const fetchProductsOfEachCategory = async () => {
   try {
     const response = await axios.get("/products/categories");
     return response.data;

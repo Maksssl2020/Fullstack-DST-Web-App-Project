@@ -4,5 +4,16 @@ import com.dst.websiteprojectbackendspring.model.user.UserRole;
 
 import java.time.LocalDate;
 
-public record UserDTO(Long id, String firstName, String lastName, String username, String email, UserRole role, String phoneNumber, LocalDate accountCreationDate, LocalDate dateOfBirth,boolean accountLocked) {
+public record UserDTO(
+        Long id,
+        String firstName,
+        String lastName,
+        String username,
+        String email,
+        UserRole role,
+        String phoneNumber,
+        LocalDate accountCreationDate,
+        LocalDate dateOfBirth,
+        boolean accountLocked
+) {
 }

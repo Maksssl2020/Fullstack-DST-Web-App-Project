@@ -57,8 +57,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User getUserById(Long userId) throws ChangeSetPersister.NotFoundException {
-        return userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public UserDTO getUserById(Long userId) throws ChangeSetPersister.NotFoundException {
+        return userRepository.findById(userId).map(userDTOMapper).orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     @Override
@@ -104,13 +104,19 @@ public class UserServiceImpl implements UserService{
         User foundUser = userRepository.findById(userId).orElseThrow(ChangeSetPersister.NotFoundException::new);
         String username = foundUser.getUsername();
         String avatar = null;
+        String identifyPhoto = null;
 
         if (foundUser.getAvatar() != null) {
             byte[] userAvatar = foundUser.getAvatar();
             avatar =  Base64.getEncoder().encodeToString(userAvatar);
         }
 
-        return new UserDisplayDataDTO(username, avatar);
+        if (foundUser.getIdentifyPhoto() != null) {
+            byte[] userIdentifyPhoto = foundUser.getIdentifyPhoto();
+            identifyPhoto =  Base64.getEncoder().encodeToString(userIdentifyPhoto);
+        }
+
+        return new UserDisplayDataDTO(username, avatar, identifyPhoto);
     }
 
     @Override

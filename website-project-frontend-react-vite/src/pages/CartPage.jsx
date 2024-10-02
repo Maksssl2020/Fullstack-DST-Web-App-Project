@@ -22,6 +22,7 @@ import {
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes.js";
 import CartItemsTable from "../components/table/CartItemsTable.jsx";
 import { isDiscountCodeValid } from "../helpers/DiscountCodesHandler.js";
+import useCart from "../hooks/queries/useCart.js";
 
 const CartPage = () => {
   const { userId, isAuthenticated } = useContext(AuthContext);
@@ -34,18 +35,14 @@ const CartPage = () => {
     formState: { errors },
   } = useForm();
   const queryClient = useQueryClient();
-
-  const { data: cartData, isLoading: fetchingCartData } = useQuery(
-    ["userCartData", identifier, isAuthenticated],
-    () => fetchShoppingCartByIdentifier(identifier, isAuthenticated),
-  );
+  const { cart, fetchingCart } = useCart(identifier);
 
   const {
     mutate: deleteAllItemsFromCart,
     isLoading: deletingAllItemsFromCart,
   } = useMutation({
-    mutationKey: ["deleteAllItemsFromCart", cartData?.id],
-    mutationFn: () => deleteAllProductsFromCart(cartData?.id),
+    mutationKey: ["deleteAllItemsFromCart", cart?.id],
+    mutationFn: () => deleteAllProductsFromCart(cart?.id),
     onSuccess: () => {
       queryClient.invalidateQueries("cartPageItems");
       queryClient.invalidateQueries("amountOfItemsInCart");
@@ -73,12 +70,12 @@ const CartPage = () => {
         if (
           isDiscountCodeValid(
             discountCodeData,
-            cartData.totalPrice,
+            cart.totalPrice,
             isAuthenticated,
           )
         ) {
           return handleAssignDiscountCodeToCart(
-            cartData.cartIdentifier,
+            cart.cartIdentifier,
             getValues().discountCode,
           );
         }
@@ -96,7 +93,7 @@ const CartPage = () => {
     });
 
   if (
-    fetchingCartData ||
+    fetchingCart ||
     deletingAllItemsFromCart ||
     fetchingDiscountCodeData ||
     assigningDiscountCode
@@ -104,7 +101,7 @@ const CartPage = () => {
     return <Spinner />;
   }
 
-  console.log(cartData);
+  console.log(cart);
   console.log(userId);
 
   return (
@@ -118,7 +115,7 @@ const CartPage = () => {
             </div>
             <p>Strefa wysyłkowa dopasowana do klienta: &nbsp; "Polska"</p>
           </div>
-          <CartItemsTable cartId={cartData?.id} />
+          <CartItemsTable cartId={cart?.id} />
           <div className="w-[90%] mt-12 flex justify-between">
             <ButtonWithLink
               link={"/rainbow-shop"}
@@ -184,25 +181,25 @@ const CartPage = () => {
                 </div>
                 <div className="ml-auto col-span-1 uppercase grid grid-rows-3 gap-4">
                   <p className="row-span-1">
-                    {formatCurrency(cartData.totalPrice)}
+                    {formatCurrency(cart.totalPrice)}
                   </p>
-                  {cartData.discountCode ? (
-                    <p className="row-span-1">{`${cartData.discountCode.discountType === "FIXED_AMOUNT" ? formatCurrency(cartData.discountCode.discountValue) : `${cartData.discountCode.discountValue} %`}`}</p>
+                  {cart.discountCode ? (
+                    <p className="row-span-1">{`${cart.discountCode.discountType === "FIXED_AMOUNT" ? formatCurrency(cart.discountCode.discountValue) : `${cart.discountCode.discountValue} %`}`}</p>
                   ) : (
                     <p className="row-span-1">BRAK</p>
                   )}
-                  {cartData.discountCode ? (
+                  {cart.discountCode ? (
                     <p className="row-span-1">
                       {formatCurrency(
                         calcCartTotalPriceWithDiscount(
-                          cartData.discountCode,
-                          cartData.totalPrice,
+                          cart.discountCode,
+                          cart.totalPrice,
                         ),
                       )}
                     </p>
                   ) : (
                     <p className="row-span-1">
-                      {formatCurrency(cartData.totalPrice)}
+                      {formatCurrency(cart.totalPrice)}
                     </p>
                   )}
                 </div>

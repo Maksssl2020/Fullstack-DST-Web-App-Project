@@ -40,5 +40,4 @@ public class Article {
     @JsonManagedReference
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     List<SocialMediaLink> socialMediaLinks = new ArrayList<>();
-
 }

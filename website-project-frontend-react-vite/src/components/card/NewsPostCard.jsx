@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
-import DeleteWarningModal from "../modal/DeleteWarningModal.jsx";
 import EditIcon from "../../icons/EditIcon.jsx";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
 import { useMutation, useQueryClient } from "react-query";
@@ -23,7 +22,7 @@ const NewsPostCard = ({ height, backgroundColor, cardData }) => {
     mutationKey: ["deletingNewsPost", id],
     mutationFn: () => handleNewsPostDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries("newsSectionPostsData");
+      queryClient.invalidateQueries("newsPostsData");
       toast.success("Usunięto post z tęczowych wiadomości!");
     },
     onError: (error) => console.log(error),

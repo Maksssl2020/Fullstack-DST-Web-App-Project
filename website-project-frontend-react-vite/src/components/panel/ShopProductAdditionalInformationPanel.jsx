@@ -1,20 +1,17 @@
 import React from "react";
-import { useQuery } from "react-query";
 import { motion } from "framer-motion";
-import { fetchProductSizes } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useProductSizes from "../../hooks/queries/useProductSizes.js";
 
 const ShopProductAdditionalInformationPanel = ({ productData, cardColor }) => {
-  const { data: productSizes, isLoading: sizesLoading } = useQuery(
-    ["productSizes", productData.id],
-    () => fetchProductSizes(productData.id),
-    {
-      enabled: productData?.productType === "CLOTHING",
-    },
+  const { productSizes, fetchingProductSizes } = useProductSizes(
+    productData.id,
+    productData.productType,
   );
+
   const productType = productData.productType;
 
-  if (productData?.productType === "CLOTHING" && sizesLoading) {
+  if (productData?.productType === "CLOTHING" && fetchingProductSizes) {
     return <Spinner />;
   }
   console.log(productSizes);

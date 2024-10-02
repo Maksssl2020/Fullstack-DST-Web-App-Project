@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useMutation, useQuery } from "react-query";
-import {
-  fetchArticleData,
-  handleDeleteArticle,
-} from "../helpers/api-integration/ArticleDataHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import ArticleImageModal from "../components/modal/ArticleImageModal.jsx";
 import { AnimatePresence } from "framer-motion";
@@ -17,6 +12,8 @@ import TikTokIcon from "../icons/TikTokIcon.jsx";
 import { AuthContext } from "../context/AuthProvider.jsx";
 import AdminOptionsButtons from "../components/button/AdminOptionsButtons.jsx";
 import toast from "react-hot-toast";
+import useArticle from "../hooks/queries/useArticle.js";
+import useDeleteArticleMutation from "../hooks/mutations/useDeleteArticleMutation.js";
 
 const socialMediaIcons = [
   {
@@ -48,20 +45,12 @@ const Article = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const navigate = useNavigate();
-
-  const { data: articleData, isLoading: fetchingArticleData } = useQuery(
-    [`articlePageData${id}`, id],
-    () => fetchArticleData(id),
-  );
-
-  const { mutate: deleteArticle, isLoading: deletingArticle } = useMutation(
-    [`deleteArticle${id}`, id],
-    () => handleDeleteArticle(id),
-    {
-      onSuccess: () => {
-        toast.success("Usunięto artykuł!");
-        navigate(-1);
-      },
+  const { article, fetchingArticle } = useArticle(id);
+  const { deleteArticle, deletingArticle } = useDeleteArticleMutation(
+    id,
+    () => {
+      toast.success("Usunięto artykuł!");
+      navigate(-1);
     },
   );
 
@@ -70,18 +59,18 @@ const Article = () => {
       textAreaRef.current.style.height = "auto";
       textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
     }
-  }, [articleData?.content]);
+  }, [article?.content]);
 
-  if (fetchingArticleData) {
+  if (fetchingArticle) {
     return <Spinner />;
   }
 
   const selectImage = (index) => {
     setSelectedImageIndex(index);
   };
-  console.log(articleData);
+  console.log(article);
 
-  if (fetchingArticleData || deletingArticle) {
+  if (fetchingArticle || deletingArticle) {
     return <Spinner />;
   }
 
@@ -98,12 +87,12 @@ const Article = () => {
           )}
           <div className="w-full h-auto flex flex-col gap-12 text-xl italic font-bold">
             <div className="flex gap-6">
-              <p>{articleData.author}</p>
+              <p>{article.author}</p>
               <p>|</p>
-              <p>{articleData.creationDate}</p>
-              {articleData?.socialMediaLinks && (
+              <p>{article.creationDate}</p>
+              {article?.socialMediaLinks && (
                 <div className={"ml-auto flex gap-4"}>
-                  {articleData.socialMediaLinks.map((linkData, index) => {
+                  {article.socialMediaLinks.map((linkData, index) => {
                     const matchingIcon = socialMediaIcons.find((icon) =>
                       linkData.socialMediaName.includes(icon.iconName),
                     );
@@ -124,20 +113,20 @@ const Article = () => {
               )}
             </div>
             <h1 className="mb-6 font-bold italic text-black text-5xl">
-              {articleData.title}
+              {article.title}
             </h1>
           </div>
 
           <textarea
             ref={textAreaRef}
-            value={articleData.content}
+            value={article.content}
             disabled
             className={
               "w-full text-2xl leading-relaxed cursor-text overflow-hidden resize-none rounded-2xl "
             }
           ></textarea>
           <div className={"w-full h-auto grid grid-cols-4 mt-16"}>
-            {articleData.images.map((image, index) => (
+            {article.images.map((image, index) => (
               <div
                 key={index}
                 onClick={() => {
@@ -148,7 +137,7 @@ const Article = () => {
               >
                 <img
                   src={`data:image/png;base64,${image.imageData}`}
-                  alt={articleData.title}
+                  alt={article.title}
                   className="size-full inset-0 object-cover rounded-xl hover:cursor-pointer"
                 />
               </div>
@@ -161,7 +150,7 @@ const Article = () => {
           <ArticleImageModal
             setIsOpen={setIsModalOpen}
             selectedImageIndex={selectedImageIndex}
-            images={articleData.images}
+            images={article.images}
           />
         )}
       </AnimatePresence>

@@ -71,7 +71,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
+        homePostService.deleteByMainArticleId(id);
+        newsPostService.deleteByMainArticleId(id);
         articleRepository.deleteById(id);
     }
 

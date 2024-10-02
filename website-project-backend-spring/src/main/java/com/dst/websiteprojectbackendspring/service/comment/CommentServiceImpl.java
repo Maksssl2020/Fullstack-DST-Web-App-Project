@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         return commentRepository.findByForumPostId(postId).stream()
                 .map(commentDTOMapper)
-                .sorted(Comparator.comparing(CommentDTO::postId).reversed())
+                .sorted(Comparator.comparing(CommentDTO::creationDate))
                 .toList();
     }
 

@@ -1,30 +1,15 @@
 import React from "react";
 import CloseIcon from "../drawer/icons/CloseIcon.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
-import { useMutation, useQueryClient } from "react-query";
-import toast from "react-hot-toast";
 import Spinner from "../universal/Spinner.jsx";
-import { deleteProductFromCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import { motion } from "framer-motion";
+import useDeleteItemFromCartMutation from "../../hooks/mutations/useDeleteItemFromCartMutation.js";
 
-const CartItemCard = ({ cartItemData }) => {
+const CartItemCard = ({ cartItemData, cartId }) => {
   const { id, productFullTitle, productSize, quantity, unitPrice, mainImage } =
     cartItemData;
-  const queryClient = useQueryClient();
-
-  const { mutate: deleteItemFromCart, isLoading: deletingItemFromCart } =
-    useMutation({
-      mutationKey: ["deleteItemFromCart", id],
-      mutationFn: () => deleteProductFromCart(id),
-      onSuccess: () => {
-        queryClient.invalidateQueries("cartItems");
-        queryClient.invalidateQueries("amountOfItemsInCart");
-        toast.success("Przedmiot został usunięty z koszyka!", {
-          position: "top-center",
-        });
-      },
-      onError: (error) => console.log(error),
-    });
+  const { deleteItemFromCart, deletingItemFromCart } =
+    useDeleteItemFromCartMutation(id, cartId);
 
   if (deletingItemFromCart) {
     return <Spinner />;

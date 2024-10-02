@@ -1,21 +1,16 @@
 import React from "react";
 import { DateParser } from "../../helpers/Date.js";
-import { useQuery } from "react-query";
-import { fetchUserDisplayData } from "../../helpers/api-integration/UserDataHandling.js";
 import { getRole } from "../../helpers/ApiDataTranslator.js";
 import Spinner from "../universal/Spinner.jsx";
 import UserIcon from "../header/icons/UserIcon.jsx";
 import { Link } from "react-router-dom";
+import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
 
 const UserCard = ({ userData }) => {
   const { id, username, role, accountCreationDate, accountLocked } = userData;
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(id);
 
-  const { data: userAvatar, isLoading: fetchingUserAvatar } = useQuery(
-    ["userAvatar", id],
-    () => fetchUserDisplayData(id),
-  );
-
-  if (fetchingUserAvatar) {
+  if (fetchingUserDisplay) {
     return <Spinner />;
   }
 
@@ -24,10 +19,10 @@ const UserCard = ({ userData }) => {
   return (
     <li className="w-full h-[75px] rounded-2xl p-2 border-4 border-black bg-white flex items-center justify-between gap-4">
       <div className="size-[55px] rounded-full flex items-center justify-center bg-white border-2 border-black">
-        {userAvatar ? (
+        {userDisplay.avatar ? (
           <img
             className="size-full inset-0 object-cover rounded-full self-center"
-            src={`data:image/png;base64,${userAvatar}`}
+            src={`data:image/png;base64,${userDisplay.avatar}`}
             alt={username}
           />
         ) : (

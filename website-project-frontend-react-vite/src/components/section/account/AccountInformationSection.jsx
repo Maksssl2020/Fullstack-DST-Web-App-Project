@@ -5,14 +5,15 @@ import AccountAdminSection from "./AccountAdminSection.jsx";
 import AccountUserSection from "./AccountUserSection.jsx";
 import ButtonWithLink from "../../universal/ButtonWithLink.jsx";
 import { AnimatePresence } from "framer-motion";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import {
-  fetchUserById,
-  handleUpdateUserFiles,
   handleUpdateUserData,
+  handleUpdateUserFiles,
 } from "../../../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
+import useUser from "../../../hooks/queries/useUser.js";
+import useUserDisplay from "../../../hooks/queries/useUserDisplay.js";
 
 const AccountInformationSection = () => {
   const { userId, isAuthenticated, role, username, logout } =
@@ -29,14 +30,8 @@ const AccountInformationSection = () => {
     avatar: null,
     identifyPhoto: null,
   });
-
-  const { data: userData, isLoading: fetchingUserData } = useQuery(
-    ["accountUserData", userId],
-    () => fetchUserById(userId),
-    {
-      enabled: isAuthenticated === true,
-    },
-  );
+  const { user, fetchingUser } = useUser(userId);
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
 
   const { mutate: updateUser, isLoading: updatingUser } = useMutation({
     mutationKey: ["accountUpdateUser", userId, updatedDataForm],
@@ -44,7 +39,7 @@ const AccountInformationSection = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("accountUserData");
       setIsChangeInTextData(false);
-      if (updatedDataForm.username !== userData.username) {
+      if (updatedDataForm.username !== user.username) {
         logout();
       }
     },
@@ -68,36 +63,35 @@ const AccountInformationSection = () => {
   );
 
   useEffect(() => {
-    if (userData) {
-      setValue("username", userData.username);
-      setValue("email", userData.email);
-      setValue("phoneNumber", userData.phoneNumber);
-      setValue("identifyPhoto", userData.identifyPhoto);
-      setValue("avatar", userData.avatar);
-      setAvatar(userData.avatar);
+    if (user) {
+      setValue("username", user.username);
+      setValue("email", user.email);
+      setValue("phoneNumber", user.phoneNumber);
+      setValue("identifyPhoto", user.identifyPhoto);
+      setValue("avatar", user.avatar);
+      setAvatar(user.avatar);
 
       setUpdatedDataForm({
-        username: userData.username,
-        email: userData.email,
-        phoneNumber: userData.phoneNumber,
+        username: user.username,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
       });
     }
-  }, [userData, setValue]);
+  }, [user, setValue]);
 
   useEffect(() => {
-    if (userData) {
+    if (user) {
       watch((values) => {
-        const isUsernameChanged = values.username !== userData.username;
-        const isEmailChanged = values.email !== userData.email;
-        const isPhoneNumberChanged =
-          values.phoneNumber !== userData.phoneNumber;
+        const isUsernameChanged = values.username !== user.username;
+        const isEmailChanged = values.email !== user.email;
+        const isPhoneNumberChanged = values.phoneNumber !== user.phoneNumber;
 
         setUpdatedDataForm({
-          username: isUsernameChanged ? values.username : userData.username,
-          email: isEmailChanged ? values.email : userData.email,
+          username: isUsernameChanged ? values.username : user.username,
+          email: isEmailChanged ? values.email : user.email,
           phoneNumber: isPhoneNumberChanged
             ? values.phoneNumber
-            : userData.phoneNumber,
+            : user.phoneNumber,
         });
 
         setIsChangeInTextData(
@@ -105,7 +99,7 @@ const AccountInformationSection = () => {
         );
       });
     }
-  }, [watch, userData]);
+  }, [watch, user]);
 
   useEffect(() => {
     setIsChangeInFilesData(
@@ -113,11 +107,6 @@ const AccountInformationSection = () => {
         updatedImagesForm.identifyPhoto !== null,
     );
   }, [role, updatedImagesForm]);
-
-  console.log(updatedImagesForm);
-  console.log(updatedDataForm);
-  console.log(getValues());
-  console.log(errors);
 
   const handleImagesChange = (field, value) => {
     if (field === "avatar") {
@@ -162,7 +151,13 @@ const AccountInformationSection = () => {
     );
   }
 
-  if (fetchingUserData || updatingUser || updatingUserFiles || !userData) {
+  if (
+    fetchingUser ||
+    updatingUser ||
+    updatingUserFiles ||
+    fetchingUserDisplay ||
+    !user
+  ) {
     return <Spinner />;
   }
 
@@ -195,8 +190,8 @@ const AccountInformationSection = () => {
           <div className="w-[85%] max-w-[1630px] flex mt-8 min-h-[700px] rounded-3xl bg-white">
             {role === "ADMIN" ? (
               <AccountAdminSection
-                userData={userData}
-                avatar={avatar}
+                userData={user}
+                avatar={userDisplay.avatar}
                 register={register}
                 handleImagesChange={handleImagesChange}
                 watch={watch}
@@ -204,7 +199,7 @@ const AccountInformationSection = () => {
               />
             ) : (
               <AccountUserSection
-                userData={userData}
+                userData={user}
                 register={register}
                 handleImagesChange={handleImagesChange}
                 watch={watch}

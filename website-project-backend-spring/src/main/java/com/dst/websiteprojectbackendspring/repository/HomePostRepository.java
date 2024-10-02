@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface HomePostRepository extends JpaRepository<HomePost, Long> {
+    void deleteByMainArticleId(Long mainArticleId);
 }

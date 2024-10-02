@@ -7,25 +7,27 @@ import RightDrawer from "../drawer/RightDrawer.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "../../icons/ShoppingBagIcon.jsx";
 import CartDrawer from "../drawer/CartDrawer.jsx";
-import { useQuery } from "react-query";
-import {
-  getShoppingCartAmountOfItems,
-  getShoppingCartId,
-} from "../../helpers/api-integration/ShoppingCartHandling.js";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import Spinner from "../universal/Spinner.jsx";
 import Badge from "../badge/Badge.jsx";
-import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling.js";
+import useCartId from "../../hooks/queries/useCartId.js";
+import useCartAmountOfItems from "../../hooks/queries/useCartAmountOfItems.js";
+import useAmountOfUserNewNotifications from "../../hooks/queries/useAmountOfUserNewNotifications.js";
 
 const Header = ({ forumAddPostButton }) => {
-  const { userId, role, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useContext(AuthContext);
   const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
     React.useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);
   const [cartIdentifier, setCartIdentifier] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
+  const { cartId, fetchingCartId } = useCartId(cartIdentifier);
+  const { amountOfCartItems, fetchingAmountOfCartItems } =
+    useCartAmountOfItems(cartId);
+  const { amountOfUserNewNotifications, fetchingAmountOfUserNewNotifications } =
+    useAmountOfUserNewNotifications(userId);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -34,34 +36,6 @@ const Header = ({ forumAddPostButton }) => {
       setCartIdentifier(getCartIdForNonRegisterUser);
     }
   }, [isAuthenticated, userId]);
-
-  const { data: cartId, isLoading: fetchingCartId } = useQuery(
-    ["cartHeaderId", cartIdentifier],
-    () => getShoppingCartId(cartIdentifier, isAuthenticated),
-    {
-      enabled: location.pathname.includes("/rainbow-shop") === true,
-    },
-  );
-
-  const { data: amountOfItemsInCart, isLoading: fetchingAmountOfItemsInCart } =
-    useQuery(
-      ["amountOfItemsInCart", cartId],
-      () => getShoppingCartAmountOfItems(cartId),
-      {
-        enabled: location.pathname.includes("/rainbow-shop") === true,
-      },
-    );
-
-  const {
-    data: amountOfNonReadUserNotifications,
-    isLoading: fetchingAmountOfNonReadUserNotifications,
-  } = useQuery(
-    ["amountOfNonReadUserNotifications", userId],
-    () => fetchAmountOfNonReadUserNotifications(userId),
-    {
-      enabled: isAuthenticated !== false && role !== "ADMIN",
-    },
-  );
 
   const toggleRightDrawer = () => {
     setIsRightDataDrawerOpen(!isRightDataDrawerOpen);
@@ -111,8 +85,8 @@ const Header = ({ forumAddPostButton }) => {
 
   if (
     fetchingCartId ||
-    fetchingAmountOfItemsInCart ||
-    fetchingAmountOfNonReadUserNotifications
+    fetchingAmountOfCartItems ||
+    fetchingAmountOfUserNewNotifications
   ) {
     return <Spinner />;
   }
@@ -151,9 +125,9 @@ const Header = ({ forumAddPostButton }) => {
                 >
                   <ShoppingBagIcon size={"size-6"} />
 
-                  {amountOfItemsInCart > 0 && (
+                  {amountOfCartItems > 0 && (
                     <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
-                      {amountOfItemsInCart}
+                      {amountOfCartItems}
                     </Badge>
                   )}
                 </button>
@@ -167,9 +141,9 @@ const Header = ({ forumAddPostButton }) => {
                   <BellIcon />
                 </Link>
 
-                {amountOfNonReadUserNotifications > 0 && (
+                {amountOfUserNewNotifications > 0 && (
                   <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
-                    {amountOfNonReadUserNotifications}
+                    {amountOfUserNewNotifications}
                   </Badge>
                 )}
               </div>

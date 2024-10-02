@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import CloseIcon from "./icons/CloseIcon.jsx";
 import GoogleIcon from "./icons/GoogleIcon.jsx";
 import AppleIcon from "./icons/AppleIcon.jsx";

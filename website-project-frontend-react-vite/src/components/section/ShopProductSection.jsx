@@ -4,20 +4,15 @@ import ShopProductBuyOptionsPanel from "../panel/ShopProductBuyOptionsPanel.jsx"
 import ShopProductDescriptionPanel from "../panel/ShopProductDescriptionPanel.jsx";
 import ShopProductAdditionalInformationPanel from "../panel/ShopProductAdditionalInformationPanel.jsx";
 import SimilarProductsList from "../list/SimilarProductsList.jsx";
-import { useQuery } from "react-query";
-import { fetchProductData } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import ButtonWithAnimatedBottomBorder from "../universal/ButtonWithAnimatedBottomBorder.jsx";
+import useProduct from "../../hooks/queries/useProduct.js";
 
 const ShopProductSection = ({ productId, cardColor }) => {
   const [chosenOption, setChosenOption] = useState(0);
   const [isActive, setIsActive] = React.useState(false);
   const [productCategories, setProductCategories] = React.useState([]);
-
-  const { data: productData, isLoading: fetchingProductData } = useQuery(
-    ["productPageData", productId],
-    () => fetchProductData(productId),
-  );
+  const { product, fetchingProduct } = useProduct(productId);
 
   const handleButtonClick = (index) => {
     setChosenOption(index);
@@ -29,7 +24,7 @@ const ShopProductSection = ({ productId, cardColor }) => {
     }
   };
 
-  if (fetchingProductData) {
+  if (fetchingProduct) {
     return <Spinner />;
   }
 
@@ -49,7 +44,7 @@ const ShopProductSection = ({ productId, cardColor }) => {
       <div className="w-full h-auto justify-between flex">
         <ShopProductImagesPanel productId={productId} cardColor={cardColor} />
         <ShopProductBuyOptionsPanel
-          productData={productData}
+          productData={product}
           cardColor={cardColor}
           setProductCategories={setProductCategories}
         />
@@ -67,12 +62,12 @@ const ShopProductSection = ({ productId, cardColor }) => {
       <div>
         {chosenOption === 0 ? (
           <ShopProductDescriptionPanel
-            productData={productData}
+            productData={product}
             cardColor={cardColor}
           />
         ) : (
           <ShopProductAdditionalInformationPanel
-            productData={productData}
+            productData={product}
             isActive={isActive}
             cardColor={cardColor}
           />

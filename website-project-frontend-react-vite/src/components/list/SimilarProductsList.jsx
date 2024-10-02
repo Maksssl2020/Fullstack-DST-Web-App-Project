@@ -1,38 +1,27 @@
 import React from "react";
-import { useQuery } from "react-query";
 import RainbowShopProductCard from "../card/RainbowShopProductCard.jsx";
 import { getBackgroundColor } from "../../helpers/DrawBackgroundColor.js";
 import { motion } from "framer-motion";
 import Spinner from "../universal/Spinner.jsx";
-import {
-  fetchAllProductsCategories,
-  fetchSimilarProducts,
-} from "../../helpers/api-integration/ShopProductsHandling.js";
+import useSimilarProducts from "../../hooks/queries/useSimilarProducts.js";
 
 const SimilarProductsList = ({ productCategories, productId }) => {
-  const { data: productsCategoriesData, isLoading: categoriesLoading } =
-    useQuery(["productCategories"], () => fetchAllProductsCategories());
-  const { data: similarProductsList, isLoading: productsLoading } = useQuery(
-    ["similarProductsList", productCategories, productsCategoriesData],
-    () =>
-      fetchSimilarProducts(
-        productCategories,
-        productsCategoriesData,
-        productId,
-      ),
+  const { similarProducts, fetchingSimilarProducts } = useSimilarProducts(
+    productCategories,
+    productId,
   );
 
-  if (categoriesLoading || productsLoading) {
+  if (fetchingSimilarProducts) {
     return <Spinner />;
   }
 
   return (
     <>
-      {similarProductsList.length > 0 && (
+      {similarProducts.length > 0 && (
         <>
           <h2 className="text-5xl font-bold">Podobne artykuły</h2>
           <ul className="w-full flex h-auto">
-            {similarProductsList.map((data, index) => (
+            {similarProducts.map((data, index) => (
               <motion.li whileHover={{ y: -15 }} key={index}>
                 <RainbowShopProductCard
                   cardData={data}

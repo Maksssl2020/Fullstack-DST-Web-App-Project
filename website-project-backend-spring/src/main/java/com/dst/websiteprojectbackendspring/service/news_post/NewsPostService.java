@@ -17,4 +17,5 @@ public interface NewsPostService {
     Page<NewsPost> getNewsPosts(PageRequest pageRequest);
     void update(Long id, String content);
     void delete(Long id);
+    void deleteByMainArticleId(Long mainArticleId);
 }

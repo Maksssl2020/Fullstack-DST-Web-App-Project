@@ -1,18 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import HeartIcon from "../../icons/HeartIcon.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchProductCategoriesData,
-  fetchProductSizes,
-} from "../../helpers/api-integration/ShopProductsHandling.js";
+import { useQuery } from "react-query";
+import { fetchProductCategoriesData } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
-import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
-import toast from "react-hot-toast";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import ProductQuantityButton from "../button/ProductQuantityButton.jsx";
 import SizesDropdown from "../dropdown/SizesDropdown.jsx";
 import { motion } from "framer-motion";
+import useAddItemToCartMutation from "../../hooks/mutations/useAddItemToCartMutation.js";
+import useProductSizes from "../../hooks/queries/useProductSizes.js";
+import useProductCategories from "../../hooks/queries/useProductCategories.js";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -25,24 +23,15 @@ const ShopProductBuyOptionsPanel = ({
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
   const [addedToFavourite, setAddedToFavourite] = useState(false);
-  const queryClient = useQueryClient();
-
-  const { data: productCategories, isLoading: categoriesLoading } = useQuery(
-    ["productCategories", id],
-    () => fetchProductCategoriesData(id),
-    {
-      onSuccess: (categories) => {
-        setProductCategories(categories);
-      },
-    },
+  const { productCategories, fetchingProductCategories } =
+    useProductCategories(id);
+  const { productSizes, fetchingProductSizes } = useProductSizes(
+    id,
+    productType,
   );
-
-  const { data: productSizes, isLoading: sizesLoading } = useQuery(
-    ["productSizes", productData.id],
-    () => fetchProductSizes(productData.id),
-    {
-      enabled: productData?.productType === "CLOTHING",
-    },
+  const { addItemToCart, addingItemToCart } = useAddItemToCartMutation(
+    cartIdentifier,
+    { id, quantity, chosenSize },
   );
 
   useEffect(() => {
@@ -53,40 +42,17 @@ const ShopProductBuyOptionsPanel = ({
     }
   }, [isAuthenticated, userId]);
 
+  useEffect(() => {
+    if (productCategories) {
+      setProductCategories(productCategories);
+    }
+  }, [productCategories, setProductCategories]);
+
   const handleAddToFavourite = () => {
     setAddedToFavourite(!addedToFavourite);
   };
 
-  const { mutate: addProductToUserCart, isLoading: addingProductToCart } =
-    useMutation({
-      mutationKey: [
-        "addProductToCart",
-        cartIdentifier,
-        id,
-        quantity,
-        chosenSize,
-        isAuthenticated,
-      ],
-      mutationFn: () =>
-        addProductToCart(
-          cartIdentifier,
-          id,
-          quantity,
-          chosenSize,
-          isAuthenticated,
-        ),
-      onSuccess: () => {
-        queryClient.invalidateQueries("cartItems");
-        queryClient.invalidateQueries("amountOfItemsInCart");
-        queryClient.invalidateQueries("authenticatedCustomerCart");
-        toast.success("Produkt dodany do koszyka!", {
-          position: "top-center",
-        });
-      },
-      onError: (error) => console.log(error),
-    });
-
-  if (categoriesLoading || addingProductToCart || sizesLoading) {
+  if (fetchingProductCategories || addingItemToCart || fetchingProductSizes) {
     return <Spinner />;
   }
 
@@ -138,7 +104,7 @@ const ShopProductBuyOptionsPanel = ({
           <motion.button
             whileHover={{ backgroundColor: "#FF5A5A", color: "#FFFFFF" }}
             style={{ backgroundColor: "#D0D0D0", color: "#111111" }}
-            onClick={addProductToUserCart}
+            onClick={addItemToCart}
             className=" w-[50%] rounded-2xl h-full  uppercase text-2xl"
           >
             Dodaj do koszyka

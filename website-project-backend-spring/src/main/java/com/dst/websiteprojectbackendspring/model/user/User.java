@@ -3,7 +3,6 @@ package com.dst.websiteprojectbackendspring.model.user;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.model.event.Event;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -89,7 +88,7 @@ public class User implements UserDetails {
     private List<ForumPost> forumPosts;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @JsonManagedReference
     private List<Comment> comments;
 
     @Override

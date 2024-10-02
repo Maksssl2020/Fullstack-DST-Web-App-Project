@@ -2,7 +2,6 @@ package com.dst.websiteprojectbackendspring.service.user;
 
 import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
 import com.dst.websiteprojectbackendspring.dto.user.UserDisplayDataDTO;
-import com.dst.websiteprojectbackendspring.model.user.User;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +16,7 @@ public interface UserService {
     boolean isEmailUnique(String email);
     List<UserDTO> findAllUsersWithoutAdmins();
     List<UserDTO> findAllVolunteers();
-    User getUserById(Long userId) throws ChangeSetPersister.NotFoundException;
+    UserDTO getUserById(Long userId) throws ChangeSetPersister.NotFoundException;
     void updateUserFiles(Long userId, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException;
     void updateUser(Long id, Map<String, Object> updates) throws ChangeSetPersister.NotFoundException;
     UserDisplayDataDTO getUserDisplayData(Long userId) throws ChangeSetPersister.NotFoundException;

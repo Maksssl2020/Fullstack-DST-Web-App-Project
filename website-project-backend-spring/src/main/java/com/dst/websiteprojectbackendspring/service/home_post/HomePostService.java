@@ -17,4 +17,5 @@ public interface HomePostService {
     HomePost findById(Long id) throws ChangeSetPersister.NotFoundException;
     void update(Long id, HomePostRequest homePostRequest);
     void delete(Long id);
+    void deleteByMainArticleId(Long mainArticleId);
 }

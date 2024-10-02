@@ -4,6 +4,7 @@ import com.dst.websiteprojectbackendspring.dto.home_post.HomePostRequest;
 import com.dst.websiteprojectbackendspring.model.home_post.HomePost;
 import com.dst.websiteprojectbackendspring.repository.HomePostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HomePostServiceImpl implements HomePostService {
@@ -56,6 +58,12 @@ public class HomePostServiceImpl implements HomePostService {
     @Override
     public void delete(Long id) {
         homePostRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByMainArticleId(Long mainArticleId) {
+        log.error("DELETING!");
+        homePostRepository.deleteByMainArticleId(mainArticleId);
     }
 
     private HomePost setHomePost(String content, String author, String creationDate, MultipartFile image) {

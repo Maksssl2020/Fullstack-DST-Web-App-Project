@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsPostRepository extends JpaRepository<NewsPost, Long> {
+    void deleteByMainArticleId(Long mainArticleId);
     boolean existsById(Long id);
 }

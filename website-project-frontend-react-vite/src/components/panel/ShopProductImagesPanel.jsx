@@ -1,16 +1,11 @@
 import React from "react";
-import { useQuery } from "react-query";
-import { fetchProductImages } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { motion } from "framer-motion";
+import useProductImages from "../../hooks/queries/useProductImages.js";
 
 const ShopProductImagesPanel = ({ productId, cardColor }) => {
   const [chosenImage, setChosenImage] = React.useState(0);
-
-  const { data: productImages, isLoading: fetchingProductImages } = useQuery(
-    ["productPageImages", productId],
-    () => fetchProductImages(productId),
-  );
+  const { productImages, fetchingProductImages } = useProductImages(productId);
 
   const handleImageClick = (imageIndex) => {
     setChosenImage(imageIndex);

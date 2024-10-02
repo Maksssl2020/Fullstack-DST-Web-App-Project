@@ -3,10 +3,7 @@ import AnimatedPage from "../animation/AnimatedPage.jsx";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import {
-  fetchOrderByOrderId,
-  fetchOrdersByUserId,
-} from "../helpers/api-integration/OrdersHandling.js";
+import { fetchOrderByOrderId } from "../helpers/api-integration/OrdersHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable.jsx";
 import { DateTimeParser } from "../helpers/Date.js";
