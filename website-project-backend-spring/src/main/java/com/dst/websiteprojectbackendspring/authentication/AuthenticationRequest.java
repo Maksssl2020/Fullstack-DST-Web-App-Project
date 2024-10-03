@@ -18,7 +18,6 @@ public class AuthenticationRequest {
 
     @NotEmpty(message = "Password cannot be empty!")
     @NotBlank(message = "Password cannot be blank!")
-    @Size(min = 8, message = "Password should be 8 characters long minimum!")
     private String password;
 
     @JsonCreator

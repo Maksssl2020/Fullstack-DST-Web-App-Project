@@ -1,6 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.discount_code;
 
+import com.dst.websiteprojectbackendspring.dto.discount_code.DiscountCodeDTO;
 import com.dst.websiteprojectbackendspring.helpers.RandomTextCodeGenerator;
+import com.dst.websiteprojectbackendspring.mapper.DiscountCodeDTOMapper;
 import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCode;
 import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCodeRequest;
 import com.dst.websiteprojectbackendspring.model.discount_code.DiscountType;
@@ -26,12 +28,14 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     private final DiscountCodeRepository discountCodeRepository;
     private final UserDiscountUsageRepository userDiscountUsageRepository;
     private final UserRepository userRepository;
+    private final DiscountCodeDTOMapper discountCodeDTOMapper;
 
     @Override
-    public List<DiscountCode> getDiscountCodes() {
+    public List<DiscountCodeDTO> getDiscountCodes() {
         return discountCodeRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(DiscountCode::getId).reversed())
+                .map(discountCodeDTOMapper::mapDiscountCodeToDiscountCodeDTO)
+                .sorted(Comparator.comparing(DiscountCodeDTO::getId).reversed())
                 .toList();
     }
 
@@ -53,7 +57,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public BigDecimal applyGlobalDiscount(String discountCode, Long userId) {
+    public BigDecimal applyGlobalDiscount(String discountCode, Long userId) throws ChangeSetPersister.NotFoundException {
         DiscountCode foundDiscountCode = getDiscountCode(discountCode);
 
         if (isDiscountCodeValid(foundDiscountCode) && isPossibleToUseDiscountByUser(foundDiscountCode, userId)) {
@@ -65,7 +69,7 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
     }
 
     @Override
-    public BigDecimal applyNonGlobalDiscount(String discountCode) {
+    public BigDecimal applyNonGlobalDiscount(String discountCode) throws ChangeSetPersister.NotFoundException {
         DiscountCode foundDiscountCode = getDiscountCode(discountCode);
 
         if (isDiscountCodeValid(foundDiscountCode) && foundDiscountCode.getUsedCount() + 1 <= foundDiscountCode.getUsageLimit()) {
@@ -77,24 +81,25 @@ public class DiscountCodeServiceImpl implements DiscountCodeService {
         }
     }
 
-    private  boolean isDiscountCodeValid(DiscountCode foundDiscountCode) {
+    @Override
+    public boolean isDiscountCodeValid(String discountCode) throws ChangeSetPersister.NotFoundException {
+        DiscountCode foundDiscountCode = getDiscountCode(discountCode);
+        return isDiscountCodeValid(foundDiscountCode);
+    }
+
+    private boolean isDiscountCodeValid(DiscountCode foundDiscountCode) {
         return foundDiscountCode.isActive() || !LocalDateTime.now().isAfter(foundDiscountCode.getExpirationDate());
     }
 
     @Override
-    public boolean isDiscountCodeValid(String discountCodeId) {
-        DiscountCode foundDiscountCode = getDiscountCode(discountCodeId);
-
-        return foundDiscountCode.isActive() || !LocalDateTime.now().isAfter(foundDiscountCode.getExpirationDate());
+    public DiscountCode getDiscountCode(String discountCode) throws ChangeSetPersister.NotFoundException {
+        return discountCodeRepository.findByCode(discountCode).orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     @Override
-    public DiscountCode getDiscountCode(String discountCodeId) {
-        try {
-            return discountCodeRepository.findByCode(discountCodeId).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        } catch (ChangeSetPersister.NotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public DiscountCodeDTO getDiscountCodeDTO(String discountCodeId) throws ChangeSetPersister.NotFoundException {
+        DiscountCode foundDiscountCode = discountCodeRepository.findByCode(discountCodeId).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        return discountCodeDTOMapper.mapDiscountCodeToDiscountCodeDTO(foundDiscountCode);
     }
 
     private boolean isPossibleToUseDiscountByUser(DiscountCode discountCode, Long userId) {

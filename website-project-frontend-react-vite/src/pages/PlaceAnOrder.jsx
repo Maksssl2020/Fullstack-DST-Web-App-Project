@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable.jsx";
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes.js";
 import { handleApplyDiscountCodeInCart } from "../helpers/api-integration/DiscountCodesHandling.js";
+import useCart from "../hooks/queries/useCart.js";
 
 const PlaceAnOrder = () => {
   const { isAuthenticated, userId } = useContext(AuthContext);
@@ -33,7 +34,6 @@ const PlaceAnOrder = () => {
   const [deliveryType, setDeliveryType] = useState();
   const [billingForm, setBillingForm] = React.useState({});
   const [shippingForm, setShippingForm] = React.useState({});
-  const [cartId, setCartId] = React.useState(null);
   const [orderId, setOrderId] = useState();
   const {
     register,
@@ -49,23 +49,14 @@ const PlaceAnOrder = () => {
     ),
   });
 
-  const { data: cartData, isLoading: fetchingCartData } = useQuery(
-    ["orderPageCartData", cartIdentifier, isAuthenticated],
-    () => fetchShoppingCartByIdentifier(cartIdentifier, isAuthenticated),
-    {
-      onSuccess: (response) => {
-        console.log(response);
-        setCartId(response.id);
-      },
-    },
-  );
+  const { cart, fetchingCart } = useCart(cartIdentifier);
 
   const { mutate: createOrder, isLoading: creatingOrder } = useMutation({
-    mutationKey: ["createOrder", cartId, billingForm, shippingForm],
+    mutationKey: ["createOrder", cart.id, billingForm, shippingForm],
     mutationFn: () =>
       handleAddNewOrder({
         authenticatedCustomerId: userId || null,
-        cartId: cartId,
+        cartId: cart.id,
         billing: billingForm,
         shipping: shippingForm,
       }),
@@ -85,12 +76,9 @@ const PlaceAnOrder = () => {
       if (orderId) {
         return handleProcessPayment({
           orderId: orderId,
-          amount: cartData.discountCode
-            ? calcCartTotalPriceWithDiscount(
-                cartData.discountCode,
-                cartData.totalPrice,
-              )
-            : cartData.totalPrice,
+          amount: cart.discountCode
+            ? calcCartTotalPriceWithDiscount(cart.discountCode, cart.totalPrice)
+            : cart.totalPrice,
           paymentDescription: "Test Payment React",
           firstName: getValues().firstName,
           lastName: getValues().lastName,
@@ -102,10 +90,10 @@ const PlaceAnOrder = () => {
       window.location.replace(redirectUrl);
       toast.success("Złożono nowe zamówienie!");
 
-      if (cartData.discountCode !== null) {
-        return applyDiscountCodeInCart(cartId);
+      if (cart.discountCode !== null) {
+        return applyDiscountCodeInCart(cart.id);
       } else {
-        return deleteAllItemsInCart(cartId);
+        return deleteAllItemsInCart(cart.id);
       }
     },
     onError: (error) => console.log(error),
@@ -115,20 +103,20 @@ const PlaceAnOrder = () => {
     mutate: applyDiscountCodeInCart,
     isLoading: applyingDiscountCodeInCart,
   } = useMutation({
-    mutationKey: ["applyDiscountCodeInCart", cartId, userId],
+    mutationKey: ["applyDiscountCodeInCart", cart.id, userId],
     mutationFn: (cartId) => {
       if (cartId) {
         return handleApplyDiscountCodeInCart(cartId, userId);
       }
     },
     onSuccess: () => {
-      return deleteAllItemsInCart(cartId);
+      return deleteAllItemsInCart(cart.id);
     },
   });
 
   const { mutate: deleteAllItemsInCart, isLoading: deletingAllItemsInCart } =
     useMutation({
-      mutationKey: ["deleteAllItemsInCart", cartId],
+      mutationKey: ["deleteAllItemsInCart", cart.id],
       mutationFn: (cartId) => {
         if (cartId) {
           return deleteAllProductsFromCart(cartId);
@@ -268,7 +256,7 @@ const PlaceAnOrder = () => {
   };
 
   if (
-    fetchingCartData ||
+    fetchingCart ||
     paying ||
     creatingOrder ||
     deletingAllItemsInCart ||
@@ -296,7 +284,7 @@ const PlaceAnOrder = () => {
             <h2 className={"text-3xl font-bold"}>Dane klienta:</h2>
             <form className={"w-full gap-6 flex flex-col"}>
               <div className={"flex w-full mt-8 justify-between"}>
-                {firstTwoInputsData.map((data, index) => (
+                {firstTwoInputsData.map((data) => (
                   <FormItem
                     key={data.label}
                     labelData={data.label}
@@ -309,7 +297,7 @@ const PlaceAnOrder = () => {
                   />
                 ))}
               </div>
-              {remainingInputsData.map((data, index) => (
+              {remainingInputsData.map((data) => (
                 <FormItem
                   key={data.label}
                   labelData={data.label}
@@ -349,7 +337,7 @@ const PlaceAnOrder = () => {
                       transition={{ duration: 0.2, type: "just" }}
                       className={"w-full gap-6 flex flex-col"}
                     >
-                      {anotherAddressInputsData.map((data, index) => (
+                      {anotherAddressInputsData.map((data) => (
                         <FormItem
                           key={data.label}
                           labelData={data.label}
@@ -369,7 +357,7 @@ const PlaceAnOrder = () => {
           <div className={"w-[48%] h-auto bg-custom-gray-100"}>
             <h2 className={"text-3xl font-bold"}>Zamówienie:</h2>
             <div className={"w-full mt-8 border-black border-2 rounded-2xl"}>
-              <OrderPageItemsTable cartId={cartData?.id} />
+              <OrderPageItemsTable cartId={cart?.id} />
               <div className={"w-full px-2 mt-8 text-2xl gap-4 flex flex-col"}>
                 <label className={"font-bold"}>Wysyłka:</label>
                 <div
@@ -417,16 +405,16 @@ const PlaceAnOrder = () => {
                 <h3>ŁĄCZNIE:</h3>
                 <div className={"flex gap-2"}>
                   <p
-                    className={`${cartData.discountCode ? "text-custom-gray-400 line-through" : "text-black"}`}
+                    className={`${cart.discountCode ? "text-custom-gray-400 line-through" : "text-black"}`}
                   >
-                    {formatCurrency(cartData.totalPrice)}
+                    {formatCurrency(cart.totalPrice)}
                   </p>
-                  {cartData.discountCode && (
+                  {cart.discountCode && (
                     <p>
                       {formatCurrency(
                         calcCartTotalPriceWithDiscount(
-                          cartData.discountCode,
-                          cartData.totalPrice,
+                          cart.discountCode,
+                          cart.totalPrice,
                         ),
                       )}
                     </p>

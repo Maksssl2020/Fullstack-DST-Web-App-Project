@@ -1,8 +1,10 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.cart.CartDTO;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.service.cart.CartServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,8 @@ public class CartController {
     }
 
     @GetMapping("/{cartIdentifier}")
-    public ResponseEntity<Cart> getCartByIdentifier(@PathVariable String cartIdentifier, @RequestParam("userRegistered") boolean isUserRegistered) {
-        return ResponseEntity.ok(cartService.getCartByIdentifier(cartIdentifier, isUserRegistered));
+    public ResponseEntity<CartDTO> getCartByIdentifier(@PathVariable String cartIdentifier, @RequestParam("userRegistered") boolean isUserRegistered) {
+        return ResponseEntity.ok(cartService.getCartDTOByIdentifier(cartIdentifier, isUserRegistered));
     }
 
     @GetMapping("/exist/{username}")
@@ -37,13 +39,13 @@ public class CartController {
     }
 
     @PutMapping("/assign-discount/{cartIdentifier}/{discountCodeId}")
-    public ResponseEntity<HttpStatus> assignCodeToCart(@PathVariable String cartIdentifier, @PathVariable String discountCodeId) {
+    public ResponseEntity<HttpStatus> assignCodeToCart(@PathVariable String cartIdentifier, @PathVariable String discountCodeId) throws ChangeSetPersister.NotFoundException {
         cartService.assignCodeToCart(cartIdentifier, discountCodeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/apply-discount/{cartId}/{userId}")
-    public ResponseEntity<HttpStatus> applyDiscount(@PathVariable Long cartId, @PathVariable Long userId) {
+    public ResponseEntity<HttpStatus> applyDiscount(@PathVariable Long cartId, @PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
         cartService.applyDiscountCode(cartId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -4,6 +4,8 @@ export const fetchShoppingCartByIdentifier = async (
   identifier,
   isAuthenticated,
 ) => {
+  console.log(identifier);
+
   try {
     const response = await axios.get(`/shop/carts/${identifier}`, {
       params: { userRegistered: isAuthenticated },

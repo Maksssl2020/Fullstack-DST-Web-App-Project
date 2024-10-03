@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
-import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDto;
+import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDTO;
 import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -12,7 +12,7 @@ import java.util.List;
 public interface ArticleService {
 
     void save(ArticleRequest articleRequest);
-    List<ArticleManagementDto> findAll();
+    List<ArticleManagementDTO> findAll();
     Article findById(Long id) throws ChangeSetPersister.NotFoundException;
     void delete(Long id);
     void update(Long id, ArticleRequest articleRequest);

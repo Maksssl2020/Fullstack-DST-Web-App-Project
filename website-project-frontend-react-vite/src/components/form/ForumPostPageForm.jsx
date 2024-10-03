@@ -16,15 +16,8 @@ import useUserAmountOfCreatedForumPosts from "../../hooks/queries/useUserAmountO
 const ForumPostPageForm = ({ isEditing }) => {
   const { id } = useParams();
   const { userId, username } = useContext(AuthContext);
-  const {
-    register,
-    setValue,
-    handleSubmit,
-    getValues,
-    formState,
-    watch,
-    reset,
-  } = useForm();
+  const { register, setValue, handleSubmit, formState, watch, reset } =
+    useForm();
   const { errors } = formState;
   const [optionIndex, setOptionIndex] = React.useState(0);
   const [postCreationDate, setPostCreationDate] = useState(null);

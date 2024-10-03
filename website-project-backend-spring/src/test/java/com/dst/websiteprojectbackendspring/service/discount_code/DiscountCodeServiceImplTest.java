@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.crossstore.ChangeSetPersister;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -111,7 +112,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldFindByCode() {
+    void shouldFindByCode() throws ChangeSetPersister.NotFoundException {
         when(discountCodeRepository.findByCode(testDiscountCode1.getCode())).thenReturn(Optional.of(testDiscountCode1));
         DiscountCode foundCode = discountCodeService.getDiscountCode(testDiscountCode1.getCode());
 
@@ -121,7 +122,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldSaveDiscountCode() {
+    void shouldSaveDiscountCode() throws ChangeSetPersister.NotFoundException {
         when(discountCodeRepository.save(any(DiscountCode.class))).thenReturn(testDiscountCode1);
         when(discountCodeRepository.findByCode(anyString())).thenReturn(Optional.of(testDiscountCode1));
 
@@ -134,7 +135,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldApplyNonGlobalDiscountCodeOneTime() {
+    void shouldApplyNonGlobalDiscountCodeOneTime() throws ChangeSetPersister.NotFoundException {
         when(discountCodeRepository.findByCode(anyString())).thenReturn(Optional.of(testDiscountCode1));
 
         BigDecimal discountValue = discountCodeService.applyNonGlobalDiscount(testDiscountCode1.getCode());
@@ -144,7 +145,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldApplyGlobalDiscountCodeOneTimePerUser() {
+    void shouldApplyGlobalDiscountCodeOneTimePerUser() throws ChangeSetPersister.NotFoundException {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser1));
         when(discountCodeRepository.findByCode(anyString())).thenReturn(Optional.of(testDiscountCode2));
 
@@ -156,7 +157,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldNotApplyNonGlobalDiscountCodeOverUsageLimit() {
+    void shouldNotApplyNonGlobalDiscountCodeOverUsageLimit() throws ChangeSetPersister.NotFoundException {
         when(discountCodeRepository.findByCode(anyString())).thenReturn(Optional.of(testDiscountCode1));
 
         discountCodeService.applyNonGlobalDiscount(testDiscountCode1.getCode());
@@ -169,7 +170,7 @@ class DiscountCodeServiceImplTest {
     }
 
     @Test
-    void shouldApplyGlobalDiscountForTwoDifferentUsersWhenTheirSumOfUsagesIsOverUsageLimit() {
+    void shouldApplyGlobalDiscountForTwoDifferentUsersWhenTheirSumOfUsagesIsOverUsageLimit() throws ChangeSetPersister.NotFoundException {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser1));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(testUser2));
         when(discountCodeRepository.findByCode(anyString())).thenReturn(Optional.of(testDiscountCode2));

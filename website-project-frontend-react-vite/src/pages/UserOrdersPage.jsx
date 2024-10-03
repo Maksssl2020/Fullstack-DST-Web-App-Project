@@ -1,20 +1,15 @@
 import React from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { fetchOrdersByUserId } from "../helpers/api-integration/OrdersHandling.js";
 import DefaultModal from "../components/modal/DefaultModal.jsx";
 import ButtonWithLink from "../components/universal/ButtonWithLink.jsx";
 import Spinner from "../components/universal/Spinner.jsx";
 import OrderUserViewCard from "../components/card/OrderUserViewCard.jsx";
+import useUserOrders from "../hooks/queries/useUserOrders.js";
 
 const UserOrdersPage = () => {
   const { userId } = useParams();
-
-  const { data: userOrders, isLoading: fetchingUserOrders } = useQuery(
-    ["userOrders", userId],
-    () => fetchOrdersByUserId(userId),
-  );
+  const { userOrders, fetchingUserOrders } = useUserOrders(userId);
 
   if (fetchingUserOrders) {
     return <Spinner />;

@@ -1,9 +1,10 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCode;
+import com.dst.websiteprojectbackendspring.dto.discount_code.DiscountCodeDTO;
 import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCodeRequest;
 import com.dst.websiteprojectbackendspring.service.discount_code.DiscountCodeServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,27 +20,27 @@ public class DiscountCodeController {
     private final DiscountCodeServiceImpl discountCodeService;
 
     @GetMapping
-    public ResponseEntity<List<DiscountCode>> getAllDiscountCodes() {
+    public ResponseEntity<List<DiscountCodeDTO>> getAllDiscountCodes() {
         return ResponseEntity.ok(discountCodeService.getDiscountCodes());
     }
 
     @GetMapping("/{discountCode}")
-    public ResponseEntity<DiscountCode> getDiscountCode(@PathVariable String discountCode) {
-        return ResponseEntity.ok(discountCodeService.getDiscountCode(discountCode));
+    public ResponseEntity<DiscountCodeDTO> getDiscountCode(@PathVariable String discountCode) throws ChangeSetPersister.NotFoundException {
+        return ResponseEntity.ok(discountCodeService.getDiscountCodeDTO(discountCode));
     }
 
     @GetMapping("/{discountCode}/is-still-valid")
-    public ResponseEntity<Boolean> isDiscountCodeStillValid(@PathVariable String discountCode) {
+    public ResponseEntity<Boolean> isDiscountCodeStillValid(@PathVariable String discountCode) throws ChangeSetPersister.NotFoundException {
         return new ResponseEntity<>(discountCodeService.isDiscountCodeValid(discountCode), HttpStatus.OK);
     }
 
     @GetMapping("/{discountCode}/apply-non-global-discount")
-    public ResponseEntity<BigDecimal> applyNonGlobalDiscount(@PathVariable String discountCode) {
+    public ResponseEntity<BigDecimal> applyNonGlobalDiscount(@PathVariable String discountCode) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(discountCodeService.applyNonGlobalDiscount(discountCode));
     }
 
     @GetMapping("/{discountCode}/{userId}/apply-global-discount")
-    public ResponseEntity<BigDecimal> applyGlobalDiscount(@PathVariable String discountCode, @PathVariable Long userId) {
+    public ResponseEntity<BigDecimal> applyGlobalDiscount(@PathVariable String discountCode, @PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(discountCodeService.applyGlobalDiscount(discountCode, userId));
     }
 

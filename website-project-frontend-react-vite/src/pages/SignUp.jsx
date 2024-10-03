@@ -3,52 +3,23 @@ import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo
 import FormItem from "../components/form/FormItem.jsx";
 import { useNavigate } from "react-router-dom";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import axios from "../helpers/AxiosConfig.js";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { handleRegister } from "../helpers/api-integration/AuthenticationHandling.js";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { userRegistrationSchema } from "../helpers/ValidationSchemas.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import toast from "react-hot-toast";
+import useRegisterMutation from "../hooks/mutations/useRegisterMutation.js";
 
 const SignUp = () => {
-  const { register, handleSubmit, getValues, setError, formState } = useForm({
+  const { register, handleSubmit, setError, formState } = useForm({
     resolver: yupResolver(userRegistrationSchema),
   });
   const { errors } = formState;
   const navigate = useNavigate();
-
-  const { mutate: registerUser, isLoading: registeringUser } = useMutation({
-    mutationKey: ["registerUser"],
-    mutationFn: () =>
-      handleRegister({
-        firstName: getValues().firstName,
-        lastName: getValues().lastName,
-        username: getValues().username,
-        email: getValues().email,
-        dateOfBirth: getValues().dateOfBirth,
-        password: getValues().password,
-      }),
-    onSuccess: () => {
-      toast.success("Wysłaliśmy wiadomość e-mail z linkiem aktywującym konto!");
-      navigate("/");
-    },
-    onError: (error) => {
-      if (error?.response?.data?.errorMessage?.includes("(email)=")) {
-        setError("email", {
-          type: "manual",
-          message: "Podany adres e-mail istnieje w bazie!",
-        });
-      }
-      if (error?.response?.data?.errorMessage?.includes("(username)=")) {
-        setError("username", {
-          type: "manual",
-          message: "Podana nazwa użytkownika istnieje w bazie!",
-        });
-      }
-    },
-  });
+  const { registerUser, registeringUser } = useRegisterMutation(() => {
+    toast.success("Wysłaliśmy wiadomość e-mail z linkiem aktywującym konto!");
+    navigate("/");
+  }, setError);
 
   const formData = [
     {
@@ -104,7 +75,16 @@ const SignUp = () => {
       <div className="font-lato pt-8 w-full bg-custom-gray-300 flex flex-col items-center justify-center h-auto">
         <MainBannerWithoutLogo bannerTitle={"Zarejestruj się"} />
         <form
-          onSubmit={handleRegister}
+          onSubmit={handleSubmit((data) =>
+            registerUser({
+              firstName: data.firstName,
+              lastName: data.lastName,
+              username: data.username,
+              email: data.email,
+              dateOfBirth: data.dateOfBirth,
+              password: data.password,
+            }),
+          )}
           className="w-[850px] p-8 flex flex-col items-center rounded-2xl my-12 h-auto bg-custom-gray-100"
         >
           {formData.map((data, index) => (
@@ -118,8 +98,7 @@ const SignUp = () => {
             />
           ))}
           <button
-            type={"submit"}
-            onClick={handleSubmit(registerUser)}
+            type="submit"
             className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-2xl border-4 border-black text-white uppercase font-bold"
           >
             Zarejestruj się

@@ -1,96 +1,48 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import { useParams } from "react-router-dom";
 import ButtonWithLink from "../components/universal/ButtonWithLink.jsx";
 import CheckIcon from "../icons/CheckIcon.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  deleteAllProductsFromCart,
-  fetchShoppingCartByIdentifier,
-} from "../helpers/api-integration/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../components/universal/Spinner.jsx";
 import { AuthContext } from "../context/AuthProvider.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
 import { useForm } from "react-hook-form";
-import {
-  fetchDiscountCode,
-  handleAssignDiscountCodeToCart,
-  isDiscountCodeStillValid,
-} from "../helpers/api-integration/DiscountCodesHandling.js";
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes.js";
 import CartItemsTable from "../components/table/CartItemsTable.jsx";
-import { isDiscountCodeValid } from "../helpers/DiscountCodesHandler.js";
 import useCart from "../hooks/queries/useCart.js";
+import useDiscountCodeMutation from "../hooks/mutations/useDiscountCodeMutation.js";
+import useAssignDiscountCodeToTheCartMutation from "../hooks/mutations/useAssignDiscountCodeToTheCartMutation.js";
+import useDeleteAllItemsFromCartMutation from "../hooks/mutations/useDeleteAllItemsFromCartMutation.js";
 
 const CartPage = () => {
-  const { userId, isAuthenticated } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const { identifier } = useParams();
-  const {
-    register,
-    getValues,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const queryClient = useQueryClient();
+  const { register, getValues, reset, handleSubmit } = useForm();
+  const [discountCode, setDiscountCode] = useState(null);
   const { cart, fetchingCart } = useCart(identifier);
 
-  const {
-    mutate: deleteAllItemsFromCart,
-    isLoading: deletingAllItemsFromCart,
-  } = useMutation({
-    mutationKey: ["deleteAllItemsFromCart", cart?.id],
-    mutationFn: () => deleteAllProductsFromCart(cart?.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries("cartPageItems");
-      queryClient.invalidateQueries("amountOfItemsInCart");
-      toast.success("Usunięto wszystkie produkty z koszyka!");
-    },
-    onError: (error) => console.log(error),
-  });
-
-  const { mutate: fetchDiscountCodeData, isLoading: fetchingDiscountCodeData } =
-    useMutation({
-      mutationKey: ["enteredDiscountCodeData", getValues().discountCode],
-      mutationFn: () => fetchDiscountCode(getValues().discountCode),
-      onSuccess: (discountCodeData) => {
-        assignDiscountCodeToCart(discountCodeData);
-      },
-      onError: () => {
-        toast.error("Wprowadzony kod jest nieprawidłowy bądż nieaktywny!");
-      },
-    });
-
-  const { mutate: assignDiscountCodeToCart, isLoading: assigningDiscountCode } =
-    useMutation({
-      mutationKey: ["assignDiscountCodeToCart"],
-      mutationFn: (discountCodeData) => {
-        if (
-          isDiscountCodeValid(
-            discountCodeData,
-            cart.totalPrice,
-            isAuthenticated,
-          )
-        ) {
-          return handleAssignDiscountCodeToCart(
-            cart.cartIdentifier,
-            getValues().discountCode,
-          );
-        }
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries("userCartData");
+  const { assigningDiscountCode, assignDiscountCodeToCart } =
+    useAssignDiscountCodeToTheCartMutation(
+      cart?.totalPrice,
+      identifier,
+      setDiscountCode,
+      () => {
         toast.success(
           `Dodano kod zniżkowy do koszyka: ${getValues().discountCode}!`,
         );
         reset();
       },
-      onError: (error) => {
-        toast.error(error.message);
-      },
+    );
+
+  const { fetchDiscountCodeData, fetchingDiscountCodeData } =
+    useDiscountCodeMutation((discountCodeData) => {
+      assignDiscountCodeToCart(discountCodeData);
     });
+
+  const { deleteAllItemsFromCart, deletingAllItemsFromCart } =
+    useDeleteAllItemsFromCartMutation(cart?.id);
 
   if (
     fetchingCart ||
@@ -150,7 +102,9 @@ const CartPage = () => {
                 })}
               />
               <button
-                onClick={handleSubmit(fetchDiscountCodeData)}
+                onClick={handleSubmit((data) =>
+                  fetchDiscountCodeData(data.discountCode),
+                )}
                 className="ml-auto font-bold text-xl border-b-2 border-custom-orange-200"
               >
                 Aktywuj kod
@@ -183,16 +137,16 @@ const CartPage = () => {
                   <p className="row-span-1">
                     {formatCurrency(cart.totalPrice)}
                   </p>
-                  {cart.discountCode ? (
-                    <p className="row-span-1">{`${cart.discountCode.discountType === "FIXED_AMOUNT" ? formatCurrency(cart.discountCode.discountValue) : `${cart.discountCode.discountValue} %`}`}</p>
+                  {discountCode ? (
+                    <p className="row-span-1">{`${discountCode.discountType === "FIXED_AMOUNT" ? formatCurrency(discountCode.discountValue) : `${discountCode.discountValue} %`}`}</p>
                   ) : (
                     <p className="row-span-1">BRAK</p>
                   )}
-                  {cart.discountCode ? (
+                  {discountCode ? (
                     <p className="row-span-1">
                       {formatCurrency(
                         calcCartTotalPriceWithDiscount(
-                          cart.discountCode,
+                          discountCode,
                           cart.totalPrice,
                         ),
                       )}

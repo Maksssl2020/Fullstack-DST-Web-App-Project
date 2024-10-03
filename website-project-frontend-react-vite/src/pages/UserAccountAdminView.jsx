@@ -1,10 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchUserById,
-  handleUpdateUserData,
-} from "../helpers/api-integration/UserDataHandling.js";
+import { useMutation, useQueryClient } from "react-query";
+import { handleUpdateUserData } from "../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import { getRole } from "../helpers/ApiDataTranslator.js";
 import { DateParser } from "../helpers/Date.js";
@@ -12,6 +9,8 @@ import AccountImageCard from "../components/card/AccountImageCard.jsx";
 import InformationContainer from "../components/universal/InformationContainer.jsx";
 import DefaultModal from "../components/modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
+import useUser from "../hooks/queries/useUser.js";
+import useUserDisplay from "../hooks/queries/useUserDisplay.js";
 
 const UserAccountAdminView = () => {
   const { userId } = useParams();
@@ -20,9 +19,8 @@ const UserAccountAdminView = () => {
   const [modalContent, setModalContent] = React.useState(null);
   const [userUpdateData, setUserUpdateData] = React.useState({});
   const navigate = useNavigate();
-
-  const { data: userAccountViewData, isLoading: fetchingUserAccountViewData } =
-    useQuery(["userAccountViewData", userId], () => fetchUserById(userId));
+  const { user, fetchingUser } = useUser(userId);
+  const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
 
   const { mutate: updateUser, isLoading: updatingUserData } = useMutation({
     mutationKey: ["updateUser", userId, userUpdateData],
@@ -35,7 +33,7 @@ const UserAccountAdminView = () => {
     onError: (error) => console.log(error),
   });
 
-  if (fetchingUserAccountViewData || updatingUserData) {
+  if (fetchingUser || updatingUserData || fetchingUserDisplay) {
     return <Spinner />;
   }
 
@@ -45,12 +43,12 @@ const UserAccountAdminView = () => {
     firstName,
     lastName,
     email,
-    avatar,
-    identifyPhoto,
     accountCreationDate,
     dateOfBirth,
     accountLocked,
-  } = userAccountViewData;
+  } = user;
+
+  const { avatar, identifyPhoto } = userDisplay;
 
   const buttonsData = [
     {

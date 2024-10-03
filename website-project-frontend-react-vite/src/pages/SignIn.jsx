@@ -1,45 +1,35 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import FormItem from "../components/form/FormItem.jsx";
 import { useNavigate } from "react-router-dom";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useMutation } from "react-query";
-import { handleLogin } from "../helpers/api-integration/AuthenticationHandling.js";
 import toast from "react-hot-toast";
-import useAuthentication from "../hooks/queries/useAuthentication.js";
+import useLoginMutation from "../hooks/mutations/useLoginMutation.js";
+import { useForm } from "react-hook-form";
+import Spinner from "../components/universal/Spinner.jsx";
 
 const SignIn = () => {
-  const { login } = useAuthentication();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState(null);
+  const { register, reset, handleSubmit } = useForm();
+  const [serviceErrors, setServiceErrors] = useState("");
   const navigate = useNavigate();
-
-  const { mutate: loginUser, isLoading: loggingUser } = useMutation({
-    mutationKey: ["loginUser", username, password],
-    mutationFn: () => handleLogin(username, password),
-    onSuccess: (response) => {
-      login(response);
-      toast.success("Logowanie udane!");
-      setUsername("");
-      setPassword("");
-      navigate("/");
-    },
-    onError: (error) => {
-      setErrors(error);
-    },
-  });
+  const { loginUser, loggingUser } = useLoginMutation(() => {
+    toast.success("Logowanie udane!");
+    reset();
+    navigate("/");
+  }, setServiceErrors);
 
   let errorMessage;
 
-  if (errors?.response?.data?.errorMessage?.includes("locked")) {
+  if (serviceErrors?.includes("locked")) {
     errorMessage = "Konto zostało zbanowane!";
-  } else if (errors?.response?.data?.errorMessage?.includes("credentials")) {
+  } else if (serviceErrors?.includes("credentials")) {
     errorMessage = "Nieprawidłowa nazwa użytkownika lub hasło!";
-  } else if (
-    errors?.response?.data?.errorMessage?.includes("Account isn't activated")
-  ) {
+  } else if (serviceErrors?.includes("Account isn't activated")) {
     errorMessage = "Konto nie zostało aktywowane! Sprawdź e-mail.";
+  }
+
+  if (loggingUser) {
+    return <Spinner />;
   }
 
   return (
@@ -47,25 +37,32 @@ const SignIn = () => {
       <div className="font-lato py-8 w-full bg-custom-gray-300 flex flex-col items-center justify-center h-auto">
         <MainBannerWithoutLogo bannerTitle={"Zaloguj się"} />
         <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            loginUser();
-          }}
+          onSubmit={handleSubmit((data) =>
+            loginUser({ username: data.username, password: data.password }),
+          )}
           className="w-[850px] p-8 flex flex-col items-center rounded-2xl my-12 h-auto bg-custom-gray-100"
         >
           <FormItem
             labelData={"Nazwa użytkownika"}
             inputStyling={"focus:border-custom-orange-200 rounded-xl px-2"}
-            onChangeAction={(event) => setUsername(event.target.value)}
-            isError={errors !== null}
+            register={{
+              ...register("username", {
+                required: true,
+              }),
+            }}
+            isError={serviceErrors !== null}
           />
 
           <FormItem
             labelData={"Hasło"}
             type={"password"}
             inputStyling={"focus:border-custom-orange-200 rounded-xl px-2"}
-            onChangeAction={(event) => setPassword(event.target.value)}
-            isError={errors !== null}
+            register={{
+              ...register("password", {
+                required: true,
+              }),
+            }}
+            isError={serviceErrors !== null}
           />
           {errorMessage && (
             <p className="mt-4 text-lg text-red-500">{errorMessage}</p>

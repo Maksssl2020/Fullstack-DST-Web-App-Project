@@ -33,6 +33,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
 
   console.log(cart);
   console.log(cartItems);
+  console.log(cartIdentifier);
 
   if (fetchingCart || fetchingCartItems) {
     return <Spinner />;

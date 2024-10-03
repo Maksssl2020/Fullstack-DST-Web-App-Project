@@ -12,7 +12,7 @@ export const handleRegister = async (registrationData) => {
 export const handleAccountActivation = async (activationCode) => {
   const activationData = new FormData();
   activationData.append("activationCode", activationCode);
-
+  console.log(activationCode);
   try {
     const response = await axios.post("/auth/activate-account", activationData);
     return response.data;

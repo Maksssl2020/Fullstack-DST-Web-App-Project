@@ -132,6 +132,8 @@ public class AuthenticationService {
         Token foundToken;
         User foundUser;
 
+        log.error(activationCode);
+
         try {
             foundToken = tokenService.findTokenByToken(activationCode);
         } catch (ChangeSetPersister.NotFoundException e) {
@@ -152,7 +154,7 @@ public class AuthenticationService {
         foundUser.setAccountEnabled(true);
         userRepository.save(foundUser);
 
-        foundToken.setExpiresAt(LocalDateTime.now());
+        foundToken.setValidatedAt(LocalDateTime.now());
         tokenService.save(foundToken);
     }
 

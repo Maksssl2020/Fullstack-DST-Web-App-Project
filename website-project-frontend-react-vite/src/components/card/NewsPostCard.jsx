@@ -4,29 +4,17 @@ import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import EditIcon from "../../icons/EditIcon.jsx";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
-import { useMutation, useQueryClient } from "react-query";
-import { handleNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling.js";
-import toast from "react-hot-toast";
 import Spinner from "../universal/Spinner.jsx";
 import DefaultModal from "../modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
+import useDeleteNewsPostMutation from "../../hooks/mutations/useDeleteNewsPostMutation.js";
 
 const NewsPostCard = ({ height, backgroundColor, cardData }) => {
   const { role } = useContext(AuthContext);
   const { id, content, author, creationDate, mainArticleId } = cardData;
-  const queryClient = useQueryClient();
   const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate();
-
-  const { mutate: deleteNewsPost, isLoading: deletingNewsPost } = useMutation({
-    mutationKey: ["deletingNewsPost", id],
-    mutationFn: () => handleNewsPostDelete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries("newsPostsData");
-      toast.success("Usunięto post z tęczowych wiadomości!");
-    },
-    onError: (error) => console.log(error),
-  });
+  const { deleteNewsPost, deletingNewsPost } = useDeleteNewsPostMutation(id);
 
   if (deletingNewsPost) {
     return <Spinner />;

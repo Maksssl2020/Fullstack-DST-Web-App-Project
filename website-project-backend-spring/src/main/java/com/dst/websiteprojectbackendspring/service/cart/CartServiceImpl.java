@@ -1,5 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.cart;
 
+import com.dst.websiteprojectbackendspring.dto.cart.CartDTO;
+import com.dst.websiteprojectbackendspring.mapper.CartDTOMapper;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.model.discount_code.DiscountCode;
 import com.dst.websiteprojectbackendspring.repository.CartRepository;
@@ -21,6 +23,7 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final DiscountCodeServiceImpl discountCodeService;
+    private final CartDTOMapper cartDTOMapper;
 
     @Override
     public boolean existsByIdentifier(String cartIdentifier) {
@@ -34,20 +37,33 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart getCartByIdentifier(String cartIdentifier, boolean isUserRegistered) {
-        if (cartRepository.existsByCartIdentifier(cartIdentifier)) {
-            return cartRepository.findByCartIdentifier(cartIdentifier);
-        } else {
-            Cart cart = Cart
-                    .builder()
-                    .cartIdentifier(cartIdentifier)
-                    .totalPrice(BigDecimal.ZERO)
-                    .creationDate(LocalDateTime.now())
-                    .lastUpdateDate(LocalDateTime.now())
-                    .userRegistered(isUserRegistered)
-                    .build();
+        return cartRepository.existsByCartIdentifier(cartIdentifier) ?
+                cartRepository.findByCartIdentifier(cartIdentifier) :
+                createAndSaveCartWhenDoesNotExist(cartIdentifier, isUserRegistered);
+    }
 
-            return cartRepository.save(cart);
+    @Override
+    public CartDTO getCartDTOByIdentifier(String cartIdentifier, boolean isUserRegistered) {
+        if (cartRepository.existsByCartIdentifier(cartIdentifier)) {
+            Cart foundCart = cartRepository.findByCartIdentifier(cartIdentifier);
+            return cartDTOMapper.mapCartToCartDTO(foundCart);
+        } else {
+            Cart cart = createAndSaveCartWhenDoesNotExist(cartIdentifier, isUserRegistered);
+            return cartDTOMapper.mapCartToCartDTO(cart);
         }
+    }
+
+    private Cart createAndSaveCartWhenDoesNotExist(String cartIdentifier, boolean isUserRegistered) {
+        Cart cart = Cart
+                .builder()
+                .cartIdentifier(cartIdentifier)
+                .totalPrice(BigDecimal.ZERO)
+                .creationDate(LocalDateTime.now())
+                .lastUpdateDate(LocalDateTime.now())
+                .userRegistered(isUserRegistered)
+                .build();
+
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -55,7 +71,7 @@ public class CartServiceImpl implements CartService {
         if (existsByIdentifier(cartIdentifier)) {
             return cartRepository.findByCartIdentifier(cartIdentifier).getId();
         } else {
-            return getCartByIdentifier(cartIdentifier, isUserRegistered).getId();
+            return getCartDTOByIdentifier(cartIdentifier, isUserRegistered).getId();
         }
     }
 
@@ -74,7 +90,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void assignCodeToCart(String cartIdentifier, String discountCodeId) {
+    public void assignCodeToCart(String cartIdentifier, String discountCodeId) throws ChangeSetPersister.NotFoundException {
         Cart foundCart = cartRepository.findByCartIdentifier(cartIdentifier);
         DiscountCode foundDiscountCode = discountCodeService.getDiscountCode(discountCodeId);
         foundCart.setDiscountCode(foundDiscountCode);
@@ -82,7 +98,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void applyDiscountCode(Long cartId, Long userId) {
+    public void applyDiscountCode(Long cartId, Long userId) throws ChangeSetPersister.NotFoundException {
         log.info("APPLYING DISCOUNT CODE");
         Cart foundCart;
 
@@ -101,7 +117,7 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-    private void applyDiscountCodeDependsOnItAccessibility(String discountCodeId, boolean isGlobal,  Long userId) {
+    private void applyDiscountCodeDependsOnItAccessibility(String discountCodeId, boolean isGlobal,  Long userId) throws ChangeSetPersister.NotFoundException {
         if (isGlobal) {
             discountCodeService.applyGlobalDiscount(discountCodeId, userId);
         } else {

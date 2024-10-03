@@ -1,15 +1,11 @@
 import React from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useQuery } from "react-query";
-import { fetchAllUsersRequests } from "../helpers/api-integration/RequestsToAdminHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import RequestToAdminCard from "../components/card/RequestToAdminCard.jsx";
+import useUsersRequests from "../hooks/queries/useUsersRequests.js";
 
 const UsersRequests = () => {
-  const { data: usersRequests, isLoading: fetchingUsersRequests } = useQuery(
-    ["usersRequestsData"],
-    () => fetchAllUsersRequests(),
-  );
+  const { usersRequests, fetchingUsersRequests } = useUsersRequests();
 
   if (fetchingUsersRequests) {
     return <Spinner />;

@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.article;
 
-import com.dst.websiteprojectbackendspring.dto.article.ArticleDTOMapper;
-import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDto;
+import com.dst.websiteprojectbackendspring.mapper.ArticleDTOMapper;
+import com.dst.websiteprojectbackendspring.dto.article.ArticleManagementDTO;
 import com.dst.websiteprojectbackendspring.dto.article.ArticleRequest;
 import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.model.article_image.ArticleImage;
@@ -58,10 +58,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleManagementDto> findAll() {
+    public List<ArticleManagementDTO> findAll() {
         return articleRepository.findAll().stream()
-                .map(articleDTOMapper)
-                .sorted(Comparator.comparing(ArticleManagementDto::id).reversed())
+                .map(articleDTOMapper::mapArticleToArticleManagementDTO)
+                .sorted(Comparator.comparing(ArticleManagementDTO::getId).reversed())
                 .toList();
     }
 

@@ -37,7 +37,9 @@ const AccountActivation = () => {
   );
 
   const submitCode = () => {
-    activateAccount(code);
+    const joinedCode = code.join("");
+
+    activateAccount(joinedCode);
   };
 
   const handleInputChange = (e, index) => {

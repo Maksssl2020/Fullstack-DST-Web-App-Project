@@ -1,7 +1,5 @@
 import React from "react";
 import UserCard from "../components/card/UserCard.jsx";
-import { useQuery } from "react-query";
-import { fetchAllUsers } from "../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import useUsers from "../hooks/queries/useUsers.js";

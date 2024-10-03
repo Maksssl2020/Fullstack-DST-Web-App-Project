@@ -2,18 +2,14 @@ import React from "react";
 import RainbowShopProductCard from "../components/card/RainbowShopProductCard.jsx";
 import { getBackgroundColor } from "../helpers/DrawBackgroundColor.js";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { AnimatePresence, motion } from "framer-motion";
-import { useQuery } from "react-query";
-import { fetchAllProducts } from "../helpers/api-integration/ShopProductsHandling.js";
+import { AnimatePresence } from "framer-motion";
 import Spinner from "../components/universal/Spinner.jsx";
+import useProducts from "../hooks/queries/useProducts.js";
 
 const RainbowShop = () => {
-  const { data: productsData, isLoading: fetchingProductsData } = useQuery(
-    ["shopProductsData"],
-    () => fetchAllProducts(),
-  );
+  const { products, fetchingProducts } = useProducts();
 
-  if (fetchingProductsData) {
+  if (fetchingProducts) {
     return <Spinner />;
   }
 
@@ -28,7 +24,7 @@ const RainbowShop = () => {
         <div className="w-[1500px] rounded-2xl h-auto">
           <AnimatePresence mode={"wait"}>
             <ul className={"flex flex-wrap"}>
-              {productsData.map((cardData, index) => (
+              {products.map((cardData, index) => (
                 <li key={index}>
                   <RainbowShopProductCard
                     key={index}
