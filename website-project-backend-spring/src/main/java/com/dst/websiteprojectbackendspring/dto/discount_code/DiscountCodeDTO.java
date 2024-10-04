@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class DiscountCodeDTO {
     private DiscountType discountType;
     private BigDecimal discountValue;
     private BigDecimal minimumOrderValue;
+    private LocalDateTime expirationDate;
     private int usageLimit;
     private int usedCount;
     private boolean isActive;

@@ -8,24 +8,17 @@ import {
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import toast from "react-hot-toast";
+import useMarkMessageAsReadMutation from "../../hooks/mutations/useMarkMessageAsReadMutation.js";
 
 const UserMessageModal = ({ messageData }) => {
   const { userId, logout } = useContext(AuthContext);
   const { messageId, author, message, messageType, requestToAdminDTO } =
     messageData;
   const queryClient = useQueryClient();
+  const { markMessageAsRead, markingMessageAsRead } =
+    useMarkMessageAsReadMutation();
 
   console.log(messageData);
-
-  const { mutate: markMessageAsRead, isLoading: markingMessageAsRead } =
-    useMutation({
-      mutationKey: ["markMessageAsRead", messageId],
-      mutationFn: () => handleMessageAsRead(messageId),
-      onSuccess: () => {
-        queryClient.invalidateQueries("allUserNonReadMessages");
-      },
-      onError: (error) => console.log(error),
-    });
 
   const { mutate: updateUserData, isLoading: updatingUserData } = useMutation({
     mutationKey: ["updateUserData", userId],
@@ -76,7 +69,7 @@ const UserMessageModal = ({ messageData }) => {
         <div className={"flex gap-8"}>
           <button
             onClick={() => {
-              markMessageAsRead();
+              markMessageAsRead(messageId);
               updateUserData();
             }}
             className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"

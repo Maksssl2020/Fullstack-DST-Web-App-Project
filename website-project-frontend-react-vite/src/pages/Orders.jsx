@@ -1,7 +1,5 @@
 import React from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useQuery } from "react-query";
-import { fetchAllOrders } from "../helpers/api-integration/OrdersHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import OrderAdminCard from "../components/card/OrderAdminCard.jsx";
 import useOrders from "../hooks/queries/useOrders.js";

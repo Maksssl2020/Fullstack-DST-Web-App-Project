@@ -2,8 +2,6 @@ import React from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { fetchOrderByOrderId } from "../helpers/api-integration/OrdersHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable.jsx";
 import { DateTimeParser } from "../helpers/Date.js";
@@ -14,16 +12,11 @@ import {
   getShippingType,
 } from "../helpers/ApiDataTranslator.js";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
+import useOrder from "../hooks/queries/useOrder.js";
 
 const OrderPage = () => {
   const { orderId } = useParams();
-
-  const { data: orderData, isLoading: fetchingOrderData } = useQuery(
-    ["orderPageData", orderId],
-    () => fetchOrderByOrderId(orderId),
-  );
-
-  console.log(orderData);
+  const { order, fetchingOrder } = useOrder(orderId);
 
   const {
     id,
@@ -32,12 +25,12 @@ const OrderPage = () => {
     customerBillingData,
     shippingData,
     payment,
-  } = orderData;
+  } = order;
   const { firstName, lastName, email, phoneNumber } = customerBillingData;
   const { shippingType } = shippingData;
   const { amount } = payment;
 
-  if (fetchingOrderData) {
+  if (fetchingOrder) {
     return <Spinner />;
   }
 

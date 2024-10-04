@@ -3,10 +3,9 @@ import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
 import {
-  fetchArticleData,
   handleAddNewArticle,
   handleUpdateArticle,
 } from "../../helpers/api-integration/ArticleDataHandling.js";
@@ -20,6 +19,7 @@ import YouTubeIcon from "../../icons/YouTubeIcon.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 import ItemCurrentImages from "../../components/list/ItemCurrentImages.jsx";
 import { decodeImageFile } from "../../helpers/PostManager.js";
+import useArticleMutation from "../../hooks/mutations/useArticleMutation.js";
 
 const socialMediaIcons = [
   {
@@ -68,21 +68,17 @@ const ArticleForm = ({ isEditing = false }) => {
   const { errors } = formState;
   const articleData = new FormData();
   const navigate = useNavigate();
-
-  const {
-    mutate: fetchArticleCurrentData,
-    isLoading: fetchingArticleCurrentData,
-  } = useMutation([`articleCurrentData${id}`, id], () => fetchArticleData(id), {
-    onSuccess: (articleCurrentData) => {
+  const { fetchArticle, fetchingArticle } = useArticleMutation(
+    (articleCurrentData) => {
       setCurrentArticleDataInInputs(articleCurrentData);
     },
-  });
+  );
 
   useEffect(() => {
     if (isEditing && id) {
-      fetchArticleCurrentData();
+      fetchArticle(id);
     }
-  }, [fetchArticleCurrentData, id, isEditing]);
+  }, [fetchArticle, id, isEditing]);
 
   const setCurrentArticleDataInInputs = (articleCurrentData) => {
     console.log(articleCurrentData);
@@ -133,7 +129,7 @@ const ArticleForm = ({ isEditing = false }) => {
 
   const contentLength = watch("content", " ");
 
-  if (addingOrUpdatingNewArticle || fetchingArticleCurrentData) {
+  if (addingOrUpdatingNewArticle || fetchingArticle) {
     return <Spinner />;
   }
 

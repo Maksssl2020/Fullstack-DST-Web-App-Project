@@ -3,7 +3,7 @@ import { fetchArticleData } from "../../helpers/api-integration/ArticleDataHandl
 
 const UseArticle = (articleId) => {
   const { data: article, isLoading: fetchingArticle } = useQuery(
-    [`articleData${articleId}`, articleId],
+    [`articleData`, articleId],
     () => fetchArticleData(articleId),
     {
       cacheTime: 1000 * 60 * 30,

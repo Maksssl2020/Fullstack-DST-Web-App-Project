@@ -4,15 +4,12 @@ import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import AcceptIcon from "../../icons/AcceptIcon.jsx";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
-import {
-  generateRandomDiscountCode,
-  handleAddNewDiscountCode,
-} from "../../helpers/api-integration/DiscountCodesHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { discountCodeSchema } from "../../helpers/ValidationSchemas.js";
+import useGenerateDiscountCodeMutation from "../../hooks/mutations/useGenerateDiscountCodeMutation.js";
+import useAddDiscountCodeMutation from "../../hooks/mutations/useAddDiscountCodeMutation.js";
 
 const DiscountCodeForm = () => {
   const {
@@ -23,40 +20,20 @@ const DiscountCodeForm = () => {
     reset,
     setValue,
   } = useForm({ resolver: yupResolver(discountCodeSchema) });
-  const queryClient = useQueryClient();
   const [discountType, setDiscountType] = React.useState("PERCENTAGE");
   const [isGlobal, setIsGlobal] = React.useState(false);
-
-  const { mutate: generateCode, isLoading: generatingCode } = useMutation({
-    mutationKey: ["generatedCode"],
-    mutationFn: () => generateRandomDiscountCode(),
-    onSuccess: (response) => {
+  const { generateCode, generatingCode } = useGenerateDiscountCodeMutation(
+    (discountCode) => {
       toast.success("Wygenerowano kod!");
-      setValue("code", response);
+      setValue("code", discountCode);
     },
-    onError: (error) => console.log(error),
-  });
-
-  const { mutate: addNewDiscountCode, isLoading: addingNewDiscountCode } =
-    useMutation({
-      mutationKey: ["addingNewDiscountCode", getValues().code],
-      mutationFn: async () =>
-        handleAddNewDiscountCode({
-          code: getValues().code,
-          discountType: discountType,
-          discountValue: getValues().discountValue,
-          minimumOrderValue: getValues().minimalOrderValue,
-          numberOfValidityDays: getValues().numberOfValidityDays,
-          usageLimit: getValues().usageLimit,
-          isGlobal: isGlobal,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries("allDiscountCodesData");
-        toast.success("Utworzono nowy kod rabatowy!");
-        reset();
-      },
-      onError: (error) => console.log(error),
-    });
+  );
+  const { addDiscountCode, addingDiscountCode } = useAddDiscountCodeMutation(
+    () => {
+      toast.success("Utworzono nowy kod rabatowy!");
+      reset();
+    },
+  );
 
   const handleDiscountTypeChange = (buttonNumber) => {
     switch (buttonNumber) {
@@ -71,7 +48,7 @@ const DiscountCodeForm = () => {
     }
   };
 
-  if (generatingCode || addingNewDiscountCode) {
+  if (generatingCode || addingDiscountCode) {
     return <Spinner />;
   }
 
@@ -84,7 +61,17 @@ const DiscountCodeForm = () => {
         <AdminFormSection
           submitTitle={"Utwórz kod"}
           disabledButton={errors.length > 0}
-          handleSubmit={handleSubmit(addNewDiscountCode)}
+          handleSubmit={handleSubmit((data) =>
+            addDiscountCode({
+              code: data.code,
+              discountType: discountType,
+              discountValue: data.discountValue,
+              minimumOrderValue: data.minimalOrderValue,
+              numberOfValidityDays: data.numberOfValidityDays,
+              usageLimit: data.usageLimit,
+              isGlobal: isGlobal,
+            }),
+          )}
           cancelLink={"/account"}
         >
           <div className="w-full flex justify-center gap-4">

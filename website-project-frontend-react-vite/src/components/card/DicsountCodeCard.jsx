@@ -4,7 +4,7 @@ import { DateTimeParser } from "../../helpers/Date.js";
 const DiscountCodeCard = ({ discountCodeData }) => {
   const {
     active,
-    code,
+    discountCode,
     discountType,
     discountValue,
     global,
@@ -20,7 +20,7 @@ const DiscountCodeCard = ({ discountCodeData }) => {
       </label>
       <label className="flex flex-col items-center h-full w-[15%] justify-between">
         <p>Kod:</p>
-        <p className="font-bold">{code}</p>
+        <p className="font-bold">{discountCode}</p>
       </label>
       <label className="flex flex-col items-center h-full w-[15%] justify-between">
         <p>Wartość kodu:</p>

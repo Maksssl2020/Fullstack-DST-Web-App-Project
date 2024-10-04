@@ -1,24 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../../context/AuthProvider.jsx";
-import DefaultModal from "../../modal/DefaultModal.jsx";
 import AccountAdminSection from "./AccountAdminSection.jsx";
 import AccountUserSection from "./AccountUserSection.jsx";
-import ButtonWithLink from "../../universal/ButtonWithLink.jsx";
-import { AnimatePresence } from "framer-motion";
-import { useMutation, useQueryClient } from "react-query";
-import {
-  handleUpdateUserData,
-  handleUpdateUserFiles,
-} from "../../../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../../universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import useUser from "../../../hooks/queries/useUser.js";
 import useUserDisplay from "../../../hooks/queries/useUserDisplay.js";
+import useUpdateUserInAccountPageMutation from "../../../hooks/mutations/useUpdateUserInAccountPageMutation.js";
+import useUpdateUserFilesMutation from "../../../hooks/mutations/useUpdateUserFilesMutation.js";
 
 const AccountInformationSection = () => {
-  const { userId, isAuthenticated, role, username, logout } =
-    useContext(AuthContext);
-  const queryClient = useQueryClient();
+  const { userId, role, username, logout } = useContext(AuthContext);
   const { register, setValue, watch, handleSubmit, getValues, formState } =
     useForm({});
   const { errors } = formState;
@@ -32,35 +24,15 @@ const AccountInformationSection = () => {
   });
   const { user, fetchingUser } = useUser(userId);
   const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
-
-  const { mutate: updateUser, isLoading: updatingUser } = useMutation({
-    mutationKey: ["accountUpdateUser", userId, updatedDataForm],
-    mutationFn: () => handleUpdateUserData(userId, updatedDataForm),
-    onSuccess: () => {
-      queryClient.invalidateQueries("accountUserData");
+  const { updateUser, updatingUser } = useUpdateUserInAccountPageMutation(
+    () => {
       setIsChangeInTextData(false);
       if (updatedDataForm.username !== user.username) {
         logout();
       }
     },
-    onError: (error) => console.log(error),
-  });
-
-  const { mutate: updateUserFiles, isLoading: updatingUserFiles } = useMutation(
-    {
-      mutationKey: ["accountUpdateUserFiles", userId, updatedImagesForm],
-      mutationFn: () =>
-        handleUpdateUserFiles(
-          userId,
-          updatedImagesForm.avatar,
-          updatedImagesForm.identifyPhoto,
-        ),
-      onSuccess: () => {
-        queryClient.invalidateQueries("accountUserData");
-      },
-      onError: (error) => console.log("Error updating user files:", error),
-    },
   );
+  const { updateUserFiles, updatingUserFiles } = useUpdateUserFilesMutation();
 
   useEffect(() => {
     if (user) {
@@ -121,36 +93,6 @@ const AccountInformationSection = () => {
       [field]: value,
     }));
   };
-
-  if (!isAuthenticated) {
-    return (
-      <AnimatePresence>
-        <DefaultModal
-          title={"Informacja"}
-          subtitle={"Musisz się zalogować, aby mieć dostęp do tej strony."}
-          blur={"backdrop-blur-3xl"}
-        >
-          <div className="flex gap-6">
-            <ButtonWithLink
-              title={"Zaloguj się"}
-              link={"/sign-in"}
-              className={
-                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-              }
-            />
-            <ButtonWithLink
-              title={"Strona główna"}
-              link={"/"}
-              className={
-                "uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
-              }
-            />
-          </div>
-        </DefaultModal>
-      </AnimatePresence>
-    );
-  }
-
   if (
     fetchingUser ||
     updatingUser ||
@@ -161,12 +103,15 @@ const AccountInformationSection = () => {
     return <Spinner />;
   }
 
-  const onSubmit = () => {
+  const onSubmit = (data) => {
     if (isChangeInTextData) {
-      updateUser();
+      updateUser(data);
+      setIsChangeInTextData(false);
     }
+
     if (isChangeInFilesData) {
-      updateUserFiles();
+      updateUserFiles(updatedImagesForm);
+      setIsChangeInFilesData(false);
     }
   };
 
@@ -179,7 +124,7 @@ const AccountInformationSection = () => {
           <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
           {(isChangeInTextData || isChangeInFilesData) && (
             <button
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(() => onSubmit(updatedDataForm))}
               className="bg-custom-orange-200 rounded-2xl ml-auto mr-[15%] text-white h-[75px] font-bold border-4 border-black p-4 w-auto"
             >
               AKCEPTUJ ZMIANY
@@ -200,6 +145,7 @@ const AccountInformationSection = () => {
             ) : (
               <AccountUserSection
                 userData={user}
+                userDisplayData={userDisplay}
                 register={register}
                 handleImagesChange={handleImagesChange}
                 watch={watch}

@@ -1,6 +1,7 @@
 import React from "react";
 import UploadIcon from "../../../icons/UploadIcon.jsx";
 import { motion } from "framer-motion";
+import { DateParser } from "../../../helpers/Date.js";
 
 const AccountSectionUserPhoto = ({
   imageTitle,
@@ -37,7 +38,7 @@ const AccountSectionUserPhoto = ({
       </div>
       <p className="ml-3 mt-auto text-xl mb-2">{bottomDataTitle}</p>
       <p className="w-full flex justify-center items-center text-2xl rounded-2xl h-[60px] border-4 border-custom-gray-300">
-        {bottomData}
+        {bottomDataTitle.includes("Data") ? DateParser(bottomData) : bottomData}
       </p>
     </div>
   );

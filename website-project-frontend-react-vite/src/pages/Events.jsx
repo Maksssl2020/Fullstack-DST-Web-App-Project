@@ -2,47 +2,22 @@ import React, { useContext } from "react";
 import EventCard from "../components/card/EventCard.jsx";
 import EventsListCard from "../components/card/EventListCard.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
-import { useQuery } from "react-query";
-import {
-  fetchAllUserEvents,
-  fetchEventsData,
-} from "../helpers/api-integration/EventsHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import { AuthContext } from "../context/AuthProvider.jsx";
 import DefaultModal from "../components/modal/DefaultModal.jsx";
 import ButtonWithLink from "../components/universal/ButtonWithLink.jsx";
-import { fetchAllVolunteers } from "../helpers/api-integration/UserDataHandling.js";
 import VolunteerListCard from "../components/card/VolunteerDataCard.jsx";
+import useEvents from "../hooks/queries/useEvents.js";
+import useUserEvents from "../hooks/queries/useUserEvents.js";
+import useVolunteers from "../hooks/queries/useVolunteers.js";
 
 const Events = () => {
-  const { isAuthenticated, role, userId } = useContext(AuthContext);
+  const { isAuthenticated, role } = useContext(AuthContext);
+  const { events, fetchingEvents } = useEvents();
+  const { userEvents, fetchingUserEvents } = useUserEvents();
+  const { volunteers, fetchingVolunteers } = useVolunteers();
 
-  const { data: eventsData, isLoading: fetchingEventsData } = useQuery(
-    ["eventsData"],
-    () => fetchEventsData(),
-  );
-
-  const { data: userEventsData, isLoading: fetchingUserEventsData } = useQuery(
-    ["userEventsData", userId],
-    () => {
-      if (isAuthenticated) {
-        return fetchAllUserEvents(userId);
-      }
-    },
-  );
-
-  const { data: allVolunteersData, isLoading: fetchingAllVolunteersData } =
-    useQuery(["allVolunteersData"], () => {
-      if (isAuthenticated && role === "ADMIN") {
-        return fetchAllVolunteers();
-      }
-    });
-
-  if (
-    fetchingEventsData ||
-    fetchingUserEventsData ||
-    fetchingAllVolunteersData
-  ) {
+  if (fetchingEvents || fetchingUserEvents || fetchingVolunteers) {
     return <Spinner />;
   }
 
@@ -79,7 +54,7 @@ const Events = () => {
                 Lista wydarzeń
               </h1>
             </div>
-            {eventsData.map((data, index) => (
+            {events.map((data, index) => (
               <EventCard
                 eventData={data}
                 number={data.eventNumber}
@@ -96,7 +71,7 @@ const Events = () => {
             <div className="w-full h-auto px-4 mt-4 flex flex-col gap-4">
               {role === "ADMIN" ? (
                 <ul className="px-4 mt-4 flex flex-col gap-4">
-                  {allVolunteersData?.map((data, index) => (
+                  {volunteers?.map((data, index) => (
                     <VolunteerListCard
                       key={index}
                       username={data.username}
@@ -106,7 +81,7 @@ const Events = () => {
                 </ul>
               ) : (
                 <ul className="px-4 mt-4 flex flex-col gap-4">
-                  {userEventsData?.map((data, index) => (
+                  {userEvents?.map((data, index) => (
                     <EventsListCard
                       key={index}
                       title={data.title}

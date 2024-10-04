@@ -4,21 +4,12 @@ import HomeNewsSection from "../components/section/HomeNewsSection.jsx";
 import HomeInstagramSection from "../components/section/HomeInstagramSection.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import { AuthContext } from "../context/AuthProvider.jsx";
-import { useQuery } from "react-query";
-import { fetchUserAllNonReadMessages } from "../helpers/api-integration/UserDataHandling.js";
 import UserMessageModal from "../components/modal/UserMessageModal.jsx";
+import useUserMessages from "../hooks/queries/useUserMessages.js";
 
 const Home = () => {
-  const { isAuthenticated, userId } = useContext(AuthContext);
-
-  const { data: userMessages, isLoading: fetchingUserMessages } = useQuery(
-    ["allUserNonReadMessages", userId],
-    () => {
-      if (isAuthenticated && userId) {
-        return fetchUserAllNonReadMessages(userId);
-      }
-    },
-  );
+  const { userId } = useContext(AuthContext);
+  const { userMessages, fetchingUserMessages } = useUserMessages();
 
   if (fetchingUserMessages) {
     return;

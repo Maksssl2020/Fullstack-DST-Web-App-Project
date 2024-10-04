@@ -1,40 +1,25 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchNewsPostDataByPostId,
-  handleNewsPostUpdate,
-} from "../../helpers/api-integration/NewsPostsHandling.js";
 import Spinner from "../../components/universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
+import useNewsPost from "../../hooks/queries/useNewsPost.js";
+import useUpdateNewsPostMutation from "../../hooks/mutations/useUpdateNewsPostMutation.js";
 
 const NewsPostForm = () => {
   const { id } = useParams();
-  const queryClient = useQueryClient();
-  const { register, getValues, handleSubmit, formState, watch } = useForm();
+  const { register, handleSubmit, watch } = useForm();
   const navigate = useNavigate();
-
-  const { data: postData, isLoading: fetchingPostData } = useQuery(
-    ["newsPostDataToUpdate", id],
-    () => fetchNewsPostDataByPostId(id),
-  );
-
-  const { mutate: updatePostData, isLoading: updatingPostData } = useMutation({
-    mutationKey: ["updateNewsPostData", id],
-    mutationFn: () => handleNewsPostUpdate(id, getValues().content),
-    onSuccess: () => {
-      queryClient.invalidateQueries("newsSectionPostsData");
-      queryClient.invalidateQueries("newsPostDataToUpdate");
+  const { newsPost, fetchingNewsPost } = useNewsPost(id);
+  const { updateNewsPostData, updatingNewsPostData } =
+    useUpdateNewsPostMutation(() => {
       toast.success("Zaktualizowano post tęczowych aktualności!");
       navigate("/news");
-    },
-    onError: (error) => console.log(error),
-  });
+    });
 
-  if (fetchingPostData || updatingPostData) {
+  if (fetchingNewsPost || updatingNewsPostData) {
     return <Spinner />;
   }
 
@@ -44,7 +29,12 @@ const NewsPostForm = () => {
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
         <AdminFormSection
-          handleSubmit={handleSubmit(updatePostData)}
+          handleSubmit={handleSubmit((data) =>
+            updateNewsPostData({
+              newsPostId: newsPost.id,
+              dataToUpdate: data.content,
+            }),
+          )}
           submitTitle={"Zaktualizuj post"}
           disabledButton={contentLength < 10}
           cancelLink={"/news"}
@@ -53,7 +43,7 @@ const NewsPostForm = () => {
             Edytuj treść posta:
           </p>
           <textarea
-            defaultValue={postData.content}
+            defaultValue={newsPost.content}
             maxLength={300}
             className="w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[450px] border-4 rounded-2xl border-black resize-none"
             {...register("content")}

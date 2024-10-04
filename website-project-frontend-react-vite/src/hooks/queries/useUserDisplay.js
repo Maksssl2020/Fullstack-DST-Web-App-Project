@@ -3,7 +3,7 @@ import { fetchUserDisplayData } from "../../helpers/api-integration/UserDataHand
 
 function useUserDisplay(userId) {
   const { data: userDisplay, isLoading: fetchingUserDisplay } = useQuery(
-    ["forumPostUserAvatar", userId],
+    ["userDisplayData", userId],
     () => fetchUserDisplayData(userId),
   );
 

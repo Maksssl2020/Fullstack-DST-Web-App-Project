@@ -4,13 +4,6 @@ import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import PlusIcon from "../../icons/PlusIcon.jsx";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchAllStatistics,
-  handleAddStatistic,
-  handleDeleteStatistic,
-  handleUpdateStatistic,
-} from "../../helpers/api-integration/StatisticsHandling.js";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
 import EditIcon from "../../icons/EditIcon.jsx";
 import { motion } from "framer-motion";
@@ -18,69 +11,34 @@ import AcceptIcon from "../../icons/AcceptIcon.jsx";
 import Spinner from "../../components/universal/Spinner.jsx";
 import { useNavigate } from "react-router-dom";
 import { MuiColorInput } from "mui-color-input";
+import useStatistics from "../../hooks/queries/useStatistics.js";
+import useAddStatisticMutation from "../../hooks/mutations/useAddStatisticMutation.js";
+import useUpdateStatisticMutation from "../../hooks/mutations/useUpdateStatisticMutation.js";
+import useDeleteStatisticMutation from "../../hooks/mutations/useDeleteStatisticMutation.js";
 
 const StatisticsForm = () => {
   const { register, reset, handleSubmit, getValues, setValue, formState } =
     useForm();
   const { errors } = formState;
-  const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
   const [updatingStatisticId, setUpdatingStatisticId] = useState(null);
   const [color, setColor] = useState("#ffffffff");
   const navigate = useNavigate();
-
-  console.log(errors);
-
-  const { data: statistics, isLoading: fetchingStatisticData } = useQuery(
-    ["statisticsData"],
-    () => fetchAllStatistics(),
-  );
-
-  const { mutate: addStatistic, isLoading: addingStatistic } = useMutation({
-    mutationKey: ["addStatistic"],
-    mutationFn: () =>
-      handleAddStatistic({
-        name: getValues().name,
-        value: getValues().value,
-        fieldHexColor: color,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries("statisticsData");
-      reset();
-      setColor("#ffffffff");
-    },
-    onError: (error) => console.log(error),
+  const { statistics, fetchingStatistic } = useStatistics();
+  const { addStatistic, addingStatistic } = useAddStatisticMutation(() => {
+    setColor("#ffffffff");
+    reset();
   });
-
-  const { mutate: updateStatistic, isLoading: updatingStatistic } = useMutation(
-    {
-      mutationKey: ["updateStatistic"],
-      mutationFn: () =>
-        handleUpdateStatistic(updatingStatisticId, {
-          name: getValues().name,
-          value: getValues().value,
-          fieldHexColor: color,
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries("statisticsData");
-        setIsEditing(false);
-        reset();
-        setColor("#ffffffff");
-      },
-      onError: (error) => console.log(error),
+  const { updateStatistic, updatingStatistic } = useUpdateStatisticMutation(
+    updatingStatisticId,
+    () => {
+      setColor("#ffffffff");
+      setIsEditing(false);
+      reset();
     },
   );
-
-  const { mutate: deleteStatistic, isLoading: deletingStatistic } = useMutation(
-    {
-      mutationKey: ["deleteStatistic"],
-      mutationFn: (statisticId) => handleDeleteStatistic(statisticId),
-      onSuccess: () => {
-        queryClient.invalidateQueries("statisticsData");
-      },
-      onError: (error) => console.log(error),
-    },
-  );
+  const { deleteStatistic, deletingStatistic } = useDeleteStatisticMutation();
+  console.log(errors);
 
   const calcStatisticsValuesSum = () => {
     const sum = statistics?.reduce((acc, statistic) => {
@@ -97,8 +55,6 @@ const StatisticsForm = () => {
     currentValue,
     currentFieldColor,
   ) => {
-    console.log("TYEST");
-
     setIsEditing(true);
     setUpdatingStatisticId(statisticId);
     setValue("name", currentName);
@@ -109,20 +65,28 @@ const StatisticsForm = () => {
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      handleSubmit(onSubmit);
+      handleSubmit((data) => onSubmit(data));
     }
   };
 
   const onSubmit = (data) => {
     if (isEditing) {
-      updateStatistic(data);
+      updateStatistic({
+        name: data.name,
+        value: data.value,
+        fieldHexColor: color,
+      });
     } else {
-      addStatistic();
+      addStatistic({
+        name: data.name,
+        value: data.value,
+        fieldHexColor: color,
+      });
     }
   };
 
   if (
-    fetchingStatisticData ||
+    fetchingStatistic ||
     addingStatistic ||
     updatingStatistic ||
     deletingStatistic
@@ -133,14 +97,12 @@ const StatisticsForm = () => {
   return (
     <AnimatedPage>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit((data) => onSubmit(data))}
         onKeyDown={handleKeyDown}
         className="w-full h-auto my-8 flex flex-col items-center"
       >
         <AdminFormSection
-          disabledButton={
-            calcStatisticsValuesSum() < 100 || calcStatisticsValuesSum() > 100
-          }
+          disabledButton={calcStatisticsValuesSum() !== 100}
           handleSubmit={() => navigate(-1)}
           submitTitle={"Zatwierdź"}
         >

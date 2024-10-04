@@ -3,15 +3,11 @@ import { AuthContext } from "../../context/AuthProvider.jsx";
 import DefaultModal from "../modal/DefaultModal.jsx";
 import FormItem from "./FormItem.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
-import { useMutation, useQuery } from "react-query";
-import { handleSendingNewRequest } from "../../helpers/api-integration/RequestsToAdminHandling.js";
 import toast from "react-hot-toast";
-import { AnimatePresence } from "framer-motion";
-import {
-  checkEmailIsUnique,
-  checkUsernameIsUnique,
-} from "../../helpers/api-integration/UserDataHandling.js";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import useSendRequestToAdminMutation from "../../hooks/mutations/useSendRequestToAdminMutation.js";
+import useIsEmailUnique from "../../hooks/queries/useIsEmailUnique.js";
+import useIsUsernameUnique from "../../hooks/queries/useIsUsernameUnique.js";
 
 const AccountFormItem = ({ labelTitle, register, value, errors }) => {
   const { role, userId } = useContext(AuthContext);
@@ -21,40 +17,13 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
     labelTitle.includes("e-mail"),
   );
   const [changedValue, setChangedValue] = useState("");
-
-  const { mutate: sendRequestToAdmin, isLoading: sendingRequestToAdmin } =
-    useMutation({
-      mutationKey: ["sendRequestToAdmin", userId],
-      mutationFn: () =>
-        handleSendingNewRequest({
-          requestType: changingEmail ? "EMAIL_CHANGING" : "USERNAME_CHANGING",
-          userEnteredValueToChange: changedValue,
-          userId: userId,
-        }),
-      onSuccess: () => {
-        toast.success("Wysłano prośbę do admina!");
-        setOpenModal(false);
-      },
-      onError: (error) => {
-        console.log(error);
-      },
+  const { sendRequestToAdmin, sendingRequestToAdmin } =
+    useSendRequestToAdminMutation(() => {
+      toast.success("Wysłano prośbę do admina!");
+      setOpenModal(false);
     });
-
-  const { refetch: isUsernameUnique } = useQuery(
-    ["isUsernameUnique", changedValue],
-    () => checkUsernameIsUnique(changedValue),
-    {
-      enabled: false,
-    },
-  );
-
-  const { refetch: isEmailUnique } = useQuery(
-    ["isEmailUnique", changedValue],
-    () => checkEmailIsUnique(changedValue),
-    {
-      enabled: false,
-    },
-  );
+  const { isEmailUnique } = useIsEmailUnique();
+  const { isUsernameUnique } = useIsUsernameUnique();
 
   const handleButtonClick = () => {
     setEditing(!editing);
@@ -62,11 +31,11 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
 
   const checkChangedValue = async () => {
     if (changingEmail) {
-      const { data } = await isEmailUnique();
+      const { data } = await isEmailUnique(changedValue);
       console.log(data);
       return data;
     } else {
-      const { data } = await isUsernameUnique();
+      const { data } = await isUsernameUnique(changedValue);
       console.log(data);
       return data;
     }
@@ -138,7 +107,13 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
                 title={"Akceptuj"}
                 onClick={async () => {
                   if ((await checkChangedValue()) === true) {
-                    sendRequestToAdmin();
+                    sendRequestToAdmin({
+                      requestType: changingEmail
+                        ? "EMAIL_CHANGING"
+                        : "USERNAME_CHANGING",
+                      userEnteredValueToChange: changedValue,
+                      userId: userId,
+                    });
                   } else {
                     toast.error(
                       `${changingEmail ? "Wprowadzony adres e-mail" : "Wprowadzona nazwa użytkownika"} już istnieje w bazie!`,
