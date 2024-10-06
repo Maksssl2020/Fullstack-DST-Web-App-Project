@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "react-query";
 import { getShoppingCartId } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import useAuthentication from "./useAuthentication.js";

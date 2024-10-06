@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import React, { useState } from "react";
 import DefaultModal from "../modal/DefaultModal.jsx";
 import FormItem from "./FormItem.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import useSendRequestToAdminMutation from "../../hooks/mutations/useSendRequestToAdminMutation.js";
-import useIsEmailUnique from "../../hooks/queries/useIsEmailUnique.js";
-import useIsUsernameUnique from "../../hooks/queries/useIsUsernameUnique.js";
+import useIsUsernameUniqueMutation from "../../hooks/mutations/useIsUsernameUniqueMutation.js";
+import useIsEmailUniqueMutation from "../../hooks/mutations/useIsEmailUniqueMutation.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const AccountFormItem = ({ labelTitle, register, value, errors }) => {
-  const { role, userId } = useContext(AuthContext);
+  const { role, userId } = useAuthentication();
   const [editing, setEditing] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [changingEmail, setChangingEmail] = React.useState(
@@ -22,8 +22,8 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
       toast.success("Wysłano prośbę do admina!");
       setOpenModal(false);
     });
-  const { isEmailUnique } = useIsEmailUnique();
-  const { isUsernameUnique } = useIsUsernameUnique();
+  const { isEmailUnique } = useIsEmailUniqueMutation();
+  const { isUsernameUnique } = useIsUsernameUniqueMutation();
 
   const handleButtonClick = () => {
     setEditing(!editing);
@@ -31,13 +31,9 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
 
   const checkChangedValue = async () => {
     if (changingEmail) {
-      const { data } = await isEmailUnique(changedValue);
-      console.log(data);
-      return data;
+      return await isEmailUnique(changedValue);
     } else {
-      const { data } = await isUsernameUnique(changedValue);
-      console.log(data);
-      return data;
+      return await isUsernameUnique(changedValue);
     }
   };
 

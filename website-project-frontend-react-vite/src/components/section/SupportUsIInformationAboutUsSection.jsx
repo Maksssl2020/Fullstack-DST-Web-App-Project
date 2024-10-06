@@ -12,15 +12,13 @@ import {
 } from "../../data/SupportUsPageData.js";
 import ReusableChart from "../universal/ReusableChart.jsx";
 import SupportUsSectionHeader from "../banner/SupportUsSectionHeader.jsx";
-import { useQuery } from "react-query";
-import { fetchAllStatistics } from "../../helpers/api-integration/StatisticsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useStatistics from "../../hooks/queries/useStatistics.js";
 
 const SupportUsIInformationAboutUsSection = () => {
-  const { data: chartStatisticsData, isLoading: fetchingChartStatisticsData } =
-    useQuery(["supportUsChartStatisticsData"], () => fetchAllStatistics());
+  const { statistics, fetchingStatistic } = useStatistics();
 
-  if (fetchingChartStatisticsData) {
+  if (fetchingStatistic) {
     return <Spinner />;
   }
 
@@ -51,11 +49,7 @@ const SupportUsIInformationAboutUsSection = () => {
       </SupportUsSectionHeader>
 
       <div className="mt-8 h-auto">
-        <ReusableChart
-          chartData={chartStatisticsData}
-          width={525}
-          height={525}
-        />
+        <ReusableChart chartData={statistics} width={525} height={525} />
       </div>
 
       <div className="mt-6 text-center">

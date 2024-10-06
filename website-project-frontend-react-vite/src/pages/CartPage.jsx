@@ -42,7 +42,7 @@ const CartPage = () => {
     });
 
   const { deleteAllItemsFromCart, deletingAllItemsFromCart } =
-    useDeleteAllItemsFromCartMutation(cart?.id);
+    useDeleteAllItemsFromCartMutation(cart.id, identifier);
 
   if (
     fetchingCart ||
@@ -67,7 +67,7 @@ const CartPage = () => {
             </div>
             <p>Strefa wysyłkowa dopasowana do klienta: &nbsp; "Polska"</p>
           </div>
-          <CartItemsTable cartId={cart?.id} />
+          <CartItemsTable cartId={cart?.id} cartIdentifier={identifier} />
           <div className="w-[90%] mt-12 flex justify-between">
             <ButtonWithLink
               link={"/rainbow-shop"}

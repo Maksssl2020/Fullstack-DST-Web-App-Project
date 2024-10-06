@@ -1,39 +1,22 @@
 import React from "react";
-import { useMutation, useQueryClient } from "react-query";
-import { updateProductQuantity } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import useUpdateCartItemQuantity from "../../hooks/mutations/useUpdateCartItemQuantity.js";
+import Spinner from "../universal/Spinner.jsx";
 
 const ProductQuantityButton = ({
   itemId = undefined,
   quantity = undefined,
+  cartIdentifier = undefined,
   addFunction,
   subFunction,
   className,
 }) => {
-  const queryClient = useQueryClient();
-
-  console.log(itemId);
-
-  const {
-    mutate: updateCartProductQuantity,
-    isLoading: updatingProductQuantity,
-  } = useMutation({
-    mutationKey: ["updateCartProductQuantity", itemId, quantity],
-    mutationFn: (newQuantity) => {
-      if (itemId) {
-        return updateProductQuantity(itemId, newQuantity);
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("cartTableData");
-      queryClient.invalidateQueries("userCartData");
-    },
-    onError: (error) => console.log(error),
-  });
+  const { updateCartItemQuantity, updatingCartItemQuantity } =
+    useUpdateCartItemQuantity(itemId, cartIdentifier);
 
   const handleSubtract = () => {
     if (itemId && quantity - 1 >= 1) {
       const newQuantity = subFunction(quantity);
-      updateCartProductQuantity(newQuantity);
+      updateCartItemQuantity(newQuantity);
     } else {
       subFunction();
     }
@@ -42,14 +25,14 @@ const ProductQuantityButton = ({
   const handleAdd = () => {
     if (itemId) {
       const newQuantity = addFunction(quantity);
-      updateCartProductQuantity(newQuantity);
+      updateCartItemQuantity(newQuantity);
     } else {
       addFunction();
     }
   };
 
-  // if (updatingProductQuantity) {
-  //   return;
+  // if (updatingCartItemQuantity) {
+  //   return <Spinner />;
   // }
 
   return (

@@ -122,6 +122,8 @@ public class CartItemServiceImpl implements CartItemService {
         foundItem.setTotalPrice(foundItem.getUnitPrice().multiply(new BigDecimal(quantity)));
         cartItemRepository.save(foundItem);
         updateCartTotalPrice(foundItem.getCart().getId());
+        log.info(String.valueOf(itemId));
+        log.info(String.valueOf(quantity));
     }
 
     @Override

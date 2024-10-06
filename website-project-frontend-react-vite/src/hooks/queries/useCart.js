@@ -6,7 +6,7 @@ function UseCart(cartIdentifier) {
   const { isAuthenticated } = useAuthentication();
 
   const { data: cart, isLoading: fetchingCart } = useQuery(
-    [`userCartData${cartIdentifier}`, cartIdentifier, isAuthenticated],
+    ["userCartData", cartIdentifier],
     () => {
       if (cartIdentifier) {
         return fetchShoppingCartByIdentifier(cartIdentifier, isAuthenticated);

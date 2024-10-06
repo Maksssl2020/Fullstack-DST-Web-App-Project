@@ -3,7 +3,7 @@ import { fetchProductImages } from "../../helpers/api-integration/ShopProductsHa
 
 function UseProductImages(productId) {
   const { data: productImages, isLoading: fetchingProductImages } = useQuery(
-    [`productPageImages${productId}`, productId],
+    [`productPageImages`, productId],
     () => fetchProductImages(productId),
   );
 

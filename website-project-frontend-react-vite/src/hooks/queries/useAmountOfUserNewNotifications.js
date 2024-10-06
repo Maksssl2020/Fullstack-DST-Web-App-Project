@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "react-query";
 import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling.js";
 import useAuthentication from "./useAuthentication.js";

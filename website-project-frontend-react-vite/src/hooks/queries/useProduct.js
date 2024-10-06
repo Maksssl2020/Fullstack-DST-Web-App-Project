@@ -3,7 +3,7 @@ import { fetchProductData } from "../../helpers/api-integration/ShopProductsHand
 
 function UseProduct(productId) {
   const { data: product, isLoading: fetchingProduct } = useQuery(
-    [`productPage${productId}`, productId],
+    ["productPage", productId],
     () => fetchProductData(productId),
   );
 

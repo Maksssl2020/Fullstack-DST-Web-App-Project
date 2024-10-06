@@ -127,6 +127,8 @@ public class CartServiceImpl implements CartService {
 
     public void setCartTotalPrice(Long cartId, BigDecimal totalPrice) {
         try {
+            log.info(String.valueOf(cartId));
+            log.info(String.valueOf(totalPrice));
             Cart foundCart = cartRepository.findById(cartId).orElseThrow(ChangeSetPersister.NotFoundException::new);
             foundCart.setTotalPrice(totalPrice);
             cartRepository.save(foundCart);

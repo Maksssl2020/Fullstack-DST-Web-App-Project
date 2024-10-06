@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import HeartIcon from "../../icons/HeartIcon.jsx";
-import { useQuery } from "react-query";
-import { fetchProductCategoriesData } from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";

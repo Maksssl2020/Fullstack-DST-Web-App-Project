@@ -3,7 +3,7 @@ import { fetchPostUsersComments } from "../../helpers/api-integration/ForumPosts
 
 function useForumPostComments(forumPostId) {
   const { data: forumPostComments, isLoading: fetchingForumPostComments } =
-    useQuery([`forumPostComments${forumPostId}`, forumPostId], () =>
+    useQuery(["forumPostComments", forumPostId], () =>
       fetchPostUsersComments(forumPostId),
     );
 

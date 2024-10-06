@@ -1,20 +1,17 @@
 import React from "react";
 import CloseIcon from "../drawer/icons/CloseIcon.jsx";
 import { createPortal } from "react-dom";
-import { useQuery } from "react-query";
-import { fetchInstagramPostAllImages } from "../../helpers/api-integration/InstagramDataHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import { motion } from "framer-motion";
+import useInstagramPostImages from "../../hooks/queries/useInstagramPostImages.js";
 
 const InstagramPostModal = ({ selectedPost, onClick }) => {
-  const { data: postImages, isLoading: fetchingPostImages } = useQuery(
-    ["instagramPostImages", selectedPost.id],
-    () => fetchInstagramPostAllImages(selectedPost.id),
-  );
+  const { instagramPostImages, fetchingInstagramPostImages } =
+    useInstagramPostImages(selectedPost.id);
 
-  if (fetchingPostImages) {
+  if (fetchingInstagramPostImages) {
     return <Spinner />;
   }
 
@@ -35,7 +32,7 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
         className={`relative flex ease-in-out rounded-lg w-[1450px] h-[750px] transform transition-transform duration-300 scale-100`}
       >
         <div className="w-[70%] h-full">
-          {postImages.length > 1 ? (
+          {instagramPostImages.length > 1 ? (
             <Swiper
               modules={[Navigation, Autoplay]}
               slidesPerView={1}
@@ -46,7 +43,7 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
                 disableOnInteraction: false,
               }}
             >
-              {postImages.map((postData, index) => (
+              {instagramPostImages.map((postData, index) => (
                 <SwiperSlide key={index}>
                   <img
                     src={postData.media_url}

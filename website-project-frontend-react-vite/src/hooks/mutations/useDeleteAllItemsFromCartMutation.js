@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { deleteAllProductsFromCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 
-function UseDeleteAllItemsFromCartMutation(cartId) {
+function UseDeleteAllItemsFromCartMutation(cartId, cartIdentifier) {
   const queryClient = useQueryClient();
 
   const {
@@ -13,8 +13,8 @@ function UseDeleteAllItemsFromCartMutation(cartId) {
     mutationFn: () => deleteAllProductsFromCart(cartId),
     onSuccess: () => {
       toast.success("Usunięto wszystkie produkty z koszyka!");
-      queryClient.invalidateQueries([`cartItems${cartId}`]);
-      queryClient.invalidateQueries([`amountOfCartItems${cartId}`]);
+      queryClient.invalidateQueries(["cartItems", cartIdentifier]);
+      queryClient.invalidateQueries(["amountOfCartItems", cartIdentifier]);
     },
   });
 

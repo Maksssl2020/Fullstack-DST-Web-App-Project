@@ -15,6 +15,8 @@ const Home = () => {
     return;
   }
 
+  console.log(userMessages);
+
   return (
     <AnimatedPage>
       {userMessages?.length > 0 && (

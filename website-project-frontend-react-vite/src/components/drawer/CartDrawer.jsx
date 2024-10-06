@@ -15,7 +15,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
   const [cartId, setCartId] = useState();
   const [cartIdentifier, setCartIdentifier] = useState("");
   const { cart, fetchingCart } = useCart(cartIdentifier);
-  const { cartItems, fetchingCartItems } = useCartItems(cartId);
+  const { cartItems, fetchingCartItems } = useCartItems(cartId, cartIdentifier);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -30,10 +30,6 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
       setCartId(cart.id);
     }
   }, [cart, fetchingCart]);
-
-  console.log(cart);
-  console.log(cartItems);
-  console.log(cartIdentifier);
 
   if (fetchingCart || fetchingCartItems) {
     return <Spinner />;
@@ -71,7 +67,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                 <h1 className="font-bold text-4xl pl-8">Koszyk</h1>
                 <div className="w-full h-auto gap-4 mt-8">
                   <AnimatePresence mode={"wait"}>
-                    {cartItems && cartItems.length > 0 ? (
+                    {cartItems?.length > 0 ? (
                       <motion.ul
                         initial="hidden"
                         animate="visible"
@@ -97,7 +93,10 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                             transition={{ type: "just", duration: 0.3 }}
                             className={`w-full ${index === 0 && "border-t-4 border-black"}`}
                           >
-                            <CartItemCard cartItemData={data} cartId={cartId} />
+                            <CartItemCard
+                              cartItemData={data}
+                              cartIdentifier={cartIdentifier}
+                            />
                           </motion.li>
                         ))}
                       </motion.ul>

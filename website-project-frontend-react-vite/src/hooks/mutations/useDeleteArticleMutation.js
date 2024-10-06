@@ -12,7 +12,7 @@ function UseDeleteArticleMutation(articleId, onSuccessCallback) {
         queryClient.invalidateQueries(["managementArticlesData"]);
         queryClient.invalidateQueries(["newsPostsData"]);
         queryClient.invalidateQueries(["homeNewsPostsData"]);
-        queryClient.invalidateQueries([`articleData`, articleId]);
+        queryClient.invalidateQueries(["articleData", articleId]);
 
         if (onSuccessCallback) {
           onSuccessCallback();

@@ -1,13 +1,11 @@
 import { useQuery } from "react-query";
 import { getShoppingCartItems } from "../../helpers/api-integration/ShoppingCartHandling.js";
 
-function UseCartItems(cartId) {
+function UseCartItems(cartId, cartIdentifier) {
   const { data: cartItems, isLoading: fetchingCartItems } = useQuery(
-    [`cartItems${cartId}`, cartId],
+    ["cartItems", cartIdentifier],
     () => {
-      if (cartId) {
-        return getShoppingCartItems(cartId);
-      }
+      return getShoppingCartItems(cartId);
     },
   );
 

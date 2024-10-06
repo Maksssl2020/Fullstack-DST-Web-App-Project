@@ -6,33 +6,14 @@ import ItemsTableRow from "./ItemsTableRow.jsx";
 import AnimatedCancelButton from "../universal/AnimatedCancelButton.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
 import ProductQuantityButton from "../button/ProductQuantityButton.jsx";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  deleteProductFromCart,
-  getShoppingCartItems,
-} from "../../helpers/api-integration/ShoppingCartHandling.js";
-import toast from "react-hot-toast";
 import Spinner from "../universal/Spinner.jsx";
+import useCartItems from "../../hooks/queries/useCartItems.js";
+import useDeleteItemFromCartMutation from "../../hooks/mutations/useDeleteItemFromCartMutation.js";
 
-const CartItemsTable = ({ cartId }) => {
-  const queryClient = useQueryClient();
-
-  const { data: cartItemsData, isLoading: fetchingCartItemsData } = useQuery(
-    ["cartTableData", cartId],
-    () => getShoppingCartItems(cartId),
-  );
-
-  const { mutate: deleteItemFromCart, isLoading: deletingItemFromCart } =
-    useMutation({
-      mutationKey: ["deleteItemFromCart"],
-      mutationFn: (itemId) => deleteProductFromCart(itemId),
-      onSuccess: () => {
-        queryClient.invalidateQueries("cartPageItems");
-        queryClient.invalidateQueries("amountOfItemsInCart");
-        toast.success("Usunięto produkt z koszyka!");
-      },
-      onError: (error) => console.log(error),
-    });
+const CartItemsTable = ({ cartId, cartIdentifier }) => {
+  const { cartItems, fetchingCartItems } = useCartItems(cartId, cartIdentifier);
+  const { deleteItemFromCart, deletingItemFromCart } =
+    useDeleteItemFromCartMutation(cartIdentifier);
 
   const handleQuantitySubtraction = (quantity) => {
     if (quantity - 1 >= 1) {
@@ -46,13 +27,13 @@ const CartItemsTable = ({ cartId }) => {
     return quantity + 1;
   };
 
-  if (fetchingCartItemsData || deletingItemFromCart) {
+  if (fetchingCartItems || deletingItemFromCart) {
     return <Spinner />;
   }
 
   return (
     <>
-      {cartItemsData?.length === 0 && (
+      {cartItems?.length === 0 && (
         <DefaultModal
           title={"Informacja"}
           subtitle={"Brak produktów w koszyku!"}
@@ -88,7 +69,7 @@ const CartItemsTable = ({ cartId }) => {
         </div>
         <div className="w-full h-auto rounded-2xl text-2xl">
           <AnimatePresence mode={"popLayout"}>
-            {cartItemsData?.map((data) => (
+            {cartItems?.map((data) => (
               <motion.div
                 layout
                 key={data.id}
@@ -122,6 +103,7 @@ const CartItemsTable = ({ cartId }) => {
                     <ProductQuantityButton
                       itemId={data.id}
                       quantity={data.quantity}
+                      cartIdentifier={cartIdentifier}
                       addFunction={handleQuantityAdding}
                       subFunction={handleQuantitySubtraction}
                       className={

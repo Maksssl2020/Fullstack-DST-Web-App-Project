@@ -5,11 +5,11 @@ import Spinner from "../universal/Spinner.jsx";
 import { motion } from "framer-motion";
 import useDeleteItemFromCartMutation from "../../hooks/mutations/useDeleteItemFromCartMutation.js";
 
-const CartItemCard = ({ cartItemData, cartId }) => {
+const CartItemCard = ({ cartItemData, cartIdentifier }) => {
   const { id, productFullTitle, productSize, quantity, unitPrice, mainImage } =
     cartItemData;
   const { deleteItemFromCart, deletingItemFromCart } =
-    useDeleteItemFromCartMutation(id, cartId);
+    useDeleteItemFromCartMutation(id, cartIdentifier);
 
   if (deletingItemFromCart) {
     return <Spinner />;

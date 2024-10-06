@@ -10,12 +10,13 @@ function UseDeleteForumPostCommentMutation(postId, commentId) {
   } = useMutation({
     mutationFn: () => handleCommentDelete(commentId),
     onMutate: async () => {
-      await queryClient.cancelQueries([`forumPostComments${postId}`]);
+      await queryClient.cancelQueries(["forumPostComments", postId]);
       const previousComments = queryClient.getQueriesData([
-        `forumPostComments${postId}`,
+        "forumPostComments",
+        postId,
       ]);
 
-      queryClient.setQueriesData([`forumPostComments${postId}`], (old = []) => {
+      queryClient.setQueriesData(["forumPostComments", postId], (old = []) => {
         return old.filter((comment) => comment.id !== commentId);
       });
 
@@ -23,13 +24,13 @@ function UseDeleteForumPostCommentMutation(postId, commentId) {
     },
     onError: (error, oldComment, context) => {
       queryClient.setQueriesData(
-        [`forumPostComments${postId}`],
+        ["forumPostComments", postId],
         context.previousComments,
       );
       console.log(error);
     },
     onSettled: () => {
-      queryClient.invalidateQueries([`forumPostComments${postId}`]);
+      queryClient.invalidateQueries(["forumPostComments", postId]);
     },
   });
 

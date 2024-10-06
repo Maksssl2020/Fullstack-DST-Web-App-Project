@@ -6,7 +6,7 @@ function UseForumPostMutation(postId) {
     data: forumPostData,
     mutate: fetchForumPostData,
     isLoading: fetchingForumPostData,
-  } = useMutation(["fetchForumPostData", postId], () => fetchPostData(postId));
+  } = useMutation(["forumPostData", postId], () => fetchPostData(postId));
 
   return { forumPostData, fetchForumPostData, fetchingForumPostData };
 }

@@ -77,7 +77,7 @@ const UserMessageModal = ({ messageData }) => {
             Akceptuj
           </button>
           <button
-            onClick={markMessageAsRead}
+            onClick={() => markMessageAsRead(messageId)}
             className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"
           >
             Anuluj
@@ -85,7 +85,7 @@ const UserMessageModal = ({ messageData }) => {
         </div>
       ) : (
         <button
-          onClick={markMessageAsRead}
+          onClick={() => markMessageAsRead(messageId)}
           className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"
         >
           Potwierdź

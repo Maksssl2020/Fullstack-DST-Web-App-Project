@@ -29,7 +29,7 @@ function UseUpdateForumPostMutation(forumPostId, onSuccessCallback) {
         return { previousForumPosts };
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(["forumPostsData", forumPostId]);
+        queryClient.invalidateQueries(["forumPostData", forumPostId]);
         queryClient.refetchQueries(["forumPostsData"]);
 
         if (onSuccessCallback) {

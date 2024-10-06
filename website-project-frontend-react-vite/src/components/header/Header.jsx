@@ -11,7 +11,6 @@ import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import Spinner from "../universal/Spinner.jsx";
 import Badge from "../badge/Badge.jsx";
-import useCartId from "../../hooks/queries/useCartId.js";
 import useCartAmountOfItems from "../../hooks/queries/useCartAmountOfItems.js";
 import useAmountOfUserNewNotifications from "../../hooks/queries/useAmountOfUserNewNotifications.js";
 
@@ -23,9 +22,8 @@ const Header = ({ forumAddPostButton }) => {
   const [cartIdentifier, setCartIdentifier] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  const { cartId, fetchingCartId } = useCartId(cartIdentifier);
   const { amountOfCartItems, fetchingAmountOfCartItems } =
-    useCartAmountOfItems(cartId);
+    useCartAmountOfItems(cartIdentifier);
   const { amountOfUserNewNotifications, fetchingAmountOfUserNewNotifications } =
     useAmountOfUserNewNotifications(userId);
 
@@ -83,11 +81,7 @@ const Header = ({ forumAddPostButton }) => {
     }
   };
 
-  if (
-    fetchingCartId ||
-    fetchingAmountOfCartItems ||
-    fetchingAmountOfUserNewNotifications
-  ) {
+  if (fetchingAmountOfCartItems || fetchingAmountOfUserNewNotifications) {
     return <Spinner />;
   }
 

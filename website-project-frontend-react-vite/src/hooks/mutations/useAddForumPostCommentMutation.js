@@ -17,13 +17,14 @@ function UseAddForumPostCommentMutation(
           authorId: userId,
         }),
       onMutate: async (newComment) => {
-        await queryClient.cancelQueries([`forumPostComments${forumPostId}`]);
+        await queryClient.cancelQueries(["forumPostComments", forumPostId]);
         const previousCommentsData = queryClient.getQueriesData([
-          `forumPostComments${forumPostId}`,
+          "forumPostComments",
+          forumPostId,
         ]);
 
         queryClient.setQueriesData(
-          [`forumPostComments${forumPostId}`],
+          ["forumPostComments", forumPostId],
           (old) => {
             return [...old, { id: old?.id + 1 || 1, content: newComment }];
           },
@@ -38,13 +39,13 @@ function UseAddForumPostCommentMutation(
       },
       onError: (error, newComment, context) => {
         queryClient.setQueriesData(
-          [`forumPostComments${forumPostId}`],
+          ["forumPostComments", forumPostId],
           context.previousCommentsData,
         );
         console.log(error);
       },
       onSettled: () => {
-        queryClient.invalidateQueries([`forumPostComments${forumPostId}`]);
+        queryClient.invalidateQueries(["forumPostComments", forumPostId]);
       },
     });
 
