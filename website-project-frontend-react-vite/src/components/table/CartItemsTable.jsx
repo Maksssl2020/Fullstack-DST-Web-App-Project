@@ -83,7 +83,12 @@ const CartItemsTable = ({ cartId, cartIdentifier }) => {
                   className={"items-center flex gap-8"}
                 >
                   <AnimatedCancelButton
-                    onClick={() => deleteItemFromCart(data.id)}
+                    onClick={() =>
+                      deleteItemFromCart({
+                        cartItemId: data.id,
+                        cartId: cartItems,
+                      })
+                    }
                     iconSize={"size-10"}
                   />
                   <img

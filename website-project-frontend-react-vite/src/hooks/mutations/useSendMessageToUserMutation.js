@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleSendUserMessage } from "../../helpers/api-integration/UserDataHandling.js";
 
-function UseSendMessageToUserMutation(userId) {
+function UseSendMessageToUserMutation(userId, onSuccessCallback) {
   const queryClient = useQueryClient();
 
   const { mutate: sendMessageToUser, isLoading: sendingMessageToUser } =
@@ -16,6 +16,10 @@ function UseSendMessageToUserMutation(userId) {
       },
       onSuccess: () => {
         queryClient.invalidateQueries(["userMessages", userId]);
+
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        }
       },
       onError: (error) => {
         console.log(error);

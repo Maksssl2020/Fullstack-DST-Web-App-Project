@@ -2,20 +2,20 @@ import BellIcon from "./icons/BellIcon.jsx";
 import UserIcon from "./icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer.jsx";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import RightDrawer from "../drawer/RightDrawer.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "../../icons/ShoppingBagIcon.jsx";
 import CartDrawer from "../drawer/CartDrawer.jsx";
-import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import Spinner from "../universal/Spinner.jsx";
 import Badge from "../badge/Badge.jsx";
 import useCartAmountOfItems from "../../hooks/queries/useCartAmountOfItems.js";
 import useAmountOfUserNewNotifications from "../../hooks/queries/useAmountOfUserNewNotifications.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const Header = ({ forumAddPostButton }) => {
-  const { userId, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useAuthentication();
   const [isRightDataDrawerOpen, setIsRightDataDrawerOpen] =
     React.useState(false);
   const [isCartDrawerOpen, setIsCartDrawerOpen] = React.useState(false);

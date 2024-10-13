@@ -5,7 +5,9 @@ function UseCartItems(cartId, cartIdentifier) {
   const { data: cartItems, isLoading: fetchingCartItems } = useQuery(
     ["cartItems", cartIdentifier],
     () => {
-      return getShoppingCartItems(cartId);
+      if (cartId) {
+        return getShoppingCartItems(cartId);
+      }
     },
   );
 

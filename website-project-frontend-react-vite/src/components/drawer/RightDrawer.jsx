@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import CloseIcon from "./icons/CloseIcon.jsx";
 import GoogleIcon from "./icons/GoogleIcon.jsx";
 import AppleIcon from "./icons/AppleIcon.jsx";
 import EmiailIcon from "./icons/EmiailIcon.jsx";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const RightDrawer = ({ isOpen, closeFunction }) => {
-  const { logout, isAuthenticated } = useContext(AuthContext);
+  const { logout, isAuthenticated } = useAuthentication();
   const navigate = useNavigate();
 
   const handleLogout = () => {

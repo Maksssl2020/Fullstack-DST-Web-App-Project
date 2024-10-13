@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const AdminFormSection = ({
   children,
@@ -14,7 +14,7 @@ const AdminFormSection = ({
   notificationData = undefined,
   sendNotification = false,
 }) => {
-  const { username } = useContext(AuthContext);
+  const { username } = useAuthentication();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 

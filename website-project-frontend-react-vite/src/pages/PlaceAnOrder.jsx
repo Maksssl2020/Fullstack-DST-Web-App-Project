@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import FormItem from "../components/form/FormItem.jsx";
@@ -11,36 +11,31 @@ import {
   orderFormWithoutAnotherAddress,
 } from "../helpers/ValidationSchemas.js";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery } from "react-query";
-import {
-  deleteAllProductsFromCart,
-  fetchShoppingCartByIdentifier,
-} from "../helpers/api-integration/ShoppingCartHandling.js";
+import { deleteAllProductsFromCart } from "../helpers/api-integration/ShoppingCartHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
-import { AuthContext } from "../context/AuthProvider.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
-import { handleProcessPayment } from "../helpers/api-integration/PaymentsHandling.js";
-import { handleAddNewOrder } from "../helpers/api-integration/OrdersHandling.js";
 import toast from "react-hot-toast";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable.jsx";
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes.js";
-import { handleApplyDiscountCodeInCart } from "../helpers/api-integration/DiscountCodesHandling.js";
 import useCart from "../hooks/queries/useCart.js";
+import useAuthentication from "../hooks/queries/useAuthentication.js";
+import useDeleteAllItemsFromCartMutation from "../hooks/mutations/useDeleteAllItemsFromCartMutation.js";
+import useApplyDiscountCodeInCart from "../hooks/mutations/useApplyDiscountCodeInCart.js";
+import useCreatePaymentMutation from "../hooks/mutations/useCreatePaymentMutation.js";
+import useCreateOrderMutation from "../hooks/mutations/useCreateOrderMutation.js";
 
 const PlaceAnOrder = () => {
-  const { isAuthenticated, userId } = useContext(AuthContext);
+  const { userId } = useAuthentication();
   const { cartIdentifier } = useParams();
   const [anotherAddress, setAnotherAddress] = React.useState(false);
   const [deliveryType, setDeliveryType] = useState();
   const [billingForm, setBillingForm] = React.useState({});
   const [shippingForm, setShippingForm] = React.useState({});
-  const [orderId, setOrderId] = useState();
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
-    reset,
   } = useForm({
     resolver: yupResolver(
       anotherAddress
@@ -50,83 +45,46 @@ const PlaceAnOrder = () => {
   });
 
   const { cart, fetchingCart } = useCart(cartIdentifier);
+  const { createOrder, creatingOrder } = useCreateOrderMutation((orderId) => {
+    createPayment({
+      orderId: orderId,
+      amount: cart.discountCode
+        ? calcCartTotalPriceWithDiscount(cart.discountCode, cart.totalPrice)
+        : cart.totalPrice,
+      paymentDescription: "Test Payment React",
+      firstName: getValues().firstName,
+      lastName: getValues().lastName,
+      email: getValues().email,
+    });
+  });
 
-  const { mutate: createOrder, isLoading: creatingOrder } = useMutation({
-    mutationKey: ["createOrder", cart.id, billingForm, shippingForm],
-    mutationFn: () =>
-      handleAddNewOrder({
+  const { createPayment, creatingPayment } = useCreatePaymentMutation(() => {
+    if (cart.discountCode !== null) {
+      return applyDiscountCodeInCart({
+        cartId: cart.id,
+        userId: userId,
+      });
+    } else {
+      return deleteAllProductsFromCart(cart.id);
+    }
+  });
+
+  const { applyDiscountCodeInCart, applyingDiscountCodeInCart } =
+    useApplyDiscountCodeInCart(() => {
+      deleteAllItemsFromCart(cart.id);
+    });
+
+  const { deleteAllItemsFromCart, deletingAllItemsFromCart } =
+    useDeleteAllItemsFromCartMutation(cart.id, cartIdentifier);
+
+  const handleSubmitOrder = () => {
+    try {
+      createOrder({
         authenticatedCustomerId: userId || null,
         cartId: cart.id,
         billing: billingForm,
         shipping: shippingForm,
-      }),
-    onSuccess: (orderId) => {
-      toast.success(orderId);
-      setOrderId(orderId);
-      handlePayment(orderId);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  const { mutate: handlePayment, isLoading: paying } = useMutation({
-    mutationKey: ["pay", orderId],
-    mutationFn: (orderId) => {
-      if (orderId) {
-        return handleProcessPayment({
-          orderId: orderId,
-          amount: cart.discountCode
-            ? calcCartTotalPriceWithDiscount(cart.discountCode, cart.totalPrice)
-            : cart.totalPrice,
-          paymentDescription: "Test Payment React",
-          firstName: getValues().firstName,
-          lastName: getValues().lastName,
-          email: getValues().email,
-        });
-      }
-    },
-    onSuccess: (redirectUrl) => {
-      window.location.replace(redirectUrl);
-      toast.success("Złożono nowe zamówienie!");
-
-      if (cart.discountCode !== null) {
-        return applyDiscountCodeInCart(cart.id);
-      } else {
-        return deleteAllItemsInCart(cart.id);
-      }
-    },
-    onError: (error) => console.log(error),
-  });
-
-  const {
-    mutate: applyDiscountCodeInCart,
-    isLoading: applyingDiscountCodeInCart,
-  } = useMutation({
-    mutationKey: ["applyDiscountCodeInCart", cart.id, userId],
-    mutationFn: (cartId) => {
-      if (cartId) {
-        return handleApplyDiscountCodeInCart(cartId, userId);
-      }
-    },
-    onSuccess: () => {
-      return deleteAllItemsInCart(cart.id);
-    },
-  });
-
-  const { mutate: deleteAllItemsInCart, isLoading: deletingAllItemsInCart } =
-    useMutation({
-      mutationKey: ["deleteAllItemsInCart", cart.id],
-      mutationFn: (cartId) => {
-        if (cartId) {
-          return deleteAllProductsFromCart(cartId);
-        }
-      },
-    });
-
-  const handleSubmitOrder = () => {
-    try {
-      createOrder();
+      });
     } catch (error) {
       console.error("Order processing error:", error);
       toast.error(
@@ -257,9 +215,9 @@ const PlaceAnOrder = () => {
 
   if (
     fetchingCart ||
-    paying ||
+    creatingPayment ||
     creatingOrder ||
-    deletingAllItemsInCart ||
+    deletingAllItemsFromCart ||
     applyingDiscountCodeInCart
   ) {
     return <Spinner />;

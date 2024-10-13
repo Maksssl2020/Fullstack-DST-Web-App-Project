@@ -26,6 +26,9 @@ import {
 } from "../../../data/NewProductFormData.js";
 import { decodeImageFile } from "../../../helpers/PostManager.js";
 import ItemCurrentImages from "../../list/ItemCurrentImages.jsx";
+import useProductMutation from "../../../hooks/mutations/useProductMutation.js";
+import useUpdateProductMutation from "../../../hooks/mutations/useUpdateProductMutation.js";
+import useAddProductMutation from "../../../hooks/mutations/useAddProductMutation.js";
 
 const NewProductForm = ({ isEditing }) => {
   const { type, id } = useParams();
@@ -44,50 +47,22 @@ const NewProductForm = ({ isEditing }) => {
     resolver: yupResolver(newProductFormSchema(type)),
   });
 
-  const {
-    mutate: fetchProductDataToUpdate,
-    isLoading: fetchingProductDataToUpdate,
-  } = useMutation(["productDataToEdit", id], () => fetchProductData(id), {
-    onSuccess: (productData) => {
-      setCurrentProductData(productData);
-    },
+  const { fetchProductDataToUpdate, fetchingProductDataToUpdate } =
+    useProductMutation((data) => {
+      setCurrentProductData(data);
+    });
+  const { addProduct, addingProduct } = useAddProductMutation(() => {
+    toast.success("Dodano nowy produkt!");
+    reset();
   });
-
-  const { mutate: addNewProduct, isLoading: addingNewProduct } = useMutation({
-    mutationKey: ["addNewProduct"],
-    mutationFn: () =>
-      handleAddNewProduct(getProductDataFormDependsOnProductType(), type),
-    onSuccess: () => {
-      queryClient.invalidateQueries("shopProductsData");
-      toast.success("Dodano nowy produkt!");
-      reset();
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  const { mutate: updateProduct, isLoading: updatingProduct } = useMutation({
-    mutationKey: ["updateProduct", id],
-    mutationFn: () => {
-      if (isEditing) {
-        return handleUpdateProduct(
-          id,
-          getProductDataFormDependsOnProductType(),
-          type,
-        );
-      }
-    },
-    onSuccess: () => {
-      toast("Pomyślnie zaktualizowano produkt!");
-      navigate("/rainbow-shop");
-    },
-    onError: (error) => console.log(error),
+  const { updateProduct, updatingProduct } = useUpdateProductMutation(() => {
+    toast("Pomyślnie zaktualizowano produkt!");
+    navigate("/rainbow-shop");
   });
 
   useEffect(() => {
     if (isEditing && id) {
-      fetchProductDataToUpdate();
+      fetchProductDataToUpdate(id);
     }
   }, [fetchProductDataToUpdate, id, isEditing]);
 
@@ -209,7 +184,10 @@ const NewProductForm = ({ isEditing }) => {
         message: "Produkt musi mieć co najmniej 1 zdjęcie!",
       });
     } else {
-      addNewProduct();
+      addProduct({
+        productData: getProductDataFormDependsOnProductType(),
+        productType: type,
+      });
     }
   };
 
@@ -225,7 +203,7 @@ const NewProductForm = ({ isEditing }) => {
     }
   };
 
-  if (addingNewProduct || fetchingProductDataToUpdate || updatingProduct) {
+  if (addingProduct || fetchingProductDataToUpdate || updatingProduct) {
     return <Spinner />;
   }
 
@@ -239,7 +217,13 @@ const NewProductForm = ({ isEditing }) => {
           submitTitle={isEditing ? "zaktualizuj produkt" : "dodaj produkt"}
           handleSubmit={
             isEditing
-              ? handleSubmit(updateProduct)
+              ? handleSubmit(() => {
+                  updateProduct({
+                    productId: id,
+                    productData: getProductDataFormDependsOnProductType(),
+                    productType: type,
+                  });
+                })
               : handleSubmit(handleProductSubmit)
           }
         >

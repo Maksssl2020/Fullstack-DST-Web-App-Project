@@ -23,7 +23,7 @@ public class GadgetController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<HttpStatus> addClothing(@ModelAttribute GadgetRequest gadgetRequest) {
+    public ResponseEntity<HttpStatus> addGadget(@ModelAttribute GadgetRequest gadgetRequest) {
         gadgetService.saveGadget(gadgetRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -5,12 +5,15 @@ import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
 import { useQuery } from "react-query";
 import { getShoppingCartItems } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import Spinner from "../universal/Spinner.jsx";
+import useCartItems from "../../hooks/queries/useCartItems.js";
 
 const OrderPageItemsTable = ({
   cartId = undefined,
+  cartIdentifier = undefined,
   purchasedItems = [],
   withImage = true,
 }) => {
+  const {} = useCartItems(cartId, cartIdentifier);
   const { data: itemsData = purchasedItems, isLoading: fetchingItemsData } =
     useQuery(["itemsTableData", cartId], () => {
       if (cartId !== undefined) {

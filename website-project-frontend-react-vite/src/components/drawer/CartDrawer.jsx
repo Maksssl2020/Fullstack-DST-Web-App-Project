@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CloseIcon from "./icons/CloseIcon.jsx";
-import { AuthContext } from "../../context/AuthProvider.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
 import CartItemCard from "../card/CartItemCard.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
@@ -9,9 +8,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import useCart from "../../hooks/queries/useCart.js";
 import useCartItems from "../../hooks/queries/useCartItems.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {
-  const { userId, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useAuthentication();
   const [cartId, setCartId] = useState();
   const [cartIdentifier, setCartIdentifier] = useState("");
   const { cart, fetchingCart } = useCart(cartIdentifier);
@@ -83,7 +83,7 @@ const CartDrawer = ({ isOpen, closeFunction }) => {
                         key={"list"}
                         className="flex flex-col w-full"
                       >
-                        {cartItems.map((data, index) => (
+                        {cartItems?.map((data, index) => (
                           <motion.li
                             key={index}
                             variants={{

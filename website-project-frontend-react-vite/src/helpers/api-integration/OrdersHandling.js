@@ -18,9 +18,14 @@ export const fetchOrderPurchasedItems = async (orderId) => {
   }
 };
 
-export const fetchAllOrders = async () => {
+export const fetchAllOrders = async (page) => {
   try {
-    const response = await axios.get("/orders/find-all");
+    const response = await axios.get("/orders/find-all", {
+      params: {
+        page: page,
+        size: 8,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(error);

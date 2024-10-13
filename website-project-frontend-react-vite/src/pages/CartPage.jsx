@@ -42,7 +42,7 @@ const CartPage = () => {
     });
 
   const { deleteAllItemsFromCart, deletingAllItemsFromCart } =
-    useDeleteAllItemsFromCartMutation(cart.id, identifier);
+    useDeleteAllItemsFromCartMutation(cart?.id, identifier);
 
   if (
     fetchingCart ||

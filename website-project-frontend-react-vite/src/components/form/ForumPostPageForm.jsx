@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import React, { useEffect, useState } from "react";
 import ForumPostItem from "./ForumPostItem.jsx";
 import { TodayDate } from "../../helpers/Date.js";
 import UserIcon from "../header/icons/UserIcon.jsx";
@@ -12,10 +11,11 @@ import useUpdateForumPostMutation from "../../hooks/mutations/useUpdateForumPost
 import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
 import useForumPostMutation from "../../hooks/mutations/useForumPostMutation.js";
 import useUserAmountOfCreatedForumPosts from "../../hooks/queries/useUserAmountOfCreatedForumPosts.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const ForumPostPageForm = ({ isEditing }) => {
   const { id } = useParams();
-  const { userId, username } = useContext(AuthContext);
+  const { userId, username } = useAuthentication();
   const { register, setValue, handleSubmit, formState, watch, reset } =
     useForm();
   const { errors } = formState;

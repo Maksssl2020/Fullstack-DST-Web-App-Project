@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const DrawerList = () => {
-  const { role, isAuthenticated, userId } = useContext(AuthContext);
+  const { role, isAuthenticated, userId } = useAuthentication();
 
   const drawerListData = [
     {

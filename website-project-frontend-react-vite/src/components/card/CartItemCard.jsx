@@ -6,10 +6,19 @@ import { motion } from "framer-motion";
 import useDeleteItemFromCartMutation from "../../hooks/mutations/useDeleteItemFromCartMutation.js";
 
 const CartItemCard = ({ cartItemData, cartIdentifier }) => {
-  const { id, productFullTitle, productSize, quantity, unitPrice, mainImage } =
-    cartItemData;
+  const {
+    id,
+    productFullTitle,
+    productSize,
+    quantity,
+    unitPrice,
+    mainImage,
+    cartId,
+  } = cartItemData;
   const { deleteItemFromCart, deletingItemFromCart } =
-    useDeleteItemFromCartMutation(id, cartIdentifier);
+    useDeleteItemFromCartMutation(cartIdentifier);
+
+  console.log(cartItemData);
 
   if (deletingItemFromCart) {
     return <Spinner />;
@@ -31,7 +40,7 @@ const CartItemCard = ({ cartItemData, cartIdentifier }) => {
       <motion.button
         whileHover={{ rotate: 180 }}
         transition={{ duration: 0.3 }}
-        onClick={deleteItemFromCart}
+        onClick={() => deleteItemFromCart({ cartItemId: id, cartId: cartId })}
         className="size-10 ml-auto rounded-full justify-center items-center flex"
       >
         <CloseIcon size={"size-10"} />

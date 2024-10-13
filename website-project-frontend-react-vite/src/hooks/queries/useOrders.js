@@ -1,13 +1,14 @@
 import { useQuery } from "react-query";
 import { fetchAllOrders } from "../../helpers/api-integration/OrdersHandling.js";
 
-function useOrders() {
-  const { data: orders, isLoading: fetchingOrders } = useQuery(
-    ["ordersData"],
-    () => fetchAllOrders(),
-  );
+function useOrders(currentPage) {
+  const {
+    data: orders,
+    isLoading: fetchingOrders,
+    refetch,
+  } = useQuery(["ordersData"], () => fetchAllOrders(currentPage));
 
-  return { orders, fetchingOrders };
+  return { orders, fetchingOrders, refetch };
 }
 
 export default useOrders;

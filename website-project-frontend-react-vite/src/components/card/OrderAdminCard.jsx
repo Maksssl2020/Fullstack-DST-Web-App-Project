@@ -62,7 +62,8 @@ const OrderAdminCard = ({ orderData }) => {
   const { buildingNumber, city, postalCode, shippingType, street } =
     shippingData;
 
-  console.log(orderData);
+  // console.log(orderData);
+  console.log(payment);
 
   if (updatingOrderStatus) {
     return <Spinner />;

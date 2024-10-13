@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
-import com.dst.websiteprojectbackendspring.service.cart_item.CartItemServiceImpl;
+import com.dst.websiteprojectbackendspring.dto.cart_item.CartItemDTO;
+import com.dst.websiteprojectbackendspring.service.cart_item.CartItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/api/v1/items")
 public class CartItemController {
 
-    private final CartItemServiceImpl cartItemService;
+    private final CartItemService cartItemService;
 
     @GetMapping("/cart/{cartId}")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable Long cartId) {
+    public ResponseEntity<List<CartItemDTO>> getCartItems(@PathVariable Long cartId) {
         return ResponseEntity.ok(cartItemService.getCartItemsByCartId(cartId));
     }
 
@@ -48,9 +48,9 @@ public class CartItemController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete-item/{cartItemId}")
-    public ResponseEntity<HttpStatus> deleteItemFromCart(@PathVariable Long cartItemId) {
-        cartItemService.deleteCartItem(cartItemId);
+    @DeleteMapping("/delete-item/{cartItemId}/{cartId}")
+    public ResponseEntity<HttpStatus> deleteItemFromCart(@PathVariable Long cartItemId, @PathVariable Long cartId) {
+        cartItemService.deleteCartItem(cartItemId, cartId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

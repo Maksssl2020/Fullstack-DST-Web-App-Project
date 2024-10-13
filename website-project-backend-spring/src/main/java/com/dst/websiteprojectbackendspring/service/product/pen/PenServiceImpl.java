@@ -17,7 +17,7 @@ public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenServic
     private final PenRepository penRepository;
 
     public PenServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, PenRepository penRepository) {
-        super(productRepository, productDTOForCardMapper);
+        super(productRepository, productDTOForCardMapper, null);
         this.penRepository = penRepository;
     }
 

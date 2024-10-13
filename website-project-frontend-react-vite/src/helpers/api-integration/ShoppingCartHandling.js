@@ -91,9 +91,11 @@ export const updateProductQuantity = async (cartItemId, quantity) => {
   }
 };
 
-export const deleteProductFromCart = async (cartItemId) => {
+export const deleteProductFromCart = async (cartItemId, cartId) => {
   try {
-    const response = await axios.delete(`/items/delete-item/${cartItemId}`);
+    const response = await axios.delete(
+      `/items/delete-item/${cartItemId}/${cartId}`,
+    );
     return response.data;
   } catch (error) {
     console.log(error);

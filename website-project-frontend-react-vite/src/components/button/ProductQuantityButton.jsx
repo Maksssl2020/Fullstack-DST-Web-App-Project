@@ -31,9 +31,9 @@ const ProductQuantityButton = ({
     }
   };
 
-  // if (updatingCartItemQuantity) {
-  //   return <Spinner />;
-  // }
+  if (updatingCartItemQuantity) {
+    return <Spinner />;
+  }
 
   return (
     <div className={className}>

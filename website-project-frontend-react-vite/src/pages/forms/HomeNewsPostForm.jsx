@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { decodeImageFile } from "../../helpers/PostManager.js";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
-import { useMutation } from "react-query";
-import {
-  fetchHomeNewsPostData,
-  handleHomeNewsPostUpdate,
-} from "../../helpers/api-integration/NewsPostsHandling.js";
 import Spinner from "../../components/universal/Spinner.jsx";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import useHomeNewsPost from "../../hooks/queries/useHomeNewsPost.js";
+import useUpdateHomeNewsPostMutation from "../../hooks/mutations/useUpdateHomeNewsPostMutation.js";
+import { decodeImageFile } from "../../helpers/PostManager.js";
 
-const HomeNewsPostForm = ({ isEditing }) => {
+const HomeNewsPostForm = () => {
   const { id } = useParams();
   const [currentImage, setCurrentImage] = useState(null);
   const {
@@ -20,63 +17,29 @@ const HomeNewsPostForm = ({ isEditing }) => {
     handleSubmit,
     formState: { errors },
     setValue,
-    getValues,
   } = useForm();
   const navigate = useNavigate();
-
-  const {
-    mutate: fetchCurrentHomeNewsPostData,
-    isLoading: fetchingCurrentHomeNewsPostData,
-  } = useMutation(
-    [`currentHomeNewsPostData${id}`, id, isEditing],
-    () => fetchHomeNewsPostData(id),
-    {
-      onSuccess: (currentHomeNewsPostData) => {
-        setCurrentHomeNewsPostData(currentHomeNewsPostData);
-      },
-    },
-  );
-
-  const setCurrentHomeNewsPostData = (currentHomeNewsPostData) => {
-    setValue("content", currentHomeNewsPostData.content);
-    setValue("image", decodeImageFile(currentHomeNewsPostData.image));
-    setCurrentImage(getValues().image);
-  };
+  const { homeNewsPost, fetchingHomeNewsPost } = useHomeNewsPost(id);
+  const { updateHomeNewsPost, updatingHomeNewsPost } =
+    useUpdateHomeNewsPostMutation(() => {
+      toast.success("Zaktualizowano post!");
+      navigate(-1);
+    });
 
   useEffect(() => {
-    if (isEditing && id) {
-      fetchCurrentHomeNewsPostData();
-    }
-  }, [fetchCurrentHomeNewsPostData, id, isEditing]);
-
-  const { mutate: updateHomeNewsPost, isLoading: updatingHomeNewsPost } =
-    useMutation(
-      ["updateHomeNewsPost", id],
-      () =>
-        handleHomeNewsPostUpdate(id, {
-          content: getValues().content,
-          image: getValues().image,
-        }),
-      {
-        onSuccess: () => {
-          toast.success("Zaktualizowano post!");
-          navigate(-1);
-        },
-      },
-    );
+    setValue("content", homeNewsPost?.content);
+    setValue("image", decodeImageFile(homeNewsPost?.image));
+    setCurrentImage(homeNewsPost?.image);
+  }, [homeNewsPost, setValue]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setCurrentImage(file);
   };
 
-  if (fetchingCurrentHomeNewsPostData || updatingHomeNewsPost) {
+  if (fetchingHomeNewsPost || updatingHomeNewsPost) {
     return <Spinner />;
   }
-
-  console.log(errors);
-  console.log(getValues());
-  console.log(currentImage);
 
   return (
     <AnimatedPage>
@@ -85,11 +48,19 @@ const HomeNewsPostForm = ({ isEditing }) => {
           cancelLink={-1}
           sendNotification={false}
           submitTitle={"Zaktualizuj Post"}
-          handleSubmit={handleSubmit(updateHomeNewsPost)}
+          handleSubmit={handleSubmit((data) =>
+            updateHomeNewsPost({
+              homeNewsPostId: id,
+              updatedData: {
+                content: data.content,
+                image: data.image,
+              },
+            }),
+          )}
         >
           <div className={"w-full flex flex-col gap-3"}>
             <label className="text-xl font-bold mt-6 ml-3">
-              {isEditing ? "Zmień zdjęcie:" : "Wybierz zdjęcie:"}
+              Zmień zdjęcie:
             </label>
             <input
               type="file"
@@ -116,9 +87,7 @@ const HomeNewsPostForm = ({ isEditing }) => {
             )}
           </div>
           <div className={"w-full h-[450px] flex flex-col gap-3"}>
-            <label className="text-xl font-bold mt-6 ml-3">
-              {isEditing ? "Zmień treść:" : "Wpisz treść:"}
-            </label>
+            <label className="text-xl font-bold mt-6 ml-3">Zmień treść:</label>
             <textarea
               maxLength={200}
               className={`w-full bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl h-[65%] border-4 rounded-xl border-black resize-none ${errors?.content && "border-red-500"}`}

@@ -9,13 +9,14 @@ import { motion } from "framer-motion";
 import useAddItemToCartMutation from "../../hooks/mutations/useAddItemToCartMutation.js";
 import useProductSizes from "../../hooks/queries/useProductSizes.js";
 import useProductCategories from "../../hooks/queries/useProductCategories.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
   cardColor,
   setProductCategories,
 }) => {
-  const { userId, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useAuthentication();
   const { id, title, name, price, productType } = productData;
   const [cartIdentifier, setCartIdentifier] = useState("");
   const [quantity, setQuantity] = React.useState(1);
@@ -63,6 +64,8 @@ const ShopProductBuyOptionsPanel = ({
   const handleQuantityAdding = () => {
     setQuantity(quantity + 1);
   };
+
+  console.log(productData);
 
   return (
     <div

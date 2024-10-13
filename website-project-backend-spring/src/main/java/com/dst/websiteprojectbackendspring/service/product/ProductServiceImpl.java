@@ -9,6 +9,7 @@ import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
+import com.dst.websiteprojectbackendspring.service.cart_item.CartItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -29,6 +30,8 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
 
     private final ProductRepository productRepository;
     private final ProductDTOForCardMapper productDTOForCardMapper;
+
+    private final CartItemService cartItemService;
 
     @Override
     public List<Product> findAllProducts() {
@@ -63,6 +66,7 @@ public class ProductServiceImpl<T extends Product> implements ProductService {
 
     @Override
     public void deleteProductById(Long id) {
+        cartItemService.deleteAllItemsWhichAreRelatedToDeletedShopProduct(id);
         productRepository.deleteById(id);
     }
 

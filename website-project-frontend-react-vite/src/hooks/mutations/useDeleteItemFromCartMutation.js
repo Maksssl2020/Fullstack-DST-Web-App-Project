@@ -8,7 +8,8 @@ function UseDeleteItemFromCartMutation(cartIdentifier) {
   const { mutate: deleteItemFromCart, isLoading: deletingItemFromCart } =
     useMutation({
       mutationKey: ["deleteItemFromCart"],
-      mutationFn: (cartItemId) => deleteProductFromCart(cartItemId),
+      mutationFn: ({ cartItemId, cartId }) =>
+        deleteProductFromCart(cartItemId, cartId),
       onMutate: async (cartItemId) => {
         await queryClient.cancelQueries(["cartItems", cartIdentifier]);
         const previousItems = queryClient.getQueryData([

@@ -64,10 +64,16 @@ export const fetchHomeNewsPostData = async (postId) => {
 };
 
 export const handleHomeNewsPostUpdate = async (postId, updatedContent) => {
+  const formData = new FormData();
+  formData.append("content", updatedContent.content);
+  formData.append("image", updatedContent.image[0]);
+
+  console.log(formData);
+
   try {
     const response = await axios.put(
       `home/posts/edit-post/${postId}`,
-      updatedContent,
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",

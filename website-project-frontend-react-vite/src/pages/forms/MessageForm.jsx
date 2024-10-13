@@ -1,36 +1,23 @@
-import React, { useContext } from "react";
+import React from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
-import { AuthContext } from "../../context/AuthProvider.jsx";
-import { handleSendUserMessage } from "../../helpers/api-integration/UserDataHandling.js";
+import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
+import useSendMessageToUserMutation from "../../hooks/mutations/useSendMessageToUserMutation.js";
+import useAuthentication from "../../hooks/queries/useAuthentication.js";
 
 const MessageForm = () => {
-  const { username } = useContext(AuthContext);
+  const { username } = useAuthentication();
   const { userId, user } = useParams();
   const { register, handleSubmit, getValues, formState } = useForm();
   const { errors } = formState;
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const { mutate: sendMessageToUser, isLoading: sendingMessageToUser } =
-    useMutation({
-      mutationKey: ["sendingMessageToUser", userId],
-      mutationFn: () =>
-        handleSendUserMessage(userId, {
-          author: username,
-          message: getValues().messageContent,
-          messageType: "INFORMATION",
-        }),
-      onSuccess: () => {
-        queryClient.invalidateQueries("allUserNonReadMessages");
-        toast.success(`Wysłano wiadomość użytkownikowi ${user}!`);
-        navigate(-1);
-      },
+  const { sendMessageToUser, sendingMessageToUser } =
+    useSendMessageToUserMutation(userId, () => {
+      toast.success(`Wysłano wiadomość użytkownikowi ${user}!`);
+      navigate(-1);
     });
 
   if (sendingMessageToUser) {
@@ -42,7 +29,16 @@ const MessageForm = () => {
       <div className="w-full h-auto flex justify-center font-lato py-8">
         <AdminFormSection
           cancelLink={"/users"}
-          handleSubmit={handleSubmit(sendMessageToUser)}
+          handleSubmit={handleSubmit((data) => {
+            sendMessageToUser({
+              requestId: null,
+              messageData: {
+                author: username,
+                message: data.messageContent,
+                messageType: "INFORMATION",
+              },
+            });
+          })}
           submitTitle={"Wyślij wiadomość"}
         >
           <label className="font-bold text-2xl mr-auto">

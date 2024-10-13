@@ -17,7 +17,7 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
     private final GadgetRepository gadgetRepository;
 
     public GadgetServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, GadgetRepository gadgetRepository) {
-        super(productRepository, productDTOForCardMapper);
+        super(productRepository, productDTOForCardMapper, null);
         this.gadgetRepository = gadgetRepository;
     }
 

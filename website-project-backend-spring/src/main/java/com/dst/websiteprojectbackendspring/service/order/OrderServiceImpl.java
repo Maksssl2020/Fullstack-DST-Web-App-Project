@@ -14,11 +14,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -79,12 +83,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAllOrders() {
+    public Page<Order> findAllOrders(PageRequest pageRequest) {
         updatePaymentsStatusBeforeFetchingItByUsers(null);
-
-        return orderRepository.findAll().stream()
+        Page<Order> allOrders =  orderRepository.findAll(pageRequest);
+        List<Order> sortedOrders = allOrders.stream()
                 .sorted(Comparator.comparing(Order::getId).reversed())
-                .toList();
+                .collect(Collectors.toList());
+
+
+        return new PageImpl<>(sortedOrders, pageRequest, allOrders.getTotalElements());
     }
 
     @Override

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../../context/AuthProvider.jsx";
+import React, { useEffect, useState } from "react";
 import AccountAdminSection from "./AccountAdminSection.jsx";
 import AccountUserSection from "./AccountUserSection.jsx";
 import Spinner from "../../universal/Spinner.jsx";
@@ -8,9 +7,10 @@ import useUser from "../../../hooks/queries/useUser.js";
 import useUserDisplay from "../../../hooks/queries/useUserDisplay.js";
 import useUpdateUserInAccountPageMutation from "../../../hooks/mutations/useUpdateUserInAccountPageMutation.js";
 import useUpdateUserFilesMutation from "../../../hooks/mutations/useUpdateUserFilesMutation.js";
+import useAuthentication from "../../../hooks/queries/useAuthentication.js";
 
 const AccountInformationSection = () => {
-  const { userId, role, username, logout } = useContext(AuthContext);
+  const { userId, role, username, logout } = useAuthentication();
   const { register, setValue, watch, handleSubmit, getValues, formState } =
     useForm({});
   const { errors } = formState;

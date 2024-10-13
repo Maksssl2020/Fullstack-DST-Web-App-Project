@@ -11,6 +11,8 @@ import { AuthContext } from "../../context/AuthProvider.jsx";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";
+import useProductImages from "../../hooks/queries/useProductImages.js";
+import useDeleteProductMutation from "../../hooks/mutations/useDeleteProductMutation.js";
 
 const RainbowShopProductCard = ({
   cardData,
@@ -20,33 +22,21 @@ const RainbowShopProductCard = ({
 }) => {
   const { role } = useContext(AuthContext);
   const { id, title, price, productType } = cardData;
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const { data: productImages, isLoading: fetchingProductImages } = useQuery(
-    ["mainCardProductImages", id],
-    () => fetchProductImages(id),
-  );
+  const { productImages, fetchingProductImages } = useProductImages(id);
+  const { deleteProduct, deletingProduct } = useDeleteProductMutation(() => {
+    toast.success("Usunięto produkt!");
+  });
 
   console.log(cardData);
   console.log(productImages);
-
-  const { mutate: deleteProduct, isLoading: deletingProduct } = useMutation({
-    mutationKey: ["deleteProductById", id],
-    mutationFn: () => handleDeleteProduct(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries("shopProductsData");
-      toast.success("Usunięto produkt!");
-    },
-    onError: (error) => console.log(error),
-  });
 
   if (fetchingProductImages || deletingProduct) {
     return <Spinner />;
   }
 
   return (
-    <motion.div whileHover={{ scale: 1.05 }} className="w-auto h-auto">
+    <motion.div whileHover={{ scale: 1.05 }}>
       <div
         onClick={() =>
           navigate(
@@ -54,13 +44,11 @@ const RainbowShopProductCard = ({
             { state: { cardColor } },
           )
         }
-        className={`flex flex-col relative justify-center items-center hover:cursor-pointer ${size}`.concat(
-          " " + cardColor,
-        )}
+        className={`flex flex-col relative justify-center items-center hover:cursor-pointer ${size} ${cardColor}`}
       >
         {role === "ADMIN" && cardType === "MAIN" && (
           <AdminOptionsButtons
-            deleteFunction={deleteProduct}
+            deleteFunction={() => deleteProduct(id)}
             editButtonLink={`/rainbow-shop/products/admin-options/${productType !== "CLOTHING" ? productType.toLowerCase().concat("s") : "clothes"}/edit/${id}`}
             modalSubtitle={"Czy na pewno chesz usunąć ten produkt?"}
           />

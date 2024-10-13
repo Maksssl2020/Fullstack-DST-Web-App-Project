@@ -17,7 +17,7 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
     private final MugRepository mugRepository;
 
     public MugServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, MugRepository mugRepository) {
-        super(productRepository, productDTOForCardMapper);
+        super(productRepository, productDTOForCardMapper, null);
         this.mugRepository = mugRepository;
     }
 

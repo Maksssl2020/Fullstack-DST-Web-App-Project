@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import FormItem from "../../components/form/FormItem.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
 import PlusIcon from "../../icons/PlusIcon.jsx";
 import { useForm } from "react-hook-form";
 import DeleteIcon from "../../icons/DeleteIcon.jsx";
-import { useMutation, useQueryClient } from "react-query";
-import { handleAddNewEvent } from "../../helpers/api-integration/EventsHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
+import useAddEventMutation from "../../hooks/mutations/useAddEventMutation.js";
 
 const EventForm = () => {
-  const queryClient = useQueryClient();
   const { register, getValues, setValue, formState, handleSubmit, reset } =
     useForm({
       defaultValues: {
@@ -24,28 +22,13 @@ const EventForm = () => {
     });
   const { errors } = formState;
   const [tasks, setTasks] = React.useState([]);
-
-  const { mutate: addNewEvent, isLoading: addingNewEvent } = useMutation({
-    mutationKey: ["addNewEvent"],
-    mutationFn: () =>
-      handleAddNewEvent({
-        title: getValues().title,
-        description: getValues().description,
-        eventDate: getValues().eventDate,
-        registrationEndDate: getValues().registrationEndDate,
-        tasks: tasks,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["eventsData"] });
-      reset();
-      setTasks([]);
-      toast.success("Dodano nowe wydarzenie!");
-    },
-    onError: (error) => console.log(error),
+  const [sendNotification, setSendNotification] = useState(false);
+  const { addEvent, addingEvent } = useAddEventMutation(() => {
+    reset();
+    setTasks([]);
+    setSendNotification(true);
+    toast.success("Dodano nowe wydarzenie!");
   });
-
-  console.log(getValues().task);
-  console.log(errors);
 
   const handleAddTask = () => {
     const task = getValues().task;
@@ -68,7 +51,7 @@ const EventForm = () => {
     setTasks(updatedTasks);
   };
 
-  if (addingNewEvent) {
+  if (addingEvent) {
     return <Spinner />;
   }
 
@@ -82,10 +65,19 @@ const EventForm = () => {
     <AnimatedPage>
       <div className="w-full h-auto flex justify-center font-lato py-8">
         <AdminFormSection
-          handleSubmit={handleSubmit(addNewEvent)}
+          handleSubmit={handleSubmit((data) =>
+            addEvent({
+              title: data.title,
+              description: data.description,
+              eventDate: data.eventDate,
+              registrationEndDate: data.registrationEndDate,
+              tasks: tasks,
+            }),
+          )}
           disabledButton={errors.length > 0}
           submitTitle={"Dodaj wydarzenie"}
           notificationData={notificationData}
+          sendNotification={sendNotification}
         >
           <FormItem
             labelData={"Tytuł wydarzenia:"}

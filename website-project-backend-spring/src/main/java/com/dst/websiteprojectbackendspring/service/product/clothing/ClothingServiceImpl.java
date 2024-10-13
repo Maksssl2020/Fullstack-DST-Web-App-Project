@@ -20,7 +20,7 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
     private final ClothingRepository clothingRepository;
 
     public ClothingServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, ClothingRepository clothingRepository) {
-        super(productRepository, productDTOForCardMapper);
+        super(productRepository, productDTOForCardMapper, null);
         this.clothingRepository = clothingRepository;
     }
 

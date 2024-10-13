@@ -22,19 +22,16 @@ const RainbowShop = () => {
           </div>
         </div>
         <div className="w-[1500px] rounded-2xl h-auto">
-          <AnimatePresence mode={"wait"}>
-            <ul className={"flex flex-wrap"}>
-              {products.map((cardData, index) => (
-                <li key={index}>
-                  <RainbowShopProductCard
-                    key={index}
-                    cardData={cardData}
-                    cardColor={getBackgroundColor(index)}
-                  />
-                </li>
-              ))}
-            </ul>
-          </AnimatePresence>
+          <ul className={"flex flex-wrap"}>
+            {products?.map((cardData, index) => (
+              <li key={cardData.id}>
+                <RainbowShopProductCard
+                  cardData={cardData}
+                  cardColor={getBackgroundColor(index)}
+                />
+              </li>
+            ))}
+          </ul>
 
           <div className="w-full flex justify-center h-auto">
             <div className="w-[80%] flex justify-center items-center h-[200px] rounded-2xl my-16 bg-white">

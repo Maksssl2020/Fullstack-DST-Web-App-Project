@@ -3,12 +3,7 @@ import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import FormItem from "../../components/form/FormItem.jsx";
 import AdminFormSection from "../../components/form/AdminFormSection.jsx";
-import { useMutation, useQueryClient } from "react-query";
 import { useForm } from "react-hook-form";
-import {
-  handleAddNewArticle,
-  handleUpdateArticle,
-} from "../../helpers/api-integration/ArticleDataHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
 import FacebookIcon from "../../icons/FacebookIcon.jsx";
@@ -20,6 +15,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import ItemCurrentImages from "../../components/list/ItemCurrentImages.jsx";
 import { decodeImageFile } from "../../helpers/PostManager.js";
 import useArticleMutation from "../../hooks/mutations/useArticleMutation.js";
+import useAddArticleMutation from "../../hooks/mutations/useAddArticleMutation.js";
+import useUpdateArticleMutation from "../../hooks/mutations/useUpdateArticleMutation.js";
 
 const socialMediaIcons = [
   {
@@ -47,7 +44,6 @@ const socialMediaIcons = [
 const ArticleForm = ({ isEditing = false }) => {
   const { id } = useParams();
   const { username } = useContext(AuthContext);
-  const queryClient = useQueryClient();
   const [sendNotification, setSendNotification] = useState(false);
   const {
     register,
@@ -71,6 +67,18 @@ const ArticleForm = ({ isEditing = false }) => {
   const { fetchArticle, fetchingArticle } = useArticleMutation(
     (articleCurrentData) => {
       setCurrentArticleDataInInputs(articleCurrentData);
+    },
+  );
+  const { addArticle, addingArticle } = useAddArticleMutation(() => {
+    setSendNotification(true);
+    toast.success("Dodano nowy artykuł!");
+    reset();
+  });
+  const { updateArticle, updatingArticle } = useUpdateArticleMutation(
+    id,
+    () => {
+      toast.success("Zaktualizowano artykuł!");
+      navigate(-1);
     },
   );
 
@@ -99,37 +107,9 @@ const ArticleForm = ({ isEditing = false }) => {
     console.log(getValues());
   };
 
-  const { mutate: addOrUpdateArticle, isLoading: addingOrUpdatingNewArticle } =
-    useMutation({
-      mutationKey: ["addOrUpdateNewArticle", articleData],
-      mutationFn: () => {
-        if (isEditing) {
-          return handleUpdateArticle(id, articleData);
-        } else {
-          return handleAddNewArticle(articleData);
-        }
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries("newsSectionPostsData");
-        queryClient.invalidateQueries("homeNewsPostsData");
-        toast.success(
-          isEditing ? "Zaktualizowano artykuł!" : "Dodano nowy artykuł!",
-        );
-        if (!isEditing) {
-          setSendNotification(true);
-        } else {
-          navigate(-1);
-          queryClient.invalidateQueries(`articlePageData${id}`);
-          queryClient.invalidateQueries(`articleCurrentData${id}`);
-        }
-        reset();
-      },
-      onError: (error) => console.log(error),
-    });
-
   const contentLength = watch("content", " ");
 
-  if (addingOrUpdatingNewArticle || fetchingArticle) {
+  if (addingArticle || updatingArticle || fetchingArticle) {
     return <Spinner />;
   }
 
@@ -166,6 +146,14 @@ const ArticleForm = ({ isEditing = false }) => {
     link: "/news",
   };
 
+  const onSubmit = () => {
+    if (isEditing) {
+      updateArticle(articleData);
+    } else {
+      addArticle(articleData);
+    }
+  };
+
   console.log(getValues());
 
   return (
@@ -175,7 +163,7 @@ const ArticleForm = ({ isEditing = false }) => {
           disabledButton={errors.length > 0}
           handleSubmit={handleSubmit(() => {
             prepareDataToSend();
-            addOrUpdateArticle();
+            onSubmit();
           })}
           submitTitle={isEditing ? "Zaktualizuj artykuł" : "Dodaj artykuł"}
           notificationData={notificationData}

@@ -1,7 +1,10 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const HomeAboutUsSection = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="mt-16 lg:ml-14 flex max-lg:h-[475px] justify-center">
       <div className="z-10 h-[350px] max-lg:hidden max-xl:w-[425px] max-2xl:w-[525px] w-[600px]">
@@ -27,12 +30,13 @@ const HomeAboutUsSection = () => {
           powyższymi problemami poczucie bezpieczeństwa i zrozumienia. Chcemy,
           aby nasza pomoc była realna i zauważalna.
         </p>
-        <Link
-          to={"/about-us"}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          onClick={() => navigate("/about-us")}
           className="bg-custom-blue-500 mt-8 max-md:h-[30px] max-md:text-lg max-md:w-[125px] h-[55px] w-[175px] self-center flex items-center justify-center rounded-full text-xl font-bold italic text-white"
         >
           O NAS
-        </Link>
+        </motion.button>
       </div>
     </div>
   );

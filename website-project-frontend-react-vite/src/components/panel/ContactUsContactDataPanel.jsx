@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { socialMediaLinks } from "../../helpers/MediaLinks.js";
 import InstagramIcon from "../../icons/InstagramIcon.jsx";
 import XIcon from "../../icons/XIcon.jsx";

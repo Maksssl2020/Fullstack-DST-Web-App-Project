@@ -16,7 +16,7 @@ const Articles = () => {
     <AnimatedPage>
       <div
         className={
-          "w-full min-h-[550px] h-auto flex flex-col items-center py-8 bg-custom-gray-400"
+          "w-full min-h-[640px] h-auto flex flex-col items-center py-8 bg-custom-gray-400"
         }
       >
         <div

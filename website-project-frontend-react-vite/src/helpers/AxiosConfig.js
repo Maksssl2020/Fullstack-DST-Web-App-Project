@@ -22,7 +22,7 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 403 && !originalRequest._retry) {
+    if (error.response?.status === 403) {
       originalRequest._retry = true;
 
       const state = store.getState();
