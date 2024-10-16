@@ -27,7 +27,7 @@ function UseAddItemToCartMutation(cartIdentifier, itemData) {
       ),
     onSuccess: () => {
       queryClient.invalidateQueries(["cartItems", cartIdentifier]);
-      queryClient.invalidateQueries(["amountOfItemsInCart", cartIdentifier]);
+      queryClient.invalidateQueries(["amountOfCartItems", cartIdentifier]);
       queryClient.invalidateQueries(["userCartData", cartIdentifier]);
       toast.success("Produkt dodany do koszyka!");
     },

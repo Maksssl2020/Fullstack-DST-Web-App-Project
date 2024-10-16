@@ -13,6 +13,7 @@ import Badge from "../badge/Badge.jsx";
 import useCartAmountOfItems from "../../hooks/queries/useCartAmountOfItems.js";
 import useAmountOfUserNewNotifications from "../../hooks/queries/useAmountOfUserNewNotifications.js";
 import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import HeartIcon from "../../icons/HeartIcon.jsx";
 
 const Header = ({ forumAddPostButton }) => {
   const { userId, isAuthenticated } = useAuthentication();
@@ -113,34 +114,44 @@ const Header = ({ forumAddPostButton }) => {
               className={`relative flex gap-4 ${location.pathname !== "/forum" && "ml-8"}`}
             >
               {location.pathname.includes("/rainbow-shop") && (
-                <button
-                  onClick={toggleCartDrawer}
-                  className="rounded-full bg-white p-1 relative"
-                >
-                  <ShoppingBagIcon size={"size-6"} />
+                <>
+                  <button
+                    onClick={toggleCartDrawer}
+                    className="rounded-full bg-white p-1 relative"
+                  >
+                    <ShoppingBagIcon size={"size-6"} />
 
-                  {amountOfCartItems > 0 && (
+                    {amountOfCartItems > 0 && (
+                      <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                        {amountOfCartItems}
+                      </Badge>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => navigate(`/favourite-products/${userId}`)}
+                    className="rounded-full flex bg-white p-1 relative"
+                  >
+                    <HeartIcon className={"size-6"} />
+                  </button>
+                </>
+              )}
+              {!location.pathname.includes("rainbow-shop") && (
+                <div className="relative flex gap-4">
+                  <Link
+                    className={"rounded-full bg-white p-1 relative"}
+                    disabled={!isAuthenticated}
+                    to={"/account"}
+                  >
+                    <BellIcon />
+                  </Link>
+
+                  {amountOfUserNewNotifications > 0 && (
                     <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
-                      {amountOfCartItems}
+                      {amountOfUserNewNotifications}
                     </Badge>
                   )}
-                </button>
+                </div>
               )}
-              <div className="relative flex gap-4">
-                <Link
-                  className={"rounded-full bg-white p-1 relative"}
-                  disabled={!isAuthenticated}
-                  to={"/account"}
-                >
-                  <BellIcon />
-                </Link>
-
-                {amountOfUserNewNotifications > 0 && (
-                  <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
-                    {amountOfUserNewNotifications}
-                  </Badge>
-                )}
-              </div>
               <button
                 onClick={toggleRightDrawer}
                 className="flex items-center rounded-full bg-white p-1 justify-center"

@@ -37,6 +37,7 @@ import Articles from "./pages/Articles.jsx";
 import ProtectedRouteAdmin from "./router/ProtectedRouteAdmin.jsx";
 import ProtectedRouteAuthenticatedUser from "./router/ProtectedRouteAuthenticatedUser.jsx";
 import UserOrdersPage from "./pages/UserOrdersPage.jsx";
+import UserFavouriteProducts from "./pages/UserFavouriteProducts.jsx";
 
 function App() {
   return (
@@ -79,6 +80,10 @@ function App() {
               <Route path={"/events"} element={<Events />} />
               <Route path={"/my-order/:orderId"} element={<OrderPage />} />
               <Route path={"/my-orders/:userId"} element={<UserOrdersPage />} />
+              <Route
+                path={"/favourite-products/:userId"}
+                element={<UserFavouriteProducts />}
+              />
             </Route>
 
             <Route element={<ProtectedRouteAdmin />}>

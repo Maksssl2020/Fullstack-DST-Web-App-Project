@@ -10,6 +10,7 @@ import useAddItemToCartMutation from "../../hooks/mutations/useAddItemToCartMuta
 import useProductSizes from "../../hooks/queries/useProductSizes.js";
 import useProductCategories from "../../hooks/queries/useProductCategories.js";
 import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAddFavouriteUserProductMutation from "../../hooks/mutations/useAddFavouriteUserProductMutation.js";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
@@ -32,6 +33,8 @@ const ShopProductBuyOptionsPanel = ({
     cartIdentifier,
     { id, quantity, chosenSize },
   );
+  const { addFavouriteProduct, addingFavouriteProduct } =
+    useAddFavouriteUserProductMutation();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -49,9 +52,19 @@ const ShopProductBuyOptionsPanel = ({
 
   const handleAddToFavourite = () => {
     setAddedToFavourite(!addedToFavourite);
+
+    addFavouriteProduct({
+      mainProductId: id,
+      productSize: chosenSize ? chosenSize : null,
+    });
   };
 
-  if (fetchingProductCategories || addingItemToCart || fetchingProductSizes) {
+  if (
+    fetchingProductCategories ||
+    addingItemToCart ||
+    fetchingProductSizes ||
+    addingFavouriteProduct
+  ) {
     return <Spinner />;
   }
 
