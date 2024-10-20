@@ -11,5 +11,9 @@ public enum Category {
     BIDONY,
     PIÓRA,
     PRZYPINKI,
-    SKARPETY
+    SKARPETY,
+    BONY,
+    OBRAZY,
+    ZESTAWY,
+    CERTYFIKAT,
 }

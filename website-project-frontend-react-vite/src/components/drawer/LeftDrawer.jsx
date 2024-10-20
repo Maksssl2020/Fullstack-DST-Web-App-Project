@@ -3,6 +3,8 @@ import HamburgerIcon from "../header/icons/HamburgerIcon.jsx";
 import CloseIcon from "./icons/CloseIcon.jsx";
 import DrawerList from "../list/DrawerList.jsx";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
+import DrawerContainer from "./DrawerContainer.jsx";
+import { motion } from "framer-motion";
 
 const LeftDrawer = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -20,36 +22,27 @@ const LeftDrawer = () => {
         <HamburgerIcon />
       </button>
 
-      {isOpen && (
-        <div
-          onClick={toggleDrawer}
-          className="fixed inset-0 z-30 bg-black bg-opacity-40 backdrop-blur-sm"
-        ></div>
-      )}
-
-      <div
-        className={`font-lato  flex z-30 transition-transform inset-0 fixed h-screen w-[490px] bg-custom-gray-200 ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      <DrawerContainer
+        drawerSide={"LEFT"}
+        isOpen={isOpen}
+        closeFunction={toggleDrawer}
+        drawerHeaderBackground={"bg-drawer-background"}
       >
-        <div className="w-full h-full flex flex-col ">
-          <div className="flex px-4 items-center justify-center gap-4 h-[11.5%] bg-drawer-background w-full ">
-            <button
-              className="rounded-full h-fit bg-custom-gray-100"
-              onClick={toggleDrawer}
-            >
-              <CloseIcon />
-            </button>
-          </div>
-          <div className="my-8 overflow-y-auto">
-            <DrawerList />
-          </div>
-          <div className="mt-auto mb-12">
-            <MainBannerWithLogo
-              imageContainerStyling={"h-[55px] w-[55px]"}
-              mainContainerStyling={"w-[90%]"}
-            />
-          </div>
+        <div
+          className={`flex px-4 items-center justify-center gap-4 h-[11.5%] w-full bg-drawer-background`}
+        >
+          <motion.button
+            whileHover={{ rotate: 180, transition: { duration: 0.3 } }}
+            className="rounded-full h-fit ml-auto mr-8"
+            onClick={toggleDrawer}
+          >
+            <CloseIcon size="size-12" />
+          </motion.button>
         </div>
-      </div>
+        <div className="my-8 overflow-y-auto h-[80%]">
+          <DrawerList />
+        </div>
+      </DrawerContainer>
     </div>
   );
 };

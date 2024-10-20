@@ -5,7 +5,7 @@ import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTO;
-import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ProductImageDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductImageRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,16 @@
 package com.dst.websiteprojectbackendspring.dto.social_media_link;
 
-public record SocialMediaLinkDTO(String socialMediaName, String url) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class SocialMediaLinkDTO {
+
+    private String socialMediaName;
+    private String url;
 }

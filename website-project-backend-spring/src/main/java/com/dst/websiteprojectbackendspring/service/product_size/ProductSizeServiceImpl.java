@@ -3,7 +3,7 @@ package com.dst.websiteprojectbackendspring.service.product_size;
 import com.dst.websiteprojectbackendspring.model.product.Product;
 import com.dst.websiteprojectbackendspring.model.product_size.ProductSize;
 import com.dst.websiteprojectbackendspring.dto.product_size.ProductSizeDTO;
-import com.dst.websiteprojectbackendspring.dto.product_size.ProductSizeDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ProductSizeDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductSizeRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class ProductSizeServiceImpl implements ProductSizeService {
     public List<ProductSizeDTO> findProductSizesByProductId(Long productId) {
         return productSizeRepository.findByProductId(productId)
                 .stream()
-                .map(productSizeDTOMapper)
+                .map(productSizeDTOMapper::mapProductSizeIntoProductSizeDTO)
                 .toList();
     }
 }

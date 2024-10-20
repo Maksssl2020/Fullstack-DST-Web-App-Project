@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.mug;
 
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
-import com.dst.websiteprojectbackendspring.dto.product.clothing.MugRequest;
+import com.dst.websiteprojectbackendspring.dto.product.mug.MugRequest;
+import com.dst.websiteprojectbackendspring.mapper.ProductDTOMapper;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
 import com.dst.websiteprojectbackendspring.repository.MugRepository;
@@ -16,8 +16,8 @@ public class MugServiceImpl extends ProductServiceImpl<Mug> implements MugServic
 
     private final MugRepository mugRepository;
 
-    public MugServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, MugRepository mugRepository) {
-        super(productRepository, productDTOForCardMapper, null);
+    public MugServiceImpl(ProductRepository productRepository, ProductDTOMapper productDTOMapper, MugRepository mugRepository) {
+        super(productRepository, productDTOMapper, null);
         this.mugRepository = mugRepository;
     }
 

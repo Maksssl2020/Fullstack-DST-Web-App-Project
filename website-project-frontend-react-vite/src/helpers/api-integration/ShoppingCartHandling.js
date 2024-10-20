@@ -16,7 +16,7 @@ export const fetchShoppingCartByIdentifier = async (
   }
 };
 
-export const getShoppingCartId = async (cartIdentifier, isAuthenticated) => {
+export const fetchShoppingCartId = async (cartIdentifier, isAuthenticated) => {
   console.log(cartIdentifier);
 
   try {

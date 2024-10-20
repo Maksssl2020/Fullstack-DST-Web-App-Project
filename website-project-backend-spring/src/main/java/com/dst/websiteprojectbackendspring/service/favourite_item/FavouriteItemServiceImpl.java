@@ -1,12 +1,11 @@
 package com.dst.websiteprojectbackendspring.service.favourite_item;
 
 import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemDTO;
+import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemIdentifyDataDTO;
 import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemRequest;
 import com.dst.websiteprojectbackendspring.mapper.FavouriteItemDTOMapper;
 import com.dst.websiteprojectbackendspring.model.favourite_item.FavouriteItem;
 import com.dst.websiteprojectbackendspring.model.product.Product;
-import com.dst.websiteprojectbackendspring.model.product_item.ProductItem;
-import com.dst.websiteprojectbackendspring.model.product_size.Size;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.repository.FavouriteItemRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
@@ -46,13 +45,15 @@ public class FavouriteItemServiceImpl implements FavouriteItemService {
                 .mainImage(product.getImages().getFirst().getImageData())
                 .productFullTitle(product.getTitle())
                 .mainProductId(favouriteItemRequest.mainProductId())
-                .unitPrice(product.getPrice());
-
-        if (favouriteItemRequest.size() != null) {
-            favouriteItemBuilder.productSize(Size.valueOf(favouriteItemRequest.size().toUpperCase()));
-        }
+                .unitPrice(product.getPrice())
+                .cardColor(favouriteItemRequest.cardColor());
 
         favouriteItemRepository.save(favouriteItemBuilder.build());
+    }
+
+    @Override
+    public Long countUserFavouriteItems(Long userId) {
+        return favouriteItemRepository.countByUserId(userId);
     }
 
     @Override
@@ -70,14 +71,14 @@ public class FavouriteItemServiceImpl implements FavouriteItemService {
     }
 
     @Override
-    public List<Long> findAllUserProductsMarkedAsFavourite(Long userId) {
+    public List<FavouriteItemIdentifyDataDTO> findAllUserProductsMarkedAsFavourite(Long userId) {
         return favouriteItemRepository.findAllByUserId(userId).stream()
-                .map(ProductItem::getId)
+                .map(favouriteItemDTOMapper::mapFavouriteItemToFavouriteItemIdentifyDataDTO)
                 .toList();
     }
 
     @Override
-    public void deleteFavouriteItem(Long favouriteItemId) {
-        favouriteItemRepository.deleteById(favouriteItemId);
+    public void deleteFavouriteItem(Long itemId) {
+        favouriteItemRepository.deleteById(itemId);
     }
 }

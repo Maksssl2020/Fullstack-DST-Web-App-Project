@@ -8,7 +8,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
   const state = store.getState();
-  const token = state.authentication.accessToken;
+  const token = state?.authentication?.accessToken;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -26,7 +26,7 @@ instance.interceptors.response.use(
       originalRequest._retry = true;
 
       const state = store.getState();
-      const refreshToken = state.authentication.refreshToken;
+      const refreshToken = state?.authentication?.refreshToken;
 
       if (refreshToken) {
         try {

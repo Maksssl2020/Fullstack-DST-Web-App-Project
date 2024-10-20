@@ -1,8 +1,12 @@
 import axios from "../AxiosConfig.js";
 
-export const fetchAllProducts = async () => {
+export const fetchAllProducts = async (chosenCategory) => {
   try {
-    const response = await axios.get("/products/cards");
+    const response = await axios.get("/products/cards", {
+      params: {
+        category: chosenCategory,
+      },
+    });
     return response.data;
   } catch (error) {
     console.log(error);

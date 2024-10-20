@@ -1,4 +1,18 @@
 package com.dst.websiteprojectbackendspring.dto.request_to_admin;
 
-public record RequestToAdminDTO(Long requestId, String requestType, boolean isAccepted, String enteredValueToChange , Long userId) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class RequestToAdminDTO {
+    private Long requestId;
+    private String requestType;
+    private boolean isAccepted;
+    private String enteredValueToChange;
+    private Long userId;
 }

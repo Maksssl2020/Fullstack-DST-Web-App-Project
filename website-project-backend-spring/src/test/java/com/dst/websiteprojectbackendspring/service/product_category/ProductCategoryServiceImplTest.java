@@ -4,7 +4,7 @@ import com.dst.websiteprojectbackendspring.model.product.Product;
 import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTO;
-import com.dst.websiteprojectbackendspring.dto.product_category.ProductCategoryDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ProductCategoryDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductCategoryRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;

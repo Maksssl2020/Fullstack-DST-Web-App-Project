@@ -1,11 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { transformProductTitleIntoLinkTitle } from "../../helpers/transformProductTitle.js";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  fetchProductImages,
-  handleDeleteProduct,
-} from "../../helpers/api-integration/ShopProductsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { motion } from "framer-motion";
@@ -28,8 +23,8 @@ const RainbowShopProductCard = ({
     toast.success("Usunięto produkt!");
   });
 
-  console.log(cardData);
-  console.log(productImages);
+  // console.log(cardData);
+  // console.log(productImages);
 
   if (fetchingProductImages || deletingProduct) {
     return <Spinner />;

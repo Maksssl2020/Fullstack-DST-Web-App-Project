@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.request_to_admin;
 
 import com.dst.websiteprojectbackendspring.dto.request_to_admin.RequestToAdminDTO;
-import com.dst.websiteprojectbackendspring.dto.request_to_admin.RequestToAdminDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.RequestToAdminDTOMapper;
 import com.dst.websiteprojectbackendspring.model.request_to_admin.RequestToAdmin;
 import com.dst.websiteprojectbackendspring.model.request_to_admin.RequestToAdminRequest;
 import com.dst.websiteprojectbackendspring.model.request_to_admin.RequestToAdminType;
@@ -42,16 +42,16 @@ public class RequestToAdminServiceImpl implements RequestToAdminService {
     @Override
     public List<RequestToAdminDTO> getAllRequestToAdmin() {
         return requestToAdminRepository.findAll().stream()
-                .map(requestToAdminDTOMapper)
-                .sorted(Comparator.comparing(RequestToAdminDTO::requestId).reversed())
+                .map(requestToAdminDTOMapper::mapRequestToAdminIntoRequestToAdminDTO)
+                .sorted(Comparator.comparing(RequestToAdminDTO::getRequestId).reversed())
                 .toList();
     }
 
     @Override
     public List<RequestToAdminDTO> getAllNonAcceptedRequests() {
         return requestToAdminRepository.findAllNonHandleRequestsToAdmin().stream()
-                .map(requestToAdminDTOMapper)
-                .sorted(Comparator.comparing(RequestToAdminDTO::requestId).reversed())
+                .map(requestToAdminDTOMapper::mapRequestToAdminIntoRequestToAdminDTO)
+                .sorted(Comparator.comparing(RequestToAdminDTO::getRequestId).reversed())
                 .toList();
     }
 

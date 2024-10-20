@@ -3,7 +3,7 @@ package com.dst.websiteprojectbackendspring.service.product_image;
 import com.dst.websiteprojectbackendspring.model.product.Product;
 import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTO;
-import com.dst.websiteprojectbackendspring.dto.product_image.ProductImageDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ProductImageDTOMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductImageRepository;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     @Override
     public List<ProductImageDTO> getProductImages(Long productId) {
         return productImageRepository.findByProductId(productId).stream()
-                .map(productImageDTOMapper)
+                .map(productImageDTOMapper::mapProductImageIntoProductImageDTO)
                 .toList();
     }
 }

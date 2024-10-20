@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.gadget;
 
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
-import com.dst.websiteprojectbackendspring.dto.product.clothing.GadgetRequest;
+import com.dst.websiteprojectbackendspring.dto.product.gadget.GadgetRequest;
+import com.dst.websiteprojectbackendspring.mapper.ProductDTOMapper;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.gadget.Gadget;
 import com.dst.websiteprojectbackendspring.repository.GadgetRepository;
@@ -16,8 +16,8 @@ public class GadgetServiceImpl extends ProductServiceImpl<Gadget> implements Gad
 
     private final GadgetRepository gadgetRepository;
 
-    public GadgetServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, GadgetRepository gadgetRepository) {
-        super(productRepository, productDTOForCardMapper, null);
+    public GadgetServiceImpl(ProductRepository productRepository, ProductDTOMapper productDTOMapper, GadgetRepository gadgetRepository) {
+        super(productRepository, productDTOMapper, null);
         this.gadgetRepository = gadgetRepository;
     }
 

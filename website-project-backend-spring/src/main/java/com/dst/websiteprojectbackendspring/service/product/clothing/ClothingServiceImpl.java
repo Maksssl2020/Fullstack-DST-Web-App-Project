@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.clothing;
 
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.dto.product.clothing.ClothingRequest;
+import com.dst.websiteprojectbackendspring.mapper.ProductDTOMapper;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.clothing.Clothing;
 import com.dst.websiteprojectbackendspring.repository.ClothingRepository;
@@ -19,8 +19,8 @@ public class ClothingServiceImpl extends ProductServiceImpl<Clothing> implements
 
     private final ClothingRepository clothingRepository;
 
-    public ClothingServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, ClothingRepository clothingRepository) {
-        super(productRepository, productDTOForCardMapper, null);
+    public ClothingServiceImpl(ProductRepository productRepository, ProductDTOMapper productDTOMapper, ClothingRepository clothingRepository) {
+        super(productRepository, productDTOMapper, null);
         this.clothingRepository = clothingRepository;
     }
 

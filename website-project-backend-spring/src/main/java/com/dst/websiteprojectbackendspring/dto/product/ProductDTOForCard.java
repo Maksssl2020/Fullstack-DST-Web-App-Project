@@ -1,6 +1,19 @@
 package com.dst.websiteprojectbackendspring.dto.product;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
-public record ProductDTOForCard(Long id, String title, BigDecimal price, String productType) {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class ProductDTOForCard {
+    private Long id;
+    private String title;
+    private BigDecimal price;
+    private String productType;
 }

@@ -29,6 +29,9 @@ export const AuthProvider = ({ children }) => {
         return fetchUserIdByUsername(username);
       }
     },
+    {
+      cacheTime: 30,
+    },
   );
 
   const setAuthenticatedUserData = (accessToken) => {
@@ -60,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     } else {
       logout();
     }
-  }, []);
+  }, [accessToken]);
 
   return (
     <AuthContext.Provider

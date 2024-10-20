@@ -1,10 +1,11 @@
 package com.dst.websiteprojectbackendspring.service.product;
 
+import com.dst.websiteprojectbackendspring.dto.product.ProductDTO;
+import com.dst.websiteprojectbackendspring.mapper.ProductDTOMapper;
 import com.dst.websiteprojectbackendspring.model.product.Product;
 import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
 import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCard;
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
 import com.dst.websiteprojectbackendspring.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class ProductServiceImplTest {
     private ProductRepository productRepository;
 
     @Mock
-    private ProductDTOForCardMapper productDTOForCardMapper;
+    private ProductDTOMapper productDTOMapper;
 
     @InjectMocks
     private ProductServiceImpl<Product> productService;
@@ -83,9 +84,37 @@ class ProductServiceImplTest {
     }
 
     @Test
+    void canMapAllProductsIntoProductDTO() {
+        // given
+        List<Product> productList = List.of(product1, product2);
+        ProductDTO productDTO1 = new ProductDTO();
+        productDTO1.setTitle("Product 1");
+
+        ProductDTO productDTO2 = new ProductDTO();
+        productDTO2.setTitle("Product 2");
+
+        given(productRepository.findAll()).willReturn(productList);
+        given(productDTOMapper.mapProductToProductDTO(product1)).willReturn(productDTO1);
+        given(productDTOMapper.mapProductToProductDTO(product2)).willReturn(productDTO2);
+
+        List<ProductDTO> productDTOs = productService.findAllProducts();
+
+        assertThat(productDTOs).isNotNull();
+        assertThat(productDTOs.size()).isEqualTo(2);
+
+        assertThat(productDTOs.get(0).getTitle()).isEqualTo("Product 1");
+        assertThat(productDTOs.get(1).getTitle()).isEqualTo("Product 2");
+
+        verify(productRepository).findAll();
+        verify(productDTOMapper).mapProductToProductDTO(product1);
+        verify(productDTOMapper).mapProductToProductDTO(product2);
+    }
+
+
+    @Test
     void canGetAllProducts() {
         given(productRepository.findAll()).willReturn(productList);
-        List<Product> allProducts = productService.findAllProducts();
+        List<ProductDTO> allProducts = productService.findAllProducts();
 
         assertThat(allProducts).isNotNull();
         assertThat(allProducts.size()).isEqualTo(2);
@@ -94,18 +123,18 @@ class ProductServiceImplTest {
     @Test
     void canMapProductsIntoProductDTOForCard() {
         given(productRepository.findAll()).willReturn(productList);
-        given(productDTOForCardMapper.apply(product1))
+        given(productDTOMapper.mapProductToProductDTOForCard(product1))
                 .willReturn(new ProductDTOForCard(product1.getId(), product1.getTitle(), product1.getPrice(), product1.getProductType().toString()));
-        given(productDTOForCardMapper.apply(product2))
+        given(productDTOMapper.mapProductToProductDTOForCard(product2))
                 .willReturn(new ProductDTOForCard(product2.getId(), product2.getTitle(), product2.getPrice(), product2.getProductType().toString()));
 
-        List<ProductDTOForCard> allProductsDTO = productService.findAllProductsDTOForCard();
+        List<ProductDTOForCard> allProductsDTO = productService.findAllProductsDTOForCard("wszystko");
 
         assertThat(allProductsDTO).isNotNull();
         assertThat(allProductsDTO.size()).isEqualTo(2);
 
         verify(productRepository).findAll();
-        verify(productDTOForCardMapper).apply(product1);
-        verify(productDTOForCardMapper).apply(product2);
+        verify(productDTOMapper).mapProductToProductDTOForCard(product1);
+        verify(productDTOMapper).mapProductToProductDTOForCard(product2);
     }
 }

@@ -1,4 +1,16 @@
 package com.dst.websiteprojectbackendspring.dto.user;
 
-public record UserDisplayDataDTO(String username, String avatar, String identifyPhoto) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class UserDisplayDataDTO {
+    private String username;
+    private String avatar;
+    private String identifyPhoto;
 }

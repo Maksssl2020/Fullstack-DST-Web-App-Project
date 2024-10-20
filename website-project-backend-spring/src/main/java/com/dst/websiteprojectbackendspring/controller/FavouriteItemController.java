@@ -1,6 +1,7 @@
 package com.dst.websiteprojectbackendspring.controller;
 
 import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemDTO;
+import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemIdentifyDataDTO;
 import com.dst.websiteprojectbackendspring.dto.favourite_item.FavouriteItemRequest;
 import com.dst.websiteprojectbackendspring.service.favourite_item.FavouriteItemService;
 import javassist.NotFoundException;
@@ -29,8 +30,13 @@ public class FavouriteItemController {
     }
 
     @GetMapping("/{userId}/find-all-marked-products-id")
-    public ResponseEntity<List<Long>> findAllMarkedProductsAsFavouriteItem(@PathVariable Long userId) {
+    public ResponseEntity<List<FavouriteItemIdentifyDataDTO>> findAllMarkedProductsAsFavouriteItem(@PathVariable Long userId) {
         return ResponseEntity.ok(favouriteItemService.findAllUserProductsMarkedAsFavourite(userId));
+    }
+
+    @GetMapping("/{userId}/amountOfItems")
+    public ResponseEntity<Long> getAmountOfUserFavouriteItems(@PathVariable Long userId) {
+        return ResponseEntity.ok(favouriteItemService.countUserFavouriteItems(userId));
     }
 
     @PostMapping("/save")
@@ -39,9 +45,9 @@ public class FavouriteItemController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{itemId}")
-    public ResponseEntity<HttpStatus> deleteFavouriteItem(@PathVariable Long itemId) throws NotFoundException {
-        favouriteItemService.deleteFavouriteItem(itemId);
+    @DeleteMapping("/delete/{favouriteItemId}")
+    public ResponseEntity<HttpStatus> deleteFavouriteItem(@PathVariable Long favouriteItemId) {
+        favouriteItemService.deleteFavouriteItem(favouriteItemId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

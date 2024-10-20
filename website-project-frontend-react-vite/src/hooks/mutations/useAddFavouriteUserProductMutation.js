@@ -10,8 +10,8 @@ function UseAddFavouriteUserProductMutation() {
   const { mutate: addFavouriteProduct, isLoading: addingFavouriteProduct } =
     useMutation({
       mutationKey: ["addFavouriteProduct"],
-      mutationFn: ({ mainProductId, productSize }) =>
-        saveUserFavouriteProduct(userId, mainProductId, productSize),
+      mutationFn: ({ mainProductId, cardColor }) =>
+        saveUserFavouriteProduct(userId, mainProductId, cardColor),
       onSuccess: () => {
         queryClient.invalidateQueries("userFavouriteUserProducts", userId);
         toast.success("Dodano produkt do ulubionych!");

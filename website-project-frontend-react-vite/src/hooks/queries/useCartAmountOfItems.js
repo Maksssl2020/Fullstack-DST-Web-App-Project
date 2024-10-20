@@ -9,7 +9,10 @@ function UseCartAmountOfItems(cartIdentifier) {
 
   const { data: amountOfCartItems, isLoading: fetchingAmountOfCartItems } =
     useQuery(["amountOfCartItems", cartIdentifier], () => {
-      if (location.pathname.includes("rainbow-shop") === true) {
+      if (
+        location.pathname.includes("rainbow-shop") === true &&
+        cartId !== undefined
+      ) {
         return getShoppingCartAmountOfItems(cartId);
       }
     });

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.dto.product.clothing.MugRequest;
+import com.dst.websiteprojectbackendspring.dto.product.mug.MugRequest;
 import com.dst.websiteprojectbackendspring.model.product.mug.Mug;
 import com.dst.websiteprojectbackendspring.service.product.mug.MugServiceImpl;
 import lombok.RequiredArgsConstructor;

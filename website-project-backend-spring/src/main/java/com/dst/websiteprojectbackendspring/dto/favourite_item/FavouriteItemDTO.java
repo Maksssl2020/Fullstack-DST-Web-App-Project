@@ -20,5 +20,6 @@ public class FavouriteItemDTO {
     private Size productSize;
     private BigDecimal unitPrice;
     private byte[] mainImage;
+    private String cardColor;
     private Long userId;
 }

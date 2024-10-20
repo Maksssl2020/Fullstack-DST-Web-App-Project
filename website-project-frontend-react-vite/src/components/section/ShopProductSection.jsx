@@ -7,12 +7,15 @@ import SimilarProductsList from "../list/SimilarProductsList.jsx";
 import Spinner from "../universal/Spinner.jsx";
 import ButtonWithAnimatedBottomBorder from "../universal/ButtonWithAnimatedBottomBorder.jsx";
 import useProduct from "../../hooks/queries/useProduct.js";
+import useUserItemsMarkedAsFavouriteIds from "../../hooks/queries/useUserItemsMarkedAsFavouriteIds.js";
 
 const ShopProductSection = ({ productId, cardColor }) => {
   const [chosenOption, setChosenOption] = useState(0);
   const [isActive, setIsActive] = React.useState(false);
   const [productCategories, setProductCategories] = React.useState([]);
   const { product, fetchingProduct } = useProduct(productId);
+  const { userItemsMarkedAsFavourite, fetchingUserItemsMarkedAsFavourite } =
+    useUserItemsMarkedAsFavouriteIds();
 
   const handleButtonClick = (index) => {
     setChosenOption(index);
@@ -24,7 +27,7 @@ const ShopProductSection = ({ productId, cardColor }) => {
     }
   };
 
-  if (fetchingProduct) {
+  if (fetchingProduct || fetchingUserItemsMarkedAsFavourite) {
     return <Spinner />;
   }
 
@@ -39,6 +42,13 @@ const ShopProductSection = ({ productId, cardColor }) => {
     },
   ];
 
+  let markedProduct = userItemsMarkedAsFavourite?.filter(
+    (item) => item.mainProductId === product.id,
+  )[0];
+
+  console.log(markedProduct);
+  console.log(product);
+
   return (
     <div className="my-8 flex flex-col w-[1450px] h-auto bg-white rounded-2xl p-6">
       <div className="w-full h-auto justify-between flex">
@@ -47,6 +57,7 @@ const ShopProductSection = ({ productId, cardColor }) => {
           productData={product}
           cardColor={cardColor}
           setProductCategories={setProductCategories}
+          markedAsFavourite={markedProduct}
         />
       </div>
       <div className="w-full flex justify-center gap-4 items-center h-[75px] bg-white relative">

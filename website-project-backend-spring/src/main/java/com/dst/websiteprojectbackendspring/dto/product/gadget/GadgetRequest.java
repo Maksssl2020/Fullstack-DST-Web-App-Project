@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.dto.product.clothing;
+package com.dst.websiteprojectbackendspring.dto.product.gadget;
 
 import com.dst.websiteprojectbackendspring.dto.product.ProductRequest;
 import lombok.AllArgsConstructor;

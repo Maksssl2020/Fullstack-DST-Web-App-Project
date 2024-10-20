@@ -12,7 +12,18 @@ export const fetchAllUserFavouriteProducts = async (userId) => {
 export const fetchAllUserProductsMarkedAsFavourite = async (userId) => {
   try {
     const response = await axios.get(
-      `/favourite-items/${userId}/find-all-marked-products-id"`,
+      `/favourite-items/${userId}/find-all-marked-products-id`,
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchAmountOfUserFavouriteItems = async (userId) => {
+  try {
+    const response = await axios.get(
+      `/favourite-items/${userId}/amountOfItems`,
     );
     return response.data;
   } catch (error) {
@@ -23,19 +34,12 @@ export const fetchAllUserProductsMarkedAsFavourite = async (userId) => {
 export const saveUserFavouriteProduct = async (
   userId,
   mainProductId,
-  productSize,
+  cardColor,
 ) => {
   const productFormData = new FormData();
   productFormData.append("mainProductId", mainProductId);
   productFormData.append("userId", userId);
-
-  console.log(mainProductId);
-  console.log(userId);
-  console.log(productSize);
-
-  if (productSize) {
-    productFormData.append("productSize", productSize);
-  }
+  productFormData.append("cardColor", cardColor);
 
   try {
     const response = await axios.post(
@@ -54,11 +58,9 @@ export const saveUserFavouriteProduct = async (
   }
 };
 
-export const deleteUserFavouriteProduct = async (favouriteProductId) => {
+export const handleDeleteUserFavouriteProduct = async (itemId) => {
   try {
-    const response = await axios.delete(
-      `/favourite-items/delete/${favouriteProductId}`,
-    );
+    const response = await axios.delete(`/favourite-items/delete/${itemId}`);
     return response.data;
   } catch (error) {
     console.log(error);

@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.product.pen;
 
-import com.dst.websiteprojectbackendspring.dto.product.ProductDTOForCardMapper;
-import com.dst.websiteprojectbackendspring.dto.product.clothing.PenRequest;
+import com.dst.websiteprojectbackendspring.dto.product.pen.PenRequest;
+import com.dst.websiteprojectbackendspring.mapper.ProductDTOMapper;
 import com.dst.websiteprojectbackendspring.model.product.ProductType;
 import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import com.dst.websiteprojectbackendspring.repository.PenRepository;
@@ -16,8 +16,8 @@ public class PenServiceImpl extends ProductServiceImpl<Pen> implements PenServic
 
     private final PenRepository penRepository;
 
-    public PenServiceImpl(ProductRepository productRepository, ProductDTOForCardMapper productDTOForCardMapper, PenRepository penRepository) {
-        super(productRepository, productDTOForCardMapper, null);
+    public PenServiceImpl(ProductRepository productRepository, ProductDTOMapper productDTOMapper, PenRepository penRepository) {
+        super(productRepository, productDTOMapper, null);
         this.penRepository = penRepository;
     }
 

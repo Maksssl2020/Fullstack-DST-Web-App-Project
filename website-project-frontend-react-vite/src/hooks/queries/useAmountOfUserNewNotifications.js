@@ -2,8 +2,8 @@ import { useQuery } from "react-query";
 import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling.js";
 import useAuthentication from "./useAuthentication.js";
 
-function UseAmountOfUserNewNotifications(userId) {
-  const { isAuthenticated, role } = useAuthentication();
+function UseAmountOfUserNewNotifications() {
+  const { isAuthenticated, role, userId } = useAuthentication();
 
   const {
     data: amountOfUserNewNotifications,

@@ -21,6 +21,8 @@ import org.hibernate.annotations.OnDeleteAction;
 @EqualsAndHashCode(callSuper = true)
 public class FavouriteItem extends ProductItem {
 
+    private String cardColor;
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.RESTRICT)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

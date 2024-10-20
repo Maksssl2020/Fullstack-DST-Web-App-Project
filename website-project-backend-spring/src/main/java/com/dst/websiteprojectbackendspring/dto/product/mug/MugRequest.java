@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.dto.product.clothing;
+package com.dst.websiteprojectbackendspring.dto.product.mug;
 
 import com.dst.websiteprojectbackendspring.dto.product.ProductRequest;
 import lombok.AllArgsConstructor;
@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PenRequest extends ProductRequest {
+public class MugRequest extends ProductRequest {
 
     private String color;
-    private String inkColor;
+    private String height;
+    private String material;
 }

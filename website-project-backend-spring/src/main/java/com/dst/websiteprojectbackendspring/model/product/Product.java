@@ -1,7 +1,8 @@
 package com.dst.websiteprojectbackendspring.model.product;
 
-import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
+import com.dst.websiteprojectbackendspring.model.product_category.Category;
 import com.dst.websiteprojectbackendspring.model.product_category.ProductCategory;
+import com.dst.websiteprojectbackendspring.model.product_image.ProductImage;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -13,11 +14,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Table(name = "products")
 @Data
@@ -59,10 +62,23 @@ public class Product {
     private ProductType productType;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductCategory> categories = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images = new ArrayList<>();
+
+    public boolean containsCategory(String category) {
+        log.info(category);
+
+        if ("wszystko".equals(category)) {
+            return true;
+        } else {
+            return categories.stream()
+                    .map(ProductCategory::getCategory)
+                    .toList()
+                    .contains(Category.valueOf(category.toUpperCase()));
+        }
+    }
 }

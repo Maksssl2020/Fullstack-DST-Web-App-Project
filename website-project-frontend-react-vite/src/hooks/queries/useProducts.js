@@ -1,10 +1,13 @@
 import { useQuery } from "react-query";
 import { fetchAllProducts } from "../../helpers/api-integration/ShopProductsHandling.js";
 
-function UseProducts() {
+function UseProducts(chosenCategory) {
   const { data: products, isLoading: fetchingProducts } = useQuery(
-    ["productsData"],
-    () => fetchAllProducts(),
+    ["productsData", chosenCategory],
+    () => fetchAllProducts(chosenCategory),
+    {
+      keepAlive: true,
+    },
   );
 
   return { products, fetchingProducts };

@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.dto.product.clothing.PenRequest;
+import com.dst.websiteprojectbackendspring.dto.product.pen.PenRequest;
 import com.dst.websiteprojectbackendspring.model.product.pen.Pen;
 import com.dst.websiteprojectbackendspring.service.product.pen.PenServiceImpl;
 import lombok.RequiredArgsConstructor;

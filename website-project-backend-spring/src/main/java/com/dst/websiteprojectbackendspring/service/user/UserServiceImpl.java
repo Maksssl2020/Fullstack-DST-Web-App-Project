@@ -1,8 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.user;
 
 import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
-import com.dst.websiteprojectbackendspring.dto.user.UserDTOMapper;
 import com.dst.websiteprojectbackendspring.dto.user.UserDisplayDataDTO;
+import com.dst.websiteprojectbackendspring.mapper.UserDTOMapper;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.UserRepository;
@@ -38,27 +38,28 @@ public class UserServiceImpl implements UserService{
         return !userRepository.existsByEmail(email);
     }
 
+
     @Override
     public List<UserDTO> findAllUsersWithoutAdmins() {
         return userRepository.findAll().stream()
-                .map(userDTOMapper)
-                .filter(user -> user.role() != UserRole.ADMIN)
-                .sorted(Comparator.comparing(UserDTO::id).reversed())
+                .map(userDTOMapper::mapUserIntoUserDTO)
+                .filter(user -> user.getRole() != UserRole.ADMIN)
+                .sorted(Comparator.comparing(UserDTO::getId).reversed())
                 .toList();
     }
 
     @Override
     public List<UserDTO> findAllVolunteers() {
         return userRepository.findAll().stream()
-                .map(userDTOMapper)
-                .filter(user -> user.role().equals(UserRole.VOLUNTEER))
-                .sorted(Comparator.comparing(UserDTO::id).reversed())
+                .map(userDTOMapper::mapUserIntoUserDTO)
+                .filter(user -> user.getRole().equals(UserRole.VOLUNTEER))
+                .sorted(Comparator.comparing(UserDTO::getId).reversed())
                 .toList();
     }
 
     @Override
     public UserDTO getUserById(Long userId) throws ChangeSetPersister.NotFoundException {
-        return userRepository.findById(userId).map(userDTOMapper).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        return userRepository.findById(userId).map(userDTOMapper::mapUserIntoUserDTO).orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     @Override

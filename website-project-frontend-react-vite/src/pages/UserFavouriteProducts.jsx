@@ -5,12 +5,18 @@ import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo
 import Spinner from "../components/universal/Spinner.jsx";
 import CloseIcon from "../components/drawer/icons/CloseIcon.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
+import { useNavigate } from "react-router-dom";
+import { transformProductTitleIntoLinkTitle } from "../helpers/transformProductTitle.js";
+import useDeleteFavouriteUserProductMutation from "../hooks/mutations/useDeleteFavouriteUserProductMutation.js";
 
 function UserFavouriteProducts() {
   const { userFavouriteProducts, fetchingUserFavouriteProducts } =
     useFavouriteUserProducts();
+  const { deleteFavouriteUserProduct, deletingFavouriteUserProduct } =
+    useDeleteFavouriteUserProductMutation();
+  const navigate = useNavigate();
 
-  if (fetchingUserFavouriteProducts) {
+  if (fetchingUserFavouriteProducts || deletingFavouriteUserProduct) {
     return <Spinner />;
   }
 
@@ -31,13 +37,22 @@ function UserFavouriteProducts() {
           <MainBannerWithoutLogo bannerTitle={"Ulubione Produkty"} />
           {userFavouriteProducts?.map((data) => (
             <div
-              className={
-                "w-[75%] flex items-center justify-between rounded-xl h-[150px] px-12 bg-custom-gray-100 border-b-4 border-custom-gray-300"
+              onClick={() =>
+                navigate(
+                  `/rainbow-shop/products/${data.mainProductId}/${transformProductTitleIntoLinkTitle(data.productFullTitle)}`,
+                  { state: { cardColor: data.cardColor } },
+                )
               }
+              className={`w-[75%] cursor-pointer flex items-center justify-between rounded-xl h-[150px] px-12 border-2 border-black ${data.cardColor}`}
               key={data.id}
             >
               <div className={"w-auto h-full flex items-center gap-8"}>
-                <button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteFavouriteUserProduct(data.id);
+                  }}
+                >
                   <CloseIcon size={"size-10"} />
                 </button>
                 <div className={"size-[125px]"}>

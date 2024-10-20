@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.dto.product.clothing.GadgetRequest;
+import com.dst.websiteprojectbackendspring.dto.product.gadget.GadgetRequest;
 import com.dst.websiteprojectbackendspring.model.product.gadget.Gadget;
 import com.dst.websiteprojectbackendspring.service.product.gadget.GadgetServiceImpl;
 import lombok.RequiredArgsConstructor;

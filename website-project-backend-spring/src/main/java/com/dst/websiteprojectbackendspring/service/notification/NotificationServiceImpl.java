@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.notification;
 
 import com.dst.websiteprojectbackendspring.dto.notification.NotificationDTO;
-import com.dst.websiteprojectbackendspring.dto.notification.NotificationDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.NotificationDTOMapper;
 import com.dst.websiteprojectbackendspring.model.notification.Notification;
 import com.dst.websiteprojectbackendspring.model.notification.NotificationRequest;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -49,8 +49,8 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public List<NotificationDTO> getNotificationsByUserId(Long userId) {
         return notificationRepository.findAllByUserId(userId).stream()
-                .map(notificationDTOMapper)
-                .sorted(Comparator.comparing(NotificationDTO::id).reversed())
+                .map(notificationDTOMapper::mapNotificationIntoNotificationDTO)
+                .sorted(Comparator.comparing(NotificationDTO::getId).reversed())
                 .collect(Collectors.toList());
     }
 

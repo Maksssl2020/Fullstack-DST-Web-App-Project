@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import HeartIcon from "../../icons/HeartIcon.jsx";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../context/AuthProvider.jsx";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import ProductQuantityButton from "../button/ProductQuantityButton.jsx";
 import SizesDropdown from "../dropdown/SizesDropdown.jsx";
@@ -11,18 +10,22 @@ import useProductSizes from "../../hooks/queries/useProductSizes.js";
 import useProductCategories from "../../hooks/queries/useProductCategories.js";
 import useAuthentication from "../../hooks/queries/useAuthentication.js";
 import useAddFavouriteUserProductMutation from "../../hooks/mutations/useAddFavouriteUserProductMutation.js";
+import useDeleteFavouriteUserProductMutation from "../../hooks/mutations/useDeleteFavouriteUserProductMutation.js";
 
 const ShopProductBuyOptionsPanel = ({
   productData,
   cardColor,
   setProductCategories,
+  markedAsFavourite,
 }) => {
   const { userId, isAuthenticated } = useAuthentication();
   const { id, title, name, price, productType } = productData;
   const [cartIdentifier, setCartIdentifier] = useState("");
   const [quantity, setQuantity] = React.useState(1);
   const [chosenSize, setChosenSize] = React.useState(null);
-  const [addedToFavourite, setAddedToFavourite] = useState(false);
+  const [addedToFavourite, setAddedToFavourite] = useState(
+    markedAsFavourite?.mainProductId === id,
+  );
   const { productCategories, fetchingProductCategories } =
     useProductCategories(id);
   const { productSizes, fetchingProductSizes } = useProductSizes(
@@ -35,6 +38,8 @@ const ShopProductBuyOptionsPanel = ({
   );
   const { addFavouriteProduct, addingFavouriteProduct } =
     useAddFavouriteUserProductMutation();
+  const { deleteFavouriteUserProduct, deletingFavouriteUserProduct } =
+    useDeleteFavouriteUserProductMutation();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -50,20 +55,22 @@ const ShopProductBuyOptionsPanel = ({
     }
   }, [productCategories, setProductCategories]);
 
-  const handleAddToFavourite = () => {
+  const handleAddDeleteFavourite = () => {
     setAddedToFavourite(!addedToFavourite);
 
-    addFavouriteProduct({
-      mainProductId: id,
-      productSize: chosenSize ? chosenSize : null,
-    });
+    if (markedAsFavourite === undefined) {
+      addFavouriteProduct({ mainProductId: id, cardColor: cardColor });
+    } else {
+      deleteFavouriteUserProduct(markedAsFavourite.favouriteItemId);
+    }
   };
 
   if (
     fetchingProductCategories ||
     addingItemToCart ||
     fetchingProductSizes ||
-    addingFavouriteProduct
+    addingFavouriteProduct ||
+    deletingFavouriteUserProduct
   ) {
     return <Spinner />;
   }
@@ -77,8 +84,6 @@ const ShopProductBuyOptionsPanel = ({
   const handleQuantityAdding = () => {
     setQuantity(quantity + 1);
   };
-
-  console.log(productData);
 
   return (
     <div
@@ -124,7 +129,7 @@ const ShopProductBuyOptionsPanel = ({
             Dodaj do koszyka
           </motion.button>
           <button
-            onClick={handleAddToFavourite}
+            onClick={handleAddDeleteFavourite}
             className="w-[50%] gap-2 h-full text-xl flex justify-center items-center"
           >
             <HeartIcon
