@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.cart_item;
 
-import com.dst.websiteprojectbackendspring.dto.cart_item.CartItemDTO;
-import com.dst.websiteprojectbackendspring.mapper.CartItemDTOMapper;
+import com.dst.websiteprojectbackendspring.dto.product_item.ProductItemDTO;
+import com.dst.websiteprojectbackendspring.mapper.ProductItemDTOMapper;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
 import com.dst.websiteprojectbackendspring.model.product.Product;
@@ -31,7 +31,7 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartItemRepository;
     private final CartServiceImpl cartService;
     private final ProductRepository productRepository;
-    private final CartItemDTOMapper cartItemDTOMapper;
+    private final ProductItemDTOMapper productItemDTOMapper;
 
     @Override
     public void saveCartItem(Integer quantity, String size, Long productId, String cartIdentifier, boolean isUserRegistered) throws ChangeSetPersister.NotFoundException {
@@ -50,7 +50,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     private boolean isItemCurrentlyInCart(Long mainProductId, String size, Integer quantity, Long cartId) {
-        List<CartItemDTO> foundCartItemsWithTheSameMainProductId = getCartItemsWithTheSameMainProductId(mainProductId, cartId);
+        List<ProductItemDTO> foundCartItemsWithTheSameMainProductId = getCartItemsWithTheSameMainProductId(mainProductId, cartId);
 
         if (size != null) {
             foundCartItemsWithTheSameMainProductId = getCartItemsWithTheSameSize(size, foundCartItemsWithTheSameMainProductId);
@@ -73,13 +73,13 @@ public class CartItemServiceImpl implements CartItemService {
         }
     }
 
-    private List<CartItemDTO> getCartItemsWithTheSameMainProductId(Long mainProductId, Long cartId) {
+    private List<ProductItemDTO> getCartItemsWithTheSameMainProductId(Long mainProductId, Long cartId) {
         return getCartItemsByCartId(cartId).stream()
                 .filter(item -> item.getMainProductId().equals(mainProductId))
                 .toList();
     }
 
-    private List<CartItemDTO> getCartItemsWithTheSameSize(String size, List<CartItemDTO> foundProductsWithTheSameTitle) {
+    private List<ProductItemDTO> getCartItemsWithTheSameSize(String size, List<ProductItemDTO> foundProductsWithTheSameTitle) {
         return foundProductsWithTheSameTitle.stream()
                 .filter(product -> product.getProductSize().equals(Size.valueOf(size)))
                 .toList();
@@ -105,10 +105,10 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public List<CartItemDTO> getCartItemsByCartId(Long cartId) {
+    public List<ProductItemDTO> getCartItemsByCartId(Long cartId) {
         return cartItemRepository.findByCartId(cartId).stream()
                 .sorted(Comparator.comparing(ProductItem::getId).reversed())
-                .map(cartItemDTOMapper::mapCartItemToCartItemDTO)
+                .map(productItemDTOMapper::mapProductItemIntoProductItemDTO)
                 .toList();
     }
 

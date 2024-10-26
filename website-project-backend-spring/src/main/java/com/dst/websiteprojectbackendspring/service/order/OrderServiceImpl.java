@@ -1,6 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.order;
 
+import com.dst.websiteprojectbackendspring.dto.order.OrderDTO;
 import com.dst.websiteprojectbackendspring.dto.order.OrderRequestDTO;
+import com.dst.websiteprojectbackendspring.mapper.OrderDTOMapper;
 import com.dst.websiteprojectbackendspring.model.order.Order;
 import com.dst.websiteprojectbackendspring.model.order.OrderStatus;
 import com.dst.websiteprojectbackendspring.model.payment.Payment;
@@ -34,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final BillingServiceImpl billingService;
     private final ShippingServiceImpl shippingService;
     private final OrderItemServiceImpl orderItemService;
+    private final OrderDTOMapper orderDTOMapper;
 
     @Override
     public void saveOrder(Order order) {
@@ -66,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findOrderById(Long id) {
+    public OrderDTO findOrderById(Long id) {
         try {
             Order order = orderRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
 
@@ -76,18 +79,18 @@ public class OrderServiceImpl implements OrderService {
                 orderRepository.save(order);
             }
 
-            return order;
+            return orderDTOMapper.mapOrderIntoOrderDTO(order);
         } catch (ChangeSetPersister.NotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Page<Order> findAllOrders(PageRequest pageRequest) {
+    public Page<OrderDTO> findAllOrders(PageRequest pageRequest) {
         updatePaymentsStatusBeforeFetchingItByUsers(null);
-        Page<Order> allOrders =  orderRepository.findAll(pageRequest);
-        List<Order> sortedOrders = allOrders.stream()
-                .sorted(Comparator.comparing(Order::getId).reversed())
+        Page<OrderDTO> allOrders =  orderRepository.findAll(pageRequest).map(orderDTOMapper::mapOrderIntoOrderDTO);
+        List<OrderDTO> sortedOrders = allOrders.stream()
+                .sorted(Comparator.comparing(OrderDTO::getId).reversed())
                 .collect(Collectors.toList());
 
 
@@ -95,11 +98,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findOrdersByAuthenticatedCustomerId(Long userId) {
+    public List<OrderDTO> findOrdersByAuthenticatedCustomerId(Long userId) {
         updatePaymentsStatusBeforeFetchingItByUsers(userId);
 
         return orderRepository.findByAuthenticatedCustomerId(userId).stream()
-                .sorted(Comparator.comparing(Order::getId).reversed())
+                .map(orderDTOMapper::mapOrderIntoOrderDTO)
+                .sorted(Comparator.comparing(OrderDTO::getId).reversed())
                 .toList();
     }
 

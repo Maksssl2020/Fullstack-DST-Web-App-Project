@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.message;
 
 import com.dst.websiteprojectbackendspring.dto.message.MessageDTO;
-import com.dst.websiteprojectbackendspring.dto.message.MessageDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.MessageDTOMapper;
 import com.dst.websiteprojectbackendspring.model.message.Message;
 import com.dst.websiteprojectbackendspring.model.message.MessageRequest;
 import com.dst.websiteprojectbackendspring.model.message.MessageType;
@@ -53,7 +53,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageDTO> findAllNonReadUserMessages(Long userId) {
         return messageRepository.findAllByUserId(userId).stream()
-                .map(messageDTOMapper)
+                .map(messageDTOMapper::mapMessageIntoMessageDTO)
                 .filter(messageDTO -> !messageDTO.isRead())
                 .toList();
     }
@@ -61,7 +61,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<MessageDTO> findAllUserMessages(Long userId) {
         return messageRepository.findAllByUserId(userId).stream()
-                .map(messageDTOMapper)
+                .map(messageDTOMapper::mapMessageIntoMessageDTO)
                 .toList();
     }
 

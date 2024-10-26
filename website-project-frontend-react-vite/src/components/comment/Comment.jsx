@@ -31,11 +31,13 @@ const Comment = ({ commentData, postId, key }) => {
   if (
     updatingForumPostComment ||
     fetchingUserDisplay ||
-    deletingForumPostComment ||
-    !userDisplay
+    deletingForumPostComment
   ) {
     return <Spinner />;
   }
+
+  console.log(userDisplay);
+  console.log(commentData);
 
   return (
     <div
@@ -47,14 +49,14 @@ const Comment = ({ commentData, postId, key }) => {
           {userDisplay ? (
             <img
               className="rounded-full inset-0 object-cover size-full"
-              src={`data:image/png;base64,${userDisplay.avatar}`}
+              src={`data:image/png;base64,${userDisplay?.avatar}`}
               alt={authorId}
             />
           ) : (
             <UserIcon size={"size-8"} />
           )}
         </p>
-        <p className="font-bold text-sm">{userDisplay.username}</p>
+        <p className="font-bold text-sm">{userDisplay?.username}</p>
       </div>
       <textarea
         defaultValue={content}
@@ -65,7 +67,7 @@ const Comment = ({ commentData, postId, key }) => {
         })}
       ></textarea>
       <div className="flex flex-col gap-2">
-        {username === userDisplay.username && (
+        {username === userDisplay?.username && (
           <button
             onClick={handleEditClick}
             className="size-8 rounded-full bg-white flex items-center justify-center"
@@ -73,7 +75,7 @@ const Comment = ({ commentData, postId, key }) => {
             <EditIcon size={"size-6"} />
           </button>
         )}
-        {(username === userDisplay.username || role === "ADMIN") && (
+        {(username === userDisplay?.username || role === "ADMIN") && (
           <button
             onClick={() => setOpenModal(true)}
             className="size-8 rounded-full bg-white flex items-center justify-center"

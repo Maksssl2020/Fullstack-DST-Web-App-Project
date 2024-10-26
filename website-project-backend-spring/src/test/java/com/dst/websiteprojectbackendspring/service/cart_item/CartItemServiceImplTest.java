@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.cart_item;
 
 import com.dst.websiteprojectbackendspring.dto.cart_item.CartItemDTO;
-import com.dst.websiteprojectbackendspring.mapper.CartItemDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ProductItemDTOMapper;
 import com.dst.websiteprojectbackendspring.model.cart.Cart;
 import com.dst.websiteprojectbackendspring.model.cart_item.CartItem;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ class CartItemServiceImplTest {
 
 
     @Mock
-    CartItemDTOMapper cartItemDTOMapper;
+    ProductItemDTOMapper productItemDTOMapper;
 
     @InjectMocks
     CartItemServiceImpl cartItemService;
@@ -66,13 +66,13 @@ class CartItemServiceImplTest {
 
     @AfterEach
     void tearDown() {
-        Mockito.reset(cartItemDTOMapper);
+        Mockito.reset(productItemDTOMapper);
     }
 
     @Test
     void testMapCartItemToCartItemDTO() {
-        when(cartItemDTOMapper.mapCartItemToCartItemDTO(testCartItem)).thenReturn(testCartItemDTO);
-        CartItemDTO result = cartItemDTOMapper.mapCartItemToCartItemDTO(testCartItem);
+        when(productItemDTOMapper.mapProductItemIntoProductItemDTO(testCartItem)).thenReturn(testCartItemDTO);
+        CartItemDTO result = (CartItemDTO) productItemDTOMapper.mapProductItemIntoProductItemDTO(testCartItem);
 
 
         assertEquals(testCartItemDTO.getDateAdded(), result.getDateAdded());

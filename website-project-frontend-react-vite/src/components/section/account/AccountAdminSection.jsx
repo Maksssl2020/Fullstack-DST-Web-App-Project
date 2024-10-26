@@ -7,6 +7,8 @@ import DefaultModal from "../../modal/DefaultModal.jsx";
 import CloseIcon from "../../drawer/icons/CloseIcon.jsx";
 import FormItem from "../../form/FormItem.jsx";
 import useAuthentication from "../../../hooks/queries/useAuthentication.js";
+import { motion } from "framer-motion";
+import AdminManagementOptionButton from "../../button/AdminManagementOptionButton.jsx";
 
 const AccountAdminSection = ({
   userData,
@@ -19,26 +21,63 @@ const AccountAdminSection = ({
   const { role, accountCreationDate } = useAuthentication();
   const [openModal, setOpenModal] = React.useState(false);
   const navigate = useNavigate();
+  const manageSiteData = [
+    {
+      name: "Swtórz nowy",
+      boldContent: "artykuł",
+      onClick: () => navigate("/article/add-article"),
+    },
+    {
+      name: "Edytuj",
+      boldContent: "dane o kwartałach",
+      onClick: () => navigate("/change-statistics"),
+    },
+    {
+      name: "Swtórz nowe",
+      boldContent: "wydarzenie",
+      onClick: () => navigate("/events/add-event"),
+    },
+    {
+      name: "Edytuj",
+      boldContent: "dane o kwartałach",
+      onClick: () => navigate("/change-statistics"),
+    },
+  ];
+
   const manageShopData = [
     {
-      title: "ubranie",
+      functionName: "Dodaj:",
+      mainContent: "ubranie",
       onClickFunction: () =>
         navigate("/rainbow-shop/products/admin-options/clothes/add"),
     },
     {
-      title: "długopis",
+      functionName: "Dodaj:",
+      mainContent: "długopis",
       onClickFunction: () =>
         navigate("/rainbow-shop/products/admin-options/pens/add"),
     },
     {
-      title: "kubek",
+      functionName: "Dodaj:",
+      mainContent: "kubek",
       onClickFunction: () =>
         navigate("/rainbow-shop/products/admin-options/mugs/add"),
     },
     {
-      title: "gadżet",
+      functionName: "Dodaj:",
+      mainContent: "gadżet",
       onClickFunction: () =>
         navigate("/rainbow-shop/products/admin-options/gadgets/add"),
+    },
+    {
+      functionName: "Dodaj:",
+      mainContent: "kod rabatowy",
+      onClickFunction: () => navigate("/rainbow-shop/create-discount-code"),
+    },
+    {
+      functionName: "Sprawdź:",
+      mainContent: "kody rabatowe",
+      onClickFunction: () => navigate("/rainbow-shop/discount-codes"),
     },
   ];
 
@@ -81,68 +120,27 @@ const AccountAdminSection = ({
         <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
           Zarządzanie Stroną
         </div>
-        <div className="w-full h-[35%] px-4 py-8 gap-6 flex justify-center items-center">
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={() => navigate("/article/add-article")}
-              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
-            >
-              Stwórz nowy &nbsp;<span className="font-bold">artykuł</span>
-            </button>
-            <button
-              onClick={() => navigate("/events/add-event")}
-              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
-            >
-              Stwórz nowe &nbsp;<span className="font-bold">wydarzenie</span>
-            </button>
-          </div>
-          <div className="flex flex-col gap-4">
-            <button
-              onClick={() => navigate("/change-statistics")}
-              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
-            >
-              Edytuj &nbsp;<span className="font-bold">dane o kwartałach</span>
-            </button>
-            <button
-              onClick={() => navigate("/change-statistics")}
-              className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
-            >
-              Edytuj &nbsp;<span className="font-bold">dane o kwartałach</span>
-            </button>
-          </div>
+        <div className="w-full h-[35%] p-6 grid grid-cols-2 grid-rows-2 items-center">
+          {manageSiteData.map((data, index) => (
+            <AdminManagementOptionButton onClick={data.onClick} key={index}>
+              {data.name}&nbsp;
+              <span className="font-bold">{data.boldContent}</span>
+            </AdminManagementOptionButton>
+          ))}
         </div>
         <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
           Zarządzanie Sklepem
         </div>
         <div className="w-full h-[400px] text-xl justify-items-center grid grid-rows-4 grid-cols-2 px-6 py-6 gap-6">
           {manageShopData.map((data, index) => (
-            <button
+            <AdminManagementOptionButton
               onClick={data.onClickFunction}
               key={index}
-              className="w-[300px] h-[75px] flex justify-center items-center bg-white border-8 border-custom-pink-200 rounded-2xl"
             >
-              Dodaj:
-              <span className="ml-2 uppercase text-custom-pink-200">{`${data.title}`}</span>
-            </button>
+              {data.functionName}
+              <span className="ml-2 uppercase text-custom-pink-200">{`${data.mainContent}`}</span>
+            </AdminManagementOptionButton>
           ))}
-          <button
-            onClick={() => navigate("/rainbow-shop/create-discount-code")}
-            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
-          >
-            Dodaj: &nbsp;
-            <span className="ml-2 uppercase text-custom-pink-200">
-              kod rabatowy
-            </span>
-          </button>
-          <button
-            onClick={() => navigate("/rainbow-shop/discount-codes")}
-            className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[75px] border-8 border-custom-pink-200 rounded-2xl"
-          >
-            Zobacz: &nbsp;
-            <span className="ml-2 uppercase text-custom-pink-200">
-              kody rabatowe
-            </span>
-          </button>
         </div>
       </div>
       {openModal && (

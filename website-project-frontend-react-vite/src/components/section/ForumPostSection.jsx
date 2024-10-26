@@ -22,11 +22,14 @@ const ForumPostSection = () => {
     return <Spinner />;
   }
 
+  console.log(forumPosts);
+  console.log(currentPage);
+
   return (
     <>
       <ul className="w-full flex flex-col">
-        {forumPosts.content.map((post) => (
-          <li className="w-full flex justify-center" key={post.id}>
+        {forumPosts?.content.map((post, index) => (
+          <li className="w-full flex justify-center" key={index}>
             <ForumPostCard postData={post} />
           </li>
         ))}

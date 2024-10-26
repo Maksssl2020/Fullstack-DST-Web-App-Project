@@ -1,9 +1,9 @@
 import React from "react";
 
-const ChevronIcon = (size) => {
+const ChevronIcon = ({ className }) => {
   return (
     <svg
-      className={`${size}`}
+      className={className}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"

@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService{
 
         updates.forEach((key, value) -> {
             if (key.equals("role") && value != null) {
-                existingUser.setRole(UserRole.valueOf(value.toString()));
+                existingUser.setRole(UserRole.valueOf(value.toString().toUpperCase()));
             } else {
                 Field field = ReflectionUtils.findField(User.class, key);
                 if (field != null) {

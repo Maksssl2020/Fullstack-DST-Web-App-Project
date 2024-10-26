@@ -1,9 +1,9 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.model.event.Event;
+import com.dst.websiteprojectbackendspring.dto.event.EventDTO;
+import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
 import com.dst.websiteprojectbackendspring.model.event.EventRequest;
-import com.dst.websiteprojectbackendspring.model.user.User;
-import com.dst.websiteprojectbackendspring.service.event.EventServiceImpl;
+import com.dst.websiteprojectbackendspring.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
@@ -17,15 +17,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EventController {
 
-    private final EventServiceImpl eventService;
+    private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<Event>> getAllEvents() {
+    public ResponseEntity<List<EventDTO>> getAllEvents() {
         return ResponseEntity.ok(eventService.getEvents());
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<Event> getEventById(@PathVariable Long eventId) throws ChangeSetPersister.NotFoundException {
+    public ResponseEntity<EventDTO> getEventById(@PathVariable Long eventId) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(eventService.getEvent(eventId));
     }
 
@@ -40,17 +40,17 @@ public class EventController {
     }
 
     @GetMapping("/{eventId}/users")
-    public ResponseEntity<List<User>> getUsersByEventId(@PathVariable Long eventId) {
+    public ResponseEntity<List<UserDTO>> getUsersByEventId(@PathVariable Long eventId) {
         return ResponseEntity.ok(eventService.getEventUsers(eventId));
     }
 
     @GetMapping("/{eventId}/user-registered-to-the-event/{userId}")
-    public ResponseEntity<Boolean> getUserRegisteredToTheEvent(@PathVariable Long eventId, @PathVariable Long userId) {
+    public ResponseEntity<Boolean> getUserRegisteredToTheEvent(@PathVariable Long eventId, @PathVariable Long userId) throws ChangeSetPersister.NotFoundException {
         return ResponseEntity.ok(eventService.isUserTakingAPertInTheEvent(eventId, userId));
     }
 
     @GetMapping("/user-events/{userId}")
-    ResponseEntity<List<Event>> getUserEventsByUserId(@PathVariable Long userId) {
+    ResponseEntity<List<EventDTO>> getUserEventsByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(eventService.getAllByUserId(userId));
     }
 

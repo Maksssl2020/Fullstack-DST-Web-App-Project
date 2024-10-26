@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { handleUpdateUserData } from "../helpers/api-integration/UserDataHandling.js";
@@ -11,13 +11,16 @@ import DefaultModal from "../components/modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
 import useUser from "../hooks/queries/useUser.js";
 import useUserDisplay from "../hooks/queries/useUserDisplay.js";
+import OneOptionDropdown from "../components/dropdown/OneOptionDropdown.jsx";
 
 const UserAccountAdminView = () => {
   const { userId } = useParams();
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalContent, setModalContent] = React.useState(null);
+  const [chosenAction, setChosenAction] = useState("");
   const [userUpdateData, setUserUpdateData] = React.useState({});
+  const [chosenRole, setChosenRole] = React.useState("");
   const navigate = useNavigate();
   const { user, fetchingUser } = useUser(userId);
   const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
@@ -56,36 +59,47 @@ const UserAccountAdminView = () => {
       onClick: () =>
         handleOpenModal(
           `${accountLocked ? "Odbanuj" : "Zbanuj"} użytkownika ${username}`,
-          setUserUpdateData,
+          "BAN",
         ),
-      action: "BAN",
     },
     {
       name: "Zmień rolę",
       onClick: () =>
-        handleOpenModal(
-          `Zmień rolę użytkownika ${username} na ${role === "REGISTERED" ? "WOLONTARIUSZ" : "ZAREJESTROWANY"}`,
-        ),
-      action: "ROLE",
+        handleOpenModal(`Zmień rolę użytkownika ${username}`, "ROLE"),
     },
     {
       name: "Usuń profilowe",
       onClick: () =>
-        handleOpenModal(`Usuń zdjęcie profilowe użytkownika ${username}`),
-      action: "AVATAR",
+        handleOpenModal(
+          `Usuń zdjęcie profilowe użytkownika ${username}`,
+          "AVATAR",
+        ),
     },
     {
       name: "Usuń indentyfikacyjne",
       onClick: () =>
-        handleOpenModal(`Usuń zdjęcie identyfikacyjne użytkownika ${username}`),
-      action: "IDENTIFY",
+        handleOpenModal(
+          `Usuń zdjęcie identyfikacyjne użytkownika ${username}`,
+          "IDENTIFY",
+        ),
     },
     {
       name: "Wyślij wiadomość",
       onClick: () =>
-        handleOpenModal(`Wyślij wiadomość użytkownikowi ${username}`),
-      action: "MESSAGE",
+        handleOpenModal(
+          `Wyślij wiadomość użytkownikowi ${username}`,
+          "MESSAGE",
+        ),
     },
+  ];
+
+  const availableRoles = [
+    {
+      value: "REGISTERED",
+      display: "Zarejestrowany",
+    },
+    { value: "VOLUNTEER", display: "Wolontariusz" },
+    { value: "MODERATOR", display: "Moderator" },
   ];
 
   const setFunctionDataDependsOnButtonAction = (action) => {
@@ -95,7 +109,7 @@ const UserAccountAdminView = () => {
         break;
       case "ROLE":
         setUserUpdateData({
-          role: role === "REGISTERED" ? "VOLUNTEER" : "REGISTERED",
+          role: chosenRole,
         });
         break;
       case "AVATAR":
@@ -109,11 +123,14 @@ const UserAccountAdminView = () => {
     }
   };
 
-  const handleOpenModal = (modalContent) => {
+  const handleOpenModal = (modalContent, chosenAction) => {
     setModalContent(modalContent);
+    setChosenAction(chosenAction);
     setIsModalOpen(true);
   };
 
+  console.log(chosenRole);
+  console.log(role);
   console.log(userUpdateData);
 
   return (
@@ -157,7 +174,6 @@ const UserAccountAdminView = () => {
               key={index}
               onClick={() => {
                 data.onClick();
-                setFunctionDataDependsOnButtonAction(data.action);
               }}
               className="h-[75px] px-10 border-4 border-black uppercase text-xl text-white font-bold rounded-2xl bg-custom-orange-200"
             >
@@ -169,6 +185,18 @@ const UserAccountAdminView = () => {
       <AnimatePresence>
         {isModalOpen && (
           <DefaultModal subtitle={modalContent}>
+            {chosenAction === "ROLE" && (
+              <OneOptionDropdown
+                containerClassName={"w-full h-auto px-4 gap-2 flex flex-col"}
+                labelClassname={"text-2xl"}
+                optionsName={"Rola"}
+                options={availableRoles.filter(
+                  (availableRole) => availableRole.value !== role,
+                )}
+                setOption={setChosenRole}
+              />
+            )}
+
             <div className="flex gap-6">
               <button
                 className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
@@ -178,10 +206,14 @@ const UserAccountAdminView = () => {
               </button>
               <button
                 onClick={() => {
-                  if (modalContent.includes("wiadomość")) {
+                  if (chosenAction === "MESSAGE") {
                     navigate(`/users/create-message/${userId}/${username}`);
                   } else {
-                    updateUser();
+                    setFunctionDataDependsOnButtonAction(chosenAction);
+
+                    setTimeout(() => {
+                      updateUser();
+                    }, 0);
                   }
                 }}
                 className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"

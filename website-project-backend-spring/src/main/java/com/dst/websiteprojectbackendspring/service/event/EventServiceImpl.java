@@ -1,5 +1,9 @@
 package com.dst.websiteprojectbackendspring.service.event;
 
+import com.dst.websiteprojectbackendspring.dto.event.EventDTO;
+import com.dst.websiteprojectbackendspring.dto.user.UserDTO;
+import com.dst.websiteprojectbackendspring.mapper.EventDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.UserDTOMapper;
 import com.dst.websiteprojectbackendspring.model.event.Event;
 import com.dst.websiteprojectbackendspring.model.event.EventRequest;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -20,6 +24,8 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final EventDTOMapper eventDTOMapper;
+    private final UserDTOMapper userDTOMapper;
 
     @Override
     public void saveEvent(EventRequest eventRequest) {
@@ -46,18 +52,24 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getEvents() {
-        return eventRepository.findAll();
+    public List<EventDTO> getEvents() {
+        return eventRepository.findAll().stream()
+                .map(eventDTOMapper::mapEventIntoEventDTO)
+                .toList();
     }
 
     @Override
-    public List<User> getEventUsers(Long eventId) {
-        return userRepository.findAllUsersByEventId(eventId);
+    public List<UserDTO> getEventUsers(Long eventId) {
+        return userRepository.findAllUsersByEventId(eventId).stream()
+                .map(userDTOMapper::mapUserIntoUserDTO)
+                .toList();
     }
 
     @Override
-    public Event getEvent(Long id) throws ChangeSetPersister.NotFoundException {
-        return eventRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public EventDTO getEvent(Long id) throws ChangeSetPersister.NotFoundException {
+        return eventRepository.findById(id)
+                .map(eventDTOMapper::mapEventIntoEventDTO)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     @Override
@@ -76,7 +88,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAllByUserId(Long userId) {
-        return eventRepository.findAllByUserId(userId);
+    public List<EventDTO> getAllByUserId(Long userId) {
+        return eventRepository.findAllByUserId(userId).stream()
+                .map(eventDTOMapper::mapEventIntoEventDTO)
+                .toList();
     }
 }

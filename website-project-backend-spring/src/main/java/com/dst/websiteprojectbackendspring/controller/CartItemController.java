@@ -1,6 +1,6 @@
 package com.dst.websiteprojectbackendspring.controller;
 
-import com.dst.websiteprojectbackendspring.dto.cart_item.CartItemDTO;
+import com.dst.websiteprojectbackendspring.dto.product_item.ProductItemDTO;
 import com.dst.websiteprojectbackendspring.service.cart_item.CartItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -18,7 +18,7 @@ public class CartItemController {
     private final CartItemService cartItemService;
 
     @GetMapping("/cart/{cartId}")
-    public ResponseEntity<List<CartItemDTO>> getCartItems(@PathVariable Long cartId) {
+    public ResponseEntity<List<ProductItemDTO>> getCartItems(@PathVariable Long cartId) {
         return ResponseEntity.ok(cartItemService.getCartItemsByCartId(cartId));
     }
 

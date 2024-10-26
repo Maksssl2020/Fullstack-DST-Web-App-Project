@@ -1,4 +1,15 @@
 package com.dst.websiteprojectbackendspring.dto.article_image;
 
-public record ArticleImageDTO(Long id, byte[] image) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class ArticleImageDTO {
+    private Long id;
+    private byte[] image;
 }

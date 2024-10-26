@@ -27,6 +27,8 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
     return <Spinner />;
   }
 
+  console.log(forumPostComments);
+
   return (
     <div className="w-[45%] justify-between flex flex-col h-full p-4 rounded-2xl bg-custom-gray-100">
       <div className="w-full h-[50px] flex text-white font-bold items-center justify-center text-4xl rounded-full bg-custom-blue-400">
@@ -34,11 +36,7 @@ const ForumPostCardCommentsPanel = ({ postId }) => {
       </div>
       <div className="h-[70%] space-y-4 px-2 w-full overflow-y-scroll">
         {forumPostComments?.map((commentData) => (
-          <Comment
-            key={commentData.id}
-            commentData={commentData}
-            postId={postId}
-          />
+          <Comment key={postId} commentData={commentData} postId={postId} />
         ))}
       </div>
       <div className={`h-[65px] relative w-full`}>

@@ -1,5 +1,6 @@
 package com.dst.websiteprojectbackendspring.service.order;
 
+import com.dst.websiteprojectbackendspring.dto.order.OrderDTO;
 import com.dst.websiteprojectbackendspring.dto.order.OrderRequestDTO;
 import com.dst.websiteprojectbackendspring.model.order.Order;
 import org.springframework.data.domain.Page;
@@ -13,9 +14,9 @@ public interface OrderService {
 
     void saveOrder(Order order);
     Long saveOrder(OrderRequestDTO orderRequestDTO);
-    Order findOrderById(Long id);
-    Page<Order> findAllOrders(PageRequest pageRequest);
-    List<Order> findOrdersByAuthenticatedCustomerId(Long userId);
+    OrderDTO findOrderById(Long id);
+    Page<OrderDTO> findAllOrders(PageRequest pageRequest);
+    List<OrderDTO> findOrdersByAuthenticatedCustomerId(Long userId);
     void updateOrder(Long orderId, String orderStatus);
     void deleteOrder(Long id);
 }

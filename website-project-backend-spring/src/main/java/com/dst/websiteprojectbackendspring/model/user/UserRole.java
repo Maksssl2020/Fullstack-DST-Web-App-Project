@@ -4,5 +4,6 @@ public enum UserRole {
     NON_REGISTERED,
     REGISTERED,
     VOLUNTEER,
+    MODERATOR,
     ADMIN,
 }

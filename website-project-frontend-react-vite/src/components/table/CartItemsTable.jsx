@@ -3,7 +3,7 @@ import DefaultModal from "../modal/DefaultModal.jsx";
 import ButtonWithLink from "../universal/ButtonWithLink.jsx";
 import { AnimatePresence, motion } from "framer-motion";
 import ItemsTableRow from "./ItemsTableRow.jsx";
-import AnimatedCancelButton from "../universal/AnimatedCancelButton.jsx";
+import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
 import ProductQuantityButton from "../button/ProductQuantityButton.jsx";
 import Spinner from "../universal/Spinner.jsx";

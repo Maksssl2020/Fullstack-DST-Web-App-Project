@@ -6,6 +6,7 @@ import EmiailIcon from "./icons/EmiailIcon.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import useAuthentication from "../../hooks/queries/useAuthentication.js";
 import DrawerContainer from "./DrawerContainer.jsx";
+import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";
 
 const RightDrawer = ({ isOpen, closeFunction }) => {
   const { logout, isAuthenticated } = useAuthentication();
@@ -26,12 +27,11 @@ const RightDrawer = ({ isOpen, closeFunction }) => {
       <div className="flex flex-col items-center w-full">
         <div className="w-full flex h-[11.5%] mt-8 justify-center items-center">
           <div className="flex gap-4 justify-center items-center w-[80%] h-[75px] rounded-full bg-custom-gray-300">
-            <button
-              className="rounded-full h-fit bg-custom-gray-100"
+            <AnimatedCancelButton
+              className={"bg-custom-gray-100 rounded-full"}
               onClick={closeFunction}
-            >
-              <CloseIcon size="size-12" />
-            </button>
+              iconSize={"size-12"}
+            />
             <div className="flex w-[70%] items-center justify-center text-xl font-bold h-[50px] bg-custom-gray-100 rounded-full">
               <Link to={"/contact-us"}>
                 <p>Skontaktuj się z nami</p>

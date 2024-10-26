@@ -1,10 +1,8 @@
 import React from "react";
 import HamburgerIcon from "../header/icons/HamburgerIcon.jsx";
-import CloseIcon from "./icons/CloseIcon.jsx";
 import DrawerList from "../list/DrawerList.jsx";
-import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
 import DrawerContainer from "./DrawerContainer.jsx";
-import { motion } from "framer-motion";
+import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";
 
 const LeftDrawer = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -31,13 +29,11 @@ const LeftDrawer = () => {
         <div
           className={`flex px-4 items-center justify-center gap-4 h-[11.5%] w-full bg-drawer-background`}
         >
-          <motion.button
-            whileHover={{ rotate: 180, transition: { duration: 0.3 } }}
-            className="rounded-full h-fit ml-auto mr-8"
+          <AnimatedCancelButton
+            className={"ml-auto bg-custom-gray-100 rounded-full"}
             onClick={toggleDrawer}
-          >
-            <CloseIcon size="size-12" />
-          </motion.button>
+            iconSize={"size-12"}
+          />
         </div>
         <div className="my-8 overflow-y-auto h-[80%]">
           <DrawerList />

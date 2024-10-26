@@ -1,9 +1,9 @@
 package com.dst.websiteprojectbackendspring.service.comment;
 
 import com.dst.websiteprojectbackendspring.dto.comment.CommentDTO;
-import com.dst.websiteprojectbackendspring.dto.comment.CommentDTOMapper;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentRequest;
 import com.dst.websiteprojectbackendspring.dto.comment.CommentUpdateRequest;
+import com.dst.websiteprojectbackendspring.mapper.CommentDTOMapper;
 import com.dst.websiteprojectbackendspring.model.comment.Comment;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentDTOMapper commentDTOMapper;
 
     @Override
-    public void saveComment(CommentRequest commentRequest, Long postId) throws ChangeSetPersister.NotFoundException {
+    public void saveComment(CommentRequest commentRequest, Long postId) {
         Comment comment = setComment(commentRequest, postId);
         commentRepository.save(comment);
     }
@@ -36,8 +36,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         return commentRepository.findByForumPostId(postId).stream()
-                .map(commentDTOMapper)
-                .sorted(Comparator.comparing(CommentDTO::creationDate))
+                .map(commentDTOMapper::mapCommentIntoCommentDTO)
+                .sorted(Comparator.comparing(CommentDTO::getCreationDate))
                 .toList();
     }
 

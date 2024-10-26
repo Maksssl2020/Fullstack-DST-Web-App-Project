@@ -1,8 +1,8 @@
 package com.dst.websiteprojectbackendspring.service.forum_post;
 
 import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostDTO;
-import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostDTOMapper;
 import com.dst.websiteprojectbackendspring.dto.forum_post.ForumPostRequest;
+import com.dst.websiteprojectbackendspring.mapper.ForumPostDTOMapper;
 import com.dst.websiteprojectbackendspring.model.forum_post.ForumPost;
 import com.dst.websiteprojectbackendspring.model.forum_post.PostType;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -39,14 +39,17 @@ public class ForumPostServiceImpl implements ForumPostService {
     public List<ForumPostDTO> getForumPosts() {
         List<ForumPost> allPosts = forumPostRepository.findAll();
 
-        return allPosts.stream().map(forumPostDTOMapper).sorted(Comparator.comparing(ForumPostDTO::id).reversed()).toList();
+        return allPosts.stream()
+                .map(forumPostDTOMapper::mapForumPostIntoForumPostDTO)
+                .sorted(Comparator.comparing(ForumPostDTO::getId).reversed())
+                .toList();
     }
 
     public Page<ForumPostDTO> getForumPosts(PageRequest pageRequest) {
         Page<ForumPost> allPosts = forumPostRepository.findAll(pageRequest);
         List<ForumPostDTO> sortedPosts = allPosts.stream()
-                .map(forumPostDTOMapper)
-                .sorted(Comparator.comparing(ForumPostDTO::id).reversed())
+                .map(forumPostDTOMapper::mapForumPostIntoForumPostDTO)
+                .sorted(Comparator.comparing(ForumPostDTO::getId).reversed())
                 .collect(Collectors.toList());
 
 
@@ -55,7 +58,9 @@ public class ForumPostServiceImpl implements ForumPostService {
 
     @Override
     public ForumPostDTO getForumPostById(Long id) throws ChangeSetPersister.NotFoundException {
-        return forumPostRepository.findById(id).map(forumPostDTOMapper).orElseThrow(ChangeSetPersister.NotFoundException::new);
+        return forumPostRepository.findById(id)
+                .map(forumPostDTOMapper::mapForumPostIntoForumPostDTO)
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
     }
 
     public Long countByAuthor(Long authorId) {

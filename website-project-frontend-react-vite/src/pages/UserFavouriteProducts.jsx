@@ -3,24 +3,15 @@ import useFavouriteUserProducts from "../hooks/queries/useFavouriteUserProducts.
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import Spinner from "../components/universal/Spinner.jsx";
-import CloseIcon from "../components/drawer/icons/CloseIcon.jsx";
-import { formatCurrency } from "../helpers/CurrencyFormatter.js";
-import { useNavigate } from "react-router-dom";
-import { transformProductTitleIntoLinkTitle } from "../helpers/transformProductTitle.js";
-import useDeleteFavouriteUserProductMutation from "../hooks/mutations/useDeleteFavouriteUserProductMutation.js";
+import FavouriteProductCard from "../components/card/FavouriteProductCard.jsx";
 
 function UserFavouriteProducts() {
   const { userFavouriteProducts, fetchingUserFavouriteProducts } =
     useFavouriteUserProducts();
-  const { deleteFavouriteUserProduct, deletingFavouriteUserProduct } =
-    useDeleteFavouriteUserProductMutation();
-  const navigate = useNavigate();
 
-  if (fetchingUserFavouriteProducts || deletingFavouriteUserProduct) {
+  if (fetchingUserFavouriteProducts) {
     return <Spinner />;
   }
-
-  console.log(userFavouriteProducts);
 
   return (
     <AnimatedPage>
@@ -36,39 +27,7 @@ function UserFavouriteProducts() {
         >
           <MainBannerWithoutLogo bannerTitle={"Ulubione Produkty"} />
           {userFavouriteProducts?.map((data) => (
-            <div
-              onClick={() =>
-                navigate(
-                  `/rainbow-shop/products/${data.mainProductId}/${transformProductTitleIntoLinkTitle(data.productFullTitle)}`,
-                  { state: { cardColor: data.cardColor } },
-                )
-              }
-              className={`w-[75%] cursor-pointer flex items-center justify-between rounded-xl h-[150px] px-12 border-2 border-black ${data.cardColor}`}
-              key={data.id}
-            >
-              <div className={"w-auto h-full flex items-center gap-8"}>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteFavouriteUserProduct(data.id);
-                  }}
-                >
-                  <CloseIcon size={"size-10"} />
-                </button>
-                <div className={"size-[125px]"}>
-                  <img
-                    className={"size-full object-cover inset-0"}
-                    src={`data:image/png;base64,${data.mainImage}`}
-                    alt={data.id}
-                  />
-                </div>
-              </div>
-              <p className={"text-3xl"}>
-                {data.productFullTitle}{" "}
-                {data.productSize && `- ${data.productSize}`}
-              </p>
-              <p className={"text-3xl"}>{formatCurrency(data.unitPrice)}</p>
-            </div>
+            <FavouriteProductCard productData={data} key={data.id} />
           ))}
         </div>
       </div>

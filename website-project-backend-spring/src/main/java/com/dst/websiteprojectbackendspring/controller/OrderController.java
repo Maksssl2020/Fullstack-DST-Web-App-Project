@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.controller;
 
+import com.dst.websiteprojectbackendspring.dto.order.OrderDTO;
 import com.dst.websiteprojectbackendspring.dto.order.OrderRequestDTO;
-import com.dst.websiteprojectbackendspring.model.order.Order;
 import com.dst.websiteprojectbackendspring.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,17 +20,17 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/find-all")
-    public ResponseEntity<Page<Order>> getAllOrders(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<Page<OrderDTO>> getAllOrders(@RequestParam int page, @RequestParam int size) {
         return ResponseEntity.ok(orderService.findAllOrders(PageRequest.of(page, size)));
     }
 
     @GetMapping("/user-orders/{userId}")
-    public ResponseEntity<List<Order>> getUserOrders(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDTO>> getUserOrders(@PathVariable Long userId) {
         return ResponseEntity.ok(orderService.findOrdersByAuthenticatedCustomerId(userId));
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.findOrderById(orderId));
     }
 

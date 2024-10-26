@@ -9,6 +9,9 @@ export const getRole = (role) => {
     case "VOLUNTEER": {
       return "Wolontariusz";
     }
+    case "MODERATOR": {
+      return "Moderator";
+    }
     default: {
       return "NIEZNANY!";
     }

@@ -1,4 +1,4 @@
-package com.dst.websiteprojectbackendspring.dto.cart_item;
+package com.dst.websiteprojectbackendspring.dto.order_item;
 
 import com.dst.websiteprojectbackendspring.dto.product_item.ProductItemDTO;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CartItemDTO extends ProductItemDTO {
-    private Long cartId;
+public class OrderItemDTO extends ProductItemDTO {
+    private Long orderId;
 }

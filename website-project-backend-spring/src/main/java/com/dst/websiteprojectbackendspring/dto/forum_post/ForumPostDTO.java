@@ -1,6 +1,21 @@
 package com.dst.websiteprojectbackendspring.dto.forum_post;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
-public record ForumPostDTO(Long id, String title, String content, String postType, LocalDateTime creationDate, Long authorId) {
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public class ForumPostDTO {
+    private Long id;
+    private String title;
+    private String content;
+    private String postType;
+    private LocalDateTime creationDate;
+    private Long authorId;
 }

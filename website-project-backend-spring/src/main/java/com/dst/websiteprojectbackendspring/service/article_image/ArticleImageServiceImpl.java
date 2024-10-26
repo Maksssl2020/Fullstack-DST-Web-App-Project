@@ -1,7 +1,7 @@
 package com.dst.websiteprojectbackendspring.service.article_image;
 
 import com.dst.websiteprojectbackendspring.dto.article_image.ArticleImageDTO;
-import com.dst.websiteprojectbackendspring.dto.article_image.ArticleImageDTOMapper;
+import com.dst.websiteprojectbackendspring.mapper.ArticleImageDTOMapper;
 import com.dst.websiteprojectbackendspring.model.article.Article;
 import com.dst.websiteprojectbackendspring.model.article_image.ArticleImage;
 import com.dst.websiteprojectbackendspring.repository.ArticleImageRepository;
@@ -34,7 +34,7 @@ public class ArticleImageServiceImpl implements ArticleImageService {
     @Override
     public List<ArticleImageDTO> findAllByArticleId(Long articleId) {
         return articleImageRepository.findByArticleId(articleId).stream()
-                .map(articleImageDTOMapper)
+                .map(articleImageDTOMapper::mapArticleImageIntoArticleImageDTO)
                 .toList();
     }
 }
