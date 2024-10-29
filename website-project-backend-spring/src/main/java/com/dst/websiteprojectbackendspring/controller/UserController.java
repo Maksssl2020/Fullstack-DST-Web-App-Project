@@ -21,8 +21,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAllUsersWithoutAdmins() {
-        return ResponseEntity.ok(userService.findAllUsersWithoutAdmins());
+    public ResponseEntity<List<UserDTO>> getAllUsersWithoutAdmins(@RequestParam("filterParam") String filterParam) {
+        return ResponseEntity.ok(userService.findAllUsersWithoutAdmins(filterParam));
     }
 
     @GetMapping("/volunteers")

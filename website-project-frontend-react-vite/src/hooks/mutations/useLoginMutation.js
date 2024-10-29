@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import { handleLogin } from "../../helpers/api-integration/AuthenticationHandling.js";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseLoginMutation(onSuccessCallback, setLoginErrors) {
   const { login } = useAuthentication();

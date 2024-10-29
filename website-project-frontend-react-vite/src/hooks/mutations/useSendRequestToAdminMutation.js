@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import { handleSendingNewRequest } from "../../helpers/api-integration/RequestsToAdminHandling.js";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseSendRequestToAdminMutation(onSuccessCallback) {
   const { userId } = useAuthentication();

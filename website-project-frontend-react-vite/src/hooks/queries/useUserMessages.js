@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchUserAllNonReadMessages } from "../../helpers/api-integration/UserDataHandling.js";
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseUserMessages() {
   const { isAuthenticated, userId } = useAuthentication();

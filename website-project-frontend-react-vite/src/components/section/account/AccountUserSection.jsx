@@ -9,7 +9,7 @@ import NotificationCard from "../../card/NotificationCard.jsx";
 import DefaultModal from "../../modal/DefaultModal.jsx";
 import CloseIcon from "../../drawer/icons/CloseIcon.jsx";
 import FormItem from "../../form/FormItem.jsx";
-import useAuthentication from "../../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../../hooks/others/useAuthentication.js";
 
 const AccountUserSection = ({
   userData,

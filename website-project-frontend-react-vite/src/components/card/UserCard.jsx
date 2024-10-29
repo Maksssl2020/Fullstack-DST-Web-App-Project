@@ -2,7 +2,7 @@ import React from "react";
 import { DateParser } from "../../helpers/Date.js";
 import { getRole } from "../../helpers/ApiDataTranslator.js";
 import Spinner from "../universal/Spinner.jsx";
-import UserIcon from "../header/icons/UserIcon.jsx";
+import UserIcon from "../../icons/UserIcon.jsx";
 import { Link } from "react-router-dom";
 import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
 

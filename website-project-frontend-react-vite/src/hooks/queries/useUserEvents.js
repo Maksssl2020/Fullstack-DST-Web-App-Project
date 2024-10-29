@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchAllUserEvents } from "../../helpers/api-integration/EventsHandling.js";
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseUserEvents() {
   const { isAuthenticated, userId } = useAuthentication();

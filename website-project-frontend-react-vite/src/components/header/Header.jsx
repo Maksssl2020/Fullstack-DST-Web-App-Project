@@ -1,5 +1,5 @@
-import BellIcon from "./icons/BellIcon.jsx";
-import UserIcon from "./icons/UserIcon.jsx";
+import BellIcon from "../../icons/BellIcon.jsx";
+import UserIcon from "../../icons/UserIcon.jsx";
 import LeftDrawer from "../drawer/LeftDrawer.jsx";
 import MainBannerWithLogo from "../universal/MainBannerWithLogo.jsx";
 import React, { useEffect } from "react";
@@ -12,7 +12,7 @@ import Spinner from "../universal/Spinner.jsx";
 import Badge from "../badge/Badge.jsx";
 import useCartAmountOfItems from "../../hooks/queries/useCartAmountOfItems.js";
 import useAmountOfUserNewNotifications from "../../hooks/queries/useAmountOfUserNewNotifications.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 import HeartIcon from "../../icons/HeartIcon.jsx";
 import useAmountOfUserFavouriteItems from "../../hooks/queries/useAmountOfUserFavouriteItems.js";
 
@@ -94,21 +94,26 @@ const Header = ({ forumAddPostButton }) => {
   }
 
   return (
-    <header className="flex h-[125px] pl-4 w-full border-0 border-violet-700">
+    <header className="flex h-[125px] pl-4 w-full static-border-gradient">
       <div className="flex w-full items-center">
         <LeftDrawer />
         <MainBannerWithLogo
-          imageContainerStyling={"max-xl:size-[50px] xl:size-[75px]"}
-          mainContainerStyling={"max-xl:w-[350px] xl:w-[450px]"}
+          imageContainerClassName={
+            "max-sm:size-[50px] max-md:size-[50px] max-lg:size-[55px] max-xl:size-[50px] xl:size-[75px]"
+          }
+          mainContainerClassName={
+            "max-sm:min-w-[60px] max-sm:size-[60px] max-md:min-w-[300px] max-lg:min-w-[350px] max-xl:w-[350px] xl:w-[450px]"
+          }
+          textClassName={"max-sm:hidden"}
         />
         <div
-          className={`ml-auto flex h-[125px] max-xl:w-[450px] xl:w-[600px] relative items-center justify-center bg-header-background`}
+          className={`ml-auto flex h-[125px] max-xl:w-[600px] xl:w-[600px] relative items-center justify-center lg:bg-header-background`}
         >
           {location.pathname === "/forum" && forumAddPostButton}
           <div
-            className={`flex h-[50px] translate-x-4 items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "w-[150px] ml-auto mr-6" : " max-xl:w-[400px] xl:w-[550px]"}`}
+            className={`flex h-[50px] items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "w-[150px] ml-auto mr-6" : "ml-auto max-sm:w-[100px] max-lg:w-[150px] max-lg:mr-4 max-xl:mr-2 sm:justify-between lg:justify-center xl:translate-x-4 lg:w-[550px]"}`}
           >
-            <ul className="flex gap-10 list-disc list-inside marker:text-lg marker:text-custom-gray-400">
+            <ul className="flex gap-10 list-disc list-inside max-lg:hidden marker:text-lg marker:text-custom-gray-400">
               {getHeaderItemsDependsOnLocation().map((data, index) => (
                 <li key={index}>
                   <button onClick={() => navigate(data.link)}>
@@ -118,7 +123,7 @@ const Header = ({ forumAddPostButton }) => {
               ))}
             </ul>
             <div
-              className={`relative flex gap-4 ${location.pathname !== "/forum" && "ml-8"}`}
+              className={`relative flex gap-4 ${location.pathname !== "/forum" && "sm:ml-8"}`}
             >
               {location.pathname.includes("/rainbow-shop") && (
                 <>
@@ -155,7 +160,7 @@ const Header = ({ forumAddPostButton }) => {
                     disabled={!isAuthenticated}
                     to={"/account"}
                   >
-                    <BellIcon />
+                    <BellIcon className={"max-sm:size-4 sm:size-6"} />
                   </Link>
 
                   {amountOfUserNewNotifications > 0 && (
@@ -169,7 +174,7 @@ const Header = ({ forumAddPostButton }) => {
                 onClick={toggleRightDrawer}
                 className="flex items-center rounded-full bg-white p-1 justify-center"
               >
-                <UserIcon size={"size-6"} />
+                <UserIcon size={"max-sm:size-4 sm:size-6"} />
               </button>
             </div>
           </div>

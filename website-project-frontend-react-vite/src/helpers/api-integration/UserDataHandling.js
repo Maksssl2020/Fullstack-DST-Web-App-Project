@@ -29,9 +29,13 @@ export const checkEmailIsUnique = async (email) => {
   }
 };
 
-export const fetchAllUsers = async () => {
+export const fetchAllUsers = async (filterParam) => {
   try {
-    const response = await axios.get("/users/all");
+    const response = await axios.get("/users/all", {
+      params: {
+        filterParam: filterParam,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);

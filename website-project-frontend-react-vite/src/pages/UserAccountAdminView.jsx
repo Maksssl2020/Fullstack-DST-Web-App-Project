@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateUserData } from "../helpers/api-integration/UserDataHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import { getRole } from "../helpers/ApiDataTranslator.js";
 import { DateParser } from "../helpers/Date.js";
@@ -12,31 +10,21 @@ import { AnimatePresence } from "framer-motion";
 import useUser from "../hooks/queries/useUser.js";
 import useUserDisplay from "../hooks/queries/useUserDisplay.js";
 import OneOptionDropdown from "../components/dropdown/OneOptionDropdown.jsx";
+import useUpdateUserInAccountPageMutation from "../hooks/mutations/useUpdateUserInAccountPageMutation.js";
+import toast from "react-hot-toast";
 
 const UserAccountAdminView = () => {
   const { userId } = useParams();
-  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [modalContent, setModalContent] = React.useState(null);
   const [chosenAction, setChosenAction] = useState("");
-  const [userUpdateData, setUserUpdateData] = React.useState({});
   const [chosenRole, setChosenRole] = React.useState("");
   const navigate = useNavigate();
   const { user, fetchingUser } = useUser(userId);
   const { userDisplay, fetchingUserDisplay } = useUserDisplay(userId);
+  const { updateUser, updatingUser } = useUpdateUserInAccountPageMutation();
 
-  const { mutate: updateUser, isLoading: updatingUserData } = useMutation({
-    mutationKey: ["updateUser", userId, userUpdateData],
-    mutationFn: () => handleUpdateUserData(userId, userUpdateData),
-    onSuccess: () => {
-      queryClient.invalidateQueries("userAccountViewData");
-      queryClient.invalidateQueries("allUsersData");
-      setIsModalOpen(false);
-    },
-    onError: (error) => console.log(error),
-  });
-
-  if (fetchingUser || updatingUserData || fetchingUserDisplay) {
+  if (fetchingUser || updatingUser || fetchingUserDisplay) {
     return <Spinner />;
   }
 
@@ -105,21 +93,17 @@ const UserAccountAdminView = () => {
   const setFunctionDataDependsOnButtonAction = (action) => {
     switch (action) {
       case "BAN":
-        setUserUpdateData({ accountLocked: !accountLocked });
-        break;
+        return { accountLocked: !accountLocked };
       case "ROLE":
-        setUserUpdateData({
+        return {
           role: chosenRole,
-        });
-        break;
+        };
       case "AVATAR":
-        setUserUpdateData({ avatar: null });
-        break;
+        return { avatar: null };
       case "IDENTIFY":
-        setUserUpdateData({ identifyPhoto: null });
-        break;
+        return { identifyPhoto: null };
       default:
-        setUserUpdateData({});
+        return {};
     }
   };
 
@@ -128,10 +112,6 @@ const UserAccountAdminView = () => {
     setChosenAction(chosenAction);
     setIsModalOpen(true);
   };
-
-  console.log(chosenRole);
-  console.log(role);
-  console.log(userUpdateData);
 
   return (
     <div className="w-full h-auto flex flex-col items-center my-8">
@@ -208,13 +188,23 @@ const UserAccountAdminView = () => {
                 onClick={() => {
                   if (chosenAction === "MESSAGE") {
                     navigate(`/users/create-message/${userId}/${username}`);
+                  } else if (
+                    (chosenAction === "AVATAR" && avatar === null) ||
+                    (chosenAction === "IDENTIFY" && identifyPhoto === null) ||
+                    identifyPhoto === null
+                  ) {
+                    toast.error("Nie można usunąć zdjęcia, gdy go nie ma!");
                   } else {
-                    setFunctionDataDependsOnButtonAction(chosenAction);
+                    const userUpdateData =
+                      setFunctionDataDependsOnButtonAction(chosenAction);
 
-                    setTimeout(() => {
-                      updateUser();
-                    }, 0);
+                    updateUser({
+                      userId: userId,
+                      updatedData: userUpdateData,
+                    });
                   }
+
+                  setIsModalOpen(false);
                 }}
                 className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
               >

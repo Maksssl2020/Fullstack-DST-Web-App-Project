@@ -3,7 +3,6 @@ import { aboutUsData } from "../../data/AboutUsPageData.js";
 import AboutUsDataCard from "../card/AboutUsDataCard.jsx";
 import LineWithCircleOnLeftSide from "../universal/LineWithCircleOnLeftSide.jsx";
 import LineWithCircleOnRightSide from "../universal/LineWithCircleOnRightSide.jsx";
-import "./AboutUsCardAndDataSection.css";
 import AboutUsIconList from "../list/AboutUsIconList.jsx";
 
 const AboutUsCardAndDataSection = () => {

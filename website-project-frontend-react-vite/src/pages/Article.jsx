@@ -55,10 +55,19 @@ const Article = () => {
   );
 
   useEffect(() => {
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = "auto";
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
-    }
+    const adjustTextAreaHeight = () => {
+      if (textAreaRef.current) {
+        textAreaRef.current.style.height = "auto";
+        textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+      }
+    };
+
+    adjustTextAreaHeight();
+    window.addEventListener("resize", adjustTextAreaHeight);
+
+    return () => {
+      window.removeEventListener("resize", adjustTextAreaHeight);
+    };
   }, [article?.content]);
 
   if (fetchingArticle) {
@@ -77,13 +86,15 @@ const Article = () => {
   return (
     <AnimatedPage>
       <div className="w-full h-auto font-lato flex justify-center">
-        <div className="w-[1250px] h-auto mt-8 relative bg-custom-gray-200 flex flex-col p-24 rounded-2xl border-4 border-black">
+        <div className="max-md:w-[95%] max-lg:w-[90%] max-xl:w-[900px] xl:w-[1250px] h-auto mt-8 relative bg-custom-gray-200 flex flex-col max-sm:p-4 sm:p-8 md:p-12 lg:p-18 xl:p-24 rounded-2xl border-4 border-black">
           {role === "ADMIN" && (
-            <AdminOptionsButtons
-              editButtonLink={`/article/edit-article/${id}`}
-              modalSubtitle={"Czy na pewno chcesz usunąć artykuł?"}
-              deleteFunction={deleteArticle}
-            />
+            <div className={"mb-12"}>
+              <AdminOptionsButtons
+                editButtonLink={`/article/edit-article/${id}`}
+                modalSubtitle={"Czy na pewno chcesz usunąć artykuł?"}
+                deleteFunction={deleteArticle}
+              />
+            </div>
           )}
           <div className="w-full h-auto flex flex-col gap-12 text-xl italic font-bold">
             <div className="flex gap-6">
@@ -112,7 +123,7 @@ const Article = () => {
                 </div>
               )}
             </div>
-            <h1 className="mb-6 font-bold italic text-black text-5xl">
+            <h1 className="mb-6 font-bold italic text-black max-md:text-xl max-lg:text-2xl max-xl:text-3xl xl:text-4xl">
               {article.title}
             </h1>
           </div>
@@ -122,7 +133,7 @@ const Article = () => {
             value={article.content}
             disabled
             className={
-              "w-full text-2xl leading-relaxed cursor-text overflow-hidden resize-none rounded-2xl "
+              "w-full max-md:text-sm max-lg:text-lg max-xl:text-xl xl:text-2xl leading-relaxed cursor-text overflow-hidden resize-none rounded-2xl"
             }
           ></textarea>
           <div className={"w-full h-auto grid grid-cols-4 mt-16"}>
@@ -133,7 +144,7 @@ const Article = () => {
                   selectImage(index);
                   setIsModalOpen(true);
                 }}
-                className="bg-custom-gray-200 size-[250px] border-4 border-black rounded-2xl mt-8"
+                className="bg-custom-gray-200 max-xs:size-[60px] max-sm:size-[85px] sm:size-[115px] md:size-[135px] lg:size-[185px] xl:size-[250px] max-lg:border-2 lg:border-4 border-black rounded-2xl mt-8"
               >
                 <img
                   src={`data:image/png;base64,${image.imageData}`}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const AdminFormSection = ({
   children,

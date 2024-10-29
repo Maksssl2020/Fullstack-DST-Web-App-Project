@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleMessageAsRead } from "../../helpers/api-integration/UserDataHandling.js";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseMarkMessageAsReadMutation() {
   const { userId } = useAuthentication();

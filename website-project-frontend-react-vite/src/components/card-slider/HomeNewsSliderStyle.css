@@ -5,6 +5,18 @@
     height: 60px;
     border-radius: 50%;
     color: black;
+    
+    @media (max-width: 768px) {
+        width: 45px;
+        height: 45px;
+        --swiper-navigation-size: 26px;
+    }
+
+    @media (max-width: 640px) {
+        width: 35px;
+        height: 35px;
+        --swiper-navigation-size: 18px;
+    }
 }
 
 .swiper-button-next::after {

@@ -35,19 +35,23 @@ const ArticleImageModal = ({ setIsOpen, selectedImageIndex, images }) => {
         onClick={() => setIsOpen(false)}
         className="absolute z-10 inset-0 text-white size-24 ml-auto mr-4 mt-4"
       >
-        <CloseIcon size={"size-24"} />
+        <CloseIcon size={"max-lg:size-12 lg:size-18"} />
       </button>
       <div
-        className={`relative flex items-center ease-in-out rounded-lg size-[750px] transform transition-transform duration-300 scale-100`}
+        className={`relative flex items-center ease-in-out rounded-lg max-xs:size-[300px] xs:size-[350px] sm:size-[450px] md:size-[550px] lg:size-[650px] xl:size-[750px] transform transition-transform duration-300 scale-100`}
       >
         <button
           onClick={handleImageChangeLeft}
           disabled={currentImageIndex === 0}
           className={
-            "size-18 left-0 z-10 ml-4 border-4 border-black absolute rounded-full bg-custom-gray-300 flex justify-center items-center disabled:bg-opacity-50"
+            "max-sm:size-8 sm:size-12 md:size-14 lg:size-16 xl:size-18 left-0 z-10 ml-4 max-lg:border-2 lg:border-4 border-black absolute rounded-full bg-custom-gray-300 flex justify-center items-center disabled:bg-opacity-50"
           }
         >
-          <ChevronLeftIcon className={"size-16 text-black"} />
+          <ChevronLeftIcon
+            className={
+              "max-sm:size-6 sm:size-10 md:size-12 lg:size-14 xl:size-16 text-black"
+            }
+          />
         </button>
         <div className="relative w-full h-full flex justify-center items-center">
           <motion.img
@@ -69,9 +73,13 @@ const ArticleImageModal = ({ setIsOpen, selectedImageIndex, images }) => {
         <button
           onClick={handleImageChangeRight}
           disabled={currentImageIndex === images.length - 1}
-          className={`size-18 right-0 mr-4 border-4 border-black absolute rounded-full bg-custom-gray-300 flex justify-center items-center disabled:bg-opacity-50`}
+          className={`max-sm:size-8 sm:size-12 md:size-14 lg:size-16 xl:size-18 z-10 ml-4 max-lg:border-2 lg:border-4 right-0 mr-4 border-black absolute rounded-full bg-custom-gray-300 flex justify-center items-center disabled:bg-opacity-50`}
         >
-          <ChevronRightIcon className={"size-16 text-black"} />
+          <ChevronRightIcon
+            className={
+              "max-sm:size-6 sm:size-10 md:size-12 lg:size-14 xl:size-16 text-black"
+            }
+          />
         </button>
       </div>
     </motion.div>,

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
 import useSendMessageToUserMutation from "../../hooks/mutations/useSendMessageToUserMutation.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const MessageForm = () => {
   const { username } = useAuthentication();

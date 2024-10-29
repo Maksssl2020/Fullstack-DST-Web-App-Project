@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import OrderPageItemsTable from "../components/table/OrderPageItemsTable.jsx";
 import { calcCartTotalPriceWithDiscount } from "../helpers/ApplyDiscountCodes.js";
 import useCart from "../hooks/queries/useCart.js";
-import useAuthentication from "../hooks/queries/useAuthentication.js";
+import useAuthentication from "../hooks/others/useAuthentication.js";
 import useDeleteAllItemsFromCartMutation from "../hooks/mutations/useDeleteAllItemsFromCartMutation.js";
 import useApplyDiscountCodeInCart from "../hooks/mutations/useApplyDiscountCodeInCart.js";
 import useCreatePaymentMutation from "../hooks/mutations/useCreatePaymentMutation.js";

@@ -6,7 +6,7 @@ import AccountSectionUserPhoto from "./AccountSectionUserPhoto.jsx";
 import DefaultModal from "../../modal/DefaultModal.jsx";
 import CloseIcon from "../../drawer/icons/CloseIcon.jsx";
 import FormItem from "../../form/FormItem.jsx";
-import useAuthentication from "../../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../../hooks/others/useAuthentication.js";
 import { motion } from "framer-motion";
 import AdminManagementOptionButton from "../../button/AdminManagementOptionButton.jsx";
 

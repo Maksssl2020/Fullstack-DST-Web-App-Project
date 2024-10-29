@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import InstagramSectionBanner from "../banner/InstagramSectionBanner.jsx";
 import HomeInstagramSectionCardSlider from "../card-slider/HomeInstagramSectionCardSlider.jsx";
-import "./HomeInstagramSection.css";
 import Spinner from "../universal/Spinner.jsx";
 import InstagramPostModal from "../modal/InstagramPostModal.jsx";
 import { AnimatePresence } from "framer-motion";

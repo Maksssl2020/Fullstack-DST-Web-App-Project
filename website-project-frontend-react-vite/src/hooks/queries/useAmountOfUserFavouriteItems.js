@@ -1,4 +1,4 @@
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { fetchAmountOfUserFavouriteItems } from "../../helpers/api-integration/FavouriteProductsHandling.js";

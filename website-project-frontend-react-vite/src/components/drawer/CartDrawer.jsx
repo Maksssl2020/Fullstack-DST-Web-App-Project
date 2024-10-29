@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { getCartIdForNonRegisterUser } from "../../helpers/NonRegisteredUserCartId.js";
 import useCart from "../../hooks/queries/useCart.js";
 import useCartItems from "../../hooks/queries/useCartItems.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 import DrawerContainer from "./DrawerContainer.jsx";
 
 const CartDrawer = ({ isOpen, closeFunction }) => {

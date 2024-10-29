@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import useAuthentication from "../hooks/queries/useAuthentication.js";
+import useAuthentication from "../hooks/others/useAuthentication.js";
 
 const ProtectedRouteAuthenticatedUser = () => {
   const { isAuthenticated } = useAuthentication();

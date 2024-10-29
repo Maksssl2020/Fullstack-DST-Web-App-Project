@@ -1,5 +1,4 @@
 import React from "react";
-import "./UniversalComponents.css";
 
 const LineWithCircleOnRightSide = ({
   lineColor = "gradient-from-blue-violet",

@@ -29,6 +29,9 @@ export default {
         "custom-red-100": "#FF3130",
         "custom-violet-100": "#D44CE0",
       },
+      screens: {
+        xs: "480px",
+      },
       backgroundImage: {
         "header-background": `url(/public/assets/images/header_rainbow_background.png)`,
         "drawer-background": `url(/public/assets/images/drawer_searchbar_background.png)`,

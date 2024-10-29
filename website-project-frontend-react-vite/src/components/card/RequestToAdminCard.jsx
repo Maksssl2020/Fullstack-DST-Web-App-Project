@@ -7,7 +7,7 @@ import useUser from "../../hooks/queries/useUser.js";
 import useAcceptUserRequestMutation from "../../hooks/mutations/useAcceptUserRequestMutation.js";
 import useRejectUserRequestMutation from "../../hooks/mutations/useRejectUserRequestMutation.js";
 import useSendMessageToUserMutation from "../../hooks/mutations/useSendMessageToUserMutation.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const RequestToAdminCard = ({ data }) => {
   const { username } = useAuthentication();

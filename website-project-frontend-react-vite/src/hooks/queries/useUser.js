@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchUserById } from "../../helpers/api-integration/UserDataHandling.js";
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseUser(userId) {
   const { isAuthenticated } = useAuthentication();

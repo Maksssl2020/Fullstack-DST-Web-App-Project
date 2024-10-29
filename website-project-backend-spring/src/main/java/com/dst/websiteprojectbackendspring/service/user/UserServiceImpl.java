@@ -15,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.Base64;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.Predicate;
 
 @Slf4j
 @Service
@@ -40,12 +38,24 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public List<UserDTO> findAllUsersWithoutAdmins() {
+    public List<UserDTO> findAllUsersWithoutAdmins(String filterParam) {
         return userRepository.findAll().stream()
                 .map(userDTOMapper::mapUserIntoUserDTO)
                 .filter(user -> user.getRole() != UserRole.ADMIN)
+                .filter(createFilterParam(filterParam))
                 .sorted(Comparator.comparing(UserDTO::getId).reversed())
                 .toList();
+    }
+
+    private Predicate<UserDTO> createFilterParam(String filterParam) {
+        return userDTO -> switch (filterParam.toUpperCase()) {
+            case "ACTIVE" -> !userDTO.isAccountLocked();
+            case "BANNED" -> userDTO.isAccountLocked();
+            case "REGISTERED" -> userDTO.getRole() == UserRole.REGISTERED;
+            case "VOLUNTEER" -> userDTO.getRole() == UserRole.VOLUNTEER;
+            case "MODERATOR" -> userDTO.getRole() == UserRole.MODERATOR;
+            default -> true;
+        };
     }
 
     @Override

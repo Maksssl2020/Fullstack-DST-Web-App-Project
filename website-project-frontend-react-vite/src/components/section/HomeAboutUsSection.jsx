@@ -14,12 +14,12 @@ const HomeAboutUsSection = () => {
           alt=""
         />
       </div>
-      <div className="bg-custom-blue-200 flex gap-2 h-full max-lg:w-[95%] max-xl:w-[600px] max-2xl:w-[700px] w-[800px] lg:-translate-x-12 flex-col rounded-3xl px-20 py-6">
-        <h1 className="font-lato max-xl:text-2xl max-sm:text-sm max-md:text-xl max-lg:text-3xl max-2xl:text-3xl text-4xl font-extrabold">
+      <div className="bg-custom-blue-200 flex gap-2 h-full max-lg:w-[95%] max-xl:w-[600px] max-2xl:w-[700px] w-[800px] lg:-translate-x-12 flex-col rounded-3xl md:px-12 lg:px-20 max-sm:px-4 max-md:px-8 max-lg:py-4 lg:py-6">
+        <h1 className="font-lato max-xl:text-2xl max-sm:text-xl max-md:text-2xl max-lg:text-3xl max-2xl:text-3xl text-4xl font-extrabold">
           O co tak właściwie chodzi?
         </h1>
-        <div className="my-5 h-1 w-full bg-gradient-to-r from-black to-transparent"></div>
-        <p className="max-[1680px]:text-[16px] max-sm:text-[10px] max-md:text-[14px] max-lg:text-lg max-xl:text-[14px] text-lg text-justify">
+        <div className="my-5 h-1 w-full bg-gradient-to-r from-black to-transparent" />
+        <p className="max-[1680px]:text-[16px] max-xs:text-[12px] max-sm:text-[14px] max-md:text-lg max-lg:text-xl max-xl:text-[14px] text-lg text-justify">
           Celem naszego projektu jest edukowanie społeczeństwa o tolerancji.
           Chcemy uświadomić ludzi, że szykanowanie i hejt nie jest w porządku
           niezależnie od tego z kim mamy do czynienia. Podczas realizowania
@@ -33,7 +33,7 @@ const HomeAboutUsSection = () => {
         <motion.button
           whileHover={{ scale: 1.05 }}
           onClick={() => navigate("/about-us")}
-          className="bg-custom-blue-500 mt-8 max-md:h-[30px] max-md:text-lg max-md:w-[125px] h-[55px] w-[175px] self-center flex items-center justify-center rounded-full text-xl font-bold italic text-white"
+          className="bg-custom-blue-500 mt-auto max-sm:h-[40px] max-sm:w-[135px] max-md:h-[50px] max-md:text-lg max-md:w-[150px] h-[55px] w-[175px] self-center flex items-center justify-center rounded-full text-xl font-bold italic text-white"
         >
           O NAS
         </motion.button>

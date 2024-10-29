@@ -4,7 +4,7 @@ import GoogleIcon from "./icons/GoogleIcon.jsx";
 import AppleIcon from "./icons/AppleIcon.jsx";
 import EmiailIcon from "./icons/EmiailIcon.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 import DrawerContainer from "./DrawerContainer.jsx";
 import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";
 

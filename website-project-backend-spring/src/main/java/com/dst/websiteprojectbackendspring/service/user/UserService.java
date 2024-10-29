@@ -14,7 +14,7 @@ public interface UserService {
 
     boolean isUsernameUnique(String username);
     boolean isEmailUnique(String email);
-    List<UserDTO> findAllUsersWithoutAdmins();
+    List<UserDTO> findAllUsersWithoutAdmins(String filterParam);
     List<UserDTO> findAllVolunteers();
     UserDTO getUserById(Long userId) throws ChangeSetPersister.NotFoundException;
     void updateUserFiles(Long userId, MultipartFile avatar, MultipartFile identifyPhoto) throws ChangeSetPersister.NotFoundException;

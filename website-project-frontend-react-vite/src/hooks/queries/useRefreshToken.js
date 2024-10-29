@@ -1,5 +1,5 @@
 import axios from "../../helpers/AxiosConfig.js";
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseRefreshToken() {
   const { setAuthenticated } = useAuthentication();

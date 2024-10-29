@@ -24,7 +24,7 @@ const Home = () => {
       )}
       <div className="w-full">
         <div className="mt-8 flex items-center max-xl:justify-center h-[200px] bg-custom-gray-200">
-          <div className="font-lato bg-custom-blue-300 flex h-[100px] italic w-2/5 items-center ml-[15%] justify-center rounded-full max-md:text-lg max-xl:w-[80%] max-xl:ml-0 max-2xl:text-2xl text-3xl font-medium text-white">
+          <div className="font-lato bg-custom-blue-300 flex h-[100px] italic max-sm:w-[95%] w-2/5 items-center ml-[15%] justify-center rounded-full max-md:text-lg max-xl:w-[80%] max-xl:ml-0 max-2xl:text-2xl text-3xl font-medium text-white">
             {"Zespół Dwóch Stron Tęczy wita Cię serdecznie <3"}
           </div>
         </div>

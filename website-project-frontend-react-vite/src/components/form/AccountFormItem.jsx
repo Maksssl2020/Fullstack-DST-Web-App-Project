@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import useSendRequestToAdminMutation from "../../hooks/mutations/useSendRequestToAdminMutation.js";
 import useIsUsernameUniqueMutation from "../../hooks/mutations/useIsUsernameUniqueMutation.js";
 import useIsEmailUniqueMutation from "../../hooks/mutations/useIsEmailUniqueMutation.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const AccountFormItem = ({ labelTitle, register, value, errors }) => {
   const { role, userId } = useAuthentication();

@@ -23,14 +23,14 @@ const DrawerContainer = ({ isOpen, closeFunction, drawerSide, children }) => {
             animate={{ x: "0%", opacity: 1 }}
             exit={{ x: openDirection, opacity: 0 }}
             transition={{ duration: 0.2, type: "just" }}
-            className={`font-lato flex-col top-0 flex z-30 fixed h-screen w-[490px] bg-custom-gray-200 ${drawerSide === "LEFT" ? "left-0" : "right-0"}`}
+            className={`font-lato flex-col top-0 flex z-30 fixed h-screen max-xs:w-full max-md:w-[400px] md:w-[490px] bg-custom-gray-200 ${drawerSide === "LEFT" ? "left-0" : "right-0"}`}
           >
             <div className="flex flex-col items-center w-full h-full">
               <div className={"w-full h-[90%]"}>{children}</div>
               <div className="bottom-0 h-[10%] w-full">
                 <MainBannerWithLogo
-                  imageContainerStyling={"h-[55px] w-[55px]"}
-                  mainContainerStyling={"w-[90%] h-[75px]"}
+                  imageContainerClassName={"h-[55px] w-[55px]"}
+                  mainContainerClassName={"w-[90%] h-[75px]"}
                 />
               </div>
             </div>

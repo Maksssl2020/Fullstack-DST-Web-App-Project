@@ -2,7 +2,7 @@ import { useMutation } from "react-query";
 import { isDiscountCodeValid } from "../../helpers/DiscountCodesHandler.js";
 import { handleAssignDiscountCodeToCart } from "../../helpers/api-integration/DiscountCodesHandling.js";
 import toast from "react-hot-toast";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseAssignDiscountCodeToTheCartMutation(
   cartTotalPrice,

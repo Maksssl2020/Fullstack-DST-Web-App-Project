@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const DrawerList = () => {
   const { role, isAuthenticated, userId } = useAuthentication();

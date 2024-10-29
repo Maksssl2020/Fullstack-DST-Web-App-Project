@@ -1,9 +1,9 @@
 import React from "react";
 
-const InstagramHeartIcon = () => {
+const InstagramHeartIcon = ({ className }) => {
   return (
     <svg
-      className="bi bi-suit-heart-fill size-12 fill-white"
+      className={`bi bi-suit-heart-fill fill-white ${className}`}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 16 16"
     >

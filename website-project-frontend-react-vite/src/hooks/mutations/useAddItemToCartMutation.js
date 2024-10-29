@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseAddItemToCartMutation(cartIdentifier, itemData) {
   const queryClient = useQueryClient();

@@ -1,4 +1,4 @@
-import useAuthentication from "./useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 import { useQuery } from "react-query";
 import { fetchAllUserFavouriteProducts } from "../../helpers/api-integration/FavouriteProductsHandling.js";
 

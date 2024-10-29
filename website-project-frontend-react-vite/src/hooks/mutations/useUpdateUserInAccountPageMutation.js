@@ -1,18 +1,16 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleUpdateUserData } from "../../helpers/api-integration/UserDataHandling.js";
-import useAuthentication from "../queries/useAuthentication.js";
 
 function UseUpdateUserInAccountPageMutation(onSuccessCallback) {
-  const { userId } = useAuthentication();
   const queryClient = useQueryClient();
 
   const { mutate: updateUser, isLoading: updatingUser } = useMutation({
-    mutationKey: ["accountUpdateUser", userId],
-    mutationFn: (updatedData) => {
+    mutationKey: ["updateUserData"],
+    mutationFn: ({ userId, updatedData }) => {
       console.log("updatingUser", updatedData);
       return handleUpdateUserData(userId, updatedData);
     },
-    onMutate: async (updatedData) => {
+    onMutate: async ({ userId, updatedData }) => {
       await queryClient.cancelQueries(["userData", userId]);
       const previousUserData = queryClient.getQueryData(["userData", userId]);
 
@@ -20,9 +18,9 @@ function UseUpdateUserInAccountPageMutation(onSuccessCallback) {
         return { ...old, updatedData };
       });
 
-      return { previousUserData };
+      return { previousUserData, updatedData, userId };
     },
-    onError: (error, updatedData, context) => {
+    onError: (error, userId, context) => {
       queryClient.setQueryData(["userData", userId], context.previousUserData);
       console.log(error);
     },
@@ -31,7 +29,8 @@ function UseUpdateUserInAccountPageMutation(onSuccessCallback) {
         onSuccessCallback();
       }
     },
-    onSettled: () => {
+    onSettled: (data, error, variables) => {
+      const { userId } = variables;
       queryClient.invalidateQueries(["userData", userId]);
     },
   });

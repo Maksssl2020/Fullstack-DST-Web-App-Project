@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleUpdateUserFiles } from "../../helpers/api-integration/UserDataHandling.js";
-import useAuthentication from "../queries/useAuthentication.js";
+import useAuthentication from "../others/useAuthentication.js";
 
 function UseUpdateUserFilesMutation() {
   const { userId } = useAuthentication();

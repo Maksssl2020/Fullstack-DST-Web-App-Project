@@ -2,8 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
-.select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+.gradient-from-red-to-yellow {
+    background: linear-gradient(90deg, #FF3130, #FF914D, #FFDE5A);
+}
+
+.gradient-from-blue-violet {
+    background: linear-gradient(90deg, #16C2E0, #1065D7, #D413CD);
+}
+
+.instagram-button-gradient {
+    background: #833ab4;
+    background: linear-gradient(
+            to right,
+            #833ab4,#fd1d1d,#fcb045
+    );
+}
+
+.animated-rainbow-gradient {
+    background: linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD);
+    background-size: 150% 150%;
+    animation: gradient-animation 10s ease infinite;
+}
+
+.static-rainbow-gradient {
+    background: linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD)
+}
+
+.static-border-gradient {
+    @media (max-width: 1023px) {
+        background: linear-gradient(white, white) padding-box,
+        linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD) border-box;
+        border-bottom: 4px solid transparent;
+    }
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
 }

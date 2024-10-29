@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import useAddItemToCartMutation from "../../hooks/mutations/useAddItemToCartMutation.js";
 import useProductSizes from "../../hooks/queries/useProductSizes.js";
 import useProductCategories from "../../hooks/queries/useProductCategories.js";
-import useAuthentication from "../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../hooks/others/useAuthentication.js";
 import useAddFavouriteUserProductMutation from "../../hooks/mutations/useAddFavouriteUserProductMutation.js";
 import useDeleteFavouriteUserProductMutation from "../../hooks/mutations/useDeleteFavouriteUserProductMutation.js";
 

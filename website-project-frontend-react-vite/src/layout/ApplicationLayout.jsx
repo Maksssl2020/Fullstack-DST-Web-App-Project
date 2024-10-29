@@ -23,7 +23,7 @@ const ApplicationLayout = () => {
   const forumAddPostButton = (
     <button
       onClick={handleNavigation}
-      className="p-2 bg-custom-blue-400 border-4 border-white ml-auto font-extrabold text-xl uppercase w-[250px] h-[50px] text-white rounded-full"
+      className="p-2 bg-custom-blue-400 border-4 border-white ml-auto font-extrabold text-xl uppercase w-[250px] h-[50px] text-white rounded-full max-lg:hidden"
     >
       Stwórz wpis
     </button>

@@ -1,5 +1,5 @@
 import React from "react";
-import HamburgerIcon from "../header/icons/HamburgerIcon.jsx";
+import HamburgerIcon from "../../icons/HamburgerIcon.jsx";
 import DrawerList from "../list/DrawerList.jsx";
 import DrawerContainer from "./DrawerContainer.jsx";
 import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";

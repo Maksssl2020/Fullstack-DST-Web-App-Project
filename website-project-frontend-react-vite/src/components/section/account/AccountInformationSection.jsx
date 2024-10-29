@@ -7,7 +7,7 @@ import useUser from "../../../hooks/queries/useUser.js";
 import useUserDisplay from "../../../hooks/queries/useUserDisplay.js";
 import useUpdateUserInAccountPageMutation from "../../../hooks/mutations/useUpdateUserInAccountPageMutation.js";
 import useUpdateUserFilesMutation from "../../../hooks/mutations/useUpdateUserFilesMutation.js";
-import useAuthentication from "../../../hooks/queries/useAuthentication.js";
+import useAuthentication from "../../../hooks/others/useAuthentication.js";
 
 const AccountInformationSection = () => {
   const { userId, role, username, logout } = useAuthentication();
