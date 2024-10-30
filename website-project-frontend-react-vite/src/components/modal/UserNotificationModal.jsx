@@ -2,7 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 
-function ForumPostModal({ className, children }) {
+const UserNotificationModal = ({ children }) => {
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
@@ -23,13 +23,13 @@ function ForumPostModal({ className, children }) {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 30, opacity: 0 }}
         open
-        className={`z-10 ${className}`}
+        className="bg-custom-gray-100 border-custom-orange-200 border-4 gap-6 w-[750px] flex flex-col items-center h-auto p-8 rounded-2xl z-10"
       >
         {children}
       </motion.dialog>
     </motion.div>,
     document.body,
   );
-}
+};
 
-export default ForumPostModal;
+export default UserNotificationModal;

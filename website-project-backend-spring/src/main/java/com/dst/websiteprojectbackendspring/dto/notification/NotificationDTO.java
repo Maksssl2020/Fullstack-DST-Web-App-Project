@@ -19,5 +19,6 @@ public class NotificationDTO {
     private String link;
     private LocalDateTime createdAt;
     private boolean isRead;
+    private String notificationType;
     private Long userId;
 }

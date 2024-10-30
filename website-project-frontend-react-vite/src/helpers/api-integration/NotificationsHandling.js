@@ -34,7 +34,7 @@ export const sendNewNotification = async (notificationData) => {
   }
 };
 
-export const markNotificationAsRead = async (notificationId) => {
+export const setNotificationAsRead = async (notificationId) => {
   try {
     const response = await axios.put(
       `/notifications/${notificationId}/is-read`,

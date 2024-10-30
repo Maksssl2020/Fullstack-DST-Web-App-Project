@@ -4,6 +4,7 @@ import com.dst.websiteprojectbackendspring.dto.notification.NotificationDTO;
 import com.dst.websiteprojectbackendspring.mapper.NotificationDTOMapper;
 import com.dst.websiteprojectbackendspring.model.notification.Notification;
 import com.dst.websiteprojectbackendspring.model.notification.NotificationRequest;
+import com.dst.websiteprojectbackendspring.model.notification.NotificationType;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.model.user.UserRole;
 import com.dst.websiteprojectbackendspring.repository.NotificationRepository;
@@ -39,6 +40,7 @@ public class NotificationServiceImpl implements NotificationService {
                 notification.setLink(notificationRequest.link());
                 notification.setCreatedAt(LocalDateTime.now());
                 notification.setRead(false);
+                notification.setNotificationType(NotificationType.valueOf(notificationRequest.notificationType().toUpperCase()));
                 notification.setUser(user);
 
                 notificationRepository.save(notification);

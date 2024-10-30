@@ -17,6 +17,7 @@ import { decodeImageFile } from "../../helpers/PostManager.js";
 import useArticleMutation from "../../hooks/mutations/useArticleMutation.js";
 import useAddArticleMutation from "../../hooks/mutations/useAddArticleMutation.js";
 import useUpdateArticleMutation from "../../hooks/mutations/useUpdateArticleMutation.js";
+import useCreateNotificationMutation from "../../hooks/mutations/useCreateNotificationMutation.js";
 
 const socialMediaIcons = [
   {
@@ -44,7 +45,6 @@ const socialMediaIcons = [
 const ArticleForm = ({ isEditing = false }) => {
   const { id } = useParams();
   const { username } = useContext(AuthContext);
-  const [sendNotification, setSendNotification] = useState(false);
   const {
     register,
     watch,
@@ -69,8 +69,10 @@ const ArticleForm = ({ isEditing = false }) => {
       setCurrentArticleDataInInputs(articleCurrentData);
     },
   );
+  const { createNotification, creatingNotification } =
+    useCreateNotificationMutation();
   const { addArticle, addingArticle } = useAddArticleMutation(() => {
-    setSendNotification(true);
+    createNotification(notificationData);
     toast.success("Dodano nowy artykuł!");
     reset();
   });
@@ -109,7 +111,12 @@ const ArticleForm = ({ isEditing = false }) => {
 
   const contentLength = watch("content", " ");
 
-  if (addingArticle || updatingArticle || fetchingArticle) {
+  if (
+    addingArticle ||
+    updatingArticle ||
+    fetchingArticle ||
+    creatingNotification
+  ) {
     return <Spinner />;
   }
 
@@ -144,6 +151,7 @@ const ArticleForm = ({ isEditing = false }) => {
     message: "Dodano nowy artykuł:",
     notificationContentTitle: getValues().title,
     link: "/news",
+    notificationType: "ARTICLE",
   };
 
   const onSubmit = () => {
@@ -166,8 +174,6 @@ const ArticleForm = ({ isEditing = false }) => {
             onSubmit();
           })}
           submitTitle={isEditing ? "Zaktualizuj artykuł" : "Dodaj artykuł"}
-          notificationData={notificationData}
-          onSuccess={sendNotification}
         >
           <FormItem
             labelData={"Wpisz tytuł:"}

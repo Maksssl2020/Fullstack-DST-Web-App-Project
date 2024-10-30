@@ -1,8 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "react-query";
-import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";
-import Spinner from "../universal/Spinner.jsx";
 import useAuthentication from "../../hooks/others/useAuthentication.js";
 
 const AdminFormSection = ({
@@ -11,31 +8,9 @@ const AdminFormSection = ({
   disabledButton,
   submitTitle,
   cancelLink = "/",
-  notificationData = undefined,
-  sendNotification = false,
 }) => {
   const { username } = useAuthentication();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const { mutate: createNewNotification, isLoading: creatingNewNotification } =
-    useMutation({
-      mutationKey: ["createNewNotification", notificationData],
-      mutationFn: () => {
-        if (sendNotification) {
-          return sendNewNotification(notificationData);
-        }
-      },
-      onSuccess: () => {
-        queryClient.invalidateQueries("userNotificationsData");
-      },
-      onError: (error) => console.log(error),
-      enabled: notificationData !== undefined && notificationData !== null,
-    });
-
-  if (creatingNewNotification) {
-    return <Spinner />;
-  }
 
   return (
     <div className="my-8 flex flex-col items-center p-8 gap-6 w-[850px] h-auto border-4 border-black rounded-2xl">
@@ -53,10 +28,7 @@ const AdminFormSection = ({
           Anuluj
         </button>
         <button
-          onClick={() => {
-            handleSubmit();
-            createNewNotification(notificationData);
-          }}
+          onClick={() => handleSubmit()}
           disabled={disabledButton}
           className="w-full h-full border-4 border-black relative bg-custom-orange-200 rounded-3xl uppercase"
         >

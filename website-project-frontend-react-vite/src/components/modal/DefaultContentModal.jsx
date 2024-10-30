@@ -2,7 +2,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 
-function ForumPostModal({ className, children }) {
+function DefaultContentModal({ className, children }) {
   return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
@@ -32,4 +32,4 @@ function ForumPostModal({ className, children }) {
   );
 }
 
-export default ForumPostModal;
+export default DefaultContentModal;

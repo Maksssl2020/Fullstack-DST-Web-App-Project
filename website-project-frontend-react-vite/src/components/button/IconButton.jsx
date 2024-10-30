@@ -6,7 +6,7 @@ function IconButton({ className, onClick, children }) {
     <motion.button
       whileHover={{ scale: 1.15 }}
       onClick={onClick}
-      className={`text-black rounded-full flex justify-center items-center bg-white ${className}`}
+      className={`rounded-full flex justify-center items-center ${className}`}
     >
       {children}
     </motion.button>

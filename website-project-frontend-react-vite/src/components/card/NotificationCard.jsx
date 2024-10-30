@@ -1,62 +1,75 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CheckIcon from "../../icons/CheckIcon.jsx";
-import { useMutation, useQueryClient } from "react-query";
-import { markNotificationAsRead } from "../../helpers/api-integration/NotificationsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { DateTimeParser } from "../../helpers/Date.js";
+import useMarkNotificationAsReadMutation from "../../hooks/mutations/useMarkNotificationAsReadMutation.js";
+import IconButton from "../button/IconButton.jsx";
+import DocumentIcon from "../../icons/DocumentIcon.jsx";
+import CalendarIcon from "../../icons/CalendarIcon.jsx";
+import { motion } from "framer-motion";
 
 const NotificationCard = ({ data }) => {
-  const queryClient = useQueryClient();
-  const { id, message, notificationContentTitle, link, isRead, createdAt } =
-    data;
-
+  const navigate = useNavigate();
   const {
-    mutate: updateNotificationStatus,
-    isLoading: updatingNotificationStatus,
-  } = useMutation({
-    mutationKey: ["updateNotificationStatus", id],
-    mutationFn: () => markNotificationAsRead(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries("amountOfNonReadUserNotifications");
-      queryClient.invalidateQueries("userNotificationsData");
-    },
-    onError: (error) => console.error(error),
-    enabled: isRead === false,
-  });
+    id,
+    message,
+    notificationContentTitle,
+    link,
+    read,
+    notificationType,
+    createdAt,
+  } = data;
+  const { markNotificationAsRead, markingNotificationAsRead } =
+    useMarkNotificationAsReadMutation();
 
-  if (updatingNotificationStatus) {
+  if (markingNotificationAsRead) {
     return <Spinner />;
   }
+
+  const getIconDependsOnArticleType = () => {
+    switch (notificationType) {
+      case "ARTICLE":
+        return <DocumentIcon className={"size-6"} />;
+      case "EVENT":
+        return <CalendarIcon className={"size-6"} />;
+      default:
+        return <DocumentIcon />;
+    }
+  };
 
   console.log(data);
 
   return (
-    <div className="w-full h-[200px] relative bg-white border-4 border-custom-gray-300 rounded-2xl p-2 flex flex-col gap-2 items-center justify-center">
-      {!isRead && (
-        <button
-          onClick={updateNotificationStatus}
-          className="absolute bg-custom-gray-300 rounded-full right-0 top-0 mr-2 mt-2"
-        >
-          <CheckIcon size="size-8" />
-        </button>
-      )}
-      <div className="flex flex-col items-center text-[16px]">
-        <h2>{DateTimeParser(createdAt)}</h2>
-        <h2>{message}</h2>
-      </div>
-      <h2 className="text-xl text-custom-orange-200 text-center">
-        {`"${notificationContentTitle}"`}
-      </h2>
-      <h2 className="text-[16px]">Kliknij w link aby zobaczyć:</h2>
-      <Link
-        onClick={updateNotificationStatus}
-        to={link}
-        className="text-[16px] text-custom-blue-400"
+    <button
+      onClick={() => {
+        if (!read) {
+          markNotificationAsRead(id);
+        }
+        navigate(link);
+      }}
+      className="w-full h-[125px] bg-white border-4 border-custom-gray-300 rounded-2xl p-2 flex gap-4 items-center justify-center"
+    >
+      <motion.div
+        initial={{ backgroundColor: "#FFFFFF", color: "#000000" }}
+        animate={!read && { backgroundColor: "#FF5A5A", color: "#FFFFFF" }}
+        exit={{ backgroundColor: "#FFFFFF", color: "#000000" }}
+        className={
+          "size-10 rounded-full border-2 border-black flex justify-center items-center"
+        }
       >
-        {link}
-      </Link>
-    </div>
+        {getIconDependsOnArticleType()}
+      </motion.div>
+      <div className="flex flex-col h-full w-[80%] justify-center text-lg gap-2">
+        <div className="w-full flex gap-4">
+          {message}
+          <span className="text-custom-orange-200">
+            {`"${notificationContentTitle}"`}
+          </span>
+        </div>
+        <h2 className={"mr-auto"}>{DateTimeParser(createdAt)}</h2>
+      </div>
+    </button>
   );
 };
 

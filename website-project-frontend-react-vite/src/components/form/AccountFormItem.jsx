@@ -44,13 +44,13 @@ const AccountFormItem = ({ labelTitle, register, value, errors }) => {
   return (
     <div className="w-full h-auto space-y-2">
       <p className="ml-3 text-xl">{labelTitle}</p>
-      <div className="w-full h-[50px] flex items-center flex-col">
+      <div className="w-full h-[50px] flex flex-col">
         <div className="w-full flex relative">
           <input
             type="text"
             disabled={editing === false}
             defaultValue={value}
-            className={`w-[80%] h-[60px] border-4 px-4 text-lg text-center focus:outline-none rounded-2xl ${editing ? "border-custom-orange-200" : "border-custom-gray-300"}`}
+            className={` max-lg:w-[90%] lg:w-[80%] h-[60px] border-4 px-4 text-lg text-center focus:outline-none rounded-2xl ${editing ? "border-custom-orange-200" : "border-custom-gray-300"}`}
             {...register}
           />
           <motion.button

@@ -116,12 +116,12 @@ const AccountInformationSection = () => {
   };
 
   return (
-    <>
-      <div
-        className={`w-full flex bg-custom-gray-300 flex-col font-lato min-h-[950px] h-auto`}
-      >
-        <div className="flex items-center mt-8">
-          <h1 className="ml-[15%] w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
+    <div
+      className={`w-full flex bg-custom-gray-300 flex-col items-center font-lato min-h-[950px] h-auto py-8`}
+    >
+      <div className={"flex flex-col"}>
+        <div className="flex items-center max-md:justify-center">
+          <h1 className="md:ml-[15%] max-md:w-[95%] md:w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
           {(isChangeInTextData || isChangeInFilesData) && (
             <button
               onClick={handleSubmit(() => onSubmit(updatedDataForm))}
@@ -132,7 +132,7 @@ const AccountInformationSection = () => {
           )}
         </div>
         <div className="flex w-full justify-center">
-          <div className="w-[85%] max-w-[1630px] flex mt-8 min-h-[700px] rounded-3xl bg-white">
+          <div className="w-full flex mt-8 h-auto justify-center rounded-3xl">
             {role === "ADMIN" ? (
               <AccountAdminSection
                 userData={user}
@@ -155,7 +155,7 @@ const AccountInformationSection = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

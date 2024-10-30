@@ -25,6 +25,9 @@ public class Notification {
     private LocalDateTime createdAt;
     private boolean isRead;
 
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
+
     @ManyToOne
     private User user;
 }

@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import Spinner from "../../components/universal/Spinner.jsx";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import useAddEventMutation from "../../hooks/mutations/useAddEventMutation.js";
+import useCreateNotificationMutation from "../../hooks/mutations/useCreateNotificationMutation.js";
 
 const EventForm = () => {
   const { register, getValues, setValue, formState, handleSubmit, reset } =
@@ -22,11 +23,12 @@ const EventForm = () => {
     });
   const { errors } = formState;
   const [tasks, setTasks] = React.useState([]);
-  const [sendNotification, setSendNotification] = useState(false);
+  const { createNotification, creatingNotification } =
+    useCreateNotificationMutation();
   const { addEvent, addingEvent } = useAddEventMutation(() => {
     reset();
     setTasks([]);
-    setSendNotification(true);
+    createNotification(notificationData);
     toast.success("Dodano nowe wydarzenie!");
   });
 
@@ -51,7 +53,7 @@ const EventForm = () => {
     setTasks(updatedTasks);
   };
 
-  if (addingEvent) {
+  if (addingEvent || creatingNotification) {
     return <Spinner />;
   }
 
@@ -59,6 +61,7 @@ const EventForm = () => {
     message: "Stworzono nowe wydarzenie:",
     notificationContentTitle: getValues().title,
     link: "/events",
+    notificationType: "EVENT",
   };
 
   return (
@@ -76,8 +79,6 @@ const EventForm = () => {
           )}
           disabledButton={errors.length > 0}
           submitTitle={"Dodaj wydarzenie"}
-          notificationData={notificationData}
-          sendNotification={sendNotification}
         >
           <FormItem
             labelData={"Tytuł wydarzenia:"}
