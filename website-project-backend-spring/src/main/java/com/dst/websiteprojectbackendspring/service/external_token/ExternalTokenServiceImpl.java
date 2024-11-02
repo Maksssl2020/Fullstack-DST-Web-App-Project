@@ -4,6 +4,7 @@ import com.dst.websiteprojectbackendspring.model.external_token.ExternalToken;
 import com.dst.websiteprojectbackendspring.model.external_token.ExternalTokenType;
 import com.dst.websiteprojectbackendspring.repository.ExternalTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExternalTokenServiceImpl implements ExternalTokenService {

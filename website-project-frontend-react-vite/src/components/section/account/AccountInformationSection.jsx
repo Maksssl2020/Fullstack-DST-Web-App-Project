@@ -119,7 +119,7 @@ const AccountInformationSection = () => {
     <div
       className={`w-full flex bg-custom-gray-300 flex-col items-center font-lato min-h-[950px] h-auto py-8`}
     >
-      <div className={"flex flex-col"}>
+      <div className={"w-full flex flex-col"}>
         <div className="flex items-center max-md:justify-center">
           <h1 className="md:ml-[15%] max-md:w-[95%] md:w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
           {(isChangeInTextData || isChangeInFilesData) && (
@@ -131,28 +131,26 @@ const AccountInformationSection = () => {
             </button>
           )}
         </div>
-        <div className="flex w-full justify-center">
-          <div className="w-full flex mt-8 h-auto justify-center rounded-3xl">
-            {role === "ADMIN" ? (
-              <AccountAdminSection
-                userData={user}
-                avatar={userDisplay.avatar}
-                register={register}
-                handleImagesChange={handleImagesChange}
-                watch={watch}
-                errors={errors}
-              />
-            ) : (
-              <AccountUserSection
-                userData={user}
-                userDisplayData={userDisplay}
-                register={register}
-                handleImagesChange={handleImagesChange}
-                watch={watch}
-                errors={errors}
-              />
-            )}
-          </div>
+        <div className="w-full flex mt-8 h-auto justify-center rounded-3xl">
+          {role === "ADMIN" ? (
+            <AccountAdminSection
+              userData={user}
+              avatar={userDisplay.avatar}
+              register={register}
+              handleImagesChange={handleImagesChange}
+              watch={watch}
+              errors={errors}
+            />
+          ) : (
+            <AccountUserSection
+              userData={user}
+              userDisplayData={userDisplay}
+              register={register}
+              handleImagesChange={handleImagesChange}
+              watch={watch}
+              errors={errors}
+            />
+          )}
         </div>
       </div>
     </div>

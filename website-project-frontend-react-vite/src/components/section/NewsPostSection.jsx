@@ -19,12 +19,14 @@ const NewsPostSection = () => {
   }
 
   return (
-    <>
+    <div
+      className={"w-full flex flex-col items-center bg-custom-gray-200 gap-4"}
+    >
       <div className="flex relative w-full h-[125px] items-center justify-center">
         <MainBannerWithoutLogo bannerTitle="Tęczowe Aktualności" />
       </div>
-      <div className="w-full relative flex flex-col justify-center bg-custom-gray-200 mt-4 p-4 h-auto">
-        <Masonry columns={{ xl: 4, lg: 3, md: 2 }} spacing={5}>
+      <div className="w-[95%] relative flex flex-col justify-center  h-auto">
+        <Masonry columns={{ xl: 4, lg: 3, md: 2, sm: 1, xs: 1 }} spacing={2}>
           {newsPosts.content.map((data, index) => (
             <NewsPostCard
               key={index}
@@ -42,7 +44,7 @@ const NewsPostSection = () => {
           setCurrentPageFunc={setCurrentPage}
         />
       </div>
-    </>
+    </div>
   );
 };
 

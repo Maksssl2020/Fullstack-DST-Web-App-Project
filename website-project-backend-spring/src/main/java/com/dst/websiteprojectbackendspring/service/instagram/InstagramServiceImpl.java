@@ -31,6 +31,7 @@ public class InstagramServiceImpl implements InstagramService {
         if (ACCESS_TOKEN == null) {
             ExternalToken token = externalTokenService.getToken(ExternalTokenType.INSTAGRAM);
             ACCESS_TOKEN = token.getToken();
+            log.info(token.getToken());
         }
 
         return webClient.get()

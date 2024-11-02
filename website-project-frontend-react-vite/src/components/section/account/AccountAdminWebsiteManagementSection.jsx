@@ -35,12 +35,12 @@ const AccountAdminWebsiteManagementSection = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.6 }}
-      className="w-full bg-custom-pink-100 rounded-2xl h-auto flex flex-col"
+      className="w-full bg-custom-pink-100 rounded-2xl h-auto"
     >
       <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
         Zarządzanie Stroną
       </div>
-      <div className="w-full h-auto text-xl justify-items-center grid grid-rows-2 grid-cols-2 px-6 py-6 gap-6">
+      <div className="w-full h-auto text-xl justify-items-center md:grid md:grid-rows-2 md:grid-cols-2 max-md:p-2 md:p-6 gap-6 max-md:flex max-md:flex-col">
         {manageSiteData.map((data, index) => (
           <AdminManagementOptionButton onClick={data.onClick} key={index}>
             {data.name}&nbsp;

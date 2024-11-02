@@ -53,7 +53,7 @@ const AccountAdminSection = ({
   };
 
   return (
-    <div className={"lg:w-[900px]  flex flex-col justify-center items-center"}>
+    <div className={"max-lg:w-[95%] lg:w-[900px] flex flex-col"}>
       <div
         className={
           "mb-2 w-full flex h-[75px] text-black justify-center items-center gap-12 bg-custom-gray-100 rounded-2xl"
@@ -87,14 +87,14 @@ const AccountAdminSection = ({
             key={index}
             onClick={() => setChosenSection(data.value)}
             className={
-              "w-[150px] h-[50px] border-2 border-black rounded-xl font-bold uppercase text-xl"
+              "max-md:w-[100px] md:w-[150px] h-[50px] border-2 border-black rounded-xl font-bold uppercase text-xl"
             }
           >
             {data.name}
           </motion.button>
         ))}
       </div>
-      <div className={"w-full  flex flex-col rounded-2xl bg-white"}>
+      <div className={"flex rounded-2xl bg-white"}>
         <AnimatePresence>
           {chosenSection === "ACCOUNT" && (
             <motion.div
@@ -107,7 +107,7 @@ const AccountAdminSection = ({
               <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-100 flex justify-center items-center">
                 Informacje o koncie
               </div>
-              <div className="flex">
+              <div className="flex max-xl:flex-col">
                 <AccountBasicDataForm
                   userData={userData}
                   register={register}
@@ -115,6 +115,7 @@ const AccountAdminSection = ({
                   errors={errors}
                 />
                 <AccountSectionUserPhoto
+                  className={"max-xl:self-center"}
                   imageTitle={"Zdjęcie profilowe:"}
                   mainImageSrc={avatar}
                   bottomDataTitle={"Status konta:"}
@@ -129,6 +130,8 @@ const AccountAdminSection = ({
           )}
           {chosenSection === "SHOP" && <AccountAdminShopManagementSection />}
         </AnimatePresence>
+      </div>
+      <AnimatePresence>
         {openModal && (
           <DefaultModal title={"Zdjęcie Profilowe"}>
             <button
@@ -148,7 +151,7 @@ const AccountAdminSection = ({
             />
           </DefaultModal>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 };

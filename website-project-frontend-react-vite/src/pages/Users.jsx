@@ -4,6 +4,8 @@ import Spinner from "../components/universal/Spinner.jsx";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import useUsers from "../hooks/queries/useUsers.js";
 import { motion } from "framer-motion";
+import AdminManagementSectionContainer from "../components/section/AdminManagementSectionContainer.jsx";
+import Page from "../components/section/Page.jsx";
 
 const Users = () => {
   const [chosenFilter, setChosenFilter] = React.useState("All");
@@ -42,47 +44,51 @@ const Users = () => {
   ];
 
   return (
-    <AnimatedPage>
-      <div className="w-full h-auto flex flex-col items-center my-8">
-        <div className="w-[1000px] min-h-[600px] h-auto flex flex-col gap-4 bg-custom-gray-100 rounded-2xl border-4 border-black p-8">
-          <div className={"h-[50px] w-full flex justify-between"}>
-            {filterButtonsData.map((data, index) => (
-              <motion.button
-                initial={{
-                  background: "#FFFFFF",
-                  color: "#000000",
-                }}
-                animate={
-                  data.value === chosenFilter
-                    ? {
-                        background: "#FF5A5A",
-                        color: "#FFFFFF",
-                      }
-                    : {
-                        background: "#FFFFFF",
-                        color: "#000000",
-                      }
-                }
-                exit={{
-                  background: "#FFFFFF",
-                  color: "#000000",
-                }}
-                onClick={() => setChosenFilter(data.value)}
-                className={"border-2 px-4 border-black rounded-xl uppercase "}
-                key={index}
-              >
-                {data.display}
-              </motion.button>
-            ))}
-          </div>
-          <ul className="gap-4 flex flex-col">
-            {users.map((userData, index) => (
-              <UserCard key={index} userData={userData} />
-            ))}
-          </ul>
+    <Page className={"flex justify-center"}>
+      <AdminManagementSectionContainer className={"border-2 border-black"}>
+        <div
+          className={
+            "max-lg:h-auto lg:h-[50px] w-full flex max-lg:gap-2 max-lg:flex-wrap justify-between"
+          }
+        >
+          {filterButtonsData.map((data, index) => (
+            <motion.button
+              initial={{
+                background: "#FFFFFF",
+                color: "#000000",
+              }}
+              animate={
+                data.value === chosenFilter
+                  ? {
+                      background: "#FF5A5A",
+                      color: "#FFFFFF",
+                    }
+                  : {
+                      background: "#FFFFFF",
+                      color: "#000000",
+                    }
+              }
+              exit={{
+                background: "#FFFFFF",
+                color: "#000000",
+              }}
+              onClick={() => setChosenFilter(data.value)}
+              className={
+                "border-2 px-4 border-black rounded-xl uppercase h-[50px]"
+              }
+              key={index}
+            >
+              {data.display}
+            </motion.button>
+          ))}
         </div>
-      </div>
-    </AnimatedPage>
+        <ul className="gap-4 flex flex-col">
+          {users.map((userData, index) => (
+            <UserCard key={index} userData={userData} />
+          ))}
+        </ul>
+      </AdminManagementSectionContainer>
+    </Page>
   );
 };
 

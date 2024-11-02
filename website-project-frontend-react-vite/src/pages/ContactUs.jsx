@@ -1,14 +1,12 @@
 import React from "react";
 import ContactUsSection from "../components/section/ContactUsSection.jsx";
-import AnimatedPage from "../animation/AnimatedPage.jsx";
+import Page from "../components/section/Page.jsx";
 
 const ContactUs = () => {
   return (
-    <AnimatedPage>
-      <div className="w-full flex justify-center h-auto font-lato">
-        <ContactUsSection />
-      </div>
-    </AnimatedPage>
+    <Page className={"justify-center flex"}>
+      <ContactUsSection />
+    </Page>
   );
 };
 

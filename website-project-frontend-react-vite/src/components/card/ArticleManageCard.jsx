@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../universal/Spinner.jsx";
 import useDeleteArticleMutation from "../../hooks/mutations/useDeleteArticleMutation.js";
+import AdminManagementSectionColumn from "../table/AdminManagementSectionColumn.jsx";
 
 const ArticleManageCard = ({ articleData }) => {
   const navigate = useNavigate();
@@ -26,38 +27,40 @@ const ArticleManageCard = ({ articleData }) => {
   return (
     <div
       className={
-        "w-full p-1 h-[75px] bg-white rounded-xl border-4 border-black grid grid-cols-8"
+        "w-full p-1 lg:h-[75px] bg-white rounded-xl border-2 border-black flex "
       }
     >
       <div
         className={
-          "h-full flex flex-col items-center justify-center col-span-2"
+          "w-[85%] max-lg:gap-4 grid max-sm:grid-rows-3 max-sm:grid-cols-1 max-lg:grid-rows-2 max-lg:grid-cols-2 lg:grid-rows-1 lg:grid-cols-4"
         }
       >
-        <label className={"font-bold"}>Autor:</label>
-        <p>{author}</p>
+        <AdminManagementSectionColumn
+          name={"Autor:"}
+          value={author}
+          className={"max-sm:row-start-1 "}
+        />
+        <AdminManagementSectionColumn
+          name={"Tytuł:"}
+          value={title.length > 40 ? `${title.substring(0, 40)}...` : title}
+          className={"max-sm:row-start-3 max-lg:row-start-2 sm:col-span-2"}
+        />
+        <AdminManagementSectionColumn
+          name={"Data dodania:"}
+          value={DateParser(creationDate)}
+          className={"max-sm:row-start-2"}
+        />
       </div>
       <div
         className={
-          "h-full flex flex-col items-center justify-center col-span-3"
+          "w-[15%] h-auto flex relative max-sm:translate-y-[15%] max-lg:translate-y-[25%]"
         }
       >
-        <label className={"font-bold"}>Tytuł:</label>
-        <p>{title.length > 50 ? `${title.substring(0, 50)}...` : title}</p>
-      </div>
-      <div
-        className={
-          "h-full flex flex-col items-center justify-center col-span-2"
-        }
-      >
-        <label className={"font-bold"}>Data dodania:</label>
-        <p>{DateParser(creationDate)}</p>
-      </div>
-      <div className={"h-full flex items-center gap-4 col-span-1 relative"}>
         <AdminOptionsButtons
           buttonSize={"size-10"}
           iconSize={"size-8"}
           modalSubtitle={"Czy na pewno chcesz usunąć ten artykuł?"}
+          buttonsClassname={"max-sm:flex-col"}
           editButtonLink={`/article/edit-article/${id}`}
           deleteFunction={deleteArticle}
         />

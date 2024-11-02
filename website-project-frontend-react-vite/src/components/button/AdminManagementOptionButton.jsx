@@ -7,7 +7,7 @@ function AdminManagementOptionButton({ onClick, children }) {
       <motion.button
         whileHover={{ scale: 1.05 }}
         onClick={onClick}
-        className="bg-white text-xl py-2 flex items-center justify-center w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
+        className="bg-white text-xl py-2 flex items-center justify-center max-md:w-full md:w-[300px] h-[85px] border-8 border-custom-pink-200 rounded-2xl"
       >
         {children}
       </motion.button>

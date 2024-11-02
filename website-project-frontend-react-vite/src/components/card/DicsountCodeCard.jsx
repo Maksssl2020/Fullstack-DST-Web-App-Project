@@ -1,5 +1,6 @@
 import React from "react";
 import { DateTimeParser } from "../../helpers/Date.js";
+import AdminManagementSectionColumn from "../table/AdminManagementSectionColumn.jsx";
 
 const DiscountCodeCard = ({ discountCodeData }) => {
   const {
@@ -13,31 +14,25 @@ const DiscountCodeCard = ({ discountCodeData }) => {
   } = discountCodeData;
 
   return (
-    <li className="w-full h-[75px] rounded-2xl p-2 border-4 border-black bg-white flex items-center justify-between gap-4">
-      <label className="flex flex-col items-center h-full w-[10%] justify-between">
-        <p>Status kodu:</p>
-        <p className={"font-bold"}>{active ? "AKTYWNY" : "WYGASŁ"}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[15%] justify-between">
-        <p>Kod:</p>
-        <p className="font-bold">{discountCode}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[15%] justify-between">
-        <p>Wartość kodu:</p>
-        <p className="font-bold">{`${discountValue} ${discountType === "PERCENTAGE" ? "%" : "zł"}`}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[10%] justify-between">
-        <p>Dostęp:</p>
-        <p className="font-bold">{global ? "KAŻDY" : "1 OSOBA"}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[15%]  justify-between">
-        <p>Limit użyć:</p>
-        <p className="font-bold">{usageLimit}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[15%] justify-between">
-        <p>Data wygaśnięcia:</p>
-        <p className="font-bold">{DateTimeParser(expirationDate)}</p>
-      </label>
+    <li className="w-full   max-lg:h-auto lg:h-[75px] rounded-2xl max-lg:gap-6 p-2 border-2 border-black bg-white grid max-sm:grid-cols-1 sm:grid-cols-2 max-lg:grid-cols-3 lg:grid-cols-6 items-center justify-between">
+      <AdminManagementSectionColumn
+        name={"Status kodu:"}
+        value={active ? "AKTYWNY" : "WYGASŁ"}
+      />
+      <AdminManagementSectionColumn name={"Kod:"} value={discountCode} />
+      <AdminManagementSectionColumn
+        name={"Wartość kodu:"}
+        value={`${discountValue} ${discountType === "PERCENTAGE" ? "%" : "zł"}`}
+      />
+      <AdminManagementSectionColumn
+        name={"Dostęp:"}
+        value={global ? "KAŻDY" : "1 OSOBA"}
+      />
+      <AdminManagementSectionColumn name={"Limit użyć:"} value={usageLimit} />
+      <AdminManagementSectionColumn
+        name={"Data wygaśnięcia:"}
+        value={DateTimeParser(expirationDate)}
+      />
     </li>
   );
 };

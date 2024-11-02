@@ -42,7 +42,10 @@ const AccountBasicDataForm = ({
   return (
     <div className="xl:w-[55%] max-xl:w-full h-full max-lg:flex max-lg:flex-col max-lg:gap-4 xl:flex xl:flex-col lg:grid lg:grid-cols-2 xl:justify-center gap-14 p-4 z-0">
       {formData.map((data, index) => (
-        <div key={index} className={`w-full  ${index % 2 !== 0 && "lg:ml-4"}`}>
+        <div
+          key={index}
+          className={`w-full  ${index % 2 !== 0 && "lg:ml-4 xl:ml-0"}`}
+        >
           <AccountFormItem
             key={index}
             labelTitle={data.title}
@@ -52,7 +55,7 @@ const AccountBasicDataForm = ({
           />
         </div>
       ))}
-      <div className="w-full h-auto space-y-2 lg:ml-4">
+      <div className="w-full h-auto space-y-2 lg:ml-4 xl:ml-0">
         <p className="ml-3 text-xl">Data założenia konta:</p>
         <div className="w-full flex relative">
           <div className="w-[60%] h-[60px] border-4 flex justify-center items-center border-custom-gray-300 text-lg rounded-2xl">

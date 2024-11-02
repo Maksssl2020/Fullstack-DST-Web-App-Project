@@ -34,9 +34,7 @@ const Home = () => {
         <div className="mt-16">
           <HomeNewsSection />
         </div>
-        <div className="mt-16">
-          <HomeInstagramSection />
-        </div>
+        <div className="mt-16">{<HomeInstagramSection />}</div>
       </div>
     </AnimatedPage>
   );

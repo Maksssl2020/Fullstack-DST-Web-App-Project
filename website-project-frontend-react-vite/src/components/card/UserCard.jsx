@@ -5,6 +5,7 @@ import Spinner from "../universal/Spinner.jsx";
 import UserIcon from "../../icons/UserIcon.jsx";
 import { Link } from "react-router-dom";
 import useUserDisplay from "../../hooks/queries/useUserDisplay.js";
+import AdminManagementSectionColumn from "../table/AdminManagementSectionColumn.jsx";
 
 const UserCard = ({ userData }) => {
   const { id, username, role, accountCreationDate, accountLocked } = userData;
@@ -17,8 +18,8 @@ const UserCard = ({ userData }) => {
   console.log(userData);
 
   return (
-    <li className="w-full h-[75px] rounded-2xl p-2 border-4 border-black bg-white flex items-center justify-between gap-4">
-      <div className="size-[55px] rounded-full flex items-center justify-center bg-white border-2 border-black">
+    <li className="w-full flex max-sm:flex-col max-sm:gap-8 max-lg:h-auto lg:h-[75px] rounded-2xl p-2 border-2 border-black bg-white justify-between items-center">
+      <div className="size-[55px]  col-span-1 rounded-full flex items-center justify-center bg-white border-2 border-black">
         {userDisplay.avatar ? (
           <img
             className="size-full inset-0 object-cover rounded-full self-center"
@@ -29,25 +30,25 @@ const UserCard = ({ userData }) => {
           <UserIcon size={"size-8"} />
         )}
       </div>
-      <label className="flex flex-col items-center h-full w-[12%] justify-between">
-        <p>Status konta:</p>
-        <p className="font-bold">{!accountLocked ? "AKTYWNE" : "ZBANOWANE"}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[18%] justify-between">
-        <p>Nazwa:</p>
-        <p className="font-bold">{username}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[15%] justify-between">
-        <p>Rola:</p>
-        <p className="font-bold">{getRole(role)}</p>
-      </label>
-      <label className="flex flex-col items-center h-full w-[25%] justify-between">
-        <p>Data założenia konta:</p>
-        <p className="font-bold">{DateParser(accountCreationDate)}</p>
-      </label>
+      <div
+        className={
+          "max-sm:border-t-2 border-black max-sm:w-full max-sm:pt-4 sm:w-[65%] lg:w-[80%] grid max-sm:gap-10 max-sm:grid-cols-1 sm:gap-6 sm:grid-cols-2 lg:gap-0 lg:grid-cols-4"
+        }
+      >
+        <AdminManagementSectionColumn
+          name={"Status konta:"}
+          value={!accountLocked ? "AKTYWNE" : "ZBANOWANE"}
+        />
+        <AdminManagementSectionColumn name={"Nazwa:"} value={username} />
+        <AdminManagementSectionColumn name={"Rola:"} value={getRole(role)} />
+        <AdminManagementSectionColumn
+          name={"Data założenia konta:"}
+          value={DateParser(accountCreationDate)}
+        />
+      </div>
       <Link
         to={`/users/check-user/${id}`}
-        className="border-4 border-black bg-custom-orange-200 w-[12%] flex justify-center items-center rounded-2xl text-white uppercase font-bold h-[50px]"
+        className="border-2 max-sm:w-full sm:w-[110px] border-black bg-custom-orange-200 flex justify-center items-center rounded-2xl text-white uppercase font-bold h-[50px]"
       >
         Sprawdź
       </Link>

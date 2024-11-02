@@ -8,6 +8,7 @@ import useAcceptUserRequestMutation from "../../hooks/mutations/useAcceptUserReq
 import useRejectUserRequestMutation from "../../hooks/mutations/useRejectUserRequestMutation.js";
 import useSendMessageToUserMutation from "../../hooks/mutations/useSendMessageToUserMutation.js";
 import useAuthentication from "../../hooks/others/useAuthentication.js";
+import AdminManagementSectionColumn from "../table/AdminManagementSectionColumn.jsx";
 
 const RequestToAdminCard = ({ data }) => {
   const { username } = useAuthentication();
@@ -54,32 +55,44 @@ const RequestToAdminCard = ({ data }) => {
   return (
     <li
       className={
-        "w-full h-[100px] bg-custom-gray-300 p-2 rounded-2xl border-4 border-black flex items-center"
+        "w-full max-lg:h-auto lg:h-[100px] bg-custom-gray-300 p-2 rounded-2xl border-2 border-black flex max-sm:flex-col items-center"
       }
     >
-      <div className={"grid grid-rows-2 w-full"}>
-        <div className={"w-full grid grid-cols-8"}>
-          <p className={"col-span-2"}>Prośba użytkownika:</p>
-          <p className={"col-span-2"}>Typ prośby:</p>
-          <p className={"col-span-2"}>Wprowadzona wartość:</p>
-          <p className={"col-span-2"}>Obecna wartość:</p>
-        </div>
-        <div className={"w-full grid grid-cols-8"}>
-          <p className={"col-span-2"}>{user.username}</p>
-          <p
-            className={"col-span-2"}
-          >{`${requestType === "EMAIL_CHANGING" ? "Zmiana adresu e-mail" : "Zmiana nazwy uzytkownika"}`}</p>
-          <p className={"col-span-2"}>{`${enteredValueToChange}`}</p>
-          <p
-            className={"col-span-2"}
-          >{`${requestType === "EMAIL_CHANGING" ? user.email : user.username}`}</p>
-        </div>
+      <div
+        className={
+          "grid max-sm:gap-6 max-lg:gap-4 max-sm:grid-rows-4 max-sm:grid-cols-1 max-lg:grid-cols-2 max-lg:grid-rows-2 lg:grid-cols-4 sm:w-[95%]"
+        }
+      >
+        <AdminManagementSectionColumn
+          name={"Prośba użytkownika:"}
+          value={user.username}
+        />
+        <AdminManagementSectionColumn
+          name={"Typ prośby:"}
+          value={
+            requestType === "EMAIL_CHANGING"
+              ? "Zmiana adresu e-mail"
+              : "Zmiana nazwy uzytkownika"
+          }
+        />
+        <AdminManagementSectionColumn
+          name={"Wprowadzona wartość:"}
+          value={enteredValueToChange}
+        />
+        <AdminManagementSectionColumn
+          name={"Obecna wartość:"}
+          value={requestType === "EMAIL_CHANGING" ? user.email : user.username}
+        />
       </div>
-      <div className={"w-[30px] h-full flex flex-col justify-between"}>
+      <div
+        className={
+          "sm:w-[5%] h-full flex max-sm:mt-8 sm:flex-col max-lg:justify-center max-lg:gap-4 lg:justify-between"
+        }
+      >
         <button
           onClick={() => acceptUserRequest(requestId)}
           className={
-            "bg-custom-orange-200  size-8 rounded-full flex items-center justify-center"
+            "bg-white  size-8 rounded-full flex items-center justify-center"
           }
         >
           <AcceptIcon size={"size-8"} />
@@ -87,7 +100,7 @@ const RequestToAdminCard = ({ data }) => {
         <button
           onClick={() => rejectUserRequest(requestId)}
           className={
-            "bg-custom-orange-200 size-8 rounded-full flex items-center justify-center"
+            "bg-white size-8 rounded-full flex items-center justify-center"
           }
         >
           <DeleteIcon size={"size-8"} />

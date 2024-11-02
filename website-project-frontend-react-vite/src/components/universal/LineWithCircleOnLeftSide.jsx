@@ -4,9 +4,12 @@ const LineWithCircleOnLeftSide = ({
   lineColor = "gradient-from-red-to-yellow",
   circleStrokeColor = "bg-custom-red-100",
   circleFillColor = "bg-white",
+  className,
 }) => {
   return (
-    <div className="w-[125px] flex items-center relative">
+    <div
+      className={`max-sm:w-[75px] sm:w-[125px] flex items-center relative ${className}`}
+    >
       <div className="absolute self-center inset-0 flex">
         <div className={`w-full h-1 ${lineColor}`}></div>
       </div>

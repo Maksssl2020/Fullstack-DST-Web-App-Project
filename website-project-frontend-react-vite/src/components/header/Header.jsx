@@ -111,7 +111,7 @@ const Header = ({ forumAddPostButton }) => {
         >
           {location.pathname === "/forum" && forumAddPostButton}
           <div
-            className={`flex h-[50px] items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "w-[150px] ml-auto mr-6" : "ml-auto max-sm:w-[100px] max-lg:w-[150px] max-lg:mr-4 max-xl:mr-2 sm:justify-between lg:justify-center xl:translate-x-4 lg:w-[550px]"}`}
+            className={`flex h-[50px] items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "w-[150px] ml-auto mr-6" : "ml-auto max-sm:w-[100px] max-lg:w-[150px] max-lg:mr-4 max-xl:mr-2 sm:justify-between lg:justify-center  lg:w-[550px]"}`}
           >
             <ul className="flex gap-10 list-disc list-inside max-lg:hidden marker:text-lg marker:text-custom-gray-400">
               {getHeaderItemsDependsOnLocation().map((data, index) => (

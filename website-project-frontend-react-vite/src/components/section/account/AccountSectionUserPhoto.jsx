@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { DateParser } from "../../../helpers/Date.js";
 
 const AccountSectionUserPhoto = ({
+  className,
   imageTitle,
   mainImageSrc,
   bottomDataTitle,
@@ -11,7 +12,9 @@ const AccountSectionUserPhoto = ({
   openModal,
 }) => {
   return (
-    <div className="max-md:w-full md:w-[45%] xl:ml-auto h-full flex flex-col p-4">
+    <div
+      className={`max-md:w-full md:w-[45%] xl:ml-auto h-full flex flex-col p-4 ${className}`}
+    >
       <p className="ml-3 text-xl mb-2">{imageTitle}</p>
       <div className="w-full relative h-[70%] flex items-center justify-center border-4 border-custom-gray-300 rounded-3xl">
         <motion.button

@@ -54,7 +54,7 @@ const AccountAdminShopManagementSection = () => {
       <div className="w-full italic h-[100px] text-5xl text-white font-bold rounded-2xl bg-custom-orange-200 flex justify-center items-center">
         Zarządzanie Sklepem
       </div>
-      <div className="w-full h-auto text-xl justify-items-center grid grid-rows-4 grid-cols-2 px-6 py-6 gap-6">
+      <div className="w-full h-auto text-xl justify-items-center max-md:flex max-md:flex-col max-md:p-2 md:grid md:grid-rows-4 md:grid-cols-2 md:p-6 gap-6">
         {manageShopData.map((data, index) => (
           <AdminManagementOptionButton
             onClick={data.onClickFunction}

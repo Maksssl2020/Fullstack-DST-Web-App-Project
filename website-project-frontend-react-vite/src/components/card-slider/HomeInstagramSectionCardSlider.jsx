@@ -7,7 +7,7 @@ const HomeInstagramSectionCardSlider = ({ sliderData, handlePostClick }) => {
   return (
     <div className="flex w-full justify-center items-center self-center h-full">
       <Swiper
-        className="w-full 2xl:w-[90%] flex justify-center"
+        className="w-full flex justify-center"
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={10}
         slidesPerView={1}
