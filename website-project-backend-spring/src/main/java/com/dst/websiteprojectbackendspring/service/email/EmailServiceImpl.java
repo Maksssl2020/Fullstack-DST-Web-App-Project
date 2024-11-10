@@ -18,41 +18,49 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
+    public static final String ADMIN_EMAIL = "maksymilian.leszczynski2020@gmail.com";
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 
     @Async
+    @Override
     public void sendVerificationEmail(
             String to, String username, EmailTemplateName emailTemplate,
             String activationCode, String subject
     ) throws MessagingException {
-        String templateName;
+        Context context = createProperties(Map.of("username", username, "activationCode", activationCode));
+        sendEmail(to, context, emailTemplate.toString().toLowerCase(), subject);
+    }
 
-        if (emailTemplate == null) {
-            templateName = "confirm-email";
-        } else {
-            templateName = emailTemplate.toString().toLowerCase();
-        }
+    @Async
+    @Override
+    public void sendResetPasswordEmail(String to, String username, EmailTemplateName emailTemplate, String generatedToken, String subject) throws MessagingException {
+        Context context = createProperties(Map.of("username", username, "generatedToken", generatedToken));
+        sendEmail(to, context, emailTemplate.toString().toLowerCase(), subject);
+    }
 
+    private Context createProperties(Map<String, Object> chosenProperties) {
+        Map<String, Object> properties = new HashMap<>(chosenProperties);
+
+        Context context = new Context();
+        context.setVariables(properties);
+
+        return context;
+    }
+
+    private void sendEmail(String to, Context properties, String templateName, String subject) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(
                 mimeMessage,
                 MimeMessageHelper.MULTIPART_MODE_MIXED,
                 StandardCharsets.UTF_8.name()
         );
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("username", username);
-        properties.put("activationCode", activationCode);
 
-        Context context = new Context();
-        context.setVariables(properties);
-
-        helper.setFrom("maksymilian.leszczynski2020@gmail.com");
+        helper.setFrom(ADMIN_EMAIL);
         helper.setTo(to);
         helper.setSubject(subject);
 
-        String template = templateEngine.process(templateName, context);
-
+        String template = templateEngine.process(templateName, properties);
         helper.setText(template, true);
 
         mailSender.send(mimeMessage);

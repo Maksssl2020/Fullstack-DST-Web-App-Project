@@ -6,7 +6,6 @@ import Spinner from "../components/universal/Spinner.jsx";
 import useProducts from "../hooks/queries/useProducts.js";
 import { motion } from "framer-motion";
 import SearchIcon from "../icons/SearchIcon.jsx";
-import store from "../store/store.js";
 
 const RainbowShop = () => {
   const [chosenCategory, setChosenCategory] = useState("wszystko");

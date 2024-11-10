@@ -40,7 +40,7 @@ const AccountBasicDataForm = ({
   ];
 
   return (
-    <div className="xl:w-[55%] max-xl:w-full h-full max-lg:flex max-lg:flex-col max-lg:gap-4 xl:flex xl:flex-col lg:grid lg:grid-cols-2 xl:justify-center gap-14 p-4 z-0">
+    <div className="xl:w-full max-xl:w-full h-full max-lg:flex max-lg:flex-col max-lg:gap-4 xl:flex xl:flex-col lg:grid lg:grid-cols-2 xl:justify-center gap-14 p-4 z-0">
       {formData.map((data, index) => (
         <div
           key={index}

@@ -65,16 +65,20 @@ const AccountUserSection = ({
   }, [userData, watch]);
 
   const imagesData = [
-    {
-      title: "Zdjęcie identyfikacyjne:",
-      imageSrc: userDisplayData.identifyPhoto,
-      bottomDataTitle: "Data urodzenia:",
-      bottomData: userData.dateOfBirth,
-    },
+    ...(role !== "REGISTERED"
+      ? [
+          {
+            title: "Zdjęcie identyfikacyjne:",
+            imageSrc: userDisplayData.identifyPhoto,
+            bottomDataTitle: "Data urodzenia:",
+            bottomData: userData.dateOfBirth,
+          },
+        ]
+      : []),
     {
       title: "Zdjęcie profilowe:",
       imageSrc: userDisplayData.avatar,
-      bottomDataTitle: "Status konta:",
+      bottomDataTitle: "",
       bottomData: getRole(role),
     },
   ];
@@ -86,7 +90,7 @@ const AccountUserSection = ({
   return (
     <div
       className={
-        "max-lg:w-[95%] lg:w-[950px] xl:w-[1250px] h-full rounded-3xl bg-white"
+        "max-lg:w-[95%] lg:w-[950px] xl:w-[1050px] h-full rounded-3xl bg-white"
       }
     >
       <div className="w-full rounded-2xl h-full flex flex-col">
@@ -107,28 +111,40 @@ const AccountUserSection = ({
             <BellIcon className={"xs:size-4 sm:size-6 lg:size-8"} />
           </IconButton>
         </div>
-        <div className="flex max-xl:flex-col items-center w-full">
-          <AccountBasicDataForm
-            register={register}
-            userData={userData}
-            accountCreationDate={accountCreationDate}
-            errors={errors}
-          />
+        <div className="flex max-xl:flex-col items-center w-full justify-between">
+          <div className={"max-xl:w-full xl:w-[500px] h-full"}>
+            <AccountBasicDataForm
+              register={register}
+              userData={userData}
+              accountCreationDate={accountCreationDate}
+              errors={errors}
+            />
+          </div>
           <div
-            className={
-              "flex max-md:flex-col w-full h-full max-xl:justify-between"
-            }
+            className={`h-full flex xl:w-[500px]  ${role !== "REGISTERED" ? "max-md:flex-col max-xl:justify-between" : ""}`}
           >
-            {imagesData.map((data, index) => (
-              <AccountSectionUserPhoto
-                key={index}
-                imageTitle={data.title}
-                mainImageSrc={data.imageSrc}
-                bottomDataTitle={data.bottomDataTitle}
-                bottomData={data.bottomData}
-                openModal={handleModalOpen}
-              />
-            ))}
+            <AccountSectionUserPhoto
+              key={userData.username}
+              className={
+                role !== "REGISTERED"
+                  ? "ml-auto md:w-[45%]"
+                  : "ml-auto md:w-full"
+              }
+              image={userDisplayData.avatar}
+              imageTitle={"Zdjęcie profilowe"}
+              openModal={handleModalOpen}
+            >
+              <div className={"w-full h-auto mt-4 flex flex-col gap-1"}>
+                <label className={"ml-3 text-xl"}>Status konta:</label>
+                <p
+                  className={
+                    "border-4 px-4 text-2xl uppercase font-bold tracking-wider  flex justify-center items-center rounded-2xl h-[60px] w-full border-custom-gray-300"
+                  }
+                >
+                  {getRole(role)}
+                </p>
+              </div>
+            </AccountSectionUserPhoto>
           </div>
         </div>
       </div>

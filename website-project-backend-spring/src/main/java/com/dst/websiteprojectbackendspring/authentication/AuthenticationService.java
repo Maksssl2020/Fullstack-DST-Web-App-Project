@@ -30,7 +30,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 @Slf4j
 @Service
@@ -81,24 +80,7 @@ public class AuthenticationService {
     }
 
     private String generateActivationToken(User user) {
-        String generatedActivationCode = generateActivationCode();
-        Token token = TokenServiceImpl.createToken(generatedActivationCode, TokenType.ACCOUNT_ACTIVATION, user);
-
-        tokenService.save(token);
-        return generatedActivationCode;
-    }
-
-    private String generateActivationCode() {
-        String characters = "0123456789";
-        StringBuilder activationCodeBuilder = new StringBuilder();
-        Random random = new Random();
-
-        for (int i = 0; i < 6; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            activationCodeBuilder.append(characters.charAt(randomIndex));
-        }
-
-        return activationCodeBuilder.toString();
+        return tokenService.generateAccountActivationToken(user);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -127,6 +109,18 @@ public class AuthenticationService {
                 .build();
     }
 
+    public String resetPassword(String email) throws MessagingException {
+        if (!userRepository.existsByEmail(email)) {
+            return "There isn't any user with this email!";
+        } else {
+            User foundUser = userRepository.findByEmail(email).get();
+            String generatedCode = tokenService.generatePasswordResetToken(foundUser);
+            emailService.sendResetPasswordEmail(foundUser.getEmail(), foundUser.getUsername(), EmailTemplateName.RESET_PASSWORD, generatedCode, "Reset Password");
+
+            return "We send you an e-mail message.";
+        }
+    }
+
     @Transactional
     public void activateAccount(String activationCode) {
         Token foundToken;
@@ -135,7 +129,7 @@ public class AuthenticationService {
         log.error(activationCode);
 
         try {
-            foundToken = tokenService.findTokenByToken(activationCode);
+            foundToken = tokenService.findTokenByToken(activationCode, TokenType.ACCOUNT_ACTIVATION);
         } catch (ChangeSetPersister.NotFoundException e) {
             throw new RuntimeException("There is no code like entered!");
         }

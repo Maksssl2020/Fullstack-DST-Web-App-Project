@@ -6,9 +6,11 @@ import useUsers from "../hooks/queries/useUsers.js";
 import { motion } from "framer-motion";
 import AdminManagementSectionContainer from "../components/section/AdminManagementSectionContainer.jsx";
 import Page from "../components/section/Page.jsx";
+import SearchBar from "../components/universal/SearchBar.jsx";
 
 const Users = () => {
   const [chosenFilter, setChosenFilter] = React.useState("All");
+  const [searchBar, setSearchBar] = React.useState("");
   const { users, fetchingUsers } = useUsers({ chosenFilter });
 
   if (fetchingUsers) {
@@ -46,6 +48,12 @@ const Users = () => {
   return (
     <Page className={"flex justify-center"}>
       <AdminManagementSectionContainer className={"border-2 border-black"}>
+        <div className={"w-full h-[60px]"}>
+          <SearchBar
+            placeholder={"Wyszukaj użytkownika..."}
+            setSearchBar={setSearchBar}
+          />
+        </div>
         <div
           className={
             "max-lg:h-auto lg:h-[50px] w-full flex max-lg:gap-2 max-lg:flex-wrap justify-between"
@@ -83,9 +91,16 @@ const Users = () => {
           ))}
         </div>
         <ul className="gap-4 flex flex-col">
-          {users.map((userData, index) => (
-            <UserCard key={index} userData={userData} />
-          ))}
+          {users
+            .filter((user) => {
+              return (
+                user.lastName.includes(searchBar) ||
+                user.email.includes(searchBar)
+              );
+            })
+            .map((userData, index) => (
+              <UserCard key={index} userData={userData} />
+            ))}
         </ul>
       </AdminManagementSectionContainer>
     </Page>

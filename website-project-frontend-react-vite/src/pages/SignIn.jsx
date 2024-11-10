@@ -69,10 +69,17 @@ const SignIn = () => {
           )}
           <button
             type={"submit"}
-            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-2xl border-4 border-black text-white uppercase font-bold"
+            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-2xl border-2 border-black text-white uppercase font-bold"
           >
             Zaloguj się
           </button>
+          <p className={"w-full h-auto text-center text-xl mt-6"}>
+            Nie pamiętam{" "}
+            <span className={"text-custom-orange-200 hover:cursor-pointer"}>
+              hasła
+            </span>
+            .
+          </p>
         </form>
       </div>
     </AnimatedPage>
