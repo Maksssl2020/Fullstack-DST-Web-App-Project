@@ -28,6 +28,13 @@
     background: linear-gradient(135deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD)
 }
 
+.static-rainbow-text-gradient {
+    background: linear-gradient(90deg, #FF3130, #FF914D, #FFDE5A, #5BBE30, #16C2E0, #1065D7, #D413CD) no-repeat;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
 .static-border-gradient {
     @media (max-width: 1023px) {
         background: linear-gradient(white, white) padding-box,

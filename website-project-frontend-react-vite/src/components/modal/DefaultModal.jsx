@@ -31,7 +31,7 @@ const DefaultModal = ({
         className="bg-custom-gray-100 border-custom-orange-200 border-4 gap-6 w-[750px] flex flex-col items-center h-auto p-8 rounded-2xl z-10"
       >
         <h2 className="text-4xl font-bold">{title}</h2>
-        <p className="text-2xl">{subtitle}</p>
+        <p className="text-2xl text-center">{subtitle}</p>
         {children}
       </motion.dialog>
     </motion.div>,

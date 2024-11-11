@@ -1,5 +1,6 @@
 import axios from "axios";
 import store from "../store/store.js";
+import { handleRefreshToken } from "./api-integration/AuthenticationHandling.js";
 import { loginUserAction } from "../actions/authenticationAction.js";
 
 const instance = axios.create({
@@ -18,41 +19,37 @@ instance.interceptors.request.use((config) => {
 });
 
 instance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  async (response) => {
+    return response;
+  },
+  (error) => {
+    const { data } = error.response;
     const originalRequest = error.config;
 
-    if (error.response?.status === 403) {
-      originalRequest._retry = true;
-
+    if (
+      data.businessErrorCode === 399 &&
+      data.errorMessage.includes("Jwt Token Expired")
+    ) {
       const state = store.getState();
       const refreshToken = state?.authentication?.refreshToken;
 
       if (refreshToken) {
-        try {
-          const response = await axios.post(
-            `http://localhost:8080/api/v1/auth/refresh-token`,
-            refreshToken,
-          );
+        const receivedData = handleRefreshToken(refreshToken);
 
-          const newAccessToken = response.data.accessToken;
-          const newRefreshToken = response.data.refreshToken;
-          const userRole = response.data.userRole;
+        const newAccessToken = receivedData.accessToken;
+        const newRefreshToken = receivedData.refreshToken;
+        const userRole = receivedData.userRole;
 
-          store.dispatch(
-            loginUserAction({
-              accessToken: newAccessToken,
-              refreshToken: newRefreshToken,
-              userRole: userRole,
-            }),
-          );
-          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        store.dispatch(
+          loginUserAction({
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+            userRole: userRole,
+          }),
+        );
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-          return axios(originalRequest);
-        } catch (error) {
-          console.error(error);
-          return Promise.reject(error);
-        }
+        return axios(originalRequest);
       }
     }
 

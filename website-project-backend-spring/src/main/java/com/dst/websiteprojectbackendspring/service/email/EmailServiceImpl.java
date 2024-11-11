@@ -3,6 +3,8 @@ package com.dst.websiteprojectbackendspring.service.email;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -19,6 +21,7 @@ import java.util.Map;
 public class EmailServiceImpl implements EmailService {
 
     public static final String ADMIN_EMAIL = "maksymilian.leszczynski2020@gmail.com";
+    private static final Logger log = LogManager.getLogger(EmailServiceImpl.class);
     private final JavaMailSender mailSender;
     private final SpringTemplateEngine templateEngine;
 

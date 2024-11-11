@@ -38,12 +38,14 @@ import ProtectedRouteAdmin from "./router/ProtectedRouteAdmin.jsx";
 import ProtectedRouteAuthenticatedUser from "./router/ProtectedRouteAuthenticatedUser.jsx";
 import UserOrdersPage from "./pages/UserOrdersPage.jsx";
 import UserFavouriteProducts from "./pages/UserFavouriteProducts.jsx";
+import NotFound from "./errors/NotFound.jsx";
 
 function App() {
   return (
     <AnimatePresence mode={"wait"}>
       <BrowserRouter>
         <Routes>
+          <Route path={"*"} element={<NotFound />} />
           <Route element={<ApplicationLayout />}>
             <Route path={"/"} element={<Home />} />
             <Route path={"/support-us"} element={<SupportUs />} />

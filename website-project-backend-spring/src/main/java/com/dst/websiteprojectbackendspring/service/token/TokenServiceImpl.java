@@ -6,6 +6,7 @@ import com.dst.websiteprojectbackendspring.model.token.TokenType;
 import com.dst.websiteprojectbackendspring.model.user.User;
 import com.dst.websiteprojectbackendspring.repository.TokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TokenServiceImpl implements TokenService {
@@ -30,6 +32,8 @@ public class TokenServiceImpl implements TokenService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expiresAt = getTokenExpiredDateDependsOnTokenType(type);
 
+        log.info(token);
+
         return Token.builder()
                 .token(token)
                 .createdAt(now)
@@ -40,6 +44,8 @@ public class TokenServiceImpl implements TokenService {
     }
 
     private static LocalDateTime getTokenExpiredDateDependsOnTokenType(TokenType tokenType) {
+        log.info(tokenType.toString());
+
         return switch (tokenType) {
             case ACCOUNT_ACTIVATION -> LocalDateTime.now().plusMinutes(20);
             case RESET_PASSWORD -> LocalDateTime.now().minusMinutes(15);
@@ -69,7 +75,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public Token findTokenByToken(String token, TokenType type) throws ChangeSetPersister.NotFoundException {
 
-        if (!type.equals(TokenType.RESET_PASSWORD)) {
+        if (type.equals(TokenType.ACCOUNT_ACTIVATION)) {
             return tokenRepository.findByToken(token).orElseThrow(ChangeSetPersister.NotFoundException::new);
         }
 
@@ -93,8 +99,10 @@ public class TokenServiceImpl implements TokenService {
             activationCodeBuilder.append(characters.charAt(randomIndex));
         }
 
+        log.info(activationCodeBuilder.toString());
+
         Token generatedToken = createToken(activationCodeBuilder.toString(), TokenType.ACCOUNT_ACTIVATION, user);
-        save(generatedToken);
+        tokenRepository.save(generatedToken);
         return generatedToken.getToken();
     }
 

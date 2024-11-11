@@ -4,10 +4,12 @@ import com.dst.websiteprojectbackendspring.authentication.AuthenticationRequest;
 import com.dst.websiteprojectbackendspring.authentication.AuthenticationResponse;
 import com.dst.websiteprojectbackendspring.authentication.AuthenticationService;
 import com.dst.websiteprojectbackendspring.authentication.RegistrationRequest;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody String email) {
-        return  ResponseEntity.ok("");
+    public ResponseEntity<String> resetPassword(@RequestBody String email) throws BadRequestException, MessagingException {
+        return  ResponseEntity.ok(authenticationService.resetPassword(email));
     }
 }

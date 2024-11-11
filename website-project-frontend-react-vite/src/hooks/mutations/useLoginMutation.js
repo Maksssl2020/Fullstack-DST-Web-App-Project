@@ -16,11 +16,8 @@ function UseLoginMutation(onSuccessCallback, setLoginErrors) {
       }
     },
     onError: (error) => {
-      if (error?.response?.data?.errorMessage) {
-        setLoginErrors(error.response.data.errorMessage);
-      } else {
-        setLoginErrors("Coś poszło nie tak...");
-      }
+      const { data } = error.response;
+      setLoginErrors(data.errorMessage);
     },
   });
 

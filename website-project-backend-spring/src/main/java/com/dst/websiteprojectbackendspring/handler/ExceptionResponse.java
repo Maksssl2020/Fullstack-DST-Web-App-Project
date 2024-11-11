@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -15,4 +17,5 @@ public class ExceptionResponse {
 
     private Integer businessErrorCode;
     private String errorMessage;
+    private Set<String> errors;
 }

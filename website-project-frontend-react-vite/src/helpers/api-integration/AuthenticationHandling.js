@@ -40,11 +40,21 @@ export const handleLogin = async (username, password) => {
   }
 };
 
-export const handleRefreshToken = async () => {
+export const handleResetPassword = async (userEmail) => {
+  try {
+    const response = await axios.post("/auth/reset-password", userEmail);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const handleRefreshToken = async (refreshToken) => {
   try {
     const response = await axios.post(
       "/auth/refresh-token",
-      {},
+      { refreshToken },
       {
         withCredentials: true,
       },
@@ -52,6 +62,6 @@ export const handleRefreshToken = async () => {
 
     return response.data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };

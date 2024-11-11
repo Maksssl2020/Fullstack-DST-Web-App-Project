@@ -1,5 +1,7 @@
 package com.dst.websiteprojectbackendspring.authentication;
 
+import com.dst.websiteprojectbackendspring.handler.JwtTokenExpiredException;
+import com.dst.websiteprojectbackendspring.handler.UserAlreadyExistsException;
 import com.dst.websiteprojectbackendspring.model.token.Token;
 import com.dst.websiteprojectbackendspring.model.token.TokenType;
 import com.dst.websiteprojectbackendspring.model.user.User;
@@ -17,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,6 +49,14 @@ public class AuthenticationService {
 
     @Transactional
     public void register(RegistrationRequest request) {
+
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UserAlreadyExistsException(String.format("Username %s is already taken!", request.getUsername()));
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new UserAlreadyExistsException(String.format("Email %s is already taken!", request.getEmail()));
+        }
+
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -64,23 +75,21 @@ public class AuthenticationService {
     }
 
     private void sendVerificationEmail(User user) {
-        String activationToken = generateActivationToken(user);
+        String activationToken = tokenService.generateAccountActivationToken(user);
 
+        log.info("Activation token: {}", activationToken);
         try {
             emailService.sendVerificationEmail(
                     user.getEmail(),
                     user.getUsername(),
                     EmailTemplateName.ACTIVATE_ACCOUNT,
+
                     activationToken,
                     "Account Activation"
             );
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String generateActivationToken(User user) {
-        return tokenService.generateAccountActivationToken(user);
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -109,15 +118,15 @@ public class AuthenticationService {
                 .build();
     }
 
-    public String resetPassword(String email) throws MessagingException {
+    public String resetPassword(String email) throws BadRequestException, MessagingException {
         if (!userRepository.existsByEmail(email)) {
-            return "There isn't any user with this email!";
+            throw new BadRequestException("There isn't any user with this email!");
         } else {
             User foundUser = userRepository.findByEmail(email).get();
             String generatedCode = tokenService.generatePasswordResetToken(foundUser);
             emailService.sendResetPasswordEmail(foundUser.getEmail(), foundUser.getUsername(), EmailTemplateName.RESET_PASSWORD, generatedCode, "Reset Password");
 
-            return "We send you an e-mail message.";
+            return "We send you an e-mail message!";
         }
     }
 
@@ -181,6 +190,8 @@ public class AuthenticationService {
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
+            } else {
+                throw new JwtTokenExpiredException("Jwt Token Expired!");
             }
         }
     }
