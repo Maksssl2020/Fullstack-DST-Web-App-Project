@@ -39,6 +39,7 @@ import ProtectedRouteAuthenticatedUser from "./router/ProtectedRouteAuthenticate
 import UserOrdersPage from "./pages/UserOrdersPage.jsx";
 import UserFavouriteProducts from "./pages/UserFavouriteProducts.jsx";
 import NotFound from "./errors/NotFound.jsx";
+import React from "react";
 
 function App() {
   return (

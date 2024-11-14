@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { AuthProvider } from "./context/AuthProvider.jsx";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
-import store, { persistor } from "./store/store.js";
+import { persistor } from "./redux/store/store.js";
 import { PersistGate } from "redux-persist/integration/react";
+import { store } from "./redux/store/store";
 
 const queryClient = new QueryClient();
 

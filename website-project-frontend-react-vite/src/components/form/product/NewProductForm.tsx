@@ -9,12 +9,7 @@ import NewMugForm from "./NewMugForm.jsx";
 import NewGadgetForm from "./NewGadgetForm.jsx";
 import AdminFormSection from "../AdminFormSection.jsx";
 import { useForm } from "react-hook-form";
-import { useMutation, useQueryClient } from "react-query";
-import {
-  fetchProductData,
-  handleAddNewProduct,
-  handleUpdateProduct,
-} from "../../../helpers/api-integration/ShopProductsHandling.js";
+import { useQueryClient } from "react-query";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { newProductFormSchema } from "../../../helpers/ValidationSchemas.js";
 import Spinner from "../../universal/Spinner.jsx";
@@ -211,7 +206,7 @@ const NewProductForm = ({ isEditing }) => {
 
   return (
     <AnimatedPage>
-      <div className="w-full h-auto flex justify-center font-lato py-8">
+      <div className="flex h-auto w-full justify-center py-8 font-lato">
         <AdminFormSection
           cancelLink={isEditing ? "/rainbow-shop" : "/account"}
           submitTitle={isEditing ? "zaktualizuj produkt" : "dodaj produkt"}
@@ -242,12 +237,12 @@ const NewProductForm = ({ isEditing }) => {
               errors={data.errors}
             />
           ))}
-          <div className="w-full h-auto flex flex-col gap-6 items-center">
+          <div className="flex h-auto w-full flex-col items-center gap-6">
             {getFormDependsOnProductType()}
           </div>
-          <div className="w-full justify-center flex gap-4">
-            <div className="gap-4 flex flex-col">
-              <p className="font-bold text-xl">Wybierz kategorie:</p>
+          <div className="flex w-full justify-center gap-4">
+            <div className="flex flex-col gap-4">
+              <p className="text-xl font-bold">Wybierz kategorie:</p>
               <DropdownWithCheckboxes
                 title={"Kategorie"}
                 options={categoriesDropdownData}
@@ -257,14 +252,14 @@ const NewProductForm = ({ isEditing }) => {
               />
 
               {errors?.categories && (
-                <p className="mt-2 text-lg text-red-500 font-bold">
+                <p className="mt-2 text-lg font-bold text-red-500">
                   {errors?.categories.message}
                 </p>
               )}
             </div>
             {type === "clothes" && (
-              <div className="gap-4 flex flex-col">
-                <p className="font-bold text-xl">Wybierz rozmiary:</p>
+              <div className="flex flex-col gap-4">
+                <p className="text-xl font-bold">Wybierz rozmiary:</p>
                 <DropdownWithCheckboxes
                   title={"rozmiary"}
                   options={sizesDropdownData}
@@ -274,7 +269,7 @@ const NewProductForm = ({ isEditing }) => {
                   setValue={setValue}
                 />
                 {errors?.sizes && (
-                  <p className="mt-2 text-lg text-red-500 font-bold">
+                  <p className="mt-2 text-lg font-bold text-red-500">
                     {errors?.sizes.message}
                   </p>
                 )}
@@ -283,7 +278,7 @@ const NewProductForm = ({ isEditing }) => {
           </div>
           {isEditing && <ItemCurrentImages images={getValues()?.images} />}
           <div className="w-full">
-            <p className="text-xl font-bold ml-4">
+            <p className="ml-4 text-xl font-bold">
               Wybierz zdjęcia ( maksymalnie 4 ):
             </p>
             <input
@@ -293,25 +288,25 @@ const NewProductForm = ({ isEditing }) => {
               multiple
               max={4}
               min={1}
-              className={`w-full file:w-[25%] mt-2 file:border-0 border-4 border-black file:flex-wrap file:border-r-4 file:bg-custom-orange-200 file:text-white file:font-bold file:hover:bg-custom-orange-100 file:text-sm file:uppercase file:rounded-l-xl file:h-full h-[75px] font-bold text-lg flex text-black bg-custom-gray-200 rounded-2xl`}
+              className={`mt-2 flex h-[75px] w-full rounded-2xl border-4 border-black bg-custom-gray-200 text-lg font-bold text-black file:h-full file:w-[25%] file:flex-wrap file:rounded-l-xl file:border-0 file:border-r-4 file:bg-custom-orange-200 file:text-sm file:font-bold file:uppercase file:text-white file:hover:bg-custom-orange-100`}
               onChange={handleFileChange}
               {...register("images")}
             />
             {errors?.images && (
-              <p className="ml-3 mt-2 text-lg text-red-500 font-bold">
+              <p className="ml-3 mt-2 text-lg font-bold text-red-500">
                 {errors?.images.message}
               </p>
             )}
           </div>
-          <div className={"w-full pb-4 min-h-[300px]"}>
-            <p className="text-2xl font-bold ml-4">Wpisz opis:</p>
+          <div className={"min-h-[300px] w-full pb-4"}>
+            <p className="ml-4 text-2xl font-bold">Wpisz opis:</p>
             <textarea
               maxLength={225}
-              className={`size-full mt-2 bg-custom-gray-200 focus:outline-none focus:border-custom-orange-200 p-4 text-xl border-4 rounded-2xl border-black resize-none ${errors?.description && "border-red-500"}`}
+              className={`mt-2 size-full resize-none rounded-2xl border-4 border-black bg-custom-gray-200 p-4 text-xl focus:border-custom-orange-200 focus:outline-none ${errors?.description && "border-red-500"}`}
               {...register("description")}
             />
             {errors?.description && (
-              <p className="ml-3 mt-2 text-lg text-red-500 font-bold">
+              <p className="ml-3 mt-2 text-lg font-bold text-red-500">
                 {errors?.description?.message}
               </p>
             )}

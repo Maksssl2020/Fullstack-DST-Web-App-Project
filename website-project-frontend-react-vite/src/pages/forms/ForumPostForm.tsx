@@ -3,11 +3,15 @@ import ForumPostPageForm from "../../components/form/ForumPostPageForm.jsx";
 import ForumBanner from "../../components/banner/ForumBanner.jsx";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 
-const ForumPostForm = ({ isEditing }) => {
+type ForumPostFormProps = {
+  isEditing?: boolean;
+};
+
+const ForumPostForm = ({ isEditing }: ForumPostFormProps) => {
   return (
     <AnimatedPage>
-      <div className="w-full h-auto font-lato flex my-8 flex-col items-center">
-        <div className="bg-custom-blue-100 max-lg:w-[95%] lg:w-[925px] xl:w-[1250px] py-16 flex flex-col items-center h-auto rounded-2xl">
+      <div className="my-8 flex h-auto w-full flex-col items-center font-lato">
+        <div className="flex h-auto flex-col items-center rounded-2xl bg-custom-blue-100 py-16 max-lg:w-[95%] lg:w-[925px] xl:w-[1250px]">
           <ForumBanner />
           <ForumPostPageForm isEditing={isEditing} />
         </div>

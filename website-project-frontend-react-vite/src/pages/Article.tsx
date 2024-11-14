@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import AnimatedPage from "../animation/AnimatedPage.jsx";
 import Spinner from "../components/universal/Spinner.jsx";
 import ArticleImageModal from "../components/modal/ArticleImageModal.jsx";
 import { AnimatePresence } from "framer-motion";
@@ -85,8 +84,8 @@ const Article = () => {
   }
 
   return (
-    <Page className={"justify-center flex"}>
-      <div className="max-md:w-[95%] max-lg:w-[90%] max-xl:w-[900px] xl:w-[1250px] h-auto mt-8 relative bg-custom-gray-200 flex flex-col max-sm:p-4 sm:p-8 md:p-12 lg:p-18 xl:p-24 rounded-2xl border-4 border-black">
+    <Page className={"flex justify-center"}>
+      <div className="lg:p-18 relative mt-8 flex h-auto flex-col rounded-2xl border-4 border-black bg-custom-gray-200 max-xl:w-[900px] max-lg:w-[90%] max-md:w-[95%] max-sm:p-4 sm:p-8 md:p-12 xl:w-[1250px] xl:p-24">
         {role === "ADMIN" && (
           <div className={"mb-12"}>
             <AdminOptionsButtons
@@ -96,7 +95,7 @@ const Article = () => {
             />
           </div>
         )}
-        <div className="w-full h-auto flex flex-col gap-12 text-xl italic font-bold">
+        <div className="flex h-auto w-full flex-col gap-12 text-xl font-bold italic">
           <div className="flex gap-6">
             <p>{article.author}</p>
             <p>|</p>
@@ -123,7 +122,7 @@ const Article = () => {
               </div>
             )}
           </div>
-          <h1 className="mb-6 font-bold italic text-black max-md:text-xl max-lg:text-2xl max-xl:text-3xl xl:text-4xl">
+          <h1 className="mb-6 font-bold italic text-black max-xl:text-3xl max-lg:text-2xl max-md:text-xl xl:text-4xl">
             {article.title}
           </h1>
         </div>
@@ -133,10 +132,10 @@ const Article = () => {
           value={article.content}
           disabled
           className={
-            "w-full max-md:text-sm max-lg:text-lg max-xl:text-xl xl:text-2xl leading-relaxed cursor-text overflow-hidden resize-none rounded-2xl"
+            "w-full cursor-text resize-none overflow-hidden rounded-2xl leading-relaxed max-xl:text-xl max-lg:text-lg max-md:text-sm xl:text-2xl"
           }
         ></textarea>
-        <div className={"w-full h-auto grid grid-cols-4 mt-16"}>
+        <div className={"mt-16 grid h-auto w-full grid-cols-4"}>
           {article.images.map((image, index) => (
             <div
               key={index}
@@ -144,12 +143,12 @@ const Article = () => {
                 selectImage(index);
                 setIsModalOpen(true);
               }}
-              className="bg-custom-gray-200 max-xs:size-[60px] max-sm:size-[85px] sm:size-[115px] md:size-[135px] lg:size-[185px] xl:size-[250px] max-lg:border-2 lg:border-4 border-black rounded-2xl mt-8"
+              className="mt-8 rounded-2xl border-black bg-custom-gray-200 max-lg:border-2 max-sm:size-[85px] max-xs:size-[60px] sm:size-[115px] md:size-[135px] lg:size-[185px] lg:border-4 xl:size-[250px]"
             >
               <img
                 src={`data:image/png;base64,${image.imageData}`}
                 alt={article.title}
-                className="size-full inset-0 object-cover rounded-xl hover:cursor-pointer"
+                className="inset-0 size-full rounded-xl object-cover hover:cursor-pointer"
               />
             </div>
           ))}

@@ -1,10 +1,15 @@
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 import NewProductForm from "../../components/form/product/NewProductForm.jsx";
+import React from "react";
 
-const ProductForm = ({ isEditing }) => {
+type ProductFormProps = {
+  isEditing?: boolean;
+};
+
+const ProductForm = ({ isEditing }: ProductFormProps) => {
   return (
     <AnimatedPage>
-      <div className="w-full font-lato h-auto flex justify-center">
+      <div className="flex h-auto w-full justify-center font-lato">
         <NewProductForm isEditing={isEditing} />
       </div>
     </AnimatedPage>

@@ -7,6 +7,7 @@ import {
   loginUserAction,
   logoutUserAction,
 } from "../actions/authenticationAction.js";
+import { RootState } from "../redux/store/store";
 
 export const AuthContext = React.createContext({});
 
@@ -16,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   const [accountCreationDate, setAccountCreationDate] = useState("");
 
   const { isAuthenticated, accessToken, role } = useSelector(
-    (state) => state.authentication,
+    (state: RootState) => state.persistedReducer.authentication,
   );
 
   console.log(isAuthenticated);

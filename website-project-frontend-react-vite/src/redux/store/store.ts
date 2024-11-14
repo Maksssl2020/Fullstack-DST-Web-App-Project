@@ -1,7 +1,7 @@
-import { createStore } from "redux";
-import rootReducer from "../reducers/index.js";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
+import { configureStore } from "@reduxjs/toolkit";
+import rootReducer from "../reducers/rootReducer";
 
 const persistConfig = {
   key: "root",
@@ -10,7 +10,12 @@ const persistConfig = {
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
-const store = createStore(persistedReducer);
+export const store = configureStore({
+  reducer: {
+    persistedReducer,
+  },
+});
 
 export const persistor = persistStore(store);
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "../components/universal/Spinner.jsx";
 import { getRole } from "../helpers/ApiDataTranslator.js";
 import { DateParser } from "../helpers/Date.js";
-import AccountImageCard from "../components/card/AccountImageCard.jsx";
-import InformationContainer from "../components/universal/InformationContainer.jsx";
-import DefaultModal from "../components/modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
 import useUser from "../hooks/queries/useUser.js";
 import useUserDisplay from "../hooks/queries/useUserDisplay.js";
-import OneOptionDropdown from "../components/dropdown/OneOptionDropdown.jsx";
 import useUpdateUserInAccountPageMutation from "../hooks/mutations/useUpdateUserInAccountPageMutation.js";
 import toast from "react-hot-toast";
+import Spinner from "../components/universal/Spinner";
+import InformationContainer from "../components/universal/InformationContainer";
+import AccountImageCard from "../components/card/AccountImageCard";
+import DefaultModal from "../components/modal/DefaultModal";
+import OneOptionDropdown from "../components/dropdown/OneOptionDropdown";
 
 const UserAccountAdminView = () => {
   const { userId } = useParams();
@@ -114,9 +114,9 @@ const UserAccountAdminView = () => {
   };
 
   return (
-    <div className="w-full h-auto flex flex-col items-center my-8">
-      <div className="w-[1150px] h-auto bg-custom-gray-200 border-4 border-black rounded-2xl p-4 flex flex-col gap-4">
-        <div className="flex gap-4 w-full justify-between">
+    <div className="my-8 flex h-auto w-full flex-col items-center">
+      <div className="flex h-auto w-[1150px] flex-col gap-4 rounded-2xl border-4 border-black bg-custom-gray-200 p-4">
+        <div className="flex w-full justify-between gap-4">
           <InformationContainer label={"Nazwa użytkownika"} value={username} />
           <InformationContainer
             label={"Rola użytkownika"}
@@ -138,7 +138,7 @@ const UserAccountAdminView = () => {
             image={identifyPhoto}
             title={"Indentyfikacyjne"}
           />
-          <div className="ml-auto flex flex-col h-[400px] justify-between">
+          <div className="ml-auto flex h-[400px] flex-col justify-between">
             <InformationContainer label={"Imię"} value={firstName} />
             <InformationContainer label={"Nazwisko"} value={lastName} />
             <InformationContainer label={"E-mail"} value={email} />
@@ -148,14 +148,14 @@ const UserAccountAdminView = () => {
             />
           </div>
         </div>
-        <div className="w-full flex gap-4 mt-12">
+        <div className="mt-12 flex w-full gap-4">
           {buttonsData.map((data, index) => (
             <button
               key={index}
               onClick={() => {
                 data.onClick();
               }}
-              className="h-[75px] px-10 border-4 border-black uppercase text-xl text-white font-bold rounded-2xl bg-custom-orange-200"
+              className="h-[75px] rounded-2xl border-4 border-black bg-custom-orange-200 px-10 text-xl font-bold uppercase text-white"
             >
               {data.name}
             </button>
@@ -179,7 +179,7 @@ const UserAccountAdminView = () => {
 
             <div className="flex gap-6">
               <button
-                className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                className="flex h-[75px] w-[250px] items-center justify-center rounded-2xl border-4 border-black bg-custom-orange-200 text-xl font-bold uppercase text-white"
                 onClick={() => setIsModalOpen(false)}
               >
                 Anuluj
@@ -206,7 +206,7 @@ const UserAccountAdminView = () => {
 
                   setIsModalOpen(false);
                 }}
-                className="uppercase font-bold text-white rounded-2xl bg-custom-orange-200 h-[75px] w-[250px] text-xl flex items-center justify-center border-4 border-black"
+                className="flex h-[75px] w-[250px] items-center justify-center rounded-2xl border-4 border-black bg-custom-orange-200 text-xl font-bold uppercase text-white"
               >
                 Potwierdź
               </button>

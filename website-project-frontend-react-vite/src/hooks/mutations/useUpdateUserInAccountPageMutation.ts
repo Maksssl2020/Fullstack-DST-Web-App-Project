@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleUpdateUserData } from "../../helpers/api-integration/UserDataHandling.js";
 
-function UseUpdateUserInAccountPageMutation(onSuccessCallback) {
+function UseUpdateUserInAccountPageMutation(onSuccessCallback?) {
   const queryClient = useQueryClient();
 
   const { mutate: updateUser, isLoading: updatingUser } = useMutation({

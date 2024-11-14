@@ -1,7 +1,6 @@
 import React from "react";
 import UserCard from "../components/card/UserCard.jsx";
 import Spinner from "../components/universal/Spinner.jsx";
-import AnimatedPage from "../animation/AnimatedPage.jsx";
 import useUsers from "../hooks/queries/useUsers.js";
 import { motion } from "framer-motion";
 import AdminManagementSectionContainer from "../components/section/AdminManagementSectionContainer.jsx";
@@ -48,7 +47,7 @@ const Users = () => {
   return (
     <Page className={"flex justify-center"}>
       <AdminManagementSectionContainer className={"border-2 border-black"}>
-        <div className={"w-full h-[60px]"}>
+        <div className={"h-[60px] w-full"}>
           <SearchBar
             placeholder={"Wyszukaj użytkownika..."}
             setSearchBar={setSearchBar}
@@ -56,7 +55,7 @@ const Users = () => {
         </div>
         <div
           className={
-            "max-lg:h-auto lg:h-[50px] w-full flex max-lg:gap-2 max-lg:flex-wrap justify-between"
+            "flex w-full justify-between max-lg:h-auto max-lg:flex-wrap max-lg:gap-2 lg:h-[50px]"
           }
         >
           {filterButtonsData.map((data, index) => (
@@ -82,7 +81,7 @@ const Users = () => {
               }}
               onClick={() => setChosenFilter(data.value)}
               className={
-                "border-2 px-4 border-black rounded-xl uppercase h-[50px]"
+                "h-[50px] rounded-xl border-2 border-black px-4 uppercase"
               }
               key={index}
             >
@@ -90,7 +89,7 @@ const Users = () => {
             </motion.button>
           ))}
         </div>
-        <ul className="gap-4 flex flex-col">
+        <ul className="flex flex-col gap-4">
           {users
             .filter((user) => {
               return (
