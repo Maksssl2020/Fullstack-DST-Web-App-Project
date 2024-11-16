@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { handleAddNewEvent } from "../../helpers/api-integration/EventsHandling.js";
+import { handleAddNewEvent } from "../../helpers/api-calls/EventsHandling.js";
 
 function UseAddEventMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

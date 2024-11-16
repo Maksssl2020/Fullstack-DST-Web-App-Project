@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAllProducts } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { fetchAllProducts } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function UseProducts(chosenCategory) {
   const { data: products, isLoading: fetchingProducts } = useQuery(

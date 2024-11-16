@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchProductImages } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { fetchProductImages } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function UseProductImages(productId) {
   const { data: productImages, isLoading: fetchingProductImages } = useQuery(

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getShoppingCartAmountOfItems } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { getShoppingCartAmountOfItems } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import { useLocation } from "react-router-dom";
 import useCartId from "./useCartId.js";
 

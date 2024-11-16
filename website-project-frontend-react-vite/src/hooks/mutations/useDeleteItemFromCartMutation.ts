@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { deleteProductFromCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { deleteProductFromCart } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 
 function UseDeleteItemFromCartMutation(cartIdentifier) {

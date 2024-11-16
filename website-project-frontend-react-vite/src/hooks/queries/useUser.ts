@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchUserById } from "../../helpers/api-integration/UserDataHandling.js";
+import { fetchUserById } from "../../helpers/api-calls/UserDataHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseUser(userId) {

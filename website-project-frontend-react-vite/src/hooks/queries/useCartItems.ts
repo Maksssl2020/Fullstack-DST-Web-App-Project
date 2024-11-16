@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { getShoppingCartItems } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { getShoppingCartItems } from "../../helpers/api-calls/ShoppingCartHandling.js";
 
 function UseCartItems(cartId, cartIdentifier) {
   const { data: cartItems, isLoading: fetchingCartItems } = useQuery(

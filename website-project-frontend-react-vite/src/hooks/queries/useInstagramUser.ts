@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchInstagramUserData } from "../../helpers/api-integration/InstagramDataHandling.js";
+import { fetchInstagramUserData } from "../../helpers/api-calls/InstagramDataHandling.js";
 
 function useInstagramUser() {
   const { data: instagramUser, isLoading: fetchingInstagramUser } = useQuery(

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchShoppingCartId } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { fetchShoppingCartId } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 import { useLocation } from "react-router-dom";
 

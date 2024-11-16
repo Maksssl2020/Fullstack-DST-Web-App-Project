@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAmountOfVolunteersInEvent } from "../../helpers/api-integration/EventsHandling.js";
+import { fetchAmountOfVolunteersInEvent } from "../../helpers/api-calls/EventsHandling.js";
 
 function UseAmountOfVolunteersInEvent({ eventId }) {
   const {

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleDeleteArticle } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { handleDeleteArticle } from "../../helpers/api-calls/ArticleDataHandling.js";
 
 function UseDeleteArticleMutation(articleId, onSuccessCallback) {
   const queryClient = useQueryClient();

@@ -1,10 +1,11 @@
 import { useMutation } from "react-query";
-import { handleRegister } from "../../helpers/api-integration/AuthenticationHandling.js";
+import { handleRegister } from "../../helpers/api-calls/AuthenticationHandling.js";
+import { RegisterRequest } from "../../models/RegisterRequest";
 
 function UseRegisterMutation(onSuccessCallback, setFormRegisterErrors) {
   const { mutate: registerUser, isLoading: registeringUser } = useMutation({
     mutationKey: ["registerUser"],
-    mutationFn: (userData) => handleRegister(userData),
+    mutationFn: (userData: RegisterRequest) => handleRegister(userData),
     onSuccess: () => {
       if (onSuccessCallback) {
         onSuccessCallback();

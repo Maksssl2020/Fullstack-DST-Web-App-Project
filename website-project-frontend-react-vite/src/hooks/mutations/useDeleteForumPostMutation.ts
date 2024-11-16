@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { handlePostDelete } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { handlePostDelete } from "../../helpers/api-calls/ForumPostsHandling.js";
 import toast from "react-hot-toast";
 
 function useDeleteForumPostMutation(postId) {

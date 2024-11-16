@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateUserFiles } from "../../helpers/api-integration/UserDataHandling.js";
+import { handleUpdateUserFiles } from "../../helpers/api-calls/UserDataHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseUpdateUserFilesMutation() {

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAmountOfBasicUsersInEvent } from "../../helpers/api-integration/EventsHandling.js";
+import { fetchAmountOfBasicUsersInEvent } from "../../helpers/api-calls/EventsHandling.js";
 
 function UseAmountOfRegisteredUsersInEvent({ eventId }) {
   const {

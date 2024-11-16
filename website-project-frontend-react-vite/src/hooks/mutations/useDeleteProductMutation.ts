@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleDeleteProduct } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { handleDeleteProduct } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function UseDeleteProductMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

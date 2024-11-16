@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchNewsPostDataByPostId } from "../../helpers/api-integration/NewsPostsHandling.js";
+import { fetchNewsPostDataByPostId } from "../../helpers/api-calls/NewsPostsHandling.js";
 
 function UseNewsPost(newsPostId) {
   const { data: newsPost, isLoading: fetchingNewsPost } = useQuery(

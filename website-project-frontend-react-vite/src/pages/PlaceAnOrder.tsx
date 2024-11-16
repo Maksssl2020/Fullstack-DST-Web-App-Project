@@ -11,7 +11,7 @@ import {
   orderFormWithoutAnotherAddress,
 } from "../helpers/ValidationSchemas.js";
 import { useParams } from "react-router-dom";
-import { deleteAllProductsFromCart } from "../helpers/api-integration/ShoppingCartHandling.js";
+import { deleteAllProductsFromCart } from "../helpers/api-calls/ShoppingCartHandling.js";
 import Spinner from "../components/universal/Spinner.jsx";
 import { formatCurrency } from "../helpers/CurrencyFormatter.js";
 import toast from "react-hot-toast";

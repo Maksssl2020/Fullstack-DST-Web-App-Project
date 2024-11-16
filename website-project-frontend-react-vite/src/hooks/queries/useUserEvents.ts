@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAllUserEvents } from "../../helpers/api-integration/EventsHandling.js";
+import { fetchAllUserEvents } from "../../helpers/api-calls/EventsHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseUserEvents() {

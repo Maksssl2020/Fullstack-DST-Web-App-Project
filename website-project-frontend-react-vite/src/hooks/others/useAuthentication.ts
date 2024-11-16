@@ -1,7 +1,10 @@
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvider.jsx";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store/store";
+
 const useAuthentication = () => {
-  return useContext(AuthContext);
+  return useSelector(
+    (state: RootState) => state.persistedReducer.authentication,
+  );
 };
 
 export default useAuthentication;

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateArticle } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { handleUpdateArticle } from "../../helpers/api-calls/ArticleDataHandling.js";
 
 function UseUpdateArticleMutation(articleId, onSuccessCallback) {
   const queryClient = useQueryClient();

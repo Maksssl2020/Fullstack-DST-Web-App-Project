@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { handleAddNewOrder } from "../../helpers/api-integration/OrdersHandling.js";
+import { handleAddNewOrder } from "../../helpers/api-calls/OrdersHandling.js";
 import toast from "react-hot-toast";
 
 function UseCreateOrderMutation(onSuccessCallback) {

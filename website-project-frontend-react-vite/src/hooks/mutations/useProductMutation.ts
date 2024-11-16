@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation } from "react-query";
-import { fetchProductData } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { fetchProductData } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function UseProductMutation(onSuccessCallback) {
   const {

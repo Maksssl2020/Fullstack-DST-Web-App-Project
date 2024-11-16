@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchManagementArticlesData } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { fetchManagementArticlesData } from "../../helpers/api-calls/ArticleDataHandling.js";
 
 function useManagementArticles() {
   const { data: managementArticles, isLoading: fetchingManagementArticles } =

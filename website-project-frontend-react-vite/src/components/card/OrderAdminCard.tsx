@@ -10,7 +10,7 @@ import ButtonWithLink from "../universal/ButtonWithLink.jsx";
 import DefaultModal from "../modal/DefaultModal.jsx";
 import { DateTimeParser } from "../../helpers/Date.js";
 import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateOrderStatus } from "../../helpers/api-integration/OrdersHandling.js";
+import { handleUpdateOrderStatus } from "../../helpers/api-calls/OrdersHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../universal/Spinner.jsx";
 import { calcCartTotalPriceWithDiscount } from "../../helpers/ApplyDiscountCodes.js";

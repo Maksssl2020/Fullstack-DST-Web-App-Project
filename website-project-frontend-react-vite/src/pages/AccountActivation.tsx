@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import AnimatedPage from "../animation/AnimatedPage.jsx";
 import toast from "react-hot-toast";
 import { useMutation } from "react-query";
-import { handleAccountActivation } from "../helpers/api-integration/AuthenticationHandling.js";
+import { handleAccountActivation } from "../helpers/api-calls/AuthenticationHandling.js";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../components/universal/Spinner.jsx";
 

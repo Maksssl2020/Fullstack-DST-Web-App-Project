@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { fetchPostData } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { fetchPostData } from "../../helpers/api-calls/ForumPostsHandling.js";
 
 function UseForumPostMutation(postId) {
   const {

@@ -6,10 +6,20 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import { motion } from "framer-motion";
 import useInstagramPostImages from "../../hooks/queries/useInstagramPostImages.js";
+import { InstagramPost } from "../../models/InstagramPost";
+import { InstagramPostImage } from "../../models/InstagramPostImage";
 
-const InstagramPostModal = ({ selectedPost, onClick }) => {
+type InstagramPostModalProps = {
+  selectedPost: InstagramPost;
+  onClick: () => void;
+};
+
+const InstagramPostModal = ({
+  selectedPost,
+  onClick,
+}: InstagramPostModalProps) => {
   const { instagramPostImages, fetchingInstagramPostImages } =
-    useInstagramPostImages(selectedPost.id);
+    useInstagramPostImages(selectedPost.postId);
 
   if (fetchingInstagramPostImages) {
     return <Spinner />;
@@ -20,18 +30,18 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className={`fixed inset-0 z-50 flex transition-opacity ease-in-out duration-300 items-center justify-center bg-black backdrop-blur bg-opacity-60 opacity-100`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 opacity-100 backdrop-blur transition-opacity duration-300 ease-in-out`}
     >
       <button
-        className="absolute z-10 inset-0 text-white size-24 ml-auto mr-4 mt-4"
+        className="absolute inset-0 z-10 ml-auto mr-4 mt-4 size-24 text-white"
         onClick={onClick}
       >
         <CloseIcon size={"size-24"} />
       </button>
       <div
-        className={`relative flex ease-in-out rounded-lg w-[1450px] h-[750px] transform transition-transform duration-300 scale-100`}
+        className={`relative flex h-[750px] w-[1450px] scale-100 transform rounded-lg transition-transform duration-300 ease-in-out`}
       >
-        <div className="w-[70%] h-full">
+        <div className="h-full w-[70%]">
           {instagramPostImages.length > 1 ? (
             <Swiper
               modules={[Navigation, Autoplay]}
@@ -43,28 +53,30 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
                 disableOnInteraction: false,
               }}
             >
-              {instagramPostImages.map((postData, index) => (
-                <SwiperSlide key={index}>
-                  <img
-                    src={postData.media_url}
-                    alt={selectedPost.caption}
-                    className="w-full z-10 h-[750px] inset-0 self-center object-cover rounded-l-3xl"
-                  />
-                </SwiperSlide>
-              ))}
+              {instagramPostImages.map(
+                (postData: InstagramPostImage, index: number) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={postData.media_url}
+                      alt={selectedPost.caption}
+                      className="inset-0 z-10 h-[750px] w-full self-center rounded-l-3xl object-cover"
+                    />
+                  </SwiperSlide>
+                ),
+              )}
             </Swiper>
           ) : (
             <img
               src={selectedPost.media_url}
               alt={selectedPost.caption}
-              className="w-full z-10 h-[750px] inset-0 self-center object-cover rounded-l-3xl"
+              className="inset-0 z-10 h-[750px] w-full self-center rounded-l-3xl object-cover"
             />
           )}
         </div>
-        <div className="bg-custom-gray-100 relative h-[750px] flex w-[30%] flex-col rounded-r-3xl">
-          <div className="w-full gap-4 justify-center items-center font-bold text-2xl flex h-[100px] bg-custom-gray-200 rounded-tr-xl">
+        <div className="relative flex h-[750px] w-[30%] flex-col rounded-r-3xl bg-custom-gray-100">
+          <div className="flex h-[100px] w-full items-center justify-center gap-4 rounded-tr-xl bg-custom-gray-200 text-2xl font-bold">
             <img
-              className="size-20 inset-0 object-cover rounded-full"
+              className="inset-0 size-20 rounded-full object-cover"
               src="/assets/images/website-logo.jpg"
               alt={"logo"}
             />
@@ -73,17 +85,17 @@ const InstagramPostModal = ({ selectedPost, onClick }) => {
           <textarea
             value={selectedPost.caption}
             readOnly
-            className="resize-none h-[75%] bg-custom-gray-100 focus:outline-none px-6 py-2"
+            className="h-[75%] resize-none bg-custom-gray-100 px-6 py-2 focus:outline-none"
           ></textarea>
           <a
             className={
-              "mt-auto h-[75px] w-[350px] flex justify-center items-center uppercase font-bold self-center text-white mb-4 button-gradient rounded-2xl"
+              "button-gradient mb-4 mt-auto flex h-[75px] w-[350px] items-center justify-center self-center rounded-2xl font-bold uppercase text-white"
             }
             href={selectedPost.permalink}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <p className="h-[70%] w-[95%] flex justify-center items-center border-4 border-white rounded-xl">
+            <p className="flex h-[70%] w-[95%] items-center justify-center rounded-xl border-4 border-white">
               Zobacz na instagramie
             </p>
           </a>

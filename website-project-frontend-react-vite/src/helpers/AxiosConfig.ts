@@ -1,18 +1,16 @@
 import axios from "axios";
-import { handleRefreshToken } from "./api-integration/AuthenticationHandling.js";
-import { loginUserAction } from "../actions/authenticationAction.js";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store/store";
+import { handleRefreshToken } from "./api-calls/AuthenticationHandling.js";
+import { useDispatch } from "react-redux";
+import { store } from "../redux/store/store";
+import { login } from "../redux/slices/authenticationSlice";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/api/v1",
 });
 
 instance.interceptors.request.use((config) => {
-  const state = useSelector(
-    (state: RootState) => state.persistedReducer.authentication,
-  );
-  const token = state.accessToken;
+  const state = store.getState();
+  const token = state.persistedReducer.authentication.accessToken;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -22,38 +20,41 @@ instance.interceptors.request.use((config) => {
 });
 
 instance.interceptors.response.use(
-  async (response) => {
+  (response) => {
     return response;
   },
-  (error) => {
-    const { data } = error.response;
-    const originalRequest = error.config;
+  async (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      const data = error?.response?.data;
+      const originalRequest = error?.config;
 
-    if (
-      data.businessErrorCode === 399 &&
-      data.errorMessage.includes("Jwt Token Expired")
-    ) {
-      const refreshToken = useSelector(
-        (state: RootState) => state.persistedReducer.authentication,
-      );
+      if (
+        data.businessErrorCode === 399 &&
+        data.errorMessage.includes("Jwt Token Expired")
+      ) {
+        const dispatch = useDispatch();
+        const refreshToken =
+          store.getState().persistedReducer.authentication.refreshToken;
 
-      if (refreshToken) {
-        const receivedData = handleRefreshToken(refreshToken);
+        if (refreshToken) {
+          const receivedData = await handleRefreshToken(refreshToken);
 
-        const newAccessToken = receivedData.accessToken;
-        const newRefreshToken = receivedData.refreshToken;
-        const userRole = receivedData.userRole;
+          if (!receivedData) return;
 
-        store.dispatch(
-          loginUserAction({
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-            userRole: userRole,
-          }),
-        );
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          dispatch(
+            login({
+              userId: receivedData.userId,
+              accessToken: receivedData.accessToken,
+              refreshToken: receivedData.refreshToken,
+              role: receivedData.role,
+            }),
+          );
 
-        return axios(originalRequest);
+          if (originalRequest === undefined) return;
+          originalRequest.headers.Authorization = `Bearer ${receivedData.accessToken}`;
+
+          return axios(originalRequest);
+        }
       }
     }
 

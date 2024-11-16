@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import { isDiscountCodeValid } from "../../helpers/DiscountCodesHandler.js";
-import { handleAssignDiscountCodeToCart } from "../../helpers/api-integration/DiscountCodesHandling.js";
+import { handleAssignDiscountCodeToCart } from "../../helpers/api-calls/DiscountCodesHandling.js";
 import toast from "react-hot-toast";
 import useAuthentication from "../others/useAuthentication.js";
 

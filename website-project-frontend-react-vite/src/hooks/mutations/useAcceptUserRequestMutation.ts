@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleAcceptRequestToAdmin } from "../../helpers/api-integration/RequestsToAdminHandling.js";
+import { handleAcceptRequestToAdmin } from "../../helpers/api-calls/RequestsToAdminHandling.js";
 
 function UseAcceptUserRequestMutation(userId, onSuccessCallback) {
   const queryClient = useQueryClient();

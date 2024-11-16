@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { checkEmailIsUnique } from "../../helpers/api-integration/UserDataHandling.js";
+import { checkEmailIsUnique } from "../../helpers/api-calls/UserDataHandling.js";
 
 function UseIsEmailUniqueMutation() {
   const { mutate: checkIsEmailUnique, isLoading: checkingIsEmailUnique } =

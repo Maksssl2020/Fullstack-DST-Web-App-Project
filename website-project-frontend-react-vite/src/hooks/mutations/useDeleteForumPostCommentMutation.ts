@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleCommentDelete } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { handleCommentDelete } from "../../helpers/api-calls/ForumPostsHandling.js";
 
 function UseDeleteForumPostCommentMutation(postId, commentId) {
   const queryClient = useQueryClient();

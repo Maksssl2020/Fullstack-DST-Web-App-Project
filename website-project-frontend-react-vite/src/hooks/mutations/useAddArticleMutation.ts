@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { handleAddNewArticle } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { handleAddNewArticle } from "../../helpers/api-calls/ArticleDataHandling.js";
 
 function UseAddArticleMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

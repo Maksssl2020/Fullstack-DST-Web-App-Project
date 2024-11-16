@@ -1,26 +1,40 @@
-import React from "react";
+import React, { ChangeEventHandler } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
+
+type FormItemProps = {
+  label: string;
+  placeholder?: string;
+  type?: string;
+  containerClassname?: string;
+  inputClassname?: string;
+  register?: UseFormRegisterReturn<string>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  errors?: string | undefined;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  defaultValue?: string;
+};
 
 const FormItem = ({
-  labelData,
-  placeholderData,
+  label,
+  placeholder,
   type = "text",
-  containerStyling = "mt-3 w-[75%] gap-2 flex flex-col",
-  inputStyling = "",
-  register = undefined,
-  onChangeAction = undefined,
-  errors = undefined,
-  onKeyDown = undefined,
-  defaultValue = undefined,
-}) => {
+  containerClassname = "mt-3 w-[75%] gap-2 flex flex-col",
+  inputClassname = "",
+  register,
+  onChange,
+  errors,
+  onKeyDown,
+  defaultValue,
+}: FormItemProps) => {
   return (
-    <div className={containerStyling}>
-      <div className="w-full h-full space-y-2">
-        <label className="ml-3">{labelData}</label>
+    <div className={containerClassname}>
+      <div className="h-full w-full space-y-2">
+        <label className="ml-3">{label}</label>
         <input
           type={type}
-          placeholder={placeholderData}
-          className={`w-full focus:outline-none placeholder:text-black h-[40px] border-2 border-black ${inputStyling} ${errors && "border-red-500"}`}
-          onChange={onChangeAction}
+          placeholder={placeholder}
+          className={`h-[40px] w-full border-2 border-black placeholder:text-black focus:outline-none ${inputClassname} ${errors && "border-red-500"}`}
+          onChange={onChange}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
           {...register}

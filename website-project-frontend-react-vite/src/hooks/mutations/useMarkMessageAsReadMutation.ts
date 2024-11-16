@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleMessageAsRead } from "../../helpers/api-integration/UserDataHandling.js";
+import { handleMessageAsRead } from "../../helpers/api-calls/UserDataHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseMarkMessageAsReadMutation() {
@@ -9,7 +9,7 @@ function UseMarkMessageAsReadMutation() {
   const { mutate: markMessageAsRead, isLoading: markingMessageAsRead } =
     useMutation({
       mutationKey: ["markMessageAsRead"],
-      mutationFn: (messageId) => handleMessageAsRead(messageId),
+      mutationFn: (messageId: number) => handleMessageAsRead(messageId),
       onSuccess: () => {
         queryClient.invalidateQueries(["userMessages", userId]);
       },

@@ -3,7 +3,7 @@ import LineWithCircleOnLeftSide from "../universal/LineWithCircleOnLeftSide.jsx"
 import LineWithCircleOnRightSide from "../universal/LineWithCircleOnRightSide.jsx";
 import { DateTimeParser } from "../../helpers/Date.js";
 import { useMutation, useQueryClient } from "react-query";
-import { handleAddUserToTheEvent } from "../../helpers/api-integration/EventsHandling.js";
+import { handleAddUserToTheEvent } from "../../helpers/api-calls/EventsHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import useAmountOfVolunteersInEvent from "../../hooks/queries/useAmountOfVolunteersInEvent.js";

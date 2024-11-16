@@ -10,7 +10,7 @@ import useUpdateUserFilesMutation from "../../../hooks/mutations/useUpdateUserFi
 import useAuthentication from "../../../hooks/others/useAuthentication.js";
 
 const AccountInformationSection = () => {
-  const { userId, role, username, logout } = useAuthentication();
+  const { userId, role, username } = useAuthentication();
   const { register, setValue, watch, handleSubmit, getValues, formState } =
     useForm({});
   const { errors } = formState;
@@ -117,21 +117,21 @@ const AccountInformationSection = () => {
 
   return (
     <div
-      className={`w-full flex bg-custom-gray-300 flex-col items-center font-lato min-h-[950px] h-auto py-8`}
+      className={`flex h-auto min-h-[950px] w-full flex-col items-center bg-custom-gray-300 py-8 font-lato`}
     >
-      <div className={"w-full flex flex-col"}>
+      <div className={"flex w-full flex-col"}>
         <div className="flex items-center max-md:justify-center">
-          <h1 className="md:ml-[15%] max-md:w-[95%] md:w-[600px] text-white items-center flex text-2xl justify-center h-[75px] bg-custom-blue-300 rounded-full">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
+          <h1 className="flex h-[75px] items-center justify-center rounded-full bg-custom-blue-300 text-2xl text-white max-md:w-[95%] md:ml-[15%] md:w-[600px]">{`Cześć, ${username} witamy Cię serdecznie <3`}</h1>
           {(isChangeInTextData || isChangeInFilesData) && (
             <button
               onClick={handleSubmit(() => onSubmit(updatedDataForm))}
-              className="bg-custom-orange-200 rounded-2xl ml-auto mr-[15%] text-white h-[75px] font-bold border-4 border-black p-4 w-auto"
+              className="ml-auto mr-[15%] h-[75px] w-auto rounded-2xl border-4 border-black bg-custom-orange-200 p-4 font-bold text-white"
             >
               AKCEPTUJ ZMIANY
             </button>
           )}
         </div>
-        <div className="w-full flex mt-8 h-auto justify-center rounded-3xl">
+        <div className="mt-8 flex h-auto w-full justify-center rounded-3xl">
           {role === "ADMIN" ? (
             <AccountAdminSection
               userData={user}

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchInstagramPostAllImages } from "../../helpers/api-integration/InstagramDataHandling.js";
+import { fetchInstagramPostAllImages } from "../../helpers/api-calls/InstagramDataHandling.js";
 
 function UseInstagramPostImages(instagramPostId) {
   const { data: instagramPostImages, isLoading: fetchingInstagramPostImages } =

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling.js";
+import { handleNewsPostDelete } from "../../helpers/api-calls/NewsPostsHandling.js";
 import toast from "react-hot-toast";
 
 function UseDeleteNewsPostMutation(newsPostId) {

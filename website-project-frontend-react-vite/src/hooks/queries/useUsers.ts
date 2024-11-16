@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAllUsers } from "../../helpers/api-integration/UserDataHandling.js";
+import { fetchAllUsers } from "../../helpers/api-calls/UserDataHandling.js";
 
 function UseUsers({ chosenFilter = "All" }) {
   const { data: users, isLoading: fetchingUsers } = useQuery(

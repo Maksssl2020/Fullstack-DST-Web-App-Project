@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchPostsData } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { fetchPostsData } from "../../helpers/api-calls/ForumPostsHandling.js";
 
 function useForumPosts(currentPage) {
   const {

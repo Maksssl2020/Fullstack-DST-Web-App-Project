@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchOrderByOrderId } from "../../helpers/api-integration/OrdersHandling.js";
+import { fetchOrderByOrderId } from "../../helpers/api-calls/OrdersHandling.js";
 
 function UseOrder(orderId) {
   const { data: order, isLoading: fetchingOrder } = useQuery(

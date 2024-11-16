@@ -2,7 +2,7 @@ import React from "react";
 import { DateParser } from "../../helpers/Date.js";
 import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";
 import { useMutation } from "react-query";
-import { handleDeleteArticle } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { handleDeleteArticle } from "../../helpers/api-calls/ArticleDataHandling.js";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Spinner from "../universal/Spinner.jsx";

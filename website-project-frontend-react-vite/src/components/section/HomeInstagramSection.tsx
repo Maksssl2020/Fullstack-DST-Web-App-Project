@@ -6,19 +6,20 @@ import InstagramPostModal from "../modal/InstagramPostModal.jsx";
 import { AnimatePresence } from "framer-motion";
 import useInstagramUser from "../../hooks/queries/useInstagramUser.js";
 import useInstagramUserPosts from "../../hooks/queries/useInstagramUserPosts.js";
+import { InstagramPost } from "../../models/InstagramPost";
 
 const HomeInstagramSection = () => {
-  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedPostId, setSelectedPostId] = useState<number | null>();
   const { instagramUser, fetchingInstagramUser } = useInstagramUser();
   const { instagramUserPosts, fetchingInstagramUserPosts } =
     useInstagramUserPosts();
 
-  const handlePostClick = (post) => {
-    setSelectedPost(post);
+  const handlePostClick = (post: number) => {
+    setSelectedPostId(post);
   };
 
   const handleCloseModal = () => {
-    setSelectedPost(null);
+    setSelectedPostId(null);
   };
 
   if (fetchingInstagramUser || fetchingInstagramUserPosts) {
@@ -26,7 +27,7 @@ const HomeInstagramSection = () => {
   }
 
   return (
-    <div className="flex h-auto w-full flex-col rounded-3">
+    <div className="rounded-3 flex h-auto w-full flex-col">
       <InstagramSectionBanner instagramUserData={instagramUser} />
       <div className="mt-10 flex h-auto w-full items-center justify-center gap-12 bg-custom-gray-200">
         <HomeInstagramSectionCardSlider
@@ -35,9 +36,11 @@ const HomeInstagramSection = () => {
         />
       </div>
       <AnimatePresence>
-        {selectedPost && (
+        {selectedPostId && (
           <InstagramPostModal
-            selectedPost={selectedPost}
+            selectedPost={instagramUserPosts.find(
+              (post: InstagramPost) => post.postId === selectedPostId,
+            )}
             onClick={handleCloseModal}
           />
         )}

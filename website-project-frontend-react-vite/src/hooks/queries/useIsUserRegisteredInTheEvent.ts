@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchUserIsRegisteredInTheEvent } from "../../helpers/api-integration/EventsHandling.js";
+import { fetchUserIsRegisteredInTheEvent } from "../../helpers/api-calls/EventsHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseIsUserRegisteredInTheEvent({ eventId }) {

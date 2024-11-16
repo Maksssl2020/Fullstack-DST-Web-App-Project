@@ -1,17 +1,22 @@
-import React, { useContext } from "react";
+import React from "react";
 import DefaultModal from "./DefaultModal.jsx";
 import { useMutation, useQueryClient } from "react-query";
-import {
-  handleMessageAsRead,
-  handleUpdateUserData,
-} from "../../helpers/api-integration/UserDataHandling.js";
+import { handleUpdateUserData } from "../../helpers/api-calls/UserDataHandling.js";
 import Spinner from "../universal/Spinner.jsx";
-import { AuthContext } from "../../context/AuthProvider.jsx";
 import toast from "react-hot-toast";
 import useMarkMessageAsReadMutation from "../../hooks/mutations/useMarkMessageAsReadMutation.js";
+import useAuthentication from "../../hooks/others/useAuthentication";
+import { Message } from "../../models/Message";
+import { logout } from "../../redux/slices/authenticationSlice";
+import { useDispatch } from "react-redux";
 
-const UserMessageModal = ({ messageData }) => {
-  const { userId, logout } = useContext(AuthContext);
+type UserMessageModalProps = {
+  messageData: Message;
+};
+
+const UserMessageModal = ({ messageData }: UserMessageModalProps) => {
+  const { userId } = useAuthentication();
+  const dispatch = useDispatch();
   const { messageId, author, message, messageType, requestToAdminDTO } =
     messageData;
   const queryClient = useQueryClient();
@@ -44,8 +49,8 @@ const UserMessageModal = ({ messageData }) => {
       } else {
         toast.success(
           `Zmieniono nazwę użytkownika na ${requestToAdminDTO.enteredValueToChange}! Nastąpi wylogowanie.`,
-          logout(),
         );
+        dispatch(logout());
       }
     },
   });
@@ -59,9 +64,9 @@ const UserMessageModal = ({ messageData }) => {
       title={"Otrzymano Wiadomość!"}
       subtitle={`Wiadomość została wysłana przez admina: ${author}!`}
     >
-      <div className="flex flex-col gap-1 w-full h-auto">
-        <label className="font-bold mr-auto ml-3 text-xl">Treść:</label>
-        <div className="w-full h-auto text-xl rounded-2xl border-4 border-black p-4 text-justify bg-red-200">
+      <div className="flex h-auto w-full flex-col gap-1">
+        <label className="ml-3 mr-auto text-xl font-bold">Treść:</label>
+        <div className="h-auto w-full rounded-2xl border-4 border-black bg-red-200 p-4 text-justify text-xl">
           {message}
         </div>
       </div>
@@ -72,13 +77,13 @@ const UserMessageModal = ({ messageData }) => {
               markMessageAsRead(messageId);
               updateUserData();
             }}
-            className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"
+            className="mt-6 h-[75px] w-[250px] rounded-2xl border-4 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
           >
             Akceptuj
           </button>
           <button
             onClick={() => markMessageAsRead(messageId)}
-            className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"
+            className="mt-6 h-[75px] w-[250px] rounded-2xl border-4 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
           >
             Anuluj
           </button>
@@ -86,7 +91,7 @@ const UserMessageModal = ({ messageData }) => {
       ) : (
         <button
           onClick={() => markMessageAsRead(messageId)}
-          className="w-[250px] h-[75px] border-4 border-black rounded-2xl mt-6 bg-custom-orange-200 uppercase text-white text-2xl font-bold"
+          className="mt-6 h-[75px] w-[250px] rounded-2xl border-4 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
         >
           Potwierdź
         </button>

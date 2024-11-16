@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { addProductToCart } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { addProductToCart } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import toast from "react-hot-toast";
 import useAuthentication from "../others/useAuthentication.js";
 

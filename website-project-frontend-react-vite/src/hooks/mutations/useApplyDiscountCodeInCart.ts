@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { handleApplyDiscountCodeInCart } from "../../helpers/api-integration/DiscountCodesHandling.js";
+import { handleApplyDiscountCodeInCart } from "../../helpers/api-calls/DiscountCodesHandling.js";
 
 function UseApplyDiscountCodeInCart(onSuccessCallback) {
   const {

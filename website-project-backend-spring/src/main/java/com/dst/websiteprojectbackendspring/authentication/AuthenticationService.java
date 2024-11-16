@@ -112,9 +112,12 @@ public class AuthenticationService {
         tokenService.save(token);
 
         return AuthenticationResponse.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
-                .userRole(user.getRole().toString())
+                .role(user.getRole().toString())
+                .creationDate(user.getAccountCreationDate())
                 .build();
     }
 
@@ -184,9 +187,12 @@ public class AuthenticationService {
                 tokenService.save(token);
 
                 AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
+                        .userId(user.getId())
+                        .username(user.getUsername())
                         .accessToken(accessToken)
                         .refreshToken(refreshToken)
-                        .userRole(user.getRole().toString())
+                        .role(user.getRole().toString())
+                        .creationDate(user.getAccountCreationDate())
                         .build();
 
                 new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);

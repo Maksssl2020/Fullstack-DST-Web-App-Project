@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { updateProductQuantity } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { updateProductQuantity } from "../../helpers/api-calls/ShoppingCartHandling.js";
 
 function UseUpdateCartItemQuantity(itemId, cartIdentifier) {
   const queryClient = useQueryClient();

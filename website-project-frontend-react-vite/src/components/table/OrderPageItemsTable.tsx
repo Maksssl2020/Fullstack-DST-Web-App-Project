@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import ItemsTableRow from "./ItemsTableRow.jsx";
 import { formatCurrency } from "../../helpers/CurrencyFormatter.js";
 import { useQuery } from "react-query";
-import { getShoppingCartItems } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { getShoppingCartItems } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import Spinner from "../universal/Spinner.jsx";
 import useCartItems from "../../hooks/queries/useCartItems.js";
 

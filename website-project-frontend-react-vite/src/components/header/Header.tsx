@@ -94,7 +94,7 @@ const Header = ({ forumAddPostButton }) => {
   }
 
   return (
-    <header className="flex h-[125px] pl-4 w-full static-border-gradient">
+    <header className="static-border-gradient flex h-[125px] w-full pl-4">
       <div className="flex w-full items-center">
         <LeftDrawer />
         <MainBannerWithLogo
@@ -107,13 +107,13 @@ const Header = ({ forumAddPostButton }) => {
           textClassName={"max-sm:hidden"}
         />
         <div
-          className={`ml-auto flex h-[125px] max-xl:w-[600px] xl:w-[600px] relative items-center justify-center lg:bg-header-background`}
+          className={`relative ml-auto flex h-[125px] items-center justify-center max-xl:w-[600px] lg:bg-header-background xl:w-[600px]`}
         >
           {location.pathname === "/forum" && forumAddPostButton}
           <div
-            className={`flex h-[50px] items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "w-[150px] ml-auto mr-6" : "ml-auto max-sm:w-[100px] max-lg:w-[150px] max-lg:mr-4 max-xl:mr-2 sm:justify-between lg:justify-center  lg:w-[550px]"}`}
+            className={`flex h-[50px] items-center justify-center rounded-full bg-custom-gray-100 ${location.pathname === "/forum" ? "ml-auto mr-6 w-[150px]" : "ml-auto max-xl:mr-2 max-lg:mr-4 max-lg:w-[150px] max-sm:w-[100px] sm:justify-between lg:w-[550px] lg:justify-center"}`}
           >
-            <ul className="flex gap-10 list-disc list-inside max-lg:hidden marker:text-lg marker:text-custom-gray-400">
+            <ul className="flex list-inside list-disc gap-10 marker:text-lg marker:text-custom-gray-400 max-lg:hidden">
               {getHeaderItemsDependsOnLocation().map((data, index) => (
                 <li key={index}>
                   <button onClick={() => navigate(data.link)}>
@@ -129,24 +129,24 @@ const Header = ({ forumAddPostButton }) => {
                 <>
                   <button
                     onClick={toggleCartDrawer}
-                    className="rounded-full bg-white p-1 relative"
+                    className="relative rounded-full bg-white p-1"
                   >
                     <ShoppingBagIcon size={"size-6"} />
 
                     {amountOfCartItems > 0 && (
-                      <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                      <Badge className="absolute inset-0 ml-auto flex size-4 -translate-y-1 translate-x-1 items-center justify-center rounded-full bg-custom-orange-200 text-[10px] text-white">
                         {amountOfCartItems}
                       </Badge>
                     )}
                   </button>
                   <button
                     onClick={() => navigate(`/favourite-products/${userId}`)}
-                    className="rounded-full flex bg-white p-1 relative"
+                    className="relative flex rounded-full bg-white p-1"
                   >
                     <HeartIcon className={"size-6"} />
 
                     {amountOfUserFavouriteItems > 0 && (
-                      <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                      <Badge className="absolute inset-0 ml-auto flex size-4 -translate-y-1 translate-x-1 items-center justify-center rounded-full bg-custom-orange-200 text-[10px] text-white">
                         {amountOfUserFavouriteItems}
                       </Badge>
                     )}
@@ -156,7 +156,7 @@ const Header = ({ forumAddPostButton }) => {
               {!location.pathname.includes("rainbow-shop") && (
                 <div className="relative flex gap-4">
                   <Link
-                    className={"rounded-full bg-white p-1 relative"}
+                    className={"relative rounded-full bg-white p-1"}
                     disabled={!isAuthenticated}
                     to={"/account"}
                   >
@@ -164,7 +164,7 @@ const Header = ({ forumAddPostButton }) => {
                   </Link>
 
                   {amountOfUserNewNotifications > 0 && (
-                    <Badge className="bg-custom-orange-200 text-white flex justify-center items-center text-[10px] size-4 absolute inset-0 ml-auto translate-x-1 -translate-y-1 rounded-full">
+                    <Badge className="absolute inset-0 ml-auto flex size-4 -translate-y-1 translate-x-1 items-center justify-center rounded-full bg-custom-orange-200 text-[10px] text-white">
                       {amountOfUserNewNotifications}
                     </Badge>
                   )}
@@ -172,7 +172,7 @@ const Header = ({ forumAddPostButton }) => {
               )}
               <button
                 onClick={toggleRightDrawer}
-                className="flex items-center rounded-full bg-white p-1 justify-center"
+                className="flex items-center justify-center rounded-full bg-white p-1"
               >
                 <UserIcon size={"max-sm:size-4 sm:size-6"} />
               </button>
@@ -185,7 +185,7 @@ const Header = ({ forumAddPostButton }) => {
         />
         <RightDrawer
           isOpen={isRightDataDrawerOpen}
-          closeFunction={toggleRightDrawer}
+          closeDrawer={toggleRightDrawer}
         />
       </div>
     </header>

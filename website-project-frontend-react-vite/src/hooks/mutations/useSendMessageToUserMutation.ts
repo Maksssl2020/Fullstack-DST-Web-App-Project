@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleSendUserMessage } from "../../helpers/api-integration/UserDataHandling.js";
+import { handleSendUserMessage } from "../../helpers/api-calls/UserDataHandling.js";
 
 function UseSendMessageToUserMutation(userId, onSuccessCallback) {
   const queryClient = useQueryClient();

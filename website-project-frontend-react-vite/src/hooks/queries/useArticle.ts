@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchArticleData } from "../../helpers/api-integration/ArticleDataHandling.js";
+import { fetchArticleData } from "../../helpers/api-calls/ArticleDataHandling.js";
 
 const UseArticle = (articleId) => {
   const { data: article, isLoading: fetchingArticle } = useQuery(

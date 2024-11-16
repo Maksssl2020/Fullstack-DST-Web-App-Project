@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateStatistic } from "../../helpers/api-integration/StatisticsHandling.js";
+import { handleUpdateStatistic } from "../../helpers/api-calls/StatisticsHandling.js";
 
 function UseUpdateStatisticMutation(statisticId, onSuccessCallback) {
   const queryClient = useQueryClient();

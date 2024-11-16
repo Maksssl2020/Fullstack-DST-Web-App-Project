@@ -1,6 +1,6 @@
 import useAuthentication from "../others/useAuthentication.js";
 import { useMutation, useQueryClient } from "react-query";
-import { handleDeleteUserFavouriteProduct } from "../../helpers/api-integration/FavouriteProductsHandling.js";
+import { handleDeleteUserFavouriteProduct } from "../../helpers/api-calls/FavouriteProductsHandling.js";
 import toast from "react-hot-toast";
 
 function UseDeleteFavouriteUserProductMutation() {

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchProductsOfEachCategory } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { fetchProductsOfEachCategory } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function useProductsOfEachCategory() {
   const {

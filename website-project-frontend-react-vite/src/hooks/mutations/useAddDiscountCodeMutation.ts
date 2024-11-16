@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleAddNewDiscountCode } from "../../helpers/api-integration/DiscountCodesHandling.js";
+import { handleAddNewDiscountCode } from "../../helpers/api-calls/DiscountCodesHandling.js";
 
 function UseAddDiscountCodeMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

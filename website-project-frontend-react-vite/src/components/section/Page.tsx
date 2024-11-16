@@ -1,10 +1,15 @@
 import React from "react";
 import AnimatedPage from "../../animation/AnimatedPage.jsx";
 
-const Page = ({ className, children }) => {
+type PageProps = {
+  className?: string;
+  children?: React.ReactNode;
+};
+
+const Page = ({ className, children }: PageProps) => {
   return (
     <AnimatedPage>
-      <div className={`w-full h-full font-lato py-8 ${className}`}>
+      <div className={`h-full w-full py-8 font-lato ${className}`}>
         {children}
       </div>
     </AnimatedPage>

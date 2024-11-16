@@ -1,6 +1,6 @@
 import useAuthentication from "../others/useAuthentication.js";
 import { useQuery } from "react-query";
-import { fetchAllUserProductsMarkedAsFavourite } from "../../helpers/api-integration/FavouriteProductsHandling.js";
+import { fetchAllUserProductsMarkedAsFavourite } from "../../helpers/api-calls/FavouriteProductsHandling.js";
 
 function UseUserItemsMarkedAsFavouriteIds() {
   const { userId } = useAuthentication();

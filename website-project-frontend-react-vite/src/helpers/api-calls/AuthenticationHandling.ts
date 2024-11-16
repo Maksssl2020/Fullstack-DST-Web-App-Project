@@ -1,15 +1,18 @@
 import axios from "../AxiosConfig.js";
+import { LoginRequest } from "../../models/LoginRequest";
+import { AccountData } from "../../models/AccountData";
+import { RegisterRequest } from "../../models/RegisterRequest";
 
-export const handleRegister = async (registrationData) => {
+export const handleRegister = async (registrationData: RegisterRequest) => {
   try {
     const response = await axios.post("/auth/register", registrationData);
     return response.data;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
-export const handleAccountActivation = async (activationCode) => {
+export const handleAccountActivation = async (activationCode: string) => {
   const activationData = new FormData();
   activationData.append("activationCode", activationCode);
   console.log(activationCode);
@@ -17,17 +20,17 @@ export const handleAccountActivation = async (activationCode) => {
     const response = await axios.post("/auth/activate-account", activationData);
     return response.data;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
-export const handleLogin = async (username, password) => {
+export const handleLogin = async (loginRequest: LoginRequest) => {
   try {
-    const response = await axios.post(
+    const response = await axios.post<AccountData>(
       "/auth/login",
       {
-        username: username,
-        password: password,
+        username: loginRequest.username,
+        password: loginRequest.password,
       },
       {
         withCredentials: true,
@@ -36,11 +39,11 @@ export const handleLogin = async (username, password) => {
 
     return response.data;
   } catch (error) {
-    throw error;
+    return error;
   }
 };
 
-export const handleResetPassword = async (userEmail) => {
+export const handleResetPassword = async (userEmail: string) => {
   try {
     const response = await axios.post("/auth/reset-password", userEmail);
     return response.data;
@@ -50,9 +53,9 @@ export const handleResetPassword = async (userEmail) => {
   }
 };
 
-export const handleRefreshToken = async (refreshToken) => {
+export const handleRefreshToken = async (refreshToken: string) => {
   try {
-    const response = await axios.post(
+    const response = await axios.post<AccountData>(
       "/auth/refresh-token",
       { refreshToken },
       {

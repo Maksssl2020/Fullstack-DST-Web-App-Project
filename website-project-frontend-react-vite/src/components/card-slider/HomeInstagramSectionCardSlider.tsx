@@ -1,13 +1,13 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import InstagramPostCard from "../card/InstagramPostCard.jsx";
 
 const HomeInstagramSectionCardSlider = ({ sliderData, handlePostClick }) => {
   return (
-    <div className="flex w-full justify-center items-center self-center h-full">
+    <div className="flex h-full w-full items-center justify-center self-center">
       <Swiper
-        className="w-full flex justify-center"
+        className="flex w-full justify-center"
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={10}
         slidesPerView={1}
@@ -35,7 +35,7 @@ const HomeInstagramSectionCardSlider = ({ sliderData, handlePostClick }) => {
             <InstagramPostCard
               key={post.id}
               post={post}
-              onClick={() => handlePostClick(post)}
+              onClick={() => handlePostClick(post.id)}
             />
           </SwiperSlide>
         ))}

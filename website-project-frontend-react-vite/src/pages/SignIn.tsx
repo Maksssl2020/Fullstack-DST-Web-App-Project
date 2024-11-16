@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MainBannerWithoutLogo from "../components/universal/MainBannerWithoutLogo.jsx";
 import FormItem from "../components/form/FormItem.jsx";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import DefaultModal from "../components/modal/DefaultModal.jsx";
 import { AnimatePresence } from "framer-motion";
 import useResetUserPasswordMutation from "../hooks/mutations/useResetUserPasswordMutation.js";
 import { translateErrorsForUsers } from "../errors/TranslateErrorsForUsers.js";
+import { LoginRequest } from "../models/LoginRequest";
 
 const SignIn = () => {
   const { register, formState, reset, handleSubmit } = useForm();
@@ -40,15 +41,15 @@ const SignIn = () => {
     return <Spinner />;
   }
 
-  const handleLoginSubmit = (data) => {
+  const handleLoginSubmit = (data: LoginRequest) => {
     if (!isModalOpen) {
       loginUser({ username: data.username, password: data.password });
     }
   };
 
-  const handlePasswordReset = (data) => {
-    console.log(data);
-    resetUserPassword(data.email);
+  const handlePasswordReset = (email: string) => {
+    console.log(email);
+    resetUserPassword(email);
     setIsModalOpen(false);
   };
 
@@ -57,33 +58,36 @@ const SignIn = () => {
 
   return (
     <AnimatedPage>
-      <div className="font-lato py-8 w-full bg-custom-gray-300 flex flex-col items-center justify-center h-auto">
+      <div className="flex h-auto w-full flex-col items-center justify-center bg-custom-gray-300 py-8 font-lato">
         <MainBannerWithoutLogo bannerTitle={"Zaloguj się"} />
         <form
-          onSubmit={handleSubmit((data) => handleLoginSubmit(data))}
-          className="w-[850px] p-8 flex flex-col items-center rounded-2xl my-12 h-auto bg-custom-gray-100"
+          onSubmit={handleSubmit((data) =>
+            handleLoginSubmit({
+              username: data.username,
+              password: data.password,
+            }),
+          )}
+          className="my-12 flex h-auto w-[850px] flex-col items-center rounded-2xl bg-custom-gray-100 p-8"
         >
           <FormItem
-            labelData={"Nazwa użytkownika"}
-            inputStyling={"focus:border-custom-orange-200 rounded-xl px-2"}
+            label={"Nazwa użytkownika"}
+            inputClassname={"focus:border-custom-orange-200 rounded-xl px-2"}
             register={{
               ...register("username", {
                 required: true,
               }),
             }}
-            isError={serviceErrors !== null}
           />
 
           <FormItem
-            labelData={"Hasło"}
+            label={"Hasło"}
             type={"password"}
-            inputStyling={"focus:border-custom-orange-200 rounded-xl px-2"}
+            inputClassname={"focus:border-custom-orange-200 rounded-xl px-2"}
             register={{
               ...register("password", {
                 required: true,
               }),
             }}
-            isError={serviceErrors !== null}
           />
           {errorMessage && (
             <p className="mt-4 text-lg text-red-500">
@@ -92,13 +96,13 @@ const SignIn = () => {
           )}
           <button
             type={"submit"}
-            className="bg-custom-orange-200 mt-8 text-2xl w-[75%] h-[50px] rounded-2xl border-2 border-black text-white uppercase font-bold"
+            className="mt-8 h-[50px] w-[75%] rounded-2xl border-2 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
           >
             Zaloguj się
           </button>
           <p
             onClick={() => setIsModalOpen(true)}
-            className={"w-full h-auto text-center text-xl mt-6"}
+            className={"mt-6 h-auto w-full text-center text-xl"}
           >
             Nie pamiętam&nbsp;
             <span className={"text-custom-orange-200 hover:cursor-pointer"}>
@@ -117,16 +121,18 @@ const SignIn = () => {
               }
             >
               <form
-                onSubmit={handleSubmit(handlePasswordReset)}
-                className={"w-full h-auto flex flex-col gap-4"}
+                onSubmit={handleSubmit((data) =>
+                  handlePasswordReset(data.email),
+                )}
+                className={"flex h-auto w-full flex-col gap-4"}
               >
                 <FormItem
                   type={"email"}
-                  containerStyling={"text-xl w-full mt-5"}
-                  inputStyling={
+                  containerClassname={"text-xl w-full mt-5"}
+                  inputClassname={
                     "focus:border-custom-orange-200 rounded-xl px-2"
                   }
-                  labelData={"Adres e-mail:"}
+                  label={"Adres e-mail:"}
                   register={
                     isModalOpen && {
                       ...register("email", {
@@ -135,12 +141,12 @@ const SignIn = () => {
                     }
                   }
                 />
-                <div className={"w-full h-[50px] flex justify-between"}>
+                <div className={"flex h-[50px] w-full justify-between"}>
                   <button
                     type={"button"}
                     onClick={() => setIsModalOpen(false)}
                     className={
-                      "w-[48%] h-full rounded-xl uppercase border-2 border-black bg-custom-orange-200 font-bold text-white text-2xl"
+                      "h-full w-[48%] rounded-xl border-2 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
                     }
                   >
                     Anuluj
@@ -149,7 +155,7 @@ const SignIn = () => {
                     type={"submit"}
                     disabled={errors?.email !== undefined}
                     className={
-                      "w-[48%] h-full rounded-xl uppercase border-2 border-black bg-custom-orange-200 font-bold text-white text-2xl"
+                      "h-full w-[48%] rounded-xl border-2 border-black bg-custom-orange-200 text-2xl font-bold uppercase text-white"
                     }
                   >
                     Resetuj

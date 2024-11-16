@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleCommentUpdate } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { handleCommentUpdate } from "../../helpers/api-calls/ForumPostsHandling.js";
 
 function UseUpdateForumPostCommentMutation(
   postId,

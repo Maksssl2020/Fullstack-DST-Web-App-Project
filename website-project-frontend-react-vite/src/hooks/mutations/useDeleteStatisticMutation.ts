@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleDeleteStatistic } from "../../helpers/api-integration/StatisticsHandling.js";
+import { handleDeleteStatistic } from "../../helpers/api-calls/StatisticsHandling.js";
 
 function UseDeleteStatisticMutation() {
   const queryClient = useQueryClient();

@@ -1,6 +1,6 @@
 import { useMutation } from "react-query";
 import toast from "react-hot-toast";
-import { fetchDiscountCode } from "../../helpers/api-integration/DiscountCodesHandling.js";
+import { fetchDiscountCode } from "../../helpers/api-calls/DiscountCodesHandling.js";
 
 function UseDiscountCodeMutation(onSuccessCallback) {
   const { mutate: fetchDiscountCodeData, isLoading: fetchingDiscountCodeData } =

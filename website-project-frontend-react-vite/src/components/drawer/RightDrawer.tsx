@@ -1,5 +1,4 @@
 import React from "react";
-import CloseIcon from "./icons/CloseIcon.jsx";
 import GoogleIcon from "./icons/GoogleIcon.jsx";
 import AppleIcon from "./icons/AppleIcon.jsx";
 import EmiailIcon from "./icons/EmiailIcon.jsx";
@@ -7,64 +6,72 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuthentication from "../../hooks/others/useAuthentication.js";
 import DrawerContainer from "./DrawerContainer.jsx";
 import AnimatedCancelButton from "../button/AnimatedCancelButton.jsx";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/authenticationSlice";
 
-const RightDrawer = ({ isOpen, closeFunction }) => {
-  const { logout, isAuthenticated } = useAuthentication();
+type RightDrawerProps = {
+  isOpen: boolean;
+  closeDrawer: () => void;
+};
+
+const RightDrawer = ({ isOpen, closeDrawer }: RightDrawerProps) => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useAuthentication();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    dispatch(logout());
     navigate("/");
-    closeFunction();
+    closeDrawer();
   };
 
   return (
     <DrawerContainer
       isOpen={isOpen}
       drawerSide={"RIGHT"}
-      closeFunction={closeFunction}
+      closeFunction={closeDrawer}
     >
-      <div className="flex flex-col items-center w-full">
-        <div className="w-full flex h-[11.5%] mt-8 justify-center items-center">
-          <div className="flex gap-4 justify-center items-center w-[80%] h-[75px] rounded-full bg-custom-gray-300">
+      <div className="flex w-full flex-col items-center">
+        <div className="mt-8 flex h-[11.5%] w-full items-center justify-center">
+          <div className="flex h-[75px] w-[80%] items-center justify-center gap-4 rounded-full bg-custom-gray-300">
             <AnimatedCancelButton
-              className={"bg-custom-gray-100 rounded-full"}
-              onClick={closeFunction}
+              className={"rounded-full bg-custom-gray-100"}
+              onClick={closeDrawer}
               iconSize={"size-12"}
             />
-            <div className="flex w-[70%] items-center justify-center text-xl font-bold h-[50px] bg-custom-gray-100 rounded-full">
+            <div className="flex h-[50px] w-[70%] items-center justify-center rounded-full bg-custom-gray-100 text-xl font-bold">
               <Link to={"/contact-us"}>
                 <p>Skontaktuj się z nami</p>
               </Link>
             </div>
           </div>
         </div>
-        <div className="bg-drawer-background mt-8 flex justify-center items-center w-full h-[75px]">
-          <p className="font-bold text-5xl">tęczowe konto</p>
+        <div className="mt-8 flex h-[75px] w-full items-center justify-center bg-drawer-background">
+          <p className="text-5xl font-bold">tęczowe konto</p>
         </div>
-        <div className="w-[90%] relative text-white text-center text-3xl items-center py-8 gap-8 flex flex-col h-auto mt-28 rounded-lg bg-custom-gray-100">
+        <div className="relative mt-28 flex h-auto w-[90%] flex-col items-center gap-8 rounded-lg bg-custom-gray-100 py-8 text-center text-3xl text-white">
           {isAuthenticated ? (
             <button
               onClick={handleLogout}
-              className="w-[65%] h-[50px] bg-custom-orange-200 py-1 rounded-full"
+              className="h-[50px] w-[65%] rounded-full bg-custom-orange-200 py-1"
             >
               WYLOGUJ SIĘ
             </button>
           ) : (
             <>
-              <Link to={"/sign-in"} className="w-[65%] h-[50px]">
-                <p className="bg-custom-orange-200 py-1 rounded-full">
+              <Link to={"/sign-in"} className="h-[50px] w-[65%]">
+                <p className="rounded-full bg-custom-orange-200 py-1">
                   Zaloguj
                 </p>
               </Link>
               <Link
                 to={"/sign-up"}
-                className="w-[65%] bg-custom-orange-200 py-1 rounded-full h-[50px]"
+                className="h-[50px] w-[65%] rounded-full bg-custom-orange-200 py-1"
               >
                 <p>Zarejestruj</p>
               </Link>
-              <div className="flex items-center justify-center bg-custom-gray-300 rounded-full w-[105%] h-[75px]">
-                <div className="h-[75%] px-16 justify-between items-center flex w-[95%] bg-white rounded-full">
+              <div className="flex h-[75px] w-[105%] items-center justify-center rounded-full bg-custom-gray-300">
+                <div className="flex h-[75%] w-[95%] items-center justify-between rounded-full bg-white px-16">
                   <GoogleIcon />
                   <AppleIcon />
                   <EmiailIcon />

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchEventsData } from "../../helpers/api-integration/EventsHandling.js";
+import { fetchEventsData } from "../../helpers/api-calls/EventsHandling.js";
 
 function UseEvents() {
   const { data: events, isLoading: fetchingEvents } = useQuery(

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-integration/NotificationsHandling.js";
+import { fetchAmountOfNonReadUserNotifications } from "../../helpers/api-calls/NotificationsHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseAmountOfUserNewNotifications() {

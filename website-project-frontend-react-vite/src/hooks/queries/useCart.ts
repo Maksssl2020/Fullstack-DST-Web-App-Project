@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchShoppingCartByIdentifier } from "../../helpers/api-integration/ShoppingCartHandling.js";
+import { fetchShoppingCartByIdentifier } from "../../helpers/api-calls/ShoppingCartHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
 
 function UseCart(cartIdentifier) {

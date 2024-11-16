@@ -1,6 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { sendNewNotification } from "../../helpers/api-integration/NotificationsHandling.js";
+import { sendNewNotification } from "../../helpers/api-calls/NotificationsHandling.js";
 
 const UseCreateNotificationMutation = () => {
   const queryClient = useQueryClient();

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAllOrders } from "../../helpers/api-integration/OrdersHandling.js";
+import { fetchAllOrders } from "../../helpers/api-calls/OrdersHandling.js";
 
 function useOrders(currentPage) {
   const {

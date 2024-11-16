@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { handleProcessPayment } from "../../helpers/api-integration/PaymentsHandling.js";
+import { handleProcessPayment } from "../../helpers/api-calls/PaymentsHandling.js";
 import toast from "react-hot-toast";
 
 function UseCreatePaymentMutation(onSuccessCallback) {

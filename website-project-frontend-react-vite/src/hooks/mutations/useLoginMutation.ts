@@ -1,15 +1,25 @@
 import { useMutation } from "react-query";
-import { handleLogin } from "../../helpers/api-integration/AuthenticationHandling.js";
-import useAuthentication from "../others/useAuthentication.js";
+import { handleLogin } from "../../helpers/api-calls/AuthenticationHandling.js";
+import { LoginRequest } from "../../models/LoginRequest";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/slices/authenticationSlice";
 
-function UseLoginMutation(onSuccessCallback, setLoginErrors) {
-  const { login } = useAuthentication();
+type UseLoginMutationProps = {
+  onSuccessCallback: () => void;
+  setErrors: (data: string) => void;
+};
+
+function UseLoginMutation({
+  onSuccessCallback,
+  setErrors,
+}: UseLoginMutationProps) {
+  const dispatch = useDispatch();
 
   const { mutate: loginUser, isLoading: loggingUser } = useMutation({
     mutationKey: ["loginUser"],
-    mutationFn: ({ username, password }) => handleLogin(username, password),
+    mutationFn: (loginRequest: LoginRequest) => handleLogin(loginRequest),
     onSuccess: (response) => {
-      login(response);
+      dispatch(login(response));
 
       if (onSuccessCallback) {
         onSuccessCallback();
@@ -17,7 +27,7 @@ function UseLoginMutation(onSuccessCallback, setLoginErrors) {
     },
     onError: (error) => {
       const { data } = error.response;
-      setLoginErrors(data.errorMessage);
+      setErrors(data.errorMessage);
     },
   });
 

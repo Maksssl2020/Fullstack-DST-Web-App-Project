@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import useAuthentication from "../others/useAuthentication.js";
-import { setNotificationAsRead } from "../../helpers/api-integration/NotificationsHandling.js";
+import { setNotificationAsRead } from "../../helpers/api-calls/NotificationsHandling.js";
 
 function UseMarkNotificationAsReadMutation() {
   const { userId } = useAuthentication();

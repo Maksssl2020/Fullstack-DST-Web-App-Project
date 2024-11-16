@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleUpdateProduct } from "../../helpers/api-integration/ShopProductsHandling.js";
+import { handleUpdateProduct } from "../../helpers/api-calls/ShopProductsHandling.js";
 
 function UseUpdateProductMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

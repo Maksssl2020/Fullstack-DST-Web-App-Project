@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { handleAddForumPost } from "../../helpers/api-integration/ForumPostsHandling.js";
+import { handleAddForumPost } from "../../helpers/api-calls/ForumPostsHandling.js";
 
 function UseAddForumPostMutation(onSuccessCallback) {
   const queryClient = useQueryClient();

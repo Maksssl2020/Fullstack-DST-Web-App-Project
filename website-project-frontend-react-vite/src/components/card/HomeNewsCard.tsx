@@ -3,7 +3,7 @@ import PostBannerWithLogoAndDate from "../universal/PostBannerWithLogoAndDate.js
 import { AuthContext } from "../../context/AuthProvider.jsx";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
-import { handleHomeNewsPostDelete } from "../../helpers/api-integration/NewsPostsHandling.js";
+import { handleHomeNewsPostDelete } from "../../helpers/api-calls/NewsPostsHandling.js";
 import toast from "react-hot-toast";
 import Spinner from "../universal/Spinner.jsx";
 import AdminOptionsButtons from "../button/AdminOptionsButtons.jsx";

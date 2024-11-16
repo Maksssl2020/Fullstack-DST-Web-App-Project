@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { checkUsernameIsUnique } from "../../helpers/api-integration/UserDataHandling.js";
+import { checkUsernameIsUnique } from "../../helpers/api-calls/UserDataHandling.js";
 
 function UseIsUsernameUniqueMutation() {
   const { mutate: checkIsUsernameUnique, isLoading: checkingIsUsernameUnique } =

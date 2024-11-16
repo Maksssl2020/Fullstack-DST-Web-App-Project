@@ -1,7 +1,7 @@
 import useAuthentication from "../others/useAuthentication.js";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import { fetchAmountOfUserFavouriteItems } from "../../helpers/api-integration/FavouriteProductsHandling.js";
+import { fetchAmountOfUserFavouriteItems } from "../../helpers/api-calls/FavouriteProductsHandling.js";
 
 function UseAmountOfUserFavouriteItems() {
   const location = useLocation();

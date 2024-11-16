@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchUserAmountOfCreatedForumPosts } from "../../helpers/api-integration/UserDataHandling.js";
+import { fetchUserAmountOfCreatedForumPosts } from "../../helpers/api-calls/UserDataHandling.js";
 
 function useUserAmountOfCreatedForumPosts(userId) {
   const {

@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { fetchAllUsersRequests } from "../../helpers/api-integration/RequestsToAdminHandling.js";
+import { fetchAllUsersRequests } from "../../helpers/api-calls/RequestsToAdminHandling.js";
 
 function UseUsersRequests() {
   const { data: usersRequests, isLoading: fetchingUsersRequests } = useQuery(
