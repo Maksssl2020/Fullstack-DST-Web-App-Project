@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "react-query";
 import { handleUpdateUserFiles } from "../../helpers/api-calls/UserDataHandling.js";
 import useAuthentication from "../others/useAuthentication.js";
+import { UserPhotoUpdateRequest } from "../../models/UserPhotoUpdateRequest";
 
 function UseUpdateUserFilesMutation() {
   const { userId } = useAuthentication();
@@ -9,8 +10,12 @@ function UseUpdateUserFilesMutation() {
   const { mutate: updateUserFiles, isLoading: updatingUserFiles } = useMutation(
     {
       mutationKey: ["accountUpdateUserFiles", userId],
-      mutationFn: ({ avatar, identifyPhoto }) =>
-        handleUpdateUserFiles(userId, avatar, identifyPhoto),
+      mutationFn: (userPhotoUpdateRequest: UserPhotoUpdateRequest) =>
+        handleUpdateUserFiles(
+          userId,
+          userPhotoUpdateRequest.photo,
+          userPhotoUpdateRequest.photoType,
+        ),
       onMutate: async (updatedData) => {
         await queryClient.cancelQueries(["userDisplayData", userId]);
         const previousUserFiles = queryClient.getQueryData([

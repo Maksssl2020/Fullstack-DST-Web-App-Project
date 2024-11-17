@@ -1,4 +1,5 @@
 import axios from "../AxiosConfig.js";
+import { UserDisplay } from "../../models/UserDisplay";
 
 export const checkUsernameIsUnique = async (username) => {
   console.log(username);
@@ -51,7 +52,7 @@ export const fetchAllVolunteers = async () => {
   }
 };
 
-export const fetchUserById = async (userId) => {
+export const fetchUserById = async (userId: number) => {
   try {
     const response = await axios.get(`/users/${userId}`);
     return response.data;
@@ -60,10 +61,14 @@ export const fetchUserById = async (userId) => {
   }
 };
 
-export const fetchUserDisplayData = async (userId) => {
+export const fetchUserDisplayData = async (
+  userId: number,
+): Promise<UserDisplay | undefined> => {
   if (userId) {
     try {
-      const response = await axios.get(`/users/${userId}/display-data`);
+      const response = await axios.get<UserDisplay>(
+        `/users/${userId}/display-data`,
+      );
       return response.data;
     } catch (error) {
       console.error(error);
@@ -132,20 +137,12 @@ export const handleUpdateUserData = async (userId, updateData) => {
 };
 
 export const handleUpdateUserFiles = async (
-  userId,
-  avatarImage,
-  identifyPhotoImage,
+  userId: number,
+  photo: File,
+  photoType: string,
 ) => {
   const formData = new FormData();
-  if (avatarImage !== null) {
-    formData.append("avatar", avatarImage[0]);
-  }
-  if (identifyPhotoImage !== null) {
-    formData.append("identifyPhoto", identifyPhotoImage[0]);
-  }
-
-  console.log(avatarImage);
-  console.log(identifyPhotoImage);
+  formData.append(`${photoType}`, photo);
 
   try {
     const response = await axios.put(

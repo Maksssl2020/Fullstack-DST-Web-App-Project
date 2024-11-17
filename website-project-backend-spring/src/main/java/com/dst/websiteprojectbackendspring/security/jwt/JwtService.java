@@ -1,13 +1,15 @@
 package com.dst.websiteprojectbackendspring.security.jwt;
 
-import com.dst.websiteprojectbackendspring.service.email.EmailServiceImpl;
+import com.dst.websiteprojectbackendspring.handler.JwtTokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.jackson.io.JacksonSerializer;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +19,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -43,7 +46,6 @@ public class JwtService {
     }
 
     public String generateRefreshJwtToken(UserDetails userDetails) {
-
         return buildJwtToken(new HashMap<>(), userDetails, JWT_REFRESH_TOKEN_EXPIRATION);
     }
 
@@ -94,10 +96,16 @@ public class JwtService {
     }
 
     public Claims extractClaims(String jwtToken) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())
-                .build()
-                .parseSignedClaims(jwtToken)
-                .getPayload();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSignInKey())
+                    .build()
+                    .parseSignedClaims(jwtToken)
+                    .getPayload();
+        } catch (ExpiredJwtException exception) {
+            throw new JwtTokenExpiredException("JWT token expired!");
+        } catch (Exception exception) {
+            throw new RuntimeException(exception);
+        }
     }
 }

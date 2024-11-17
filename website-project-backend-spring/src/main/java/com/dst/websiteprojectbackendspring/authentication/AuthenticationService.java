@@ -12,7 +12,6 @@ import com.dst.websiteprojectbackendspring.service.email.EmailServiceImpl;
 import com.dst.websiteprojectbackendspring.service.email.EmailTemplateName;
 import com.dst.websiteprojectbackendspring.service.token.TokenService;
 import com.dst.websiteprojectbackendspring.service.token.TokenServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.BadRequestException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,6 +33,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @Slf4j
 @Service
@@ -92,7 +95,7 @@ public class AuthenticationService {
         }
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest request) {
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),
@@ -100,25 +103,8 @@ public class AuthenticationService {
                 )
         );
 
-        HashMap<String, Object> claims = new HashMap<>();
         User user = (User) authenticate.getPrincipal();
-        claims.put("username", user.getUsername());
-        claims.put("accountCreationDate", user.getAccountCreationDate());
-        String jwtToken = jwtService.generateJwtToken(claims, user);
-        String refreshToken = jwtService.generateRefreshJwtToken(user);
-
-        revokeAllUserTokens(user.getId());
-        Token token = TokenServiceImpl.createToken(jwtToken, TokenType.USER_AUTHENTICATION, user);
-        tokenService.save(token);
-
-        return AuthenticationResponse.builder()
-                .userId(user.getId())
-                .username(user.getUsername())
-                .accessToken(jwtToken)
-                .refreshToken(refreshToken)
-                .role(user.getRole().toString())
-                .creationDate(user.getAccountCreationDate())
-                .build();
+        return createTokenAndAuthenticationResponse(user);
     }
 
     public String resetPassword(String email) throws BadRequestException, MessagingException {
@@ -164,13 +150,13 @@ public class AuthenticationService {
         tokenService.save(foundToken);
     }
 
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String refreshToken;
         String username;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return;
+            return new ResponseEntity<>(null, UNAUTHORIZED);
         }
 
         refreshToken = authHeader.substring(7);
@@ -180,26 +166,13 @@ public class AuthenticationService {
             User user = userRepository.findByUsername(username).orElseThrow();
 
             if (jwtService.isTokenValid(refreshToken, user)) {
-                String accessToken = jwtService.generateJwtToken(user);
-
-                revokeAllUserTokens(user.getId());
-                Token token = TokenServiceImpl.createToken(accessToken, TokenType.USER_AUTHENTICATION, user);
-                tokenService.save(token);
-
-                AuthenticationResponse authenticationResponse = AuthenticationResponse.builder()
-                        .userId(user.getId())
-                        .username(user.getUsername())
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .role(user.getRole().toString())
-                        .creationDate(user.getAccountCreationDate())
-                        .build();
-
-                new ObjectMapper().writeValue(response.getOutputStream(), authenticationResponse);
+                return createTokenAndAuthenticationResponse(user);
             } else {
                 throw new JwtTokenExpiredException("Jwt Token Expired!");
             }
         }
+
+        throw new RuntimeException("Refresh token header is incorrect!");
     }
 
     private void revokeAllUserTokens(Long userId) {
@@ -212,5 +185,29 @@ public class AuthenticationService {
 
             tokenService.saveAll(validUserTokens);
         }
+    }
+
+    private ResponseEntity<AuthenticationResponse> createTokenAndAuthenticationResponse(User user) {
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("username", user.getUsername());
+        claims.put("accountCreationDate", user.getAccountCreationDate());
+        String accessToken = jwtService.generateJwtToken(claims, user);
+        String refreshToken = jwtService.generateRefreshJwtToken(user);
+
+        revokeAllUserTokens(user.getId());
+        Token token = TokenServiceImpl.createToken(accessToken, TokenType.USER_AUTHENTICATION, user);
+        tokenService.save(token);
+
+        return new ResponseEntity<>(
+                AuthenticationResponse.builder()
+                        .userId(user.getId())
+                        .username(user.getUsername())
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .role(user.getRole().toString())
+                        .creationDate(user.getAccountCreationDate())
+                        .build(),
+                OK
+        );
     }
 }

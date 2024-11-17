@@ -100,7 +100,7 @@ public class GlobalExceptionHandler {
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorCode(BAD_REQUEST.value())
-                                .errorMessage(String.format("Missing required parameter: %s",error.getParameterName()))
+                                .errorMessage(String.format("Missing required parameter: %s", error.getParameterName()))
                                 .build()
                 );
     }
@@ -111,9 +111,9 @@ public class GlobalExceptionHandler {
                 .status(FORBIDDEN)
                 .body(
                         ExceptionResponse.builder()
-                        .businessErrorCode(ACCOUNT_LOCKED.getCode())
-                        .errorMessage(ACCOUNT_LOCKED.getMessage())
-                        .build()
+                                .businessErrorCode(ACCOUNT_LOCKED.getCode())
+                                .errorMessage(ACCOUNT_LOCKED.getMessage())
+                                .build()
                 );
     }
 
@@ -159,10 +159,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(
-                  ExceptionResponse.builder()
-                          .businessErrorCode(INTERNAL_SERVER_ERROR.value())
-                          .errorMessage(error.getMessage())
-                          .build()
+                        ExceptionResponse.builder()
+                                .businessErrorCode(INTERNAL_SERVER_ERROR.value())
+                                .errorMessage(error.getMessage())
+                                .build()
                 );
     }
 
@@ -198,12 +198,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(JwtTokenExpiredException.class)
     public ResponseEntity<ExceptionResponse> handleJwtTokenExpiredException() {
+        log.error("HANDLING ERROR!");
+
         return ResponseEntity
                 .status(UNAUTHORIZED)
                 .body(
                         ExceptionResponse.builder()
                                 .businessErrorCode(JWT_TOKEN_EXPIRED.getCode())
-                                .errorMessage(JWT_TOKEN_EXPIRED.getMessage())
+                                .errorMessage("GOŁA BABA POSZŁA SPAĆ!")
                                 .build()
                 );
     }

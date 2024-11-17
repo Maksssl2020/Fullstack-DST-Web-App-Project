@@ -1,5 +1,4 @@
 import React from "react";
-import AccountFormItem from "./AccountFormItem.jsx";
 import { DateParser, PeriodOfDays } from "../../helpers/Date.js";
 
 const AccountBasicDataForm = ({
@@ -40,28 +39,28 @@ const AccountBasicDataForm = ({
   ];
 
   return (
-    <div className="xl:w-full max-xl:w-full h-full max-lg:flex max-lg:flex-col max-lg:gap-4 xl:flex xl:flex-col lg:grid lg:grid-cols-2 xl:justify-center gap-14 p-4 z-0">
-      {formData.map((data, index) => (
-        <div
-          key={index}
-          className={`w-full  ${index % 2 !== 0 && "lg:ml-4 xl:ml-0"}`}
-        >
-          <AccountFormItem
-            key={index}
-            labelTitle={data.title}
-            register={data.register}
-            value={data.value}
-            errors={data.error}
-          />
-        </div>
-      ))}
-      <div className="w-full h-auto space-y-2 lg:ml-4 xl:ml-0">
+    <div className="z-0 h-full gap-14 p-4 max-xl:w-full max-lg:flex max-lg:flex-col max-lg:gap-4 lg:grid lg:grid-cols-2 xl:flex xl:w-full xl:flex-col xl:justify-center">
+      {/*{formData.map((data, index) => (*/}
+      {/*  <div*/}
+      {/*    key={index}*/}
+      {/*    className={`w-full  ${index % 2 !== 0 && "lg:ml-4 xl:ml-0"}`}*/}
+      {/*  >*/}
+      {/*    <AccountFormItem*/}
+      {/*      key={index}*/}
+      {/*      labelTitle={data.title}*/}
+      {/*      register={data.register}*/}
+      {/*      value={data.value}*/}
+      {/*      errors={data.error}*/}
+      {/*    />*/}
+      {/*  </div>*/}
+      {/*))}*/}
+      <div className="h-auto w-full space-y-2 lg:ml-4 xl:ml-0">
         <p className="ml-3 text-xl">Data założenia konta:</p>
-        <div className="w-full flex relative">
-          <div className="w-[60%] h-[60px] border-4 flex justify-center items-center border-custom-gray-300 text-lg rounded-2xl">
+        <div className="relative flex w-full">
+          <div className="flex h-[60px] w-[60%] items-center justify-center rounded-2xl border-4 border-custom-gray-300 text-lg">
             {DateParser(accountCreationDate)} r.
           </div>
-          <div className="absolute ml-auto gap-1 -translate-x-4 inset-0 w-[45%] h-[60px] items-center flex justify-center rounded-2xl bg-custom-gray-300">
+          <div className="absolute inset-0 ml-auto flex h-[60px] w-[45%] -translate-x-4 items-center justify-center gap-1 rounded-2xl bg-custom-gray-300">
             <span className="font-bold">{periodOfDays}</span>
             {periodOfDays !== "Dzisiaj" && (
               <span className="italic">

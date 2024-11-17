@@ -1,11 +1,12 @@
-import axios from "../AxiosConfig.js";
+import customAxios from "../AxiosConfig.js";
 import { LoginRequest } from "../../models/LoginRequest";
 import { AccountData } from "../../models/AccountData";
 import { RegisterRequest } from "../../models/RegisterRequest";
+import axios from "axios";
 
 export const handleRegister = async (registrationData: RegisterRequest) => {
   try {
-    const response = await axios.post("/auth/register", registrationData);
+    const response = await customAxios.post("/auth/register", registrationData);
     return response.data;
   } catch (error) {
     return error;
@@ -17,7 +18,10 @@ export const handleAccountActivation = async (activationCode: string) => {
   activationData.append("activationCode", activationCode);
   console.log(activationCode);
   try {
-    const response = await axios.post("/auth/activate-account", activationData);
+    const response = await customAxios.post(
+      "/auth/activate-account",
+      activationData,
+    );
     return response.data;
   } catch (error) {
     return error;
@@ -26,7 +30,7 @@ export const handleAccountActivation = async (activationCode: string) => {
 
 export const handleLogin = async (loginRequest: LoginRequest) => {
   try {
-    const response = await axios.post<AccountData>(
+    const response = await customAxios.post<AccountData>(
       "/auth/login",
       {
         username: loginRequest.username,
@@ -45,7 +49,7 @@ export const handleLogin = async (loginRequest: LoginRequest) => {
 
 export const handleResetPassword = async (userEmail: string) => {
   try {
-    const response = await axios.post("/auth/reset-password", userEmail);
+    const response = await customAxios.post("/auth/reset-password", userEmail);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -55,10 +59,13 @@ export const handleResetPassword = async (userEmail: string) => {
 
 export const handleRefreshToken = async (refreshToken: string) => {
   try {
-    const response = await axios.post<AccountData>(
-      "/auth/refresh-token",
-      { refreshToken },
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/auth/refresh-token",
+      {},
       {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
         withCredentials: true,
       },
     );

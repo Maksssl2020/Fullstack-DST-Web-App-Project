@@ -1,6 +1,5 @@
 import axios from "axios";
 import { handleRefreshToken } from "./api-calls/AuthenticationHandling.js";
-import { useDispatch } from "react-redux";
 import { store } from "../redux/store/store";
 import { login } from "../redux/slices/authenticationSlice";
 
@@ -25,30 +24,26 @@ instance.interceptors.response.use(
   },
   async (error: unknown) => {
     if (axios.isAxiosError(error)) {
-      const data = error?.response?.data;
+      const response = error?.response;
       const originalRequest = error?.config;
 
-      if (
-        data.businessErrorCode === 399 &&
-        data.errorMessage.includes("Jwt Token Expired")
-      ) {
-        const dispatch = useDispatch();
+      if (response?.data.message.includes("Jwt token expired!")) {
         const refreshToken =
           store.getState().persistedReducer.authentication.refreshToken;
 
         if (refreshToken) {
           const receivedData = await handleRefreshToken(refreshToken);
 
+          console.log(receivedData);
+
           if (!receivedData) return;
 
-          dispatch(
-            login({
-              userId: receivedData.userId,
-              accessToken: receivedData.accessToken,
-              refreshToken: receivedData.refreshToken,
-              role: receivedData.role,
-            }),
-          );
+          login({
+            userId: receivedData.userId,
+            accessToken: receivedData.accessToken,
+            refreshToken: receivedData.refreshToken,
+            role: receivedData.role,
+          });
 
           if (originalRequest === undefined) return;
           originalRequest.headers.Authorization = `Bearer ${receivedData.accessToken}`;
